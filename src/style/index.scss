@@ -1,0 +1,65 @@
+//var
+$primary-color: #2a8ce7;
+$nav-b-color:pink;
+$side-font-act-color:#ffffff;
+$side-font-color: #cfd9e2;
+$side-background:#2a3549;
+$side-item:#324054;
+
+$side-item-height:56px;
+//layout
+#app{
+  height:100%;
+}
+.p-relative{
+  position:relative;
+}
+.p-absolute{
+  position:absolute;
+}
+.left-0{
+  left:0;
+}
+.right-0{
+  right: 0;
+}
+//font-size
+.f-s-12{
+  font-size: 12px;
+}
+.f-s-13{
+  font-size: 13px;
+}
+.f-s-14{
+  font-size: 14px;
+}
+.f-s-15{
+  font-size: 15px;
+}
+.f-s-16{
+  font-size: 16px;
+}
+.f-s-20{
+  font-size: 20px;
+}
+.f-s-22{
+  font-size: 22px;
+}
+
+//font-weight
+.f-w-500{
+  font-weight: 500;
+}
+//height
+.full-height{
+  height:100%;
+}
+
+//color
+.nav-b-color{
+  background: $nav-b-color;
+}
+
+.text-a-c{
+  text-align: center;
+}
