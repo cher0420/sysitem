@@ -1,5 +1,5 @@
 <template>
-  <section class="p-relative nav-b-color">
+  <section class="p-relative">
     <section class="p-absolute left-0">hightalk-ai</section>
     <section class="p-absolute right-0">右侧</section>
   </section>

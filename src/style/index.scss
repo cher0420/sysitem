@@ -1,12 +1,18 @@
+//命名空间： yoy
 //var
 $primary-color: #2a8ce7;
-$nav-b-color:pink;
+$nav-b-color:#3b516f;
+$nav-height:66px;
+
 $side-font-act-color:#ffffff;
 $side-font-color: #cfd9e2;
 $side-background:#2a3549;
 $side-item:#324054;
+$side-item-height:48px;
+$side-icon-height:28px;
+$side-item-padding:14px;
+$side-bar-width:59px;
 
-$side-item-height:56px;
 //layout
 #app{
   height:100%;
@@ -59,7 +65,9 @@ $side-item-height:56px;
 .nav-b-color{
   background: $nav-b-color;
 }
-
+.side-font-color{
+  color:$side-font-color;
+}
 .text-a-c{
   text-align: center;
 }
