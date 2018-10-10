@@ -12,12 +12,22 @@
       :router="isRouter"
     >
       <el-menu-item index="" class="handle-item text-a-c" @click="show">
-        <i class="f-s-14 el-icon-more"></i>
+        <i class="yoy-menu-icon">2222</i>
       </el-menu-item>
-      <el-menu-item :index="item.id" v-for="item in menus">
-        <i class="el-icon-menu yoy-menu-icon"></i>
+      <el-menu-item index="dashboard" class="dashboard">
+        <i class="yoy-menu-icon dis-i-b"></i>
         <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
-        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">{{item.chineseName}}</span>
+        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">仪表盘</span>
+      </el-menu-item>
+      <el-menu-item index="bot" class="bot">
+        <i class="yoy-menu-icon dis-i-b"></i>
+        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
+        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">机器人列表</span>
+      </el-menu-item>
+      <el-menu-item index="skill" class="skill">
+        <i class="yoy-menu-icon dis-i-b"></i>
+        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
+        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">机器人技能</span>
       </el-menu-item>
     </el-menu>
   </section>
@@ -25,7 +35,6 @@
 <script>
   import store from '../../store/index'
   import {REPLACE} from "../../store/mutations";
-  import {MENUS} from "../../constants/constants";
 
   export default {
     data() {
@@ -77,40 +86,38 @@
 </script>
 <style lang="scss">
   @import "../../style/index";
+  $image-dashboard: url('../../assets/dashboard.png') center center no-repeat;
+  $image-bot: url('../../assets/bot.png') center center no-repeat;
+  $image-skill: url('../../assets/skill.png') center center no-repeat;
   .el-menu-item.handle-item{
-    background-color: $side-background;
-  }
-  .el-menu-item:hover, .el-menu-item:focus{
-    background-color: $side-item;
-  }
-  .el-menu-item.is-active{
-    background: $primary-color;
-  }
-  .el-menu-item:hover{
-    background: $primary-color;
-  }
-
-  .el-menu-item:hover.el-menu-item.handle-item{
-    background: $side-background;
+    background-color: $side-transition;
     i{
-      color:$primary-color;
+      color: $primary-color;
     }
-  }
+  }                     //菜单伸缩按钮
+  .el-menu-item.handle-item:hover{
+    background-color: $side-transition!important;
+    i{
+      color: $primary-color;
+    }
+  }               //保持样式，去除悬浮样式
+
   .el-menu-item{
     padding-left:$side-item-padding !important;
     padding-right:$side-item-padding;
-    background: $side-item;
     color:$side-font-color !important; //侧边栏字体颜色
     font-size: 0;
   }
-  .sidebar-container{
+  .sidebar-container{ //菜单默认样式
     ul{
       height:100%;
       background: $side-background;
     }
-  }
+  }                               //缩进效果
   .yoy-menu-icon{
-    font-size: 26px !important;
+    height:$iconH;
+    width:$iconW;
+    font-size: 26px !important;   //缩进效果
   }
   .side-item-rightRow{
     display:inline-block;
@@ -134,5 +141,39 @@
   .yoy-menu-title{
     display: inline-block;
     vertical-align: middle;
+  }
+
+  .el-menu-item:hover, .el-menu-item:focus{
+    background: $side-background;
+  }
+  .el-menu-item.is-active{                 //已选中的item，背景色
+    background: $primary-color;
+    color:$fff !important;
+    i{
+      color:$fff;
+    }
+    .yoy-menu-icon{
+      background:$image-bot;
+    }
+  }
+  .el-menu-item.is-active:hover{           //已选中的item，去除鼠标悬浮效果
+    background: $primary-color;
+  }
+  .el-menu-item:hover{
+    background: $side-hover;
+    color:$fff !important; //鼠标划过菜单时字体颜色
+    i{
+      color:$fff;
+    }
+  }
+  .dashboard:hover{
+    .yoy-menu-icon{
+      background:$image-bot;
+    }
+  }
+  .dashboard{
+    .yoy-menu-icon{
+      background:$image-dashboard;
+    }
   }
 </style>

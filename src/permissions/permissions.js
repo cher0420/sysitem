@@ -18,6 +18,7 @@ window.onhashchange = function(){
     pathNameFir = hash.match(/#[/](\S*)/)[1]      //正则匹配{ #/... }
     pathNameSec = null;
   }
-  store.dispatch(REPLACE, {navIndex: pathNameFir})
+  console.log(pathNameFir);
+  store.commit(REPLACE, {navIndex: pathNameFir})
 }
 

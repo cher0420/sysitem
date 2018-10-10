@@ -3,19 +3,31 @@
 $primary-color: #2a8ce7;
 $nav-b-color:#3b516f;
 $nav-height:66px;
+$fff:#fff;
+
+$iconW:28px;
+$iconH:28px;
 
 $side-font-act-color:#ffffff;
 $side-font-color: #cfd9e2;
-$side-background:#2a3549;
+$side-background:#324054;
+$side-transition:#2a3549;
 $side-item:#324054;
+$side-hover:#475365;
 $side-item-height:48px;
 $side-icon-height:28px;
 $side-item-padding:14px;
-$side-bar-width:59px;
+$side-bar-width:60px;
+$side-width:240px;
+
+$f-pri-c: #555;
 
 //layout
 #app{
   height:100%;
+}
+.dis-i-b{
+  display: inline-block;
 }
 .p-relative{
   position:relative;
@@ -30,6 +42,12 @@ $side-bar-width:59px;
   right: 0;
 }
 //font-size
+.f-s-0{
+  font-size:0;
+}
+.f-s-24{
+  font-size:24px;
+}
 .f-s-12{
   font-size: 12px;
 }
@@ -62,6 +80,9 @@ $side-bar-width:59px;
 }
 
 //color
+.font-primary{
+  color: $f-pri-c;
+}
 .nav-b-color{
   background: $nav-b-color;
 }

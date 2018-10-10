@@ -10,13 +10,15 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "element-ui": "^2.4.7",
     "js-cookie": "^2.2.0",
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
