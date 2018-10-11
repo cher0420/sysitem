@@ -12,37 +12,15 @@
       :router="isRouter"
     >
       <el-menu-item index="" class="handle-item text-a-c" @click="show">
-        <i class="yoy-menu-icon">2222</i>
+        <i class="yoy-menu-icon"></i>
       </el-menu-item>
-      <el-menu-item index="dashboard" class="dashboard">
-        <i class="yoy-menu-icon dis-i-b"></i>
+      <el-menu-item :index="item.id" v-for="item in menus">
+        <p class="p-absolute">
+          <i class="p-absolute yoy-menu-icon dis-i-b yoy-icon1" :style="{background: 'url(' + require(`../../assets/${item.id}.png`) + ')center center no-repeat'}"></i>
+          <i class="p-absolute yoy-menu-icon dis-i-b yoy-icon2" :style="{background: 'url(' + require(`../../assets/${item.id}-hover.png`) + ')center center no-repeat'}"></i>
+        </p>
         <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
-        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">仪表盘</span>
-      </el-menu-item>
-      <el-menu-item index="bot" class="bot">
-        <i class="yoy-menu-icon dis-i-b"></i>
-        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
-        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">机器人列表</span>
-      </el-menu-item>
-      <el-menu-item index="skill" class="skill">
-        <i class="yoy-menu-icon dis-i-b"></i>
-        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
-        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">机器人技能</span>
-      </el-menu-item>
-      <el-menu-item index="custom" class="custom">
-        <i class="yoy-menu-icon dis-i-b"></i>
-        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
-        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">定制服务</span>
-      </el-menu-item>
-      <el-menu-item index="opinion" class="opinion">
-        <i class="yoy-menu-icon dis-i-b"></i>
-        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
-        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">意见反馈</span>
-      </el-menu-item>
-      <el-menu-item index="authority" class="authority">
-        <i class="yoy-menu-icon dis-i-b"></i>
-        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
-        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">权限管理</span>
+        <span class="f-s-14 yoy-menu-title p-relative margin-l-47" slot="title">{{item.chineseName}}</span>
       </el-menu-item>
     </el-menu>
   </section>
@@ -101,23 +79,17 @@
 </script>
 <style lang="scss">
   @import "../../style/index";
-  $image-dashboard: url('../../assets/dashboard.png') center center no-repeat;
-  $image-dashboard-hover: url('../../assets/dashboard-hover.png') center center no-repeat;
-  $image-bot: url('../../assets/bot.png') center center no-repeat;
-  $image-bot-hover: url('../../assets/bot-hover.png') center center no-repeat;
-  $image-skill: url('../../assets/skill.png') center center no-repeat;
-  $image-skill-hover: url('../../assets/skill-hover.png') center center no-repeat;
-  $image-custom: url('../../assets/custom.png') center center no-repeat;
-  $image-custom-hover: url('../../assets/custom-hover.png') center center no-repeat;
-  $image-opinion: url('../../assets/opinion.png') center center no-repeat;
-  $image-opinion-hover: url('../../assets/opinion-hover.png') center center no-repeat;
-  $image-authority: url('../../assets/authority.png') center center no-repeat;
-  $image-authority-hover: url('../../assets/authority-hover.png') center center no-repeat;
 
   .el-menu-item.handle-item{
     background-color: $side-transition;
     i{
       color: $primary-color;
+    }
+    .yoy-menu-icon{
+      display: inline-block;
+      height: $iconH;
+      width: $iconW;
+      background: url("../../assets/menu.png") center center no-repeat;
     }
   }                     //菜单伸缩按钮
   .el-menu-item.handle-item:hover{
@@ -150,8 +122,8 @@
     margin-right: -170px!important;
   }
   .el-menu-item{
-    height:$side-item-height;
-    line-height: $side-item-height;
+    height:$side-item-height !important;
+    line-height: $side-item-height !important;
   }
   .el-menu--collapse{
     width:$side-bar-width;
@@ -160,8 +132,8 @@
     padding:0 $side-item-padding!important;
     /*text-align:center;*/
   }
-  .margin-l-15{
-    margin-left:15px;
+  .margin-l-47{
+    margin-left:47px;
   }
   .yoy-menu-title{
     display: inline-block;
@@ -169,54 +141,41 @@
   }
 
   .el-menu-item:hover, .el-menu-item:focus{
-    background: $side-background;
+    background: $side-background !important;
   }
   .el-menu-item.is-active{                 //已选中的item，背景色
-    background: $primary-color;
+    background: $primary-color !important;
     color:$fff !important;
     i{
       color:$fff;
     }
-    .yoy-menu-icon{
-      background:$image-bot;
+    .yoy-icon1{
+      display: none;
     }
   }
   .el-menu-item.is-active:hover{           //已选中的item，去除鼠标悬浮效果
-    background: $primary-color;
+    background: $primary-color !important;
   }
   .el-menu-item:hover{
-    background: $side-hover;
+    background: $side-hover !important;
     color:$fff !important; //鼠标划过菜单时字体颜色
     i{
       color:$fff;
     }
+    .yoy-icon1{
+      display: none;
+    }
   }
   // 控制各个项的选中效果
-  .dashboard:hover{
-    .yoy-menu-icon{
-      background:$image-dashboard-hover;
-    }
+  .yoy-icon1,.yoy-icon2{
+    top:0;
+    left:0;
+    margin-top: $iconH/2-3;
+    width:$iconW;
+    height:$iconH;
+    z-index: 0;
   }
-  .dashboard.is-active .yoy-menu-icon{
-    background:$image-dashboard-hover;
-  }
-  .dashboard{
-    .yoy-menu-icon{
-      background:$image-dashboard;
-    }
-  }
-
-  .bot:hover{
-    .yoy-menu-icon{
-      background:$image-bot-hover;
-    }
-  }
-  .bot.is-active .yoy-menu-icon{
-    background:$image-bot-hover;
-  }
-  .bot{
-    .yoy-menu-icon{
-      background:$image-bot;
-    }
+  .yoy-icon1{
+    z-index: 2;
   }
 </style>

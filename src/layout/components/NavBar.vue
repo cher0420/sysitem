@@ -5,7 +5,7 @@
     <section class="p-absolute right-0 yoy-intro">
       <section>
         <el-dropdown class="f-s-14">
-          <span class="el-dropdown-link">
+          <span class="el-dropdown-link" trigger="click">
             {{userName}}<i class="el-icon-caret-bottom el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
@@ -48,7 +48,7 @@
   }
   // 覆盖原有组件样式
   .el-header{
-    padding:0 0;
+    padding:0 0 !important;
   }
   .yoy-intro .el-dropdown{
     color:$fff;
