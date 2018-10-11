@@ -29,6 +29,21 @@
         <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
         <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">机器人技能</span>
       </el-menu-item>
+      <el-menu-item index="custom" class="custom">
+        <i class="yoy-menu-icon dis-i-b"></i>
+        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
+        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">定制服务</span>
+      </el-menu-item>
+      <el-menu-item index="opinion" class="opinion">
+        <i class="yoy-menu-icon dis-i-b"></i>
+        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
+        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">意见反馈</span>
+      </el-menu-item>
+      <el-menu-item index="authority" class="authority">
+        <i class="yoy-menu-icon dis-i-b"></i>
+        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
+        <span class="f-s-14 yoy-menu-title p-relative margin-l-15" slot="title">权限管理</span>
+      </el-menu-item>
     </el-menu>
   </section>
 </template>
@@ -87,8 +102,18 @@
 <style lang="scss">
   @import "../../style/index";
   $image-dashboard: url('../../assets/dashboard.png') center center no-repeat;
+  $image-dashboard-hover: url('../../assets/dashboard-hover.png') center center no-repeat;
   $image-bot: url('../../assets/bot.png') center center no-repeat;
+  $image-bot-hover: url('../../assets/bot-hover.png') center center no-repeat;
   $image-skill: url('../../assets/skill.png') center center no-repeat;
+  $image-skill-hover: url('../../assets/skill-hover.png') center center no-repeat;
+  $image-custom: url('../../assets/custom.png') center center no-repeat;
+  $image-custom-hover: url('../../assets/custom-hover.png') center center no-repeat;
+  $image-opinion: url('../../assets/opinion.png') center center no-repeat;
+  $image-opinion-hover: url('../../assets/opinion-hover.png') center center no-repeat;
+  $image-authority: url('../../assets/authority.png') center center no-repeat;
+  $image-authority-hover: url('../../assets/authority-hover.png') center center no-repeat;
+
   .el-menu-item.handle-item{
     background-color: $side-transition;
     i{
@@ -166,14 +191,32 @@
       color:$fff;
     }
   }
+  // 控制各个项的选中效果
   .dashboard:hover{
     .yoy-menu-icon{
-      background:$image-bot;
+      background:$image-dashboard-hover;
     }
+  }
+  .dashboard.is-active .yoy-menu-icon{
+    background:$image-dashboard-hover;
   }
   .dashboard{
     .yoy-menu-icon{
       background:$image-dashboard;
+    }
+  }
+
+  .bot:hover{
+    .yoy-menu-icon{
+      background:$image-bot-hover;
+    }
+  }
+  .bot.is-active .yoy-menu-icon{
+    background:$image-bot-hover;
+  }
+  .bot{
+    .yoy-menu-icon{
+      background:$image-bot;
     }
   }
 </style>
