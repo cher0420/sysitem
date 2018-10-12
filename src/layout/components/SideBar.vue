@@ -14,13 +14,16 @@
       <el-menu-item index="" class="handle-item text-a-c" @click="show">
         <i class="yoy-menu-icon"></i>
       </el-menu-item>
+
       <el-menu-item :index="item.id" v-for="item in menus">
         <p class="p-absolute">
           <i class="p-absolute yoy-menu-icon dis-i-b yoy-icon1" :style="{background: 'url(' + require(`../../assets/${item.id}.png`) + ')center center no-repeat'}"></i>
           <i class="p-absolute yoy-menu-icon dis-i-b yoy-icon2" :style="{background: 'url(' + require(`../../assets/${item.id}-hover.png`) + ')center center no-repeat'}"></i>
         </p>
         <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
-        <span class="f-s-14 yoy-menu-title p-relative margin-l-47" slot="title">{{item.chineseName}}</span>
+        <span class="f-s-14 p-relative" slot="title">
+          {{item.chineseName}}
+        </span>
       </el-menu-item>
     </el-menu>
   </section>
@@ -28,6 +31,8 @@
 <script>
   import store from '../../store/index'
   import {REPLACE} from "../../store/mutations";
+  import {STR} from "../../constants/constants";
+  // import router from '../../router/index'
 
   export default {
     data() {
@@ -53,6 +58,29 @@
         return store.state.app.isCollapse
       }
     },
+    watch: {
+      '$route' (to, from) {
+        if(to&&from){
+          console.log(to, from)
+          const arr = this.$route.path.split('/')
+          const pathArr = arr.splice(1,arr.length-1)
+          const newArr = []
+          const navIndex = pathArr[0]
+          for(let v of pathArr){
+            const url = '/'+v
+            const name = STR[v]
+            const obj = {
+              url, name
+            }
+            newArr.push(obj)
+          }
+          store.dispatch(REPLACE,{navIndex:navIndex,breadArr:newArr})
+        }else{
+          this.$router.push('/dashboard')
+        }
+
+      }
+    },
     methods: {
       show(){
         store.dispatch(REPLACE, {isCollapse: !this.isCollapse}).then(
@@ -68,12 +96,35 @@
         console.log(key, keyPath);
       },
       handle(key, keyPath){
-
-      }
+        if(key){
+          window.location.hash=key
+          this.$router.push(key)
+          const url = key
+          const name = STR[key]
+          const obj = {
+            url,name
+          }
+          const arr=[obj]
+          store.commit(REPLACE,{navIndex:key,breadArr:arr})
+          this.$router.push(key)
+          window.location.hash = '#/'+key
+        }
+        }
     },
     created(){
-      const navIndex = this.$route.name
-      store.dispatch(REPLACE, {navIndex: navIndex})
+      const arr = this.$route.path.split('/')
+      const pathArr = arr.splice(1,arr.length-1)
+      const newArr = []
+      const navIndex = pathArr[0]
+      for(let v of pathArr){
+        const url = '/'+v
+        const name = STR[v]
+        const obj = {
+          url, name
+        }
+        newArr.push(obj)
+      }
+      store.dispatch(REPLACE,{navIndex:navIndex,breadArr:newArr})
     }
   }
 </script>
@@ -101,7 +152,7 @@
 
   .el-menu-item{
     padding-left:$side-item-padding !important;
-    padding-right:$side-item-padding;
+    padding-right:$side-item-padding !important;
     color:$side-font-color !important; //侧边栏字体颜色
     font-size: 0;
   }
@@ -116,15 +167,16 @@
     width:$iconW;
     font-size: 26px !important;   //缩进效果
   }
-  .side-item-rightRow{
-    display:inline-block;
-    margin-left: 150px;
-    margin-right: -170px!important;
-  }
   .el-menu-item{
     height:$side-item-height !important;
     line-height: $side-item-height !important;
+    .side-item-rightRow{
+      display:inline-block;
+      margin-left: 188px;
+      margin-right:-159px;
+    }
   }
+
   .el-menu--collapse{
     width:$side-bar-width;
   }
@@ -132,14 +184,9 @@
     padding:0 $side-item-padding!important;
     /*text-align:center;*/
   }
-  .margin-l-47{
-    margin-left:47px;
+  .margin-l-159{
+    margin-left:-159px;
   }
-  .yoy-menu-title{
-    display: inline-block;
-    vertical-align: middle;
-  }
-
   .el-menu-item:hover, .el-menu-item:focus{
     background: $side-background !important;
   }

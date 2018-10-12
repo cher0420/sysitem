@@ -6,3 +6,13 @@ export const MENUS=[
   {id:'opinion',chineseName:'意见反馈',englishName:'opinion'},
   {id:'authority',chineseName:'权限管理',englishName:'authority'},
 ]
+export const STR = {
+  authority:'权限管理',
+  custom:'定制服务',
+  opinion:'意见反馈',
+  bot:'机器人列表',
+  skill:'机器人技能',
+  dashboard:'仪表盘',
+  create: '创建',
+  edit: '编辑'
+}

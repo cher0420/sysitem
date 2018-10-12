@@ -14,16 +14,16 @@ for(let v of MENUS){
       {
       path: '/',
       name: v.id,
-      component: () => import(`../page/test/index`)
+      component: () => import('../page/test/index')
       },
       {
-        path: '/create',
-        name: v.id,
-        component: () => import(`../page/test/index`)
+        path: 'create',
+        name: 'create',
+        component: () => import('../page/test/index')
       },
       {
-        path: '/edit',
-        name: v.id,
+        path: 'edit',
+        name: 'edit',
         component: () => import(`../page/test/index`)
       },
     ]

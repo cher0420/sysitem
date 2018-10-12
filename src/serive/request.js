@@ -1,5 +1,5 @@
-// import ElementUI from'element-ui';
-import {getCookies, removeCookies} from './utils'
+import ElementUI from'element-ui';
+import {getCookies, removeCookies} from '../utils/cookie'
 
 export const request =(api, params,) =>{
   const cookie = getCookies('Access-Token')

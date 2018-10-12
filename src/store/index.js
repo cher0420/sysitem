@@ -16,9 +16,10 @@ const store = new Vuex.Store({
         {id:'opinion',chineseName:'意见反馈',englishName:'opinion'},
         {id:'authority',chineseName:'权限管理',englishName:'authority'},
       ],
-      navIndex: 'dashboard',
+      navIndex: '',
       isCollapse: false,
       aSideWidth: '240px',
+      breadArr:[{url:'/',name :'首页'}]
     },
   },
   mutations: {
