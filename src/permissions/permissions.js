@@ -1,31 +1,49 @@
 import {getCookies, removeCookies, setCookies} from "../utils/cookie";
-import {USERNAME,TOKEN,VOILD_TOKEN_URL, VOILD_USERINFO} from "../constants/constants";
+import {USERNAME,TOKEN,VOILD_TOKEN_URL, VOILD_USERINFO,LOGIN,LOGOUT} from "../constants/constants";
 import URL from '../host/baseUrl'
-import {request} from "../serive/request";
+import {request,isIE9} from "../serive/request";
 import Router from '../router/index'
 import store from '../store/index'
 import {REPLACE} from "../store/mutations";
+import {Loading} from 'element-ui';
 
-export function redirect(){
+export function redirect(type){
   const redirectUrl = window.location.href
-  window.location.href = URL.SSOWebUrl.zh + redirectUrl
+  window.location.href = URL.SSOWebUrl.zh+ type + redirectUrl
 }
 /**
  * 用户登录
  */
 export function getLoginStatus(){
+  let loadingInstance = Loading.service({fullscreen: true});
   const userName = getCookies(USERNAME)
   const token = getCookies(TOKEN)
   if(userName&&token){
     //验证token
-    voildToken(token)
+    voildToken(token).then(
+      () => {
+        setTimeout(
+          () => {
+            loadingInstance.close();
+          },800
+        )
+      }
+    )
   }else{
     //检验是否有SID
-    voildId()
+    voildId().then(
+      () => {
+        setTimeout(
+          () => {
+            loadingInstance.close();
+          },800
+        )
+      }
+    )
   }
 }
 
-export const voildId = () => {
+export async function voildId (){
   const path = window.location.search
     const matchToken = path.match(/token=(\S*)?&rk=/)
     const token = matchToken?matchToken[1]:null;
@@ -38,7 +56,7 @@ export const voildId = () => {
         err => err
       )
     }else{
-        redirect()//跳转登录
+        redirect(LOGIN)//跳转登录
     }
 }
 
@@ -46,7 +64,7 @@ export const voildId = () => {
  * 验证token
  * @param token
  */
-export const voildToken = (token) => {
+export async function voildToken (token) {
   const url = URL.SSOServerApi+ VOILD_TOKEN_URL
   const data = {
     Token: token,
@@ -75,7 +93,11 @@ export const voildToken = (token) => {
   }).catch(
     (err)=>
     {
-      console.log('++++',err)
+      removeCookies([USERNAME,TOKEN]).then(
+        () => {
+          redirect(LOGIN)
+        }
+      )
     });
 }
 
@@ -117,7 +139,22 @@ export const hiddenTokenInUrl = () => {
   const stateObject = {};
   const title = "index";
   const newUrl = path;
-  window.history.pushState(stateObject, title, newUrl);
+  const status = isIE9()
+  if(!status){
+    window.history.pushState(stateObject, title, newUrl);
+  }
+}
+
+export const logOut = () => {
+  let loadingInstance = Loading.service({fullscreen: true});
+  const token = getCookies('token')
+  const redirectUrl = 'http://'+window.location.host
+  removeCookies([USERNAME,TOKEN]).then(
+    () => {
+      loadingInstance.close();
+      window.location.href = URL.SSOWebUrl.zh+ LOGOUT + redirectUrl + '&token='+token
+    }
+  )
 }
 
 

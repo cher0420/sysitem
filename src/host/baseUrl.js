@@ -1,7 +1,7 @@
 const TEST_URL = {
-  baseUrl:'http://localhost:8080/#',
+  baseUrl:'http://localhost:3000/#',
   SSOWebUrl:{
-    zh:"https://hightalkssoweb-test.azurewebsites.net/zh-cn/login/index?redirecturl=",
+    zh:"https://hightalkssoweb-test.azurewebsites.net/zh-cn",
     en:'/'
   },
   SSOServerApi:"https://hightalkssoapi-test.azurewebsites.net",

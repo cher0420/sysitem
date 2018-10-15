@@ -1,16 +1,14 @@
 <template>
   <section class="p-relative f-s-0">
     <section class="p-absolute left-0 f-s-14 yoy-logo">
-      <button id="fetch">测试按钮</button>
-
     </section>
     <section class="p-absolute right-0 yoy-intro">
       <section>
-        <el-dropdown class="f-s-14">
-          <span class="el-dropdown-link" trigger="click">
+        <el-dropdown class="f-s-14" @command="handleClick" trigger="click">
+          <span class="el-dropdown-link">
             {{userName}}<i class="el-icon-caret-bottom el-icon--right"></i>
           </span>
-          <el-dropdown-menu slot="dropdown">
+          <el-dropdown-menu slot="dropdown" >
             <el-dropdown-item class="f-s-14 font-primary">注销</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -21,10 +19,16 @@
 </template>
 <script>
   import store from '../../store/index'
+  import {logOut} from '../../permissions/permissions'
   export default {
     computed:{
       userName(){
         return store.state.app.userName
+      }
+    },
+    methods: {
+      handleClick() {
+        logOut()
       }
     }
   }

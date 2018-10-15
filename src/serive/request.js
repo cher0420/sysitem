@@ -1,8 +1,48 @@
-import jQuery from 'jquery'
-jQuery.support.cors = true;
-
-export const request = (api,params = {}) => {
+import $ from 'jquery'
+$.support.cors = true;
+export const isIE9 = () => {
   if(!-[1,]){
+    return true;
+  }else{
+    if(navigator.userAgent.indexOf('MSIE 9.0')>0){
+      return true;
+    }else{
+      return false;
+    }
+  }
+}
+export const requestJSONP = (api,params = {}) => {
+      const headers = {
+        "Content-Type": "application/json; charset=utf-8",
+        ...params.headers
+      }
+      const type = params.method
+      const data = params.body||{}
+      console.log('.....',data)
+      return new Promise(
+        (resolve, reject) => {
+          $.ajax({
+            url:api,
+            headers,
+            type,
+            data,
+            success: function(res){
+              if(res.Status){
+                return resolve(res)
+              }else{
+                return reject(res)
+              }
+            },
+            error: function(res){
+              return reject(res)
+            }
+          })
+        }
+      )
+  }
+export const request = (api,params = {}) => {
+  const status = isIE9()
+  if(status){
     const headers = {
       "Content-Type": "application/json; charset=utf-8",
       ...params.headers
@@ -30,7 +70,7 @@ export const request = (api,params = {}) => {
       }
     )
   }else{
-    if(navigator.userAgent.indexOf('MSIE 9.0')>0){
+    if(status){
       const headers = {
         "Content-Type": "application/json; charset=utf-8",
         ...params.headers

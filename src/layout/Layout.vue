@@ -5,10 +5,10 @@
         <navBar></navBar>
       </el-header>
       <el-container class="full-height el-container">
-        <el-aside :width="aSideWidth" class="full-height el-aside">
+        <el-aside :width="aSideWidth" class="full-height el-aside" style="float:left">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
-        <el-main class="full-height el-main">
+        <el-main class="full-height el-main" style="float:left">
           <app-main></app-main>
         </el-main>
       </el-container>

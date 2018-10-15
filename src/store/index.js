@@ -7,7 +7,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     app: {
-      userName: 'test',
+      userName: '未登录',
       loading: false,
       menus:[
         {id:'dashboard',chineseName:'仪表盘',englishName:'dashboard'},
