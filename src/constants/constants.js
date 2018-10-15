@@ -16,3 +16,8 @@ export const STR = {
   create: '创建',
   edit: '编辑'
 }
+export const USERNAME = 'userName';
+export const TOKEN = 'token';
+
+export const VOILD_TOKEN_URL = '/api/Tenant/ValidateToken'
+export const VOILD_USERINFO = '/api/Tenant/GetUserInfo'

@@ -5,8 +5,13 @@
 </template>
 
 <script>
-export default {
-  name: 'App'
+  import {getLoginStatus} from "./permissions/permissions";
+
+  export default {
+  name: 'App',
+  created: function(){
+    getLoginStatus()
+  }
 }
 </script>
 

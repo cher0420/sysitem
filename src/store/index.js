@@ -7,6 +7,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     app: {
+      userName: 'test',
       loading: false,
       menus:[
         {id:'dashboard',chineseName:'仪表盘',englishName:'dashboard'},
@@ -24,6 +25,7 @@ const store = new Vuex.Store({
   },
   mutations: {
     [REPLACE] (state, payload) {
+      console.log(payload)
       state.app = {
         ...state.app,
         ...payload

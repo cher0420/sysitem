@@ -18,10 +18,11 @@
   </section>
 </template>
 <script>
+  import store from '../../store/index'
   export default {
     computed:{
       userName(){
-        return 'Jessie'
+        return store.state.app.userName
       }
     }
   }

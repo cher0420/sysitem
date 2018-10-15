@@ -6,7 +6,9 @@ import 'whatwg-fetch'
 import router from './router';
 import 'element-ui/lib/theme-chalk/index.css';
 // import ElementUI from 'element-ui';
+
 import './style/element-variables.scss';
+
 import {
   // Pagination,
   // Dialog,
@@ -78,7 +80,6 @@ import {
 } from 'element-ui';
 
 import App from './App';
-import './permissions/permissions';
 
 
 // Vue.use(Pagination);
@@ -144,7 +145,6 @@ Vue.use(Header);
 Vue.use(Aside);
 Vue.use(Main);
 // Vue.use(Footer);
-
 Vue.use(Loading.directive);
 
 Vue.prototype.$loading = Loading.service;
@@ -157,7 +157,6 @@ Vue.prototype.$message = Message;
 
 Vue.config.productionTip = false
 // Vue.use(ElementUI)
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -1,19 +1,14 @@
 import ElementUI from'element-ui';
 import {getCookies, removeCookies} from '../utils/cookie'
 
-export const request =(api, params,) =>{
-  const cookie = getCookies('Access-Token')
-  const option = params&&params.options&&params.options
-  const headers = params&&params.options&&params.header
+export const request =(api, params) =>{
   return new Promise(
     (resolve, reject) =>{
-      fetch(URL.baseUrl + api, {
-        ...option,
-        headers:{
-          'Content-Type': 'application/json; charset=utf-8',
-          'Access-Token': cookie,
-          ...headers
-        }
+      fetch(api, {
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        ...params
       }).then(
         (response) =>{
           switch (response.status) {
@@ -33,7 +28,7 @@ export const request =(api, params,) =>{
   ).then(
         (res)=>{
           if (res.Status) {
-            console.log(res)
+            resolve(res)
           } else {
             reject(res)
           }

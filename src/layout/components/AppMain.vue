@@ -10,7 +10,6 @@
 </template>
 <script>
   import {STR} from '../../constants/constants'
-  import {hashChange} from "../../permissions/permissions";
   import store from '../../store/index';
 
   export default {
@@ -30,7 +29,6 @@
       }
     },
     created() {
-      hashChange()
     },
     methods: {
       regUrl() {
