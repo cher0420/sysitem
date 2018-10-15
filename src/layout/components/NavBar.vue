@@ -1,6 +1,8 @@
 <template>
   <section class="p-relative f-s-0">
     <section class="p-absolute left-0 f-s-14 yoy-logo">
+      <button id="fetch">测试按钮</button>
+
     </section>
     <section class="p-absolute right-0 yoy-intro">
       <section>

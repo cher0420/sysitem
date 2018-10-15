@@ -173,7 +173,7 @@
     .side-item-rightRow{
       display:inline-block;
       margin-left: 188px;
-      margin-right:-159px;
+      margin-right:-159px !important;
     }
   }
 
