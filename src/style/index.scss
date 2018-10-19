@@ -4,6 +4,7 @@ $primary-color: #2a8ce7;
 $nav-b-color:#3b516f;
 $nav-height:66px;
 $fff:#fff;
+$danger: #f04b4b;
 
 $iconW:28px;
 $iconH:28px;
@@ -92,3 +93,25 @@ $f-pri-c: #555;
 .text-a-c{
   text-align: center;
 }
+.primary-color{
+  color: $primary-color;
+}
+.c555{
+  color: #555;
+}
+.c999{
+  color: #999;
+}
+
+// example
+.text-title{
+  color: $f-pri-c;
+  font-size: 24px;
+}
+
+//config
+.box-sizing{
+  box-sizing:border-box;
+}
+
+

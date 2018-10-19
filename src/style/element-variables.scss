@@ -9,6 +9,38 @@ $--color-info: #909399 !default;
 
 
 /* 改变 icon 字体路径变量，必需 */
-
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 @import "~element-ui/packages/theme-chalk/src/index";
+
+/*
+覆盖原有element组件ui
+ */
+.el-main{
+  padding: 40px;
+}
+
+.el-input__suffix{
+  right:0;
+}
+
+
+/*
+覆盖弹框默认样式
+ */
+.el-message-box{
+  border-top-left-radius:0;
+  border-top-right-radius:0;
+  border-bottom-left-radius:0;
+  border-bottom-right-radius:0;
+}
+.el-input__inner{
+  border-top-left-radius:0;
+  border-top-right-radius:0;
+  border-bottom-left-radius:0;
+  border-bottom-right-radius:0;
+}
+/*
+覆盖table
+ */
+.el-table th{
+}

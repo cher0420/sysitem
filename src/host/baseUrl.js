@@ -5,6 +5,7 @@ const TEST_URL = {
     en:'/'
   },
   SSOServerApi:"https://hightalkssoapi-test.azurewebsites.net",
+  requestHost: 'https://hightalkadminapi-test.azurewebsites.net'
 }
 const STAGING_URL = {
   SSOServerApi:"https://hightalkssoapi-test.azurewebsites.net",

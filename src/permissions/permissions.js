@@ -1,5 +1,6 @@
 import {getCookies, removeCookies, setCookies} from "../utils/cookie";
-import {USERNAME,TOKEN,VOILD_TOKEN_URL, VOILD_USERINFO,LOGIN,LOGOUT} from "../constants/constants";
+import {USERNAME,TOKEN} from "../constants/constants";
+import {VOILD_TOKEN_URL, VOILD_USERINFO,LOGIN,LOGOUT} from "../constants/api";
 import URL from '../host/baseUrl'
 import {request,isIE9} from "../serive/request";
 import Router from '../router/index'
@@ -117,7 +118,8 @@ export const fetchUserInfo = (token = null) => {
   }
   request(URL.SSOServerApi + VOILD_USERINFO,options).then((res) => {
     const name = res.UserInfo.FullName
-    store.dispatch(REPLACE,{userName: name}).then(
+    const userInfo  = res.UserInfo
+    store.dispatch(REPLACE,{userName: name, userInfo,}).then(
       ()=>{
         setCookies('userName',name, {expires: 1}).then(
           () => {

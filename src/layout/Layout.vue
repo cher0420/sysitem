@@ -8,9 +8,14 @@
         <el-aside :width="aSideWidth" class="full-height el-aside" style="float:left">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
-        <el-main class="full-height el-main" style="float:left">
-          <app-main></app-main>
-        </el-main>
+        <el-container style="float:left">
+          <el-main class="full-height el-main">
+            <app-main></app-main>
+          </el-main>
+          <el-footer style="height:64px;">
+            <footer-bar></footer-bar>
+          </el-footer>
+        </el-container>
       </el-container>
     </el-container>
   </section>
@@ -20,6 +25,7 @@
   import NavBar from './components/NavBar'
   import Sidebar from './components/Sidebar'
   import AppMain from './components/AppMain'
+  import FooterBar from './components/Footer'
   import store from '../store/index'
 
   export default {
@@ -33,6 +39,7 @@
       NavBar,
       Sidebar,
       AppMain,
+      FooterBar,
     },
   }
 </script>

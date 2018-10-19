@@ -14,7 +14,7 @@ for(let v of MENUS){
       {
       path: '/',
       name: v.id,
-      component: () => import('../page/test/index')
+      component: () => import(`../page/${v.id}/index`)
       },
       {
         path: 'create',

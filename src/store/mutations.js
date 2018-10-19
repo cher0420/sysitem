@@ -1,2 +1,2 @@
 export const REPLACE = 'REPLACE'
-export const UPDATETABLE = 'UPDATETABLE'
+export const UPDATE = 'UPDATE'

@@ -72,8 +72,8 @@ export const request = (api,params = {}) => {
   }else{
     if(status){
       const headers = {
+        ...params.headers,
         "Content-Type": "application/json; charset=utf-8",
-        ...params.headers
       }
       const type = params.method
       const data = params.body||{}
@@ -101,10 +101,11 @@ export const request = (api,params = {}) => {
       return new Promise(
         (resolve, reject) =>{
           fetch(api, {
+            ...params,
             headers: {
+              ...params.headers,
               "Content-Type": "application/json; charset=utf-8",
             },
-            ...params
           }).then(
             (response) =>{
               switch (response.status) {
