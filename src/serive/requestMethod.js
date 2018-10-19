@@ -4,16 +4,18 @@ import {REPLACE} from "../store/mutations";
 import {getCookies} from "../utils/cookie";
 import {TOKEN} from "../constants/constants";
 
-const app = store.state.app
 
-export async function getList(api,params,key){
+export async function getList(api,params,key, loading=true){
+  const app = store.state.app
   const token = getCookies(TOKEN)
-  if(token){
-    store.dispatch(REPLACE,{loading: true}).then(
+  const TenantId = app.userInfo.TenantId
+  if(token&&TenantId){
+    store.dispatch(REPLACE,{loading: loading}).then(
       () => {
         const data = {
           PageIndex: 1,                                     //分页页数
           PageSize: 10,                                     //当前页的条数
+          // tenantId:TenantId,
           ...params.body,
         }
         const body = JSON.stringify(data)

@@ -1,6 +1,6 @@
 <template>
   <el-dropdown @command="handleCommand" placement="bottom-start">
-  <span class="el-dropdown-link">
+  <span class="el-dropdown-link c333">
     {{title}}<i class="el-icon-arrow-down el-icon--right"></i>
   </span>
     <el-dropdown-menu slot="dropdown">
@@ -59,11 +59,12 @@
         store.dispatch(REPLACE,{searchStatus:command-0,PageIndex:1}).then(
           () =>{
             const searchStatus = store.state.app.searchStatus
+            const description = store.state.app.description
             that.title = BOTLIST.status[command]
             const options={
               body:{
-                description:this.keyWords,
-                searchStatus:searchStatus
+                description,
+                searchStatus,
               }
             }
             getList(URL.requestHost + BOT,options,ITEMKEY).then(
@@ -142,6 +143,10 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+@import '../style/index';
+.el-table th > .cell .el-dropdown{
+  height:30px;
+  line-height: 30px;
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
   <section>
     <section class="search box-sizing f-s-0">
-      <el-input class='' size = 'small' v-model="keyWords" placeholder="搜索机器人或描述" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      <el-input class='' size = 'small' v-model="keyWords" placeholder="搜索机器人名称或描述" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input></section>
     <el-table
       v-loading="loading"
@@ -21,7 +21,7 @@
       <el-table-column
         prop="Description"
         label="描述"
-        width="180">
+        width="420">
       </el-table-column>
       <el-table-column
         prop="StatusString"
@@ -51,24 +51,31 @@
       >
         <template slot-scope="scope">
           <span class="yoy-list-todo c555">
-            <span v-if="scope.row.config == 2">
+            <span v-if="scope.row.Status == 2||scope.row.Status == 5">
               <span class="config">
                 <i class="el-icon-setting"></i>
-                <a href="javascript:;" class="c555">配置</a>
+                <a href="javascript:;" class="c555" @click="go('/bot/config')">配置</a>
               </span>
               <span class="del">
                 <i class="el-icon-delete"></i>
                 <a href="javascript:;" class="c555" @click="del(scope.$index,scope.row)">删除</a>
               </span>
             </span>
-            <span class="yoy-botList-create" v-else-if="scope.row.config==1">
+            <span class="yoy-botList-create" v-else-if="scope.row.Status==1">
               <span class="primary-color">
                 <i class="el-icon-refresh rotate360" ></i>
                 <span class="creating">创建中...</span>
                 <span class="wait">（ 预计需要三分钟 ）</span>
               </span>
             </span>
-            <span v-else class="create" v-else-if="scope.row.config==0">
+            <span class="yoy-botList-create" v-else-if="scope.row.Status==3">
+              <span class="danger-color">
+                <i class="el-icon-refresh rotate360" ></i>
+                <span class="creating">删除中...</span>
+                <span class="wait">（ 预计需要三分钟 ）</span>
+              </span>
+            </span>
+            <span v-else class="create" v-else-if="scope.row.Status==0||scope.row.Status">
                 <i class="el-icon-plus"></i>
                 <a href="javascript:;" class="c555" @click="create(scope.$index,scope.row)">创建</a>
               </span>
@@ -101,6 +108,29 @@
   import {TOKEN} from "../../constants/constants";
   import {getList} from "../../serive/requestMethod";
 
+  let  reloadListObj=null
+  function reloadList(v){
+    const PageIndex = store.state.app.PageIndex
+    const description = store.state.app.description
+    const searchStatus = store.state.app.searchStatus
+    const options = {
+      body:{
+        PageIndex,
+        description,
+        searchStatus
+      }
+    }
+    getList(URL.requestHost + BOT,options,ITEMKEY,false).then(
+      () =>{
+        console.log('reload')
+      }
+    ).catch(
+      ()=>{
+
+      }
+    )
+  }
+
   export default {
     data() {
       return {
@@ -129,14 +159,21 @@
         ()=>{
           getList(URL.requestHost + BOT,{},ITEMKEY).then(
             ()=>{
-              console.log('获取列表')
+              reloadListObj = setInterval(reloadList,5000)
             }
           )
         }
       )
 
     },
+    destroyed: function () {
+      clearInterval(reloadListObj)
+      console.log('移除轮训了');
+    },
     methods:{
+      go(path){
+        this.$router.push(path)
+      },
       renderProductId(h, {column}) {
         return h(DrapDown,{
               props: {
@@ -149,10 +186,25 @@
         console.log(val);
       },
       create(k,row){
+        this.$confirm('确认创建机器人？', '警告！', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.add(k,row)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消确认'
+          });
+        });
+      }
+      ,
+      add(k,row){
         const that = this
         const token = getCookies(TOKEN)
         let obj = JSON.parse(JSON.stringify(row))
-        let newObj = {...obj,StatusString:'ceshi',config:1}
+        let newObj = {...obj,Status:1}
         const tableData = store.state.app.tableData
         tableData.splice(k,1,newObj)
         store.dispatch(REPLACE,{tableData:tableData})
@@ -178,20 +230,12 @@
           },
           body,
         }
-
         request(URL.requestHost+CREATEBOT,options).then(
           (res) => {
-            that.$message({
-              type: 'success',
-              message: '创建成功'
-            });
           }
         ).catch(
           (err)=>{
-            that.$message({
-              type: 'error',
-              message: '创建失败'
-            });
+
           }
         )
       },
@@ -236,10 +280,6 @@
         }
         request(URL.requestHost + DELETEBOT,options).then(
           (res)=>{
-            that.$message({
-              type: 'success',
-              message: '删除成功'
-            });
           }
         ).catch(
           (res)=>{
@@ -272,10 +312,9 @@
       },
       search(){
         const that = this
-        store.dispatch(REPLACE,{})
         const description = this.keyWords
         const searchStatus = store.state.app.searchStatus
-        store.dispatch(REPLACE,{PageIndex:1}).then(
+        store.dispatch(REPLACE,{PageIndex:1,description}).then(
           () =>{
             const options={
               body:{
@@ -304,16 +343,28 @@
 <style lang="scss" scoped>
   @import '../../style/index';
   .yoy-search-button{
-    width: $iconW;
-    background-color: $primary-color;
+    width: 32px;
+    height:30px;
+    margin-top:1px;
+    margin-right: 1px;
+    background-color: $light-blue;
   }
   .yoy-search-button:hover{
     cursor:pointer;
   }
+
   .search{
     width: 360px;
     height: 32px;
   }
+  .el-icon-search:before {
+    font-weight: 900;
+    font-size: 14px;
+    color: $primary-color;
+  }
+  /*
+  size
+   */
   .margin-top20{
     margin-top: 20px;
   }

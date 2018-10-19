@@ -42,5 +42,34 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 /*
 覆盖table
  */
-.el-table th{
+.el-table thead {
+  color: #909399;
+  font-weight: 500;
+}
+.el-table th > .cell{
+  color: #333;
+  height:30px;
+  line-height: 30px;
+}
+/*
+覆盖分页
+ */
+.el-pagination.is-background .btn-prev, .el-pagination.is-background .btn-next, .el-pagination.is-background .el-pager li{
+  margin: 0 5px;
+  background-color: #fff;
+  color: #999;
+  min-width: 30px;
+  border-radius: 2px;
+  font-weight: 400;
+  border: 1px solid #f4f4f5;
+}
+.el-pagination__total{
+  color:#999;
+}
+
+/*
+覆盖button
+ */
+.el-button{
+  border-radius:0;
 }

@@ -5,6 +5,7 @@ $nav-b-color:#3b516f;
 $nav-height:66px;
 $fff:#fff;
 $danger: #f04b4b;
+$light-blue: #eaf6fe;
 
 $iconW:28px;
 $iconH:28px;
@@ -95,6 +96,12 @@ $f-pri-c: #555;
 }
 .primary-color{
   color: $primary-color;
+}
+.danger-color{
+  color: $danger;
+}
+.c333{
+  color:#333;
 }
 .c555{
   color: #555;

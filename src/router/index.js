@@ -5,31 +5,30 @@ import {MENUS} from "../constants/constants";
 
 Vue.use(Router)
 let arr = []
+let obj = {}
 for(let v of MENUS){
-  const obj={
+  let children = [{
+    path: '/',
+    name: v.id,
+    component: () => import(`../page/${v.path}/index`)
+  }]
+  for(let value of v.children){
+    let childrenObj = {
+      path: value.path,
+      name: value.id,
+      component: () => import(`../page/${v.path}/${value.path}/index`)
+    }
+    children = [...children,childrenObj]
+  }
+  obj={
     path:`/${v.id}`,
     component:Layout,
     name:v.id,
-    children: [
-      {
-      path: '/',
-      name: v.id,
-      component: () => import(`../page/${v.id}/index`)
-      },
-      {
-        path: 'create',
-        name: 'create',
-        component: () => import('../page/test/index')
-      },
-      {
-        path: 'edit',
-        name: 'edit',
-        component: () => import(`../page/test/index`)
-      },
-    ]
+    children:children
   }
   arr.push(obj)
 }
+console.log('===',arr)
 const root = [{
     path: '/',
     component: Layout,
@@ -39,9 +38,15 @@ const root = [{
     children: [{
       path: 'dashboard',
       name: 'dashboard',
-      component: () => import('../page/dashboard/index')
+      component: () => import('../page/wait/index')
     }]
-  }]
+  },
+  {
+    path: '*',
+    name: 'Error',
+    redirect: "/"
+  }
+  ]
 const routes = [...root,...arr]
 const router = {
   routes: routes
