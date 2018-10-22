@@ -107,7 +107,7 @@ export async function voildToken (token) {
  * @param token
  * @return String
  */
-export const fetchUserInfo = (token = null) => {
+export async function fetchUserInfo (token = null) {
   const options = {
     method: 'POST',
     headers: {
@@ -119,12 +119,15 @@ export const fetchUserInfo = (token = null) => {
   request(URL.SSOServerApi + VOILD_USERINFO,options).then((res) => {
     const name = res.UserInfo.FullName
     const userInfo  = res.UserInfo
+    const TenantId  = res.UserInfo.TenantId
     store.dispatch(REPLACE,{userName: name, userInfo,}).then(
       ()=>{
         setCookies('userName',name, {expires: 1}).then(
-          () => {
-            hiddenTokenInUrl()
-          }
+          setCookies('TenantId',TenantId,{expires: 1}).then(
+            () => {
+              hiddenTokenInUrl()
+            }
+          )
         )
       }
     )

@@ -51,7 +51,7 @@ export const request = (api,params = {}) => {
     const data = params.body||{}
     return new Promise(
       (resolve, reject) => {
-        jQuery.ajax({
+        $.ajax({
           url:api,
           headers,
           type,
@@ -79,7 +79,7 @@ export const request = (api,params = {}) => {
       const data = params.body||{}
       return new Promise(
         (resolve, reject) => {
-          jQuery.ajax({
+          $.ajax({
             url:api,
             headers,
             type,

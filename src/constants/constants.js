@@ -102,5 +102,6 @@ export const STR = {
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';
+export const TENANTID = 'TenantId'
 
 

@@ -2,20 +2,19 @@ import {request} from "./request";
 import store from '../store/index'
 import {REPLACE} from "../store/mutations";
 import {getCookies} from "../utils/cookie";
-import {TOKEN} from "../constants/constants";
+import {TOKEN,TENANTID} from "../constants/constants";
 
 
 export async function getList(api,params,key, loading=true){
-  const app = store.state.app
   const token = getCookies(TOKEN)
-  const TenantId = app.userInfo.TenantId
+  const TenantId = getCookies(TENANTID)
   if(token&&TenantId){
     store.dispatch(REPLACE,{loading: loading}).then(
       () => {
         const data = {
           PageIndex: 1,                                     //分页页数
           PageSize: 10,                                     //当前页的条数
-          // tenantId:TenantId,
+          tenantId:TenantId,
           ...params.body,
         }
         const body = JSON.stringify(data)

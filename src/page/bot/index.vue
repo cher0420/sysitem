@@ -15,18 +15,20 @@
       <el-table-column
         prop="AliasName"
         label="机器人名称"
-        width="180"
+        min-width="120"
       >
       </el-table-column>
       <el-table-column
         prop="Description"
         label="描述"
-        width="420">
+        min-width="420"
+      >
       </el-table-column>
       <el-table-column
         prop="StatusString"
         label="状态"
         :render-header="renderProductId"
+        min-width="120"
       >
         <template slot-scope="scope">
           <span :style="{'color': scope.row.StatusString === '已创建'? '#555':'#999'}">
@@ -36,7 +38,9 @@
       </el-table-column>
       <el-table-column
         prop="CreateDate"
-        label="创建时间">
+        label="创建时间"
+        min-width="120"
+      >
         <template slot-scope="scope">
           <span v-if="scope.row.Status == 2">
             {{scope.row.CreateDate}}
@@ -48,6 +52,7 @@
       </el-table-column>
       <el-table-column
         label="操作"
+        min-width="120"
       >
         <template slot-scope="scope">
           <span class="yoy-list-todo c555">

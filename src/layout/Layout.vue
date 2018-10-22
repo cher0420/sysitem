@@ -8,8 +8,8 @@
         <el-aside :width="aSideWidth" class="full-height el-aside" style="float:left">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
-        <el-container style="float:left">
-          <el-main class="full-height el-main">
+        <el-container>
+          <el-main class="full-height el-main" style="min-height: 85vh">
             <app-main></app-main>
           </el-main>
           <el-footer style="height:64px;">
@@ -47,5 +47,9 @@
   @import '../style/index';
   .nav-height{
     height: $nav-height !important; //顶栏高度
+  }
+  .app-container{
+    min-width: 1440px;
+    min-height: 800px;
   }
 </style>
