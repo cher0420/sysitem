@@ -7,6 +7,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     app: {
+      config: false,
       userName: '',
       userInfo: {},
       navIndex: '',
@@ -18,7 +19,6 @@ const store = new Vuex.Store({
       PageSize: 10,                                     //当前页的条数
       total: 0,                                         //列表总数
       searchStatus:null,
-
       tableData:[],
       loading: false,
       description: '',
@@ -34,7 +34,6 @@ const store = new Vuex.Store({
     [UPDATE] (state, payload) {
       state.app.tableData[payload.index] = payload.value
       state.app.tableData[payload.index].StatusString = '测试时'
-      console.log('state',state, payload)
     }
   },
   actions: {

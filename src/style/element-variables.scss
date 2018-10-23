@@ -11,12 +11,13 @@ $--color-info: #909399 !default;
 /* 改变 icon 字体路径变量，必需 */
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 @import "~element-ui/packages/theme-chalk/src/index";
-
+@import './index';
+@import './bread';
 /*
 覆盖原有element组件ui
  */
 .el-main{
-  padding: 40px;
+  padding: 0;
 }
 
 .el-input__suffix{
@@ -73,3 +74,153 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 .el-button{
   border-radius:0;
 }
+
+/*
+覆盖菜单栏
+ */
+.el-menu{
+  border-right:none;
+}
+.el-menu-item.handle-item{
+  background-color: $side-transition;
+  i{
+    color: $primary-color;
+  }
+  .yoy-menu-icon{
+    display: inline-block;
+    height: $iconH;
+    width: $iconW;
+    background: url("../assets/menu.png") center center no-repeat;
+  }
+}                     //菜单伸缩按钮
+.el-menu-item.handle-item:hover{
+  background-color: $side-transition;
+  i{
+    color: $primary-color;
+  }
+}               //保持样式，去除悬浮样式
+
+.el-menu-item{
+  padding-left:$side-item-padding;
+  padding-right:$side-item-padding;
+  color:$side-font-color; //侧边栏字体颜色
+  //font-size: 0;
+}
+.el-menu-item{
+  height:$side-item-height;
+  line-height: $side-item-height;
+  .side-item-rightRow{
+    display:inline-block;
+    margin-left: 188px;
+    margin-right:-159px;
+  }
+}
+.el-menu-item:hover, .el-menu-item:focus{
+  background: $side-background;
+}
+.el-menu-item.is-active{                 //已选中的item，背景色
+  background: $primary-color;
+  color:$fff;
+  i{
+    color:$fff;
+  }
+  .yoy-icon1{
+    display: none;
+  }
+}
+.el-menu-item.is-active:hover{           //已选中的item，去除鼠标悬浮效果
+  background: $primary-color;
+}
+.el-menu-item:hover{
+  background: $side-hover;
+  color:$fff; //鼠标划过菜单时字体颜色
+  i{
+    color:$fff;
+  }
+  .yoy-icon1{
+    display: none;
+  }
+}
+
+.el-submenu .el-menu-item{
+  min-width: 180px;
+}
+.el-submenu__title{
+  height:$side-item-height;
+  line-height: $side-item-height;
+}
+/*
+覆盖二级菜单原始样式
+ */
+.yoy-second-menu{
+  background: $second-side; // 二级菜单背景色
+}
+.yoy-second-menu .el-menu-item{
+  background:$second-side;
+  color: $second-f-c ;
+  font-weight: $second-f-w;
+  padding-left: 30px !important; //二级菜单左侧padding
+  padding-right: 10px !important; //二级菜单右侧padding
+  span,i {
+    font-weight: $second-f-w;
+  }
+  i{
+    margin-left: 60px;
+    font-size: 13px;
+  }
+}
+.yoy-second-menu .el-menu-item.is-disabled{
+  opacity:1;
+  background: $second-side !important;
+  color: $second-f-c;
+  span,i{
+    color: $second-f-c;
+  }
+}
+.yoy-second-menu .el-menu-item:hover{
+  background: $second-side-hover;
+  font-weight:$second-f-w;
+  color:#000;
+  span,i{
+    font-weight:$second-f-w;
+    color:#000;
+  }
+}
+.yoy-second-menu .el-menu-item.is-disabled:hover{
+  opacity:1;
+  background: $second-side !important;
+  color: $second-f-c;
+  span,i{
+    color: $second-f-c;
+  }
+}
+
+.yoy-second-menu .el-menu-item.is-active{
+  background:#fff;
+  i,span{
+    color:$primary-color;
+    font-weight: $second-f-w;
+  }
+}
+.yoy-second-menu .el-submenu__title{
+  background: $second-side;
+  color:$second-f-c ;
+  font-weight: $second-f-w;
+  padding-left: 30px !important;
+  padding-right: 10px;
+  span,i{
+    font-weight: $second-f-w;
+  }
+}
+.yoy-second-menu .el-submenu.is-active .el-submenu__title{
+  background: $second-side;
+}
+.yoy-second-menu .el-submenu .el-menu-item{
+  font-weight:$second-f-w;
+  color:$second-f-c-l;
+  padding-left: 45px !important;
+}
+.yoy-second-menu .el-submenu .el-menu-item:hover{
+  color:$second-f-c-hover;
+}
+

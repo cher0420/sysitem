@@ -18,7 +18,6 @@ export const requestJSONP = (api,params = {}) => {
       }
       const type = params.method
       const data = params.body||{}
-      console.log('.....',data)
       return new Promise(
         (resolve, reject) => {
           $.ajax({

@@ -98,7 +98,8 @@ export const STR = {
   skill:'机器人技能',
   dashboard:'仪表盘',
   create: '创建',
-  edit: '编辑'
+  edit: '编辑',
+  config:'配置'
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

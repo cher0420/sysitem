@@ -1,6 +1,6 @@
 <template>
   <section>
-    <section class="search box-sizing f-s-0">
+    <section class="search box-sizing">
       <el-input class='' size = 'small' v-model="keyWords" placeholder="搜索机器人名称或描述" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input></section>
     <el-table
@@ -9,26 +9,24 @@
       :data="tableData"
       border
       stripe
-      style="width: 100%"
+      style="width: 91%"
       row-key="RecordId"
     >
       <el-table-column
         prop="AliasName"
         label="机器人名称"
-        min-width="120"
       >
       </el-table-column>
       <el-table-column
         prop="Description"
         label="描述"
-        min-width="420"
+        min-width="320"
       >
       </el-table-column>
       <el-table-column
         prop="StatusString"
         label="状态"
         :render-header="renderProductId"
-        min-width="120"
       >
         <template slot-scope="scope">
           <span :style="{'color': scope.row.StatusString === '已创建'? '#555':'#999'}">
@@ -39,20 +37,18 @@
       <el-table-column
         prop="CreateDate"
         label="创建时间"
-        min-width="120"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.Status == 2">
-            {{scope.row.CreateDate}}
+          <span v-if="scope.row.Status == 6">
+            -
           </span>
           <span v-else>
-            -
+            {{scope.row.CreateDate}}
           </span>
         </template>
       </el-table-column>
       <el-table-column
         label="操作"
-        min-width="120"
       >
         <template slot-scope="scope">
           <span class="yoy-list-todo c555">
@@ -127,7 +123,6 @@
     }
     getList(URL.requestHost + BOT,options,ITEMKEY,false).then(
       () =>{
-        console.log('reload')
       }
     ).catch(
       ()=>{
@@ -173,7 +168,6 @@
     },
     destroyed: function () {
       clearInterval(reloadListObj)
-      console.log('移除轮训了');
     },
     methods:{
       go(path){

@@ -6,6 +6,14 @@ $nav-height:66px;
 $fff:#fff;
 $danger: #f04b4b;
 $light-blue: #eaf6fe;
+//二级菜单
+$second-side: #eaedf1;  //背景色
+$second-side-hover: #f5f6f8;
+$second-f-c:#555;//菜单默认颜色（标题）
+$second-f-w:600; //菜单字体粗细
+$second-f-c-l:#777; //子菜单字体颜色
+$second-f-c-hover:#000; //鼠标划过时字体颜色
+
 
 $iconW:28px;
 $iconH:28px;
@@ -81,6 +89,11 @@ $f-pri-c: #555;
   height:100%;
 }
 
+//width
+.full-width{
+  width:100%;
+}
+
 //color
 .font-primary{
   color: $f-pri-c;
@@ -120,5 +133,10 @@ $f-pri-c: #555;
 .box-sizing{
   box-sizing:border-box;
 }
+//border
+.border-bottom{
+  border-bottom: 1px solid #eaedf1;
+}
+
 
 

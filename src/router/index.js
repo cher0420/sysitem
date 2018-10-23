@@ -28,7 +28,6 @@ for(let v of MENUS){
   }
   arr.push(obj)
 }
-console.log('===',arr)
 const root = [{
     path: '/',
     component: Layout,

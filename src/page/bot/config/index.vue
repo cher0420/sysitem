@@ -1,11 +1,12 @@
 <template>
-  <section>
-    123
-
-  </section>
 </template>
 <script>
   export default {
 
   }
 </script>
+<style lang="scss" scoped>
+  .el-main{
+    padding:0;
+  }
+</style>

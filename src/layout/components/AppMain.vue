@@ -1,11 +1,12 @@
 <template>
-  <section class="p-relative">
-    <section class="margin-top-30">
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item :to="{ path: item.url }" v-for="item in breadArr"><span class="dis-i-b line align-middle"></span><span class="text-title align-middle">{{item.name}}</span></el-breadcrumb-item>
-    </el-breadcrumb>
+  <section class="p-relative yoy-header-container">
+    <section class="yoy-bread f-s-14">
+        <el-breadcrumb separator-class="el-icon-arrow-right">
+          <el-breadcrumb-item class="primary-color align-middle" :to="{ path: item.url }" v-for="item in breadArr">{{item.name}}</el-breadcrumb-item>
+        </el-breadcrumb>
+      <section class="yoy-title box-sizing border-bottom text-title"><span class="align-middle dis-i-b line"></span><span class="align-middle">基本资料</span></section>
     </section>
-    <router-view></router-view>
+    <router-view class="yoy-main"></router-view>
   </section>
 </template>
 <script>
@@ -24,10 +25,10 @@
     },
     watch: {
       '$route'(to, from) {
-        // console.log(this.$route)
       }
     },
     created() {
+      console.log(this.$route)
     },
     methods: {
       regUrl() {
@@ -38,9 +39,9 @@
 </script>
 <style lang="scss">
   @import '../../style/index';
-  .margin-top-30{
-    margin-bottom: 30px;
-  }
+  $bread-background: #2a8ce7;
+  $bread-height: 48px;
+  $title-height: 65px;
   .align-middle{
     vertical-align: middle;
   }
@@ -50,4 +51,34 @@
     background-color: $primary-color;
     margin-right: 6px;
   }
+
+  .yoy-header-container{
+    .yoy-bread{
+
+    }
+  }
+  .yoy-bread .el-breadcrumb{
+    height: $bread-height;
+    line-height: $bread-height;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .yoy-title{
+    height: $title-height;
+    line-height: $title-height;
+    padding-top: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  .yoy-main{
+    padding:30px 40px 40px 40px;
+  }
+  .line{
+    width: 2px;
+    height: 24px;
+    line-height: 24px;
+    background: $primary-color;
+    margin-right: 6px;
+  }
+
 </style>

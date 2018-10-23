@@ -32,27 +32,18 @@
   import store from '../../store/index'
   import {REPLACE} from "../../store/mutations";
   import {STR} from "../../constants/constants";
-  // import router from '../../router/index'
+  import {MENUS} from "../../constants/constants";
 
   export default {
     data() {
       return {
         isRouter: true,
+        menus:MENUS
       };
     },
     computed: {
       navIndex () {
         return store.state.app.navIndex
-      },
-      menus () {
-        return [
-          {id:'dashboard',chineseName:'仪表盘',englishName:'dashboard'},
-          {id:'bot',chineseName:'机器人列表',englishName:'bot'},
-          {id:'skill',chineseName:'机器人技能',englishName:'skill'},
-          {id:'custom',chineseName:'定制服务',englishName:'custom'},
-          {id:'opinion',chineseName:'意见反馈',englishName:'opinion'},
-          {id:'authority',chineseName:'权限管理',englishName:'authority'},
-        ]
       },
       isCollapse () {
         return store.state.app.isCollapse
@@ -61,11 +52,11 @@
     watch: {
       '$route' (to, from) {
         if(to&&from){
-          console.log(to, from)
           const arr = this.$route.path.split('/')
           const pathArr = arr.splice(1,arr.length-1)
           const newArr = []
           const navIndex = pathArr[0]
+          const navEnd = pathArr[pathArr.length-1]
           for(let v of pathArr){
             const url = '/'+v
             const name = STR[v]
@@ -74,7 +65,9 @@
             }
             newArr.push(obj)
           }
-          store.dispatch(REPLACE,{navIndex:navIndex,breadArr:newArr})
+          // 进入配置二级菜单页面
+          const config = navEnd === 'config'
+          store.dispatch(REPLACE,{navIndex:navIndex,breadArr:newArr,config,})
         }else{
           this.$router.push('/dashboard')
         }
@@ -131,31 +124,6 @@
 <style lang="scss">
   @import "../../style/index";
 
-  .el-menu-item.handle-item{
-    background-color: $side-transition;
-    i{
-      color: $primary-color;
-    }
-    .yoy-menu-icon{
-      display: inline-block;
-      height: $iconH;
-      width: $iconW;
-      background: url("../../assets/menu.png") center center no-repeat;
-    }
-  }                     //菜单伸缩按钮
-  .el-menu-item.handle-item:hover{
-    background-color: $side-transition!important;
-    i{
-      color: $primary-color;
-    }
-  }               //保持样式，去除悬浮样式
-
-  .el-menu-item{
-    padding-left:$side-item-padding !important;
-    padding-right:$side-item-padding !important;
-    color:$side-font-color !important; //侧边栏字体颜色
-    font-size: 0;
-  }
   .sidebar-container{ //菜单默认样式
     ul{
       height:100%;
@@ -167,15 +135,6 @@
     width:$iconW;
     font-size: 26px !important;   //缩进效果
   }
-  .el-menu-item{
-    height:$side-item-height !important;
-    line-height: $side-item-height !important;
-    .side-item-rightRow{
-      display:inline-block;
-      margin-left: 188px;
-      margin-right:-159px !important;
-    }
-  }
 
   .el-menu--collapse{
     width:$side-bar-width;
@@ -186,32 +145,6 @@
   }
   .margin-l-159{
     margin-left:-159px;
-  }
-  .el-menu-item:hover, .el-menu-item:focus{
-    background: $side-background !important;
-  }
-  .el-menu-item.is-active{                 //已选中的item，背景色
-    background: $primary-color !important;
-    color:$fff !important;
-    i{
-      color:$fff;
-    }
-    .yoy-icon1{
-      display: none;
-    }
-  }
-  .el-menu-item.is-active:hover{           //已选中的item，去除鼠标悬浮效果
-    background: $primary-color !important;
-  }
-  .el-menu-item:hover{
-    background: $side-hover !important;
-    color:$fff !important; //鼠标划过菜单时字体颜色
-    i{
-      color:$fff;
-    }
-    .yoy-icon1{
-      display: none;
-    }
   }
   // 控制各个项的选中效果
   .yoy-icon1,.yoy-icon2{
