@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    default-active="1"
+    default-active="basic"
     class=""
     @open="handleOpen"
     @close="handleClose"
@@ -12,28 +12,27 @@
       <span slot="title">小华智能助理</span>
     </el-menu-item>
     {{/*基本资料*/}}
-    <el-menu-item index="1" class="f-s-14">
+    <el-menu-item v-if='!item.children' v-for='item in secondMenus' :index="item.id" class="f-s-14">
       <template slot="title">
-        <span>基本资料</span>
+        <span>{{item.chineseName}}</span>
         <i class="el-icon-arrow-right"></i>
       </template>
     </el-menu-item>
-    <el-submenu index="2" class="f-s-14">
-      <template slot="title">渠道配置</template>
-      <el-menu-item index="2-1">网页</el-menu-item>
-      <el-menu-item index="2-2">微信服务号</el-menu-item>
-      <el-menu-item index="2-3">微信企业号</el-menu-item>
-      <el-menu-item index="2-4">实体机器人</el-menu-item>
-      <el-menu-item index="2-5">桌面应用</el-menu-item>
+    <el-submenu v-if="item.children" v-for='item in secondMenus' :index="item.id" class="f-s-14">
+      <template slot="title">{{item.chineseName}}</template>
+      <el-menu-item v-for='items in item.children' :index="items.id">{{items.chineseName}}</el-menu-item>
     </el-submenu>
   </el-menu>
 </template>
 
 <script>
-    export default {
+  import {SECONDMENUS} from "../../constants/constants";
+
+  export default {
       data(){
         return{
-          openArr:['1','2']
+          openArr:['channel'],
+          secondMenus:SECONDMENUS
         }
       },
         name: "SecondaryMenu",

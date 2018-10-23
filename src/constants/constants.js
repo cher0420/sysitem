@@ -25,7 +25,39 @@ export const MENUS=[
           id:'config',
           chineseName:'配置',
           englishName:'config',
-          path:'config'
+          path:'config',
+          children:[
+            {
+              id:'web',
+              chineseName:'网页',
+              englishName:'web',
+              path:'web',
+            },
+            {
+              id:'weChatService',
+              chineseName:'微信服务号',
+              englishName:'weChatService',
+              path:'weChatService',
+            },
+            {
+              id:'weChatCompany',
+              chineseName:'微信企业号',
+              englishName:'weChatCompany',
+              path:'weChatCompany',
+            },
+            {
+              id:'robot',
+              chineseName:'实体机器人',
+              englishName:'robot',
+              path:'robot',
+            },
+            {
+              id:'desktopApp',
+              chineseName:'桌面应用',
+              englishName:'desktopApp',
+              path:'desktopApp',
+            }
+          ]
         }
       ]
   },
@@ -90,6 +122,53 @@ export const MENUS=[
       ]
   },
 ]
+
+export const SECONDMENUS = [
+  {
+    id:'basic',
+    chineseName:'基本资料',
+    englishName:'basic',
+    path:'basic',
+  },
+  {
+    id:'channel',
+    chineseName:'渠道配置',
+    englishName:'channel',
+    path:'channel',
+    children:[
+      {
+        id:'web',
+        chineseName:'网页',
+        englishName:'web',
+        path:'web',
+      },
+      {
+        id:'weChatService',
+        chineseName:'微信服务号',
+        englishName:'weChatService',
+        path:'weChatService',
+      },
+      {
+        id:'weChatCompany',
+        chineseName:'微信企业号',
+        englishName:'weChatCompany',
+        path:'weChatCompany',
+      },
+      {
+        id:'robot',
+        chineseName:'实体机器人',
+        englishName:'robot',
+        path:'robot',
+      },
+      {
+        id:'desktopApp',
+        chineseName:'桌面应用',
+        englishName:'desktopApp',
+        path:'desktopApp',
+      }
+    ]
+  },
+]
 export const STR = {
   authority:'权限管理',
   custom:'定制服务',
@@ -99,7 +178,8 @@ export const STR = {
   dashboard:'仪表盘',
   create: '创建',
   edit: '编辑',
-  config:'配置'
+  config:'配置',
+  basicsInformation:'基本资料'
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

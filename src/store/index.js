@@ -33,7 +33,6 @@ const store = new Vuex.Store({
     },
     [UPDATE] (state, payload) {
       state.app.tableData[payload.index] = payload.value
-      state.app.tableData[payload.index].StatusString = '测试时'
     }
   },
   actions: {

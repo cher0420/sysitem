@@ -21,7 +21,7 @@
     computed: {
       breadArr(){
         return store.state.app.breadArr
-      }
+      },
     },
     watch: {
       '$route'(to, from) {

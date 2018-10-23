@@ -24,7 +24,6 @@
             <!--</secondary-menu>-->
           <!--</section>-->
           <!--<section class="p-relative full-width" style="float: left">-->
-
           <!--</section>-->
         </el-container>
       </el-container>
@@ -56,7 +55,7 @@
         return store.state.app.aSideWidth
       }
     },
-    created(){
+    beforeCreate(){
       const config = this.$route.name ==='config' //判断路由是否为配置二级菜单，是则为true，不是则false并隐藏二级菜单
       store.dispatch(REPLACE,{config})
     },

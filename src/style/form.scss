@@ -1,0 +1,23 @@
+@import './index';
+$input-height: 32px;
+.el-input__inner{
+  height:$input-height;
+  line-height:$input-height;
+}
+.el-form-item{
+  margin-bottom: 12px;
+}
+.el-button--medium{
+  padding:10px 25px;
+}
+//.el-radio__input.is-checked .el-radio__inner{
+//  background: #fff;
+//  border-color: #eaedf1;
+//}
+//.el-radio__input.is-checked .el-radio__inner::after{
+//  display: inline-block;
+//  width: 6px;
+//  height: 6px;
+//  border-radius: 50%;
+//  background: $primary-color;
+//}
