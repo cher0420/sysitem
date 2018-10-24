@@ -16,7 +16,14 @@ for(let v of MENUS){
     let childrenObj = {
       path: value.path,
       name: value.id,
-      component: () => import(`../page/${v.path}/${value.path}/index`)
+      component: () => import(`../page/${v.path}/${value.path}/index`),
+      children:[
+        {
+          path:'/',
+          name:'config',
+          component: ()=>import(`../page/${v.path}/${value.path}/index`),
+        }
+      ]
     }
     children = [...children,childrenObj]
   }
@@ -47,6 +54,7 @@ const root = [{
   }
   ]
 const routes = [...root,...arr]
+console.log(routes);
 const router = {
   routes: routes
 }

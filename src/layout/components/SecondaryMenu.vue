@@ -1,9 +1,10 @@
 <template>
   <el-menu
-    default-active="basic"
+    default-active="config"
     class=""
     @open="handleOpen"
     @close="handleClose"
+    @select="select"
     active-text-color="#2a8ce7"
     style="width: 180px;"
     :default-openeds='openArr'
@@ -27,6 +28,8 @@
 
 <script>
   import {SECONDMENUS} from "../../constants/constants";
+  import {REPLACE} from "../../store/mutations";
+  import store from '../../store/index'
 
   export default {
       data(){
@@ -43,6 +46,9 @@
         handleClose(index,indexPath){
           console.log(index,indexPath)
         },
+        select(index,indexPath){
+          store.dispatch(REPLACE,{componentName:index})
+        }
       }
     }
 </script>

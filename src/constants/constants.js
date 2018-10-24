@@ -125,10 +125,10 @@ export const MENUS=[
 
 export const SECONDMENUS = [
   {
-    id:'basic',
+    id:'config',
     chineseName:'基本资料',
-    englishName:'basic',
-    path:'basic',
+    englishName:'config',
+    path:'config',
   },
   {
     id:'channel',

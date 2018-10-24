@@ -8,6 +8,7 @@ const store = new Vuex.Store({
   state: {
     app: {
       config: false,
+      componentName:'config',
       userName: '',
       userInfo: {},
       navIndex: '',
