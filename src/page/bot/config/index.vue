@@ -1,18 +1,21 @@
 <template>
   <section>
     <web v-if="componentName === 'web'"></web>
-    <config v-if="componentName === 'config'"></config>
+    <config v-else-if="componentName === 'config'"></config>
+    <weChatService v-else-if="componentName === 'weChatService'"></weChatService>
   </section>
 </template>
 <script>
   import Web from './web/index'
   import Config from './config/index'
+  import WeChatService from './weChatService'
   import store from '../../../store/index'
   import {REPLACE} from "../../../store/mutations";
   export default {
     components:{
       Web,
-      Config
+      Config,
+      WeChatService
     },
     data() {
       return {

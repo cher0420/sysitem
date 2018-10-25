@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="yoy-main">
     我是配置页面
   </section>
 </template>

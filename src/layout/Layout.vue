@@ -9,7 +9,7 @@
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
         <el-container class="full-width">
-          <secondary-menu v-if='config' class="yoy-second-menu" style="float: left">
+          <secondary-menu class="yoy-second-menu" :style="{'display': config? 'block':'none'}">
           </secondary-menu>
           <el-container>
             <el-main class="p-relative full-height" style="float: left">

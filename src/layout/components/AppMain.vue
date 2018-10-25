@@ -6,7 +6,7 @@
         </el-breadcrumb>
       <section class="yoy-title box-sizing border-bottom text-title"><span class="align-middle dis-i-b line"></span><span class="align-middle">基本资料</span></section>
     </section>
-    <router-view class="yoy-main"></router-view>
+    <router-view></router-view>
   </section>
 </template>
 <script>

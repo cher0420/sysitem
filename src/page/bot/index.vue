@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="yoy-main">
     <section class="search box-sizing">
       <el-input class='' size = 'small' v-model="keyWords" placeholder="搜索机器人名称或描述" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input></section>

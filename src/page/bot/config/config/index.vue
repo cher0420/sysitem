@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" :model="form" label-width="150px" v-loading="loading">
+  <el-form ref="form" :model="form" label-width="150px" v-loading="loading"  class="yoy-main">
     <el-form-item label="机器人姓名">
       <el-col :span="11">
         <el-input v-model="form.name"></el-input>
