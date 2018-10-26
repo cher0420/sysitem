@@ -1,49 +1,73 @@
 import {getCookies, removeCookies, setCookies} from "../utils/cookie";
-import {USERNAME,TOKEN} from "../constants/constants";
+import {USERNAME, TOKEN, SID, TENANTID} from "../constants/constants";
 import {VOILD_TOKEN_URL, VOILD_USERINFO,LOGIN,LOGOUT} from "../constants/api";
 import URL from '../host/baseUrl'
 import {request,isIE9} from "../serive/request";
 import store from '../store/index'
 import {REPLACE} from "../store/mutations";
 import {Loading} from 'element-ui';
+import Router from '../router/index';
 
 export function redirect(type){
-  const redirectUrl = window.location.href
-  window.location.href = URL.SSOWebUrl.zh+ type + redirectUrl
+  let random = Math.floor(Math.random() * 1000000)
+  const host = window.location.host
+  setCookies('SID',random,{ expires: 1 }).then(
+    () =>{
+      console.log(window.location.hash)
+      const hash = window.location.hash
+      const callbackString = `http://${host}/?sid=${random}`
+      window.location.href = URL.SSOWebUrl.zh+ type + callbackString
+    }
+  )
 }
 /**
  * 用户登录
  */
 export function getLoginStatus(){
   let loadingInstance = Loading.service({fullscreen: true});
-  const userName = getCookies(USERNAME)
-  const token = getCookies(TOKEN)
-  if(userName&&token){
-    //验证token
-    voildToken(token).then(
-      () => {
-        setTimeout(
-          () => {
-            loadingInstance.close();
-          },800
-        )
-      }
-    )
+
+  const id = getCookies('SID')
+  if(id){
+    voildId(id)
+    setTimeout(
+            () => {
+              loadingInstance.close();
+            },800
+          )
   }else{
-    //检验是否有SID
-    voildId().then(
-      () => {
-        setTimeout(
-          () => {
-            loadingInstance.close();
-          },800
-        )
-      }
-    )
+    redirect(LOGIN)
   }
+  // const reGex = window.location.href.match(/SID(\S*)yoytips/)
+  // const reGexSID = reGex&&reGex[1]
+  // console.log(reGexSID)
+
+    // if(userName&&token){
+    //   //验证token
+    //   voildToken(token).then(
+    //     () => {
+    //       setTimeout(
+    //         () => {
+    //           loadingInstance.close();
+    //         },800
+    //       )
+    //     }
+    //   )
+    // }else
+    //   {
+    //   //检验是否有SID
+    //   voildId().then(
+    //     () => {
+    //       setTimeout(
+    //         () => {
+    //           loadingInstance.close();
+    //         },800
+    //       )
+    //     }
+    //   )
+    // }
 }
 
-export async function voildId (){
+export async function voildURLToken (){
   const path = window.location.search
     const matchToken = path.match(/token=(\S*)?&rk=/)
     const token = matchToken?matchToken[1]:null;
@@ -59,7 +83,34 @@ export async function voildId (){
         redirect(LOGIN)//跳转登录
     }
 }
-
+export const voildId = (SID) => {
+  let str = window.location.search;
+  const matchStr = str.match(/sid=(\S*)?&token=/)
+  str = matchStr ? matchStr[1] : null;
+  if (str === SID) {
+      removeCookies(SID).then(
+        () => {
+          const userName = getCookies(USERNAME)
+          const token = getCookies(TOKEN)
+          if(userName&&token){
+            voildToken(token);
+          }else{
+            voildURLToken()
+          }
+        }
+      )
+    } else {
+      // removeCookies([SID,USERNAME,TOKEN,TENANTID]).then(
+      //   () =>{
+          redirect(LOGIN)
+      //   }
+      // )
+      // const stateObject = {};
+      // const title = "index";
+      // const newUrl = "/";
+      // window.history.pushState(stateObject, title, newUrl);
+    }
+}
 /**
  * 验证token
  * @param token
@@ -93,11 +144,11 @@ export async function voildToken (token) {
   }).catch(
     (err)=>
     {
-      removeCookies([USERNAME,TOKEN]).then(
-        () => {
-          redirect(LOGIN)
-        }
-      )
+      // removeCookies([USERNAME,TOKEN]).then(
+      //   () => {
+      //     redirect(LOGIN)
+      //   }
+      // )
     });
 }
 
@@ -139,20 +190,20 @@ export async function fetchUserInfo (token = null) {
  * 更新url，隐藏地址
  */
 export const hiddenTokenInUrl = () => {
-  // const path = '/#'+Router.history.current.path
-  // const stateObject = {};
-  // const title = "index";
-  // const newUrl = path;
-  // const status = isIE9()
-  // if(!status){
-  //   window.history.pushState(stateObject, title, newUrl);
-  // }
+  const path = '/#'+Router.history.current.path
+  const stateObject = {};
+  const title = "index";
+  const newUrl = path;
+  const status = isIE9()
+  if(!status){
+    // window.history.pushState(stateObject, title, newUrl);
+  }
 }
 
 export const logOut = () => {
   let loadingInstance = Loading.service({fullscreen: true});
   const token = getCookies('token')
-  const redirectUrl = 'http://'+window.location.host
+  const redirectUrl = 'https://'+window.location.host
   removeCookies([USERNAME,TOKEN]).then(
     () => {
       loadingInstance.close();

@@ -115,7 +115,6 @@ export const request = (api,params = {}) => {
                   return response.json()
                 case 401:
                   redirect(LOGIN)
-                  // alert('没有权限')
                   break;
                 default:
                 // ElementUI.Message({
