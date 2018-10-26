@@ -3,7 +3,6 @@ import {USERNAME,TOKEN} from "../constants/constants";
 import {VOILD_TOKEN_URL, VOILD_USERINFO,LOGIN,LOGOUT} from "../constants/api";
 import URL from '../host/baseUrl'
 import {request,isIE9} from "../serive/request";
-import Router from '../router/index'
 import store from '../store/index'
 import {REPLACE} from "../store/mutations";
 import {Loading} from 'element-ui';

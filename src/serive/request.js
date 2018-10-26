@@ -1,5 +1,8 @@
 import $ from 'jquery'
 $.support.cors = true;
+import {redirect} from "../permissions/permissions";
+import {LOGIN} from "../constants/api";
+
 export const isIE9 = () => {
   if(!-[1,]){
     return true;
@@ -111,8 +114,9 @@ export const request = (api,params = {}) => {
                 case 200:
                   return response.json()
                 case 401:
-                  alert('没有权限')
-                  break
+                  redirect(LOGIN)
+                  // alert('没有权限')
+                  break;
                 default:
                 // ElementUI.Message({
                 //   type: 'error',

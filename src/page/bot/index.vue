@@ -9,7 +9,6 @@
       :data="tableData"
       border
       stripe
-      style="width: 91%"
       row-key="RecordId"
     >
       <el-table-column
@@ -244,10 +243,19 @@
         }
         request(URL.requestHost+CREATEBOT,options).then(
           (res) => {
+            that.$message({
+              type: 'success',
+              message: '创建中，请稍后',
+              duration: 2000
+            });
           }
         ).catch(
           (err)=>{
-
+            that.$message({
+              type: 'error',
+              message: '删除失败',
+              duration: 2000
+            });
           }
         )
       },

@@ -91,7 +91,7 @@
       show(){
         store.dispatch(REPLACE, {isCollapse: !this.isCollapse}).then(
           ()=>{
-            this.isCollapse?store.dispatch(REPLACE,{aSideWidth: '59px'}):store.dispatch(REPLACE,{aSideWidth: '240px'})
+            this.isCollapse?store.dispatch(REPLACE,{aSideWidth: '60px'}):store.dispatch(REPLACE,{aSideWidth: '240px'})
           }
         )
       },
@@ -149,9 +149,6 @@
     font-size: 26px !important;   //缩进效果
   }
 
-  .el-menu--collapse{
-    width:$side-bar-width;
-  }
   .el-tooltip{
     padding:0 $side-item-padding!important;
     /*text-align:center;*/

@@ -77,11 +77,18 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 }
 
 /*
+覆盖收缩后的侧边栏
+ */
+.el-menu--collapse{
+  width:$side-bar-width;
+}
+
+/*
 覆盖菜单栏
  */
 .el-menu{
-  border-right:none;
-}
+    border-right:none;
+  }
 .el-menu-item.handle-item{
   background-color: $side-transition;
   i{

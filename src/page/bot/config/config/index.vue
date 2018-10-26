@@ -117,6 +117,7 @@
       },
       selectArea(k){
         const that = this
+        that.form.address.street = ''
         that.area.forEach(
           (v,key) =>{
             if(v.name === k){

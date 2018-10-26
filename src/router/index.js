@@ -40,13 +40,13 @@ for(let v of MENUS){
 const root = [{
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
-    name: 'dashboard',
+    redirect: '/bot',
+    name: 'bot',
     hidden: true,
     children: [{
-      path: 'dashboard',
-      name: 'dashboard',
-      component: () => import('../page/wait/index')
+      path: 'bot',
+      name: 'bot',
+      component: () => import('../page/bot/index')
     }]
   },
   {

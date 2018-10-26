@@ -5,7 +5,9 @@
     </section>
     <el-form-item label="URL :">
       <el-col :span="20">
-        <el-input disabled v-model="formData.SvcUrl"/>
+        <section>
+          {{formData.SvcUrl}}
+        </section>
       </el-col>
     </el-form-item>
     <el-form-item label="Token :">
@@ -20,7 +22,7 @@
           <i class="el-icon-question f-s-16"></i>
           <span>如何开启公众账号开发模式？</span>
         </section>
-        <section class="padding-l-20px">登录到微信国内公众平台账号，进入菜单栏 <span class="primary-color">"开发者中心" </span> > <span class="primary-color"> "成为开发者" </span>,根据提示讲URL和Token复制到相应输入框中，点击 <span class="primary-color">"提价"</span>后，点击 <span class="primary-color">"启动"</span>启动开发者模式
+        <section class="padding-l-20px">登录到微信国内公众平台账号，进入菜单栏 <span class="primary-color">"开发者中心" </span> > <span class="primary-color"> "成为开发者" </span>,根据提示讲URL和Token复制到相应输入框中，点击 <span class="primary-color">"提交"</span>后，点击 <span class="primary-color">"启动"</span>启动开发者模式
         </section>
       </el-col>
     </el-form-item>

@@ -5,7 +5,7 @@
         <navBar></navBar>
       </el-header>
       <el-container class="full-height el-container">
-        <el-aside :width="aSideWidth" class="full-height el-aside" style="float:left">
+        <el-aside :width="aSideWidth" class="full-height" style="float:left">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
         <el-container class="full-width full-height" v-loading="mainLoading">
@@ -15,7 +15,7 @@
             <el-main class="p-relative full-height">
               <app-main></app-main>
             </el-main>
-            <el-footer style="height:64px;" class="">
+            <el-footer style="height:65px;" class="">
               <footer-bar></footer-bar>
             </el-footer>
           </el-container>
@@ -71,7 +71,7 @@
     height: $nav-height !important; //顶栏高度
   }
   .app-container{
-    min-width: 1440px;
+    min-width: 1280px;
     /*min-height: 800px;*/
   }
   .el-main{

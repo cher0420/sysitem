@@ -1,7 +1,7 @@
 <template>
   <section class="yoy-bread f-s-14">
     <el-breadcrumb separator-class="el-icon-arrow-right">
-      <el-breadcrumb-item class="primary-color align-middle" to="/">首页</el-breadcrumb-item>
+      <el-breadcrumb-item class="primary-color align-middle" to="/bot">首页</el-breadcrumb-item>
       <el-breadcrumb-item class="primary-color align-middle" :to="{ path: item.url }" v-for="item in breadArr" @change="handle(item.name)">{{item.name}}</el-breadcrumb-item>
     </el-breadcrumb>
     <section class="yoy-title box-sizing border-bottom text-title"><span class="align-middle dis-i-b line"></span><span class="align-middle">{{navIndex}}</span></section>
