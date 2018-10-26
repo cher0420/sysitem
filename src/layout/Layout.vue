@@ -8,23 +8,17 @@
         <el-aside :width="aSideWidth" class="full-height el-aside" style="float:left">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
-        <el-container class="full-width">
-          <secondary-menu class="yoy-second-menu" :style="{'display': config? 'block':'none'}">
+        <el-container class="full-width full-height" v-loading="mainLoading">
+          <secondary-menu v-if='config' class="yoy-second-menu full-height">
           </secondary-menu>
           <el-container>
-            <el-main class="p-relative full-height" style="float: left">
+            <el-main class="p-relative full-height">
               <app-main></app-main>
             </el-main>
             <el-footer style="height:64px;" class="">
               <footer-bar></footer-bar>
             </el-footer>
           </el-container>
-          <!--<section v-if='config' class="yoy-second-menu" style="float: left">-->
-            <!--<secondary-menu v-if='config' class="yoy-second-menu" style="float: left">-->
-            <!--</secondary-menu>-->
-          <!--</section>-->
-          <!--<section class="p-relative full-width" style="float: left">-->
-          <!--</section>-->
         </el-container>
       </el-container>
     </el-container>
@@ -48,6 +42,9 @@
       }
     },
     computed:{
+      mainLoading(){
+        return store.state.app.mainLoading
+      },
       config() {
         return store.state.app.config
       },

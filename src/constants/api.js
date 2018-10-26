@@ -7,3 +7,6 @@ export const LOGOUT = '/login/logout?redirecturl='
 export const BOT = '/api/ChatBot/GetBotList'
 export const DELETEBOT = '/api/ChatBot/DeleteBot'
 export const CREATEBOT = '/api/ChatBot/GenerateBot'
+
+export const WECHATDETAil = '/api/ChatBot/WeChatSetting'
+export const UPDATDETAIL = '/api/ChatBot/UpdateWeChatSetting'

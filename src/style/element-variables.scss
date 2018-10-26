@@ -156,7 +156,6 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 .yoy-second-menu{
   background: $second-side; // 二级菜单背景色
   float:left;
-  transition: width 2s;
 }
 .yoy-second-menu .el-menu-item{
   background:$second-side;

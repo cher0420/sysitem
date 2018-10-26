@@ -178,8 +178,12 @@ export const STR = {
   dashboard:'仪表盘',
   create: '创建',
   edit: '编辑',
-  config:'配置',
-  basicsInformation:'基本资料'
+  config:'基本资料',
+  web:'网页',
+  weChatService:'微信服务号',
+  weChatCompany:'微信企业号',
+  robot:'实体机器人',
+  desktopApp:'桌面应用'
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

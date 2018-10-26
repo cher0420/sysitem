@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    default-active="config"
+    :default-active="defaultActiveSecondM"
     class=""
     @open="handleOpen"
     @close="handleClose"
@@ -30,15 +30,21 @@
   import {SECONDMENUS} from "../../constants/constants";
   import {REPLACE} from "../../store/mutations";
   import store from '../../store/index'
+  import {STR} from "../../constants/constants";
 
   export default {
       data(){
         return{
           openArr:['channel'],
-          secondMenus:SECONDMENUS
+          secondMenus:SECONDMENUS,
         }
       },
-        name: "SecondaryMenu",
+      name: "SecondaryMenu",
+      computed:{
+        defaultActiveSecondM(){
+          return store.state.app.defaultActiveSecondM
+        }
+      },
       methods:{
         handleOpen(index,indexPath){
           console.log(index,indexPath)
@@ -47,7 +53,17 @@
           console.log(index,indexPath)
         },
         select(index,indexPath){
-          store.dispatch(REPLACE,{componentName:index})
+          const arr = store.state.app.breadArr
+          const obj={
+            name:STR[index],
+            url:'/config'
+          }
+          arr.splice(1,arr.length-1,obj)
+          store.dispatch(REPLACE,{breadArr:arr,componentName:index,navIndex:index}).then(
+            () =>{
+
+            }
+          )
         }
       }
     }
@@ -55,8 +71,5 @@
 
 <style lang="scss">
   @import '../../style/index';
-/*.yoy-second-menu .el-menu-item.is-active{*/
-  /*background:#fff;*/
-/*}*/
 
 </style>

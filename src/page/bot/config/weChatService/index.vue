@@ -1,16 +1,16 @@
 <template>
-  <el-form ref="form" label-width="120px" :model="form" class="yoy-main full-height c555">
+  <el-form ref="formData" label-width="120px" :model="formData" class="yoy-main full-height c555" v-loading="loading">
     <section class="title f-s-16 c555 box-sizing margin-b-30px">
       基础设置
     </section>
     <el-form-item label="URL :">
       <el-col :span="20">
-        <section>{{form.url}}</section>
+        <el-input disabled v-model="formData.SvcUrl"/>
       </el-col>
     </el-form-item>
     <el-form-item label="Token :">
       <el-col :span="20">
-        <el-input v-model="form.Token"></el-input>
+        <el-input v-model="formData.Token"></el-input>
         <section class="f-s-11 c999">请将URL和Token复制到您的微信公众平台账号开发模式下的接口配置中</section>
       </el-col>
     </el-form-item>
@@ -29,12 +29,12 @@
     </section>
     <el-form-item label="App ID :">
       <el-col :span="20">
-        <el-input placeholder="请输入App ID"></el-input>
+        <el-input placeholder="请输入App ID" v-model="formData.AppID"></el-input>
       </el-col>
     </el-form-item>
     <el-form-item label="App Secret :">
       <el-col :span="20">
-        <el-input placeholder="请输入App Secret"></el-input>
+        <el-input placeholder="请输入App Secret" v-model="formData.AppSecret"></el-input>
         <section class="c999 f-s-11">请填写您在微信公众号平台申请的key和Secret</section>
       </el-col>
     </el-form-item>
@@ -62,23 +62,99 @@
       <a href="javascript:;" class="primary-color padding-l-20px">什么是知识分类</a>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">保存</el-button>
-
+      <el-button type="primary" @click="onSubmit('formData')">保存</el-button>
     </el-form-item>
   </el-form>
 </template>
 <script>
+  import {request} from "../../../../serive/request";
+  import URL from '../../../../host/baseUrl';
+  import {WECHATDETAil,UPDATDETAIL} from "../../../../constants/api";
+  import {getCookies} from "../../../../utils/cookie";
+  import {TOKEN} from "../../../../constants/constants";
+
+  const token=getCookies(TOKEN)
+
   export default {
     data(){
       return{
         title:'基础设置',
-        form:{
-          url:'dsafdsafdsafdsaf',
-          Token:'ssss'
+        loading:false,
+        formData: {
+          SvcUrl: '',
+          Token: '',
+          AppID:'',
+          AppSecret:'',
         }
       }
     },
     components:{
+    },
+    methods:{
+      onSubmit(formName) {
+        const that = this
+        that.$confirm('确认立即更新?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          that.$refs[formName].validate((valid) => {
+            if (valid) {
+              that.loading = true
+              that.requestJSON(URL.requestHost+UPDATDETAIL,this.formData)
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消更新'
+          });
+        });
+      },
+      requestJSON(url,data){
+        const that = this
+        const option ={
+          headers:{
+            'Access-Token':token,
+          },
+          method:'POST',
+          body:JSON.stringify(data)
+        }
+        request(url,option).then(
+          (res) =>{
+            that.$message({
+              type: 'info',
+              message: '保存成功',
+              duration: 2000,
+              onClose: () =>{
+                that.loading = false
+              }
+            });
+          }
+        )
+      },
+    },
+    created(){
+      this.loading = true
+      const recordId = this.$route.query.recordId
+      const data ={recordId}
+      const option ={
+        headers:{
+          'Access-Token':token,
+        },
+        method:'POST',
+        body:JSON.stringify(data)
+      }
+      request(URL.requestHost+WECHATDETAil,option).then(
+        (res) =>{
+          const data = res.WeChatSettingModel
+          this.formData = data
+          this.loading = false
+        }
+      )
     }
   }
 </script>

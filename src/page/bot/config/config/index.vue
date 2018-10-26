@@ -35,22 +35,22 @@
     </el-form-item>
     <el-form-item label="出生地">
       <el-col :span="5" >
-        <el-select placeholder="请选择" v-model="form.address.city">
+        <el-select placeholder="请选择" v-model="form.address.city" @change="selectArea">
           <el-option
             v-for="item in area"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.id"
+            :label="item.name"
+            :value="item.name">
           </el-option>
         </el-select>
       </el-col>
       <el-col :span="5" offset="1">
         <el-select placeholder="请选择" v-model="form.address.street">
           <el-option
-            v-for="item in area.city"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            v-for="item in city"
+            :key="item.id"
+            :label="item.name"
+            :value="item.name">
           </el-option>
         </el-select>
       </el-col>
@@ -85,6 +85,8 @@
   </el-form>
 </template>
 <script>
+  import {ADDRESS} from "../../../../constants/address";
+
   export default {
     data() {
       return {
@@ -104,13 +106,25 @@
           school:''
         },
         loading:false,
-        area:[],
+        area:ADDRESS,
+        city:ADDRESS[0].child,
         button:'保存'
       }
     },
     methods: {
       onSubmit() {
         console.log('submit!');
+      },
+      selectArea(k){
+        const that = this
+        that.area.forEach(
+          (v,key) =>{
+            if(v.name === k){
+              that.city = v.child
+              // that.form.
+            }
+          }
+        )
       }
     }
   }

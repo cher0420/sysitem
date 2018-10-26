@@ -140,14 +140,14 @@ export async function fetchUserInfo (token = null) {
  * 更新url，隐藏地址
  */
 export const hiddenTokenInUrl = () => {
-  const path = '/#'+Router.history.current.path
-  const stateObject = {};
-  const title = "index";
-  const newUrl = path;
-  const status = isIE9()
-  if(!status){
-    window.history.pushState(stateObject, title, newUrl);
-  }
+  // const path = '/#'+Router.history.current.path
+  // const stateObject = {};
+  // const title = "index";
+  // const newUrl = path;
+  // const status = isIE9()
+  // if(!status){
+  //   window.history.pushState(stateObject, title, newUrl);
+  // }
 }
 
 export const logOut = () => {

@@ -9,6 +9,7 @@ const store = new Vuex.Store({
     app: {
       config: false,
       componentName:'config',
+      defaultActiveSecondM:'config',                   //二级菜单active-key
       userName: '',
       userInfo: {},
       navIndex: '',
@@ -23,6 +24,8 @@ const store = new Vuex.Store({
       tableData:[],
       loading: false,
       description: '',
+
+      mainLoading:false
     },
   },
   mutations: {

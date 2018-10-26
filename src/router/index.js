@@ -10,6 +10,7 @@ for(let v of MENUS){
   let children = [{
     path: '/',
     name: v.id,
+    title:v.chineseName,
     component: () => import(`../page/${v.path}/index`)
   }]
   for(let value of v.children){
@@ -21,6 +22,7 @@ for(let v of MENUS){
         {
           path:'/',
           name:'config',
+          title:value.chineseName,
           component: ()=>import(`../page/${v.path}/${value.path}/index`),
         }
       ]
@@ -54,7 +56,7 @@ const root = [{
   }
   ]
 const routes = [...root,...arr]
-console.log(routes);
+
 const router = {
   routes: routes
 }

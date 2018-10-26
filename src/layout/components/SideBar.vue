@@ -52,22 +52,35 @@
     watch: {
       '$route' (to, from) {
         if(to&&from){
-          const arr = this.$route.path.split('/')
-          const pathArr = arr.splice(1,arr.length-1)
-          const newArr = []
-          const navIndex = pathArr[0]
-          const navEnd = pathArr[pathArr.length-1]
-          for(let v of pathArr){
-            const url = '/'+v
-            const name = STR[v]
-            const obj = {
-              url, name
+          store.dispatch(REPLACE,{mainLoading: true}).then(
+            () =>{
+              const arr = this.$route.path.split('/')
+              const pathArr = arr.splice(1,arr.length-1)
+              const newArr = []
+              const navEnd = pathArr[pathArr.length-1]
+              for(let v of pathArr){
+                const url = '/'+v
+                const name = STR[v]
+                const obj = {
+                  url, name
+                }
+                newArr.push(obj)
+              }
+              // 进入配置二级菜单页面
+              const config = navEnd === 'config'
+              const name = to.name
+              store.dispatch(REPLACE,{breadArr:newArr,config,navIndex:name}).then(
+                () => {
+                  setTimeout(
+                    () =>{
+                      store.dispatch(REPLACE,{mainLoading:false})
+                    },300
+                  )
+                }
+              )
             }
-            newArr.push(obj)
-          }
-          // 进入配置二级菜单页面
-          const config = navEnd === 'config'
-          store.dispatch(REPLACE,{navIndex:navIndex,breadArr:newArr,config,})
+          )
+
         }else{
           this.$router.push('/dashboard')
         }
@@ -91,14 +104,14 @@
       handle(key, keyPath){
         if(key){
           window.location.hash=key
-          this.$router.push(key)
           const url = key
           const name = STR[key]
           const obj = {
             url,name
           }
           const arr=[obj]
-          store.commit(REPLACE,{navIndex:key,breadArr:arr})
+          store.commit(REPLACE,{breadArr:arr})
+          store.dispatch(REPLACE, {defaultActiveSecondM: 'config'})
           this.$router.push(key)
           window.location.hash = '#/'+key
         }

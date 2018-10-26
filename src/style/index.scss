@@ -140,8 +140,12 @@ $f-pri-c: #555;
   box-sizing:border-box;
 }
 //border
+$border-color:#eaedf1;
 .border-bottom{
-  border-bottom: 1px solid #eaedf1;
+  border-bottom: 1px solid $border-color;
+}
+.borderAround{
+  border:1px solid $border-color;
 }
 
 

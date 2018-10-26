@@ -1,4 +1,4 @@
-export const address=[
+export const ADDRESS=[
   {
   "name": "北京",
   "id": 1,

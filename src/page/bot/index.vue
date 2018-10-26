@@ -39,7 +39,7 @@
         label="创建时间"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.Status == 6">
+          <span v-if="scope.row.Status == 0||scope.row.Status == 1||scope.row.Status == 6">
             -
           </span>
           <span v-else>
@@ -55,7 +55,7 @@
             <span v-if="scope.row.Status == 2||scope.row.Status == 5">
               <span class="config">
                 <i class="el-icon-setting"></i>
-                <a href="javascript:;" class="c555" @click="go('/bot/config')">配置</a>
+                <a href="javascript:;" class="c555" @click="go('/bot/config',scope.row.RecordId)">配置</a>
               </span>
               <span class="del">
                 <i class="el-icon-delete"></i>
@@ -102,7 +102,7 @@
   import {BOTLIST,ITEMKEY} from './constants'
   import URL from '../../host/baseUrl'
   import {BOT,DELETEBOT,CREATEBOT} from '../../constants/api'
-  import {REPLACE,UPDATE} from "../../store/mutations";
+  import {REPLACE} from "../../store/mutations";
   import {request} from "../../serive/request";
   import store from '../../store/index'
   import {getCookies} from "../../utils/cookie";
@@ -170,8 +170,21 @@
       clearInterval(reloadListObj)
     },
     methods:{
-      go(path){
-        this.$router.push(path)
+      go(path,id){
+        const url = {
+          path:path,
+          query: {
+            recordId:id
+        }
+      }
+        const arr = path.split('/')
+        const index=arr[arr.length-1]
+        store.dispatch(REPLACE,{navIndex:index}).then(
+          () =>{
+            this.$router.push(url)
+          }
+        )
+
       },
       renderProductId(h, {column}) {
         return h(DrapDown,{
