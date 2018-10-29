@@ -66,7 +66,7 @@
     padding-right: 40px;
   }
   .yoy-main{
-    padding:30px 40px 40px 40px;
+    padding:0 40px 40px 40px;
   }
   .line{
     width: 2px;

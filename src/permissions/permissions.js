@@ -13,9 +13,7 @@ export function redirect(type){
   const host = window.location.host
   setCookies('SID',random,{ expires: 1 }).then(
     () =>{
-      console.log(window.location.hash)
-      const hash = window.location.hash
-      const callbackString = `http://${host}/?sid=${random}`
+      const callbackString = `https://${host}/?sid=${random}`
       window.location.href = URL.SSOWebUrl.zh+ type + callbackString
     }
   )
@@ -25,7 +23,6 @@ export function redirect(type){
  */
 export function getLoginStatus(){
   let loadingInstance = Loading.service({fullscreen: true});
-
   const id = getCookies('SID')
   if(id){
     voildId(id)
@@ -37,34 +34,6 @@ export function getLoginStatus(){
   }else{
     redirect(LOGIN)
   }
-  // const reGex = window.location.href.match(/SID(\S*)yoytips/)
-  // const reGexSID = reGex&&reGex[1]
-  // console.log(reGexSID)
-
-    // if(userName&&token){
-    //   //验证token
-    //   voildToken(token).then(
-    //     () => {
-    //       setTimeout(
-    //         () => {
-    //           loadingInstance.close();
-    //         },800
-    //       )
-    //     }
-    //   )
-    // }else
-    //   {
-    //   //检验是否有SID
-    //   voildId().then(
-    //     () => {
-    //       setTimeout(
-    //         () => {
-    //           loadingInstance.close();
-    //         },800
-    //       )
-    //     }
-    //   )
-    // }
 }
 
 export async function voildURLToken (){
@@ -100,15 +69,7 @@ export const voildId = (SID) => {
         }
       )
     } else {
-      // removeCookies([SID,USERNAME,TOKEN,TENANTID]).then(
-      //   () =>{
           redirect(LOGIN)
-      //   }
-      // )
-      // const stateObject = {};
-      // const title = "index";
-      // const newUrl = "/";
-      // window.history.pushState(stateObject, title, newUrl);
     }
 }
 /**
@@ -144,11 +105,6 @@ export async function voildToken (token) {
   }).catch(
     (err)=>
     {
-      // removeCookies([USERNAME,TOKEN]).then(
-      //   () => {
-      //     redirect(LOGIN)
-      //   }
-      // )
     });
 }
 

@@ -102,12 +102,13 @@ export const request = (api,params = {}) => {
     }else{
       return new Promise(
         (resolve, reject) =>{
+          const headers = {...params.headers,"Content-Type": "application/json; charset=utf-8"}
+          const body = params.body
+          const method = params.method||"GET"
           fetch(api, {
-            ...params,
-            headers: {
-              ...params.headers,
-              "Content-Type": "application/json; charset=utf-8",
-            },
+            headers,
+            body,
+            method
           }).then(
             (response) =>{
               switch (response.status) {
@@ -126,11 +127,12 @@ export const request = (api,params = {}) => {
             }
           ).then(
             (res)=>{
-              if (res.Status) {
-                resolve(res)
-              } else {
-                reject(res)
-              }
+              resolve(res)
+              // if (res.Status) {
+              //   resolve(res)
+              // } else {
+              //   reject(res)
+              // }
             }
           ).catch(
             (err)=>{
