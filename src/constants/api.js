@@ -12,3 +12,6 @@ export const WECHATDETAil = '/api/ChatBot/WeChatSetting'
 export const UPDATDETAIL = '/api/ChatBot/UpdateWeChatSetting'
 
 export const BOTINFO = '/api/BotProfile/QueryBotConfigInfo'
+
+export const WEBINFO = '/api/ChatBot/WebPageSetting'
+export const UPDATEWEB = '/api/ChatBot/UpdateWebPageSetting'
