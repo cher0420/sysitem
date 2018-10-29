@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="ruleForm" :model="ruleForm" label-width="150px" v-loading="loading"  class="yoy-main">
+  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="150px" v-loading="loading" class="yoy-main">
     <el-form-item label="机器人姓名">
       <el-col :span="11">
         <el-input v-model="ruleForm.Bot_Name" maxlength="30"></el-input>
@@ -55,9 +55,9 @@
         </el-select>
       </el-col>
     </el-form-item>
-    <el-form-item label="身高" >
+    <el-form-item label="身高" prop='Bot_Height'>
       <el-col :span="11">
-        <el-input v-model="ruleForm.Bot_Height" placeholder="请输入身高"><span slot="suffix" class="suffix">cm</span>
+        <el-input v-model.number="ruleForm.Bot_Height" placeholder="请输入身高"><span slot="suffix" class="suffix">cm</span>
         </el-input>
       </el-col>
     </el-form-item>
@@ -80,7 +80,7 @@
       </el-col>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit" size="medium">{{button}}</el-button>
+      <el-button type="primary" @click="submit('ruleForm')" size="medium">{{button}}</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -112,7 +112,17 @@
         loading:false,
         area:ADDRESS,
         city:ADDRESS[0].child,
-        button:'保存'
+        button:'保存',
+        rules: {
+          Bot_Height: [
+            {required: false, message: '请填写身高!'},
+            { type: 'number', message: '身高必须为数字值'}
+          ],
+          Bot_Weight:[
+            {required: false, message: '请填写体重!'},
+            { type: 'number', message: '体重必须为数字值'}
+          ]
+        }
       }
     },
     beforeCreate(){
@@ -143,8 +153,15 @@
       )
     },
     methods: {
-      onSubmit() {
-        console.log('submit!');
+      submit(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       },
       getBot_Constellation(v){
         const m = moment(v).format('MM')

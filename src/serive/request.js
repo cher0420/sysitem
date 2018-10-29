@@ -127,12 +127,11 @@ export const request = (api,params = {}) => {
             }
           ).then(
             (res)=>{
-              resolve(res)
-              // if (res.Status) {
-              //   resolve(res)
-              // } else {
-              //   reject(res)
-              // }
+              if (res.Status) {
+                resolve(res)
+              } else {
+                reject(res)
+              }
             }
           ).catch(
             (err)=>{

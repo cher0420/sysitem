@@ -11,7 +11,7 @@
       :collapse="isCollapse"
       :router="isRouter"
     >
-      <el-menu-item index="" class="handle-item text-a-c" @click="show">
+      <el-menu-item index="show" class="handle-item text-a-c" @click="show">
         <i class="yoy-menu-icon"></i>
       </el-menu-item>
 
