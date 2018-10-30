@@ -91,19 +91,21 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 .el-menu{
     border-right:none;
   }
-.el-menu-item.handle-item{
+.handle-item{
   background-color: $side-transition;
+  height: 48px;
+  line-height: 48px;
   i{
     color: $primary-color;
   }
   .yoy-menu-icon{
     display: inline-block;
-    height: $iconH;
+    height: 48px;
     width: $iconW;
     background: url("../assets/menu.png") center center no-repeat;
   }
 }                     //菜单伸缩按钮
-.el-menu-item.handle-item:hover{
+.handle-item:hover{
   background-color: $side-transition;
   i{
     color: $primary-color;

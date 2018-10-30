@@ -72,7 +72,7 @@
       <el-col :span="12">
         <el-col :span="2" v-for="item in textColorItems" :index="index">
           <span class="colorItem"
-                :style="{background:item,border:item === '#FFFFFF'?'1px solid #eaedf1':'none',opacity:item === textCheckedColor?'1':'.6'}"
+                :style="{background:item,border:item === '#FFFFFF'?'1px solid #eaedf1':'none',opacity:item === DialogTitleColor?'1':'.6'}"
                 @click="changeColor('DialogTitleColor',item)"
           >
             <i class="el-icon-check c555 f-w-900" :style="{display:item === DialogTitleColor?'inline-block':'none',color:item === '#FFFFFF'?'#555':'white'}"></i>

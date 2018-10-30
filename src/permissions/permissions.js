@@ -13,7 +13,7 @@ export function redirect(type){
   const host = window.location.host
   setCookies('SID',random,{ expires: 1 }).then(
     () =>{
-      const callbackString = `http://${host}/?sid=${random}`
+      const callbackString = `https://${host}/?sid=${random}`
       window.location.href = URL.SSOWebUrl.zh+ type + callbackString
     }
   )
@@ -32,7 +32,11 @@ export function getLoginStatus(){
             },800
           )
   }else{
-    redirect(LOGIN)
+    removeCookies([SID,TOKEN,USERNAME,TENANTID]).then(
+      () =>{
+        redirect(LOGIN)
+      }
+    )
   }
 }
 
@@ -69,8 +73,12 @@ export const voildId = (SID) => {
         }
       )
     } else {
-          redirect(LOGIN)
-    }
+    removeCookies([SID,TOKEN,USERNAME,TENANTID]).then(
+      () =>{
+        redirect(LOGIN)
+      }
+    )
+  }
 }
 /**
  * 验证token

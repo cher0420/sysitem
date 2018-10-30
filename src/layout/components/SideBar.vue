@@ -1,5 +1,8 @@
 <template>
   <section class="">
+    <section index="" class="handle-item text-a-c" @click="show">
+      <i class="yoy-menu-icon"></i>
+    </section>
     <el-menu
       :default-active="navIndex"
       class="el-menu-vertical-demo"
@@ -11,10 +14,6 @@
       :collapse="isCollapse"
       :router="isRouter"
     >
-      <el-menu-item index="show" class="handle-item text-a-c" @click="show">
-        <i class="yoy-menu-icon"></i>
-      </el-menu-item>
-
       <el-menu-item :index="item.id" v-for="item in menus">
         <p class="p-absolute">
           <i class="p-absolute yoy-menu-icon dis-i-b yoy-icon1" :style="{background: 'url(' + require(`../../assets/${item.id}.png`) + ')center center no-repeat'}"></i>
@@ -115,7 +114,7 @@
           this.$router.push(key)
           window.location.hash = '#/'+key
         }
-        }
+      }
     },
     created(){
       const arr = this.$route.path.split('/')
@@ -138,8 +137,8 @@
   @import "../../style/index";
 
   .sidebar-container{ //菜单默认样式
+    background: $side-background;
     ul{
-      height:100%;
       background: $side-background;
     }
   }                               //缩进效果
