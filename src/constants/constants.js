@@ -165,9 +165,23 @@ export const SECONDMENUS = [
         chineseName:'桌面应用',
         englishName:'desktopApp',
         path:'desktopApp',
-      }
+      },
     ]
   },
+  {
+    id:'knowledgeBuild',
+    chineseName:'知识建设',
+    englishName:'knowledgeBuild',
+    path:'knowledgeBuild',
+    children:[
+      {
+        id:'knowledgeQuiz',
+        chineseName:'知识问答',
+        englishName:'knowledgeQuiz',
+        path:'knowledgeQuiz',
+      }
+    ]
+  }
 ]
 export const STR = {
   authority:'权限管理',
@@ -183,7 +197,8 @@ export const STR = {
   weChatService:'微信服务号',
   weChatCompany:'微信企业号',
   robot:'实体机器人',
-  desktopApp:'桌面应用'
+  desktopApp:'桌面应用',
+  knowledgeQuiz:'知识问答',
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

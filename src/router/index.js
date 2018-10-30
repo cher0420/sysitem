@@ -24,7 +24,7 @@ for(let v of MENUS){
           name:'config',
           title:value.chineseName,
           component: ()=>import(`../page/${v.path}/${value.path}/index`),
-        }
+        },
       ]
     }
     children = [...children,childrenObj]

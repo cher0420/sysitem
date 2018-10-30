@@ -2,7 +2,7 @@
   <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="150px" v-loading="loading" class="yoy-main">
     <el-form-item label="机器人姓名" prop='Bot_Name'>
       <el-col :span="11">
-        <el-input v-model="ruleForm.Bot_Name" maxlength="30"></el-input>
+        <el-input v-model="ruleForm.Bot_Name" maxlength="15"></el-input>
       </el-col>
     </el-form-item>
     <el-form-item label="机器人性别" prop='Bot_Gender'>
@@ -69,13 +69,13 @@
     </el-form-item>
     <el-form-item label="工作单位" prop="Bot_Company">
       <el-col :span="11">
-        <el-input v-model="ruleForm.Bot_Company" placeholder="请输入工作单位">
+        <el-input v-model="ruleForm.Bot_Company" placeholder="请输入工作单位" maxlength="15">
         </el-input>
       </el-col>
     </el-form-item>
     <el-form-item label="毕业院校" prop="Bot_School">
       <el-col :span="11">
-        <el-input v-model="ruleForm.Bot_School" placeholder="请输入毕业院校">
+        <el-input v-model="ruleForm.Bot_School" placeholder="请输入毕业院校" maxlength="15">
         </el-input>
       </el-col>
     </el-form-item>
@@ -117,6 +117,8 @@
           Bot_Birthplace:{
             province:[{required: true, message: '请选择省份和城市!'}],
           },
+          Bot_Company:[{required: false},{max:15,message:'最多15个字符！'}],
+          Bot_School:[{required: false},{max:15,message:'最多15个字符！'}],
         },
         ruleForm: {
           Bot_Name: '',
@@ -166,6 +168,21 @@
     },
     methods: {
       submit(formName) {
+        const that = this
+        this.$confirm('确认保存?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          that.validate(formName)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消保存'
+          });
+        });
+      },
+      validate(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
             const data  = JSON.parse(JSON.stringify(this.ruleForm))
@@ -179,6 +196,8 @@
         });
       },
       submitForm(v){
+        const that = this
+        that.loading = true
         const BotConfigId = this.$route.query.recordId
         const body = {
             ...v,
@@ -194,7 +213,25 @@
         }
         request(URL.requestHost+'/api/BotProfile/StoreBotProfile',option).then(
           (res) =>{
-            console.log(res)
+            that.$message({
+              type: 'success',
+              message: '保存成功',
+              duration: 2000,
+              onClose:() => {
+                that.loading = false;
+              }
+            });
+          }
+        ).catch(
+          () =>{
+            that.$message({
+              type: 'error',
+              message: '保存失败',
+              duration: 2000,
+              onClose:() => {
+                that.loading = false;
+              }
+            });
           }
         )
       },

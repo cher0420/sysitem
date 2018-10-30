@@ -143,8 +143,9 @@
         对话框标题：
       </el-col>
       <el-col :span="15">
-        <el-input v-model="formData.DialogTitle">
-          <span solt="suffix">最多15个字符</span>
+        <el-input v-model="formData.DialogTitle" maxlength="15">
+          <span slot="suffix">最多15个字符 &nbsp;</span>
+
         </el-input>
       </el-col>
     </el-form-item>
@@ -153,8 +154,8 @@
         问候语：
       </el-col>
       <el-col :span="15">
-        <el-input v-model="formData.DialogGreetings" type="textarea" :rows="5">
-          <span solt="suffix">最多30个字符</span>
+        <el-input v-model="formData.DialogGreetings" type="textarea" :rows="5" maxlength="30">
+          <span slot="suffix">最多30个字符 &nbsp;</span>
         </el-input>
       </el-col>
     </el-form-item>
@@ -180,7 +181,7 @@
   import URL from '../../../../host/baseUrl'
   import {WEBINFO,UPDATEWEB} from "../../../../constants/api";
   import {getCookies} from "../../../../utils/cookie";
-  import {TOKEN} from "../../../../constants/constants";
+  import {TOKEN,TENANTID} from "../../../../constants/constants";
   import{unhtml,htmlDecodeByRegExp} from "../../../../utils/utils";
   import store from '../../../../store/index'
 
@@ -193,7 +194,7 @@
           BotHeadPortrait: IMAGE,
           disabled: true,
           DialogColor: '#3B65B7',
-          DialogTitleColor:'#555555',
+          DialogTitleColor:'#FFFFFF',
           LoginSwitch:true, //true 为需要 ，false 为不需要
           DialogTitle:'小华智能助理',
           DialogGreetings:'您好，我是小华，有什么可以帮助您？',
@@ -201,8 +202,8 @@
         },
         rules: {
           AuthorizedAddress:[{required: true, message: '请填写授信域名!'}],
-          DialogTitle:[{required: true, message: '请填写对话框标题!'}],
-          DialogGreetings:[{required: true, message: '请填写问候语!'}],
+          DialogTitle:[{required: true, message: '请填写对话框标题!'},{max:15,message:'最多15个字符！'}],
+          DialogGreetings:[{required: true, message: '请填写问候语!'},{max:30,message:'最多30个字符！'}],
         },
         DialogColor:'#3B65B7',
         DialogTitleColor:'#FFFFFF',
@@ -233,13 +234,13 @@
       request(URL.requestHost+WEBINFO,option).then(
         (res) =>{
           const data =res.WebChatSettingModel
-          data.Code =  htmlDecodeByRegExp(data.Code)
-          this.headerPicture = data.BotHeadPortrait.substr(0,5) === 'normal'?'normal':'custom'
-          const BotHeadPortrait = data.BotHeadPortrait.substr(6,data.BotHeadPortrait.length-1)
+          data.Code =  data.Code?htmlDecodeByRegExp(data.Code):null
+          this.headerPicture = data.BotHeadPortrait&&data.BotHeadPortrait.substr(0,5) === 'normal'?'normal':'custom'
+          const BotHeadPortrait = data.BotHeadPortrait?data.BotHeadPortrait.substr(6,data.BotHeadPortrait.length-1):null
           data.BotHeadPortrait = BotHeadPortrait
           data.LoginSwitch = data.LoginSwitch !== 0
-          this.DialogTitleColor = data.DialogTitleColor
-          this.DialogColor = data.DialogColor
+          this.DialogTitleColor = data.DialogTitleColor?data.DialogTitleColor:this.DialogTitleColor
+          this.DialogColor = data.DialogColor?data.DialogColor:this.DialogColor
           this.formData = data
         }
       )
@@ -274,26 +275,43 @@
         this.headerPicture = v
       },
       submit(formName) {
+        const that = this
+        this.$confirm('确认保存?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          that.validate(formName)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消保存'
+          });
+        });
+      },
+      validate(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            this.loading = true;
             const recordId = this.$route.query.recordId
             const host = 'https://'+window.location.host
             const data  = JSON.parse(JSON.stringify(this.formData))
+
             const Code=`&lt;script id=&quot;bot&quot; type=&quot;text/javascript&quot; src=&quot;&quot; dataposition=&quot;${data.Position}&quot; datahost=&quot;${host}&quot; dataid=&quot;${recordId}&quot; dataimg=&quot;${host}/Content/images/logo.jpg&quot; datatxt=&quot;&quot;&gt;&lt;/script&gt;`
             this.formData.Code = htmlDecodeByRegExp(Code)
 
             const user = store.state.app.userInfo
 
             const BotHeadPortrait =this.headerPicture === 'normal'?'normal'+IMAGE:'custom'+data.BotHeadPortrait
-            console.log('=====',data)
 
             const UserInfo = {
               Email:user.Email,
               FullName:user.FullName
             }
             data.LoginSwitch = data.LoginSwitch === true?1:0
+            const TenantId = getCookies(TENANTID)
             const newData = {
-              "TenantId":data.TenantId,
+              "TenantId":TenantId,
               "BotConfigId":data.BotConfigId,
               "Position":data.Position,
               "BotHeadPortrait":BotHeadPortrait,
@@ -306,15 +324,14 @@
               'UserInfo':UserInfo,
               LoginSwitch:data.LoginSwitch
             }
-
             this.submitForm(newData)
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
       },
       submitForm(data){
+        const that = this
         const token =getCookies(TOKEN)
         const body = {
             ...data,
@@ -328,7 +345,25 @@
         }
         request(URL.requestHost+UPDATEWEB,option).then(
           (res) =>{
-            console.log(res)
+            that.$message({
+              type: 'success',
+              message: '保存成功',
+              duration: 2000,
+              onClose:() =>{
+                that.loading = false;
+              }
+            })
+          }
+        ).catch(
+          ()=>{
+            that.$message({
+              type: 'error',
+              message: '保存失败',
+              duration: 2000,
+              onClose:() => {
+                that.loading = false;
+              }
+            })
           }
         )
       },
