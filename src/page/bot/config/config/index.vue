@@ -169,31 +169,37 @@
     methods: {
       submit(formName) {
         const that = this
-        this.$confirm('确认保存?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          that.validate(formName)
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消保存'
-          });
-        });
+        that.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$confirm('确认保存?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              that.validate(formName)
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消保存'
+              });
+            });
+          }else{
+            return false;
+          }
+        })
       },
       validate(formName){
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
+        // this.$refs[formName].validate((valid) => {
+        //   if (valid) {
             const data  = JSON.parse(JSON.stringify(this.ruleForm))
             data.Bot_Birthplace = `${data.Bot_Birthplace.province}-${data.Bot_Birthplace.city}`
             delete data.Status
             this.submitForm(data)
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
+          // } else {
+          //   console.log('error submit!!');
+          //   return false;
+          // }
+        // });
       },
       submitForm(v){
         const that = this

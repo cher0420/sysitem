@@ -1,14 +1,15 @@
 <template>
-  <iframe src="https://hightalkmarketadminportal-test.azurewebsites.net/WebTalk/Index.html" frameborder="0" style="width: 100%;height: 100%;"></iframe>
+  <iframe :src="url" frameborder="0" style="width: 100%;height: 100%;"></iframe>
 </template>
 <style scoped>
 </style>
 <script>
+  import URL from '../../host/baseUrl'
 
   export default{
     data () {
       return {
-        url1: ''
+        url: URL.baseUrl + '/WebTalk/Index.html'
       }
     },
     methods: {

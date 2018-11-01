@@ -198,7 +198,7 @@
           LoginSwitch:true, //true 为需要 ，false 为不需要
           DialogTitle:'小华智能助理',
           DialogGreetings:'您好，我是小华，有什么可以帮助您？',
-          AuthorizedAddress:'',
+          AuthorizedAddress:'127.0.0.1',
         },
         rules: {
           AuthorizedAddress:[{required: true, message: '请填写授信域名!'}],
@@ -211,11 +211,17 @@
         titleColorItems:['#3B65B7','#F45E63','#FF9800','#00BEAC','#2A8CE7','#9E3BC8','#673AB7'],
         textColorItems:['#FFFFFF','#F45E63','#FF9800','#00BEAC','#2A8CE7','#9E3BC8','#673AB7'],
         headerPicture:'normal',
-        defaultPicture:IMAGE,
+        // defaultPicture:IMAGE,
         loading:false,
       }
     },
     name:'webTest',
+    computed:{
+      defaultPicture(){
+        const data = IMAGE.substr(6,IMAGE.length-1)
+        return data
+      }
+    },
     components:{
       TitleItem,
     },
@@ -234,21 +240,31 @@
       }
       request(URL.requestHost+WEBINFO,option).then(
         (res) =>{
-          const data =res.WebChatSettingModel
-          data.Code =  data.Code?htmlDecodeByRegExp(data.Code):null
-          this.headerPicture = data.BotHeadPortrait&&data.BotHeadPortrait.substr(0,5) === 'normal'?'normal':'custom'
-          const BotHeadPortrait = data.BotHeadPortrait?data.BotHeadPortrait.substr(6,data.BotHeadPortrait.length-1):null
-          data.BotHeadPortrait = BotHeadPortrait
-          data.LoginSwitch = data.LoginSwitch !== 0
-          this.DialogTitleColor = data.DialogTitleColor?data.DialogTitleColor:this.DialogTitleColor
-          this.DialogColor = data.DialogColor?data.DialogColor:this.DialogColor
-          this.formData = data
+          this.initData(res)
         }
       )
     },
     methods: {
       upload(response, file, fileList){
         console.log(response, file, fileList)
+      },
+      initData(res){
+        const data =res.WebChatSettingModel
+        data.Code =  data.Code?htmlDecodeByRegExp(data.Code):null
+        this.headerPicture = data.BotHeadPortrait&&data.BotHeadPortrait.substr(0,5) === 'normal'?'normal':'custom'
+        const BotHeadPortrait = data.BotHeadPortrait?data.BotHeadPortrait.substr(6,data.BotHeadPortrait.length-1):null
+        data.BotHeadPortrait = BotHeadPortrait
+        data.LoginSwitch = data.LoginSwitch !== 0
+        this.DialogTitleColor = data.DialogTitleColor?data.DialogTitleColor:this.DialogTitleColor
+        this.DialogColor = data.DialogColor?data.DialogColor:this.DialogColor
+        //对话框标题 判断是否有初始值
+        data.DialogTitle = data.DialogTitle?data.DialogTitle:'小华智能助理'
+        //问候语 判断是否有初始值
+        data.DialogGreetings = data.DialogGreetings?data.DialogGreetings:'您好，我是小华，有什么可以帮助您？'
+        //授信域名 判断是否有初始值
+        data.AuthorizedAddress = data.AuthorizedAddress?data.AuthorizedAddress:'127.0.0.1'
+
+        this.formData = data
       },
       upLoadImg(e) {
         const that = this
@@ -276,10 +292,8 @@
       },
       submit(formName) {
         const that = this
-        debugger;
         that.$refs[formName].validate((valid) => {
           if (valid) {
-            debugger;
             this.$confirm('确认保存?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
