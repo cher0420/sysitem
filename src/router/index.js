@@ -50,6 +50,14 @@ const root = [{
     }]
   },
   {
+    path:'/webTalk',
+    component: () => import('../page/webtalk/index')
+  },
+  {
+    path:'/webTalk/v2',
+    component: () => import('../page/v2/index')
+  },
+  {
     path: '*',
     name: 'Error',
     redirect: "/"

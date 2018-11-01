@@ -19,13 +19,14 @@
       <el-table-column
         prop="Description"
         label="描述"
-        min-width="320"
+        min-width="220"
       >
       </el-table-column>
       <el-table-column
         prop="StatusString"
         label="状态"
         :render-header="renderProductId"
+        min-width="40"
       >
         <template slot-scope="scope">
           <span :style="{'color': scope.row.StatusString === '已创建'? '#555':'#999'}">
@@ -36,6 +37,7 @@
       <el-table-column
         prop="CreateDate"
         label="创建时间"
+        min-width="40"
       >
         <template slot-scope="scope">
           <span v-if="scope.row.Status == 0||scope.row.Status == 1||scope.row.Status == 6">
@@ -106,10 +108,10 @@
   import store from '../../store/index'
   import {getCookies} from "../../utils/cookie";
   import {TOKEN} from "../../constants/constants";
-  import {getList} from "../../serive/requestMethod";
+  import {getList,wait} from "../../serive/requestMethod";
 
   let  reloadListObj=null
-  function reloadList(v){
+  async function reloadList(v){
     const PageIndex = store.state.app.PageIndex
     const description = store.state.app.description
     const searchStatus = store.state.app.searchStatus
@@ -156,14 +158,13 @@
     created(){
       store.dispatch(REPLACE,{PageIndex:1,searchStatus:null,description:null}).then(
         ()=>{
-          getList(URL.requestHost + BOT,{},ITEMKEY).then(
-            ()=>{
-              reloadListObj = setInterval(reloadList,5000)
+          wait(getList(URL.requestHost + BOT,{},ITEMKEY,false)).then(
+            () =>{
+              reloadListObj = setInterval(reloadList,10000)
             }
           )
         }
-      )
-
+      ).catch(err=>err)
     },
     destroyed: function () {
       clearInterval(reloadListObj)
@@ -243,11 +244,15 @@
         }
         request(URL.requestHost+CREATEBOT,options).then(
           (res) => {
-            that.$message({
-              type: 'success',
-              message: '创建中，请稍后',
-              duration: 2000
-            });
+            reloadList().then(
+              () =>{
+                that.$message({
+                  type: 'success',
+                  message: '创建中，请稍后',
+                  duration: 2000,
+                });
+              }
+            )
           }
         ).catch(
           (err)=>{
@@ -300,6 +305,14 @@
         }
         request(URL.requestHost + DELETEBOT,options).then(
           (res)=>{
+            reloadList().then(
+              () =>{
+                that.$message({
+                  type: 'success',
+                  message: '删除成功！'
+                });
+              }
+            )
           }
         ).catch(
           (res)=>{

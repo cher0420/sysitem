@@ -14,91 +14,41 @@ export const isIE9 = () => {
     }
   }
 }
-export const requestJSONP = (api,params = {}) => {
-      const headers = {
-        "Content-Type": "application/json; charset=utf-8",
-        ...params.headers
-      }
-      const type = params.method
-      const data = params.body||{}
-      return new Promise(
-        (resolve, reject) => {
-          $.ajax({
-            url:api,
-            headers,
-            type,
-            data,
-            success: function(res){
-              if(res.Status){
-                return resolve(res)
-              }else{
-                return reject(res)
-              }
-            },
-            error: function(res){
-              return reject(res)
-            }
-          })
-        }
-      )
+export const IE9Request = (api,params) => {
+  const headers = {
+    "Content-Type": "application/json; charset=utf-8",
+    ...params.headers
   }
+  const type = params.method
+  const data = params.body||{}
+  return new Promise(
+    (resolve, reject) => {
+      $.ajax({
+        url:api,
+        headers,
+        type,
+        data,
+        success: function(res){
+          if(res.Status){
+            return resolve(res)
+          }else{
+            return reject(res)
+          }
+        },
+        error: function(res){
+          return reject(res)
+        }
+      })
+    }
+  )
+}
 export const request = (api,params = {}) => {
   const status = isIE9()
   if(status){
-    const headers = {
-      "Content-Type": "application/json; charset=utf-8",
-      ...params.headers
-    }
-    const type = params.method
-    const data = params.body||{}
-    return new Promise(
-      (resolve, reject) => {
-        $.ajax({
-          url:api,
-          headers,
-          type,
-          data,
-          success: function(res){
-            if(res.Status){
-              return resolve(res)
-            }else{
-              return reject(res)
-            }
-          },
-          error: function(res){
-            return reject(res)
-          }
-        })
-      }
-    )
+    return IE9Request(api,params)
   }else{
     if(status){
-      const headers = {
-        ...params.headers,
-        "Content-Type": "application/json; charset=utf-8",
-      }
-      const type = params.method
-      const data = params.body||{}
-      return new Promise(
-        (resolve, reject) => {
-          $.ajax({
-            url:api,
-            headers,
-            type,
-            data,
-            success: function(res){
-              if(res.Status){
-                return resolve(res)
-              }else{
-                return reject(res)
-              }
-            },
-            error: function(res){
-              return reject(res)
-            }
-          })
-        }
-      )
+      return IE9Request(api,params)
     }else{
       return new Promise(
         (resolve, reject) =>{

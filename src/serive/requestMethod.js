@@ -4,12 +4,21 @@ import {REPLACE} from "../store/mutations";
 import {getCookies} from "../utils/cookie";
 import {TOKEN,TENANTID} from "../constants/constants";
 
+export async function wait(callback){
+    let reload = setInterval(function () {
+      const TenantId = getCookies(TENANTID);
+      if(TenantId){
+        clearInterval(reload);
+        callback
+      }
+    },50)
+}
 
 export async function getList(api,params,key, loading=true){
-  const token = getCookies(TOKEN)
-  const TenantId = getCookies(TENANTID)
-  if(token&&TenantId){
-    store.dispatch(REPLACE,{loading: loading}).then(
+    const token = getCookies(TOKEN)
+    const TenantId = getCookies(TENANTID)
+    // if(token&&TenantId){
+    store.dispatch(REPLACE, {loading: loading}).then(
       () => {
         const data = {
           PageIndex: 1,                                     //分页页数
@@ -20,26 +29,25 @@ export async function getList(api,params,key, loading=true){
         const body = JSON.stringify(data)
         const options = {
           method: 'POST',
-          headers:{
+          headers: {
             "Content-Type": "application/json; charset=utf-8",
-            'Access-Token':token
+            'Access-Token': token
           },
           body,
         }
-        request(api,options).then(
+        request(api, options).then(
           (res) => {
-            store.dispatch(REPLACE,{loading:false})
+            store.dispatch(REPLACE, {loading: false})
             const newData = res[key]
-            if(newData.length>0){
-              for(let v of newData){
+            if (newData.length > 0) {
+              for (let v of newData) {
                 const arr = v.CreateDate.split(' ')[0].split('/')
-                const item = arr[arr.length-1]
+                const item = arr[arr.length - 1]
                 arr.unshift(item)
                 arr.pop()
                 v.CreateDate = arr.join('-')
                 //0:创建 1: 配置 删除 2：创建中 3：删除
-                switch(v.Status)
-                {
+                switch (v.Status) {
                   case 0:
                     v.config = 0
                     break;
@@ -60,15 +68,15 @@ export async function getList(api,params,key, loading=true){
                 }
               }
             }
-            store.dispatch(REPLACE,{tableData: newData,total:res.TotalCount})
+            store.dispatch(REPLACE, {tableData: newData, total: res.TotalCount})
           }
         ).catch(
-          (err) =>{
+          (err) => {
             console.log(err);
           }
         )
       }
     )
-  }
+  // }
 }
 

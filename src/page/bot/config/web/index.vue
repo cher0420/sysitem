@@ -170,7 +170,7 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submit('formData')">保存</el-button>
-      <el-button >预览</el-button>
+      <el-button @click="submit('formData')">预览</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -212,6 +212,7 @@
         textColorItems:['#FFFFFF','#F45E63','#FF9800','#00BEAC','#2A8CE7','#9E3BC8','#673AB7'],
         headerPicture:'normal',
         defaultPicture:IMAGE,
+        loading:false,
       }
     },
     name:'webTest',
@@ -266,7 +267,6 @@
           reader.onload = (function (file) {
             return function (e) {
               that.formData.BotHeadPortrait =this.result
-              console.log(that.formData.BotHeadPortrait)
             };
           })(e.target.files[0]);
           reader.readAsDataURL(e.target.files[0]);
@@ -276,22 +276,30 @@
       },
       submit(formName) {
         const that = this
-        this.$confirm('确认保存?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          that.validate(formName)
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消保存'
-          });
-        });
+        debugger;
+        that.$refs[formName].validate((valid) => {
+          if (valid) {
+            debugger;
+            this.$confirm('确认保存?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              that.validate(formName)
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消保存'
+              });
+            });
+          }else{
+            return false;
+          }
+        })
       },
       validate(formName){
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
+        // this.$refs[formName].validate((valid) => {
+        //   if (valid) {
             this.loading = true;
             const recordId = this.$route.query.recordId
             const host = 'https://'+window.location.host
@@ -325,10 +333,10 @@
               LoginSwitch:data.LoginSwitch
             }
             this.submitForm(newData)
-          } else {
-            return false;
-          }
-        });
+          // } else {
+          //   return false;
+          // }
+        // });
       },
       submitForm(data){
         const that = this
