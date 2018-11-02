@@ -1,5 +1,5 @@
 const TEST_URL = {
-  baseUrl:'https://hightalkmarketadminportal-test.azurewebsites.net',
+  baseUrl:'https://portal-test.hightalk.ai',
   SSOWebUrl:{
     zh:"https://hightalkssoweb-test.azurewebsites.net/zh-cn",
     en:'/'
@@ -8,12 +8,12 @@ const TEST_URL = {
   requestHost: 'https://hightalkadminapi-test.azurewebsites.net'
 }
 const STAGING_URL = {
+  baseUrl:'https://portal-staging.hightalk.ai',
   SSOWebUrl:{
     zh:"https://login-staging.hightalk.ai/zh-cn",
     en:'/'
   },
   SSOServerApi:"https://hightalkssoapi-staging.azurewebsites.net",
-  baseUrl:'https://hightalkadminportal-staging.azurewebsites.net',
   requestHost: 'https://hightalkadminapi-staging.azurewebsites.net'
 }
-export default STAGING_URL
+export default TEST_URL

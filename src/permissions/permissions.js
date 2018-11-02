@@ -13,7 +13,7 @@ export function redirect(type){
   const host = window.location.host
   setCookies('SID',random,{ expires: 1 }).then(
     () =>{
-      const callbackString = `https://${host}/?sid=${random}`
+      const callbackString = `http://${host}/?sid=${random}`
       window.location.href = URL.SSOWebUrl.zh+ type + callbackString
     }
   )
@@ -29,12 +29,16 @@ export function getLoginStatus(){
 
   if(token){
     // 验证cookie里的SID与url上的是否一致
-    voildToken(token)
+    voildToken(token).then(
+      ()=>{
+        console.log('voildToken'+token);
+      }
+    )
 
   }else{
     // 如果cookie里的SID不存在则跳转到SSO登录
     const sid = getCookies(SID)
-
+    console.log(sid)
      if( sid ){
        voildId( sid )
      } else {
@@ -44,6 +48,7 @@ export function getLoginStatus(){
 }
 
 export const voildId = (sid) => {
+
   let search = window.location.search;
 
   //验证 url 上的 SID 是否存在
@@ -56,14 +61,17 @@ export const voildId = (sid) => {
 
 
   // url上的sid不空且与cookie的sid一致
-
   if (tokenUrl&&str&&str === sid) {
 
     // url上的sid不空且与cookie的sid一致移除cookie的SID
       removeCookies(SID).then(
         () => {
           //验证url上的token是否存在并且与cookie的token一致
-          voildToken(tokenUrl)
+          voildToken(tokenUrl).then(
+            () =>{
+
+            }
+          )
         }
       )
     } else {
@@ -72,7 +80,7 @@ export const voildId = (sid) => {
 }
 /**
  * 验证token
- * @param token
+ * @param tokens
  */
 export async function voildToken (tokens) {
   const url = URL.SSOServerApi+ VOILD_TOKEN_URL
@@ -88,7 +96,9 @@ export async function voildToken (tokens) {
     body: baseData
   }
   request(url, options).then((res) => {
+
     if (res.IsValid) {
+
       setCookies(TOKEN, tokens, { expires: 1 } ).then(
         ()=>{
           fetchUserInfo(tokens)
@@ -96,9 +106,17 @@ export async function voildToken (tokens) {
         }
       )
    } else {
-        redirect(LOGIN)
+          redirect(LOGIN)
     }
-  })
+  }).catch(
+    (err) =>{
+      removeCookies([TOKEN]).then(
+        () =>{
+          redirect(LOGIN)
+        }
+      )
+    }
+  )
 }
 
 /**
@@ -152,7 +170,7 @@ export const hiddenTokenInUrl = () => {
 export const logOut = () => {
   let loadingInstance = Loading.service({fullscreen: true});
   const token = getCookies('token')
-  const redirectUrl = 'https://'+window.location.host
+  const redirectUrl = 'http://'+window.location.host
   removeCookies([USERNAME,TOKEN]).then(
     () => {
       loadingInstance.close();

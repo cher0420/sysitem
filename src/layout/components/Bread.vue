@@ -37,7 +37,6 @@
     },
     methods:{
       handle(name){
-        debugger;
         store.dispatch(REPLACE,{navIndex:name}).then(
           () =>{
 

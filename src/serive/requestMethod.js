@@ -17,13 +17,13 @@ export async function wait(callback){
 export async function getList(api,params,key, loading=true){
     const token = getCookies(TOKEN)
     const TenantId = getCookies(TENANTID)
-    // if(token&&TenantId){
+
     store.dispatch(REPLACE, {loading: loading}).then(
       () => {
         const data = {
           PageIndex: 1,                                     //分页页数
           PageSize: 10,                                     //当前页的条数
-          tenantId:TenantId,
+          // tenantId:TenantId,
           ...params.body,
         }
         const body = JSON.stringify(data)

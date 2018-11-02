@@ -15,9 +15,14 @@ Vue.config.productionTip = false
 getLoginStatus()
 
 /* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
-})
+setTimeout(
+  () =>{
+    new Vue({
+      el: '#app',
+      router,
+      components: { App },
+      template: '<App/>'
+    })
+  },400
+)
+

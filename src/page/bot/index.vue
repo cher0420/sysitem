@@ -364,7 +364,6 @@
         )
       },
       update(v){
-        debugger;
         this.data = {
           ...this.data,
           ...v
