@@ -179,11 +179,19 @@ export const SECONDMENUS = [
         chineseName:'知识问答',
         englishName:'knowledgeQuiz',
         path:'knowledgeQuiz',
-      }
+      },
+      {
+        id:'caseStore',
+        chineseName:'案例库',
+        englishName:'caseStore',
+        path:'caseStore',
+      },
+
     ]
   }
 ]
 export const STR = {
+
   authority:'权限管理',
   custom:'定制服务',
   opinion:'意见反馈',
@@ -199,6 +207,7 @@ export const STR = {
   robot:'实体机器人',
   desktopApp:'桌面应用',
   knowledgeQuiz:'知识问答',
+  caseStore: "案例库"
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';
