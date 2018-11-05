@@ -11,11 +11,11 @@
         <el-container class="full-width full-height" v-loading="mainLoading">
           <secondary-menu v-if='config' class="yoy-second-menu full-height">
           </secondary-menu>
-          <el-container>
+          <el-container class="full-width">
             <el-main class="p-relative full-height">
               <app-main></app-main>
             </el-main>
-            <el-footer style="height:65px;" class="">
+            <el-footer style="height:65px;">
               <footer-bar></footer-bar>
             </el-footer>
           </el-container>

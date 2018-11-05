@@ -13,7 +13,7 @@ export function redirect(type){
   const host = window.location.host
   setCookies('SID',random,{ expires: 1 }).then(
     () =>{
-      const callbackString = `http://${host}/?sid=${random}`
+      const callbackString = `https://${host}/?sid=${random}`
       window.location.href = URL.SSOWebUrl.zh+ type + callbackString
     }
   )
@@ -170,7 +170,7 @@ export const hiddenTokenInUrl = () => {
 export const logOut = () => {
   let loadingInstance = Loading.service({fullscreen: true});
   const token = getCookies('token')
-  const redirectUrl = 'http://'+window.location.host
+  const redirectUrl = 'https://'+window.location.host
   removeCookies([USERNAME,TOKEN]).then(
     () => {
       loadingInstance.close();

@@ -6,7 +6,6 @@
     @close="handleClose"
     @select="select"
     active-text-color="#2a8ce7"
-    style="width: 180px;"
     :default-openeds='openArr'
   >
     <el-menu-item index="0" class="f-s-14" disabled>
@@ -61,7 +60,6 @@
           arr.splice(1,arr.length-1,obj)
           store.dispatch(REPLACE,{breadArr:arr,componentName:index,navIndex:index}).then(
             () =>{
-
             }
           )
         }
