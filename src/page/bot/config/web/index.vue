@@ -170,7 +170,7 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="submit('formData')">保存</el-button>
-      <el-button @click="submit('formData')">预览</el-button>
+      <el-button @click="preview">预览</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -211,16 +211,12 @@
         titleColorItems:['#3B65B7','#F45E63','#FF9800','#00BEAC','#2A8CE7','#9E3BC8','#673AB7'],
         textColorItems:['#FFFFFF','#F45E63','#FF9800','#00BEAC','#2A8CE7','#9E3BC8','#673AB7'],
         headerPicture:'normal',
-        // defaultPicture:IMAGE,
+        defaultPicture:IMAGE,
         loading:false,
       }
     },
     name:'webTest',
     computed:{
-      defaultPicture(){
-        const data = IMAGE.substr(6,IMAGE.length-1)
-        return data
-      }
     },
     components:{
       TitleItem,
@@ -248,12 +244,42 @@
       upload(response, file, fileList){
         console.log(response, file, fileList)
       },
+      preview(){
+        const id = this.$route.query.recordId
+        const host = 'https://'+window.location.host
+        const url = `${host}/WebTalk/preview.html?id=${id}`
+        window.open(url)
+      },
       initData(res){
+        const that = this
+        //data 为返回值的form
         const data =res.WebChatSettingModel
+
         data.Code =  data.Code?htmlDecodeByRegExp(data.Code):null
-        this.headerPicture = data.BotHeadPortrait&&data.BotHeadPortrait.substr(0,5) === 'normal'?'normal':'custom'
-        const BotHeadPortrait = data.BotHeadPortrait?data.BotHeadPortrait.substr(6,data.BotHeadPortrait.length-1):null
-        data.BotHeadPortrait = BotHeadPortrait
+
+        if(data.BotHeadPortrait){
+          // 如果头像有数据
+          that.headerPicture = data.BotHeadPortrait.substr(0,6)
+          // 如果头像的状态为normal
+          if(that.headerPicture === 'normal'){
+            // 则将form表单的头像设置为默认头像
+            data.BotHeadPortrait = IMAGE
+          }else{
+            data.BotHeadPortrait = data.BotHeadPortrait.substr(6,data.BotHeadPortrait.length-1)
+          }
+        }else{
+          // 头像为null,设置状态为nomal,头像数据为IMAGE
+          that.headerPicture = 'normal'
+          data.BotHeadPortrait = IMAGE
+        }
+
+        // 判断form的头像数据状态为默认还是自定义
+        for(let v in data){
+          if(!data[v]){
+            data[v] = that.formData[v]
+          }
+        }
+
         data.LoginSwitch = data.LoginSwitch !== 0
         this.DialogTitleColor = data.DialogTitleColor?data.DialogTitleColor:this.DialogTitleColor
         this.DialogColor = data.DialogColor?data.DialogColor:this.DialogColor
@@ -263,7 +289,9 @@
         data.DialogGreetings = data.DialogGreetings?data.DialogGreetings:'您好，我是小华，有什么可以帮助您？'
         //授信域名 判断是否有初始值
         data.AuthorizedAddress = data.AuthorizedAddress?data.AuthorizedAddress:'127.0.0.1'
-
+        //头像位置是否有初始值
+        data.Position = data.Position?data.Position:'right-down'
+        //判断对话标题的颜色
         this.formData = data
       },
       upLoadImg(e) {
@@ -288,6 +316,11 @@
           reader.readAsDataURL(e.target.files[0]);
       },
       changeHeaderImage(v){
+        //如果上传头像为自定义，则清空头像数据
+        if(v === 'custom'){
+          this.formData.BotHeadPortrait = ''
+        }
+        //改变头像状态
         this.headerPicture = v
       },
       submit(formName) {
@@ -312,19 +345,18 @@
         })
       },
       validate(formName){
-        // this.$refs[formName].validate((valid) => {
-        //   if (valid) {
             this.loading = true;
             const recordId = this.$route.query.recordId
             const host = 'https://'+window.location.host
             const data  = JSON.parse(JSON.stringify(this.formData))
 
-            const Code=`&lt;script id=&quot;bot&quot; type=&quot;text/javascript&quot; src=&quot;&quot; dataposition=&quot;${data.Position}&quot; datahost=&quot;${host}&quot; dataid=&quot;${recordId}&quot; dataimg=&quot;${host}/Content/images/logo.jpg&quot; datatxt=&quot;&quot;&gt;&lt;/script&gt;`
+            const Code=`&lt;script id=&quot;bot&quot; type=&quot;text/javascript&quot; src=&quot;${host}/WebTalk/linkScript/bot.js&quot; dataposition=&quot;${data.Position}&quot; datahost=&quot;${host}&quot; dataid=&quot;${recordId}&quot; dataimg=&quot;${host}/WebTalk/linkScript/robot.png&quot; datatxt=&quot;机器人&quot;&gt;&lt;/script&gt;`
+
             this.formData.Code = htmlDecodeByRegExp(Code)
 
             const user = store.state.app.userInfo
 
-            const BotHeadPortrait =this.headerPicture === 'normal'?'normal'+IMAGE:'custom'+data.BotHeadPortrait
+            const BotHeadPortrait = this.headerPicture === 'normal'?'normal'+IMAGE:'custom'+data.BotHeadPortrait
 
             const UserInfo = {
               Email:user.Email,
@@ -347,10 +379,7 @@
               LoginSwitch:data.LoginSwitch
             }
             this.submitForm(newData)
-          // } else {
-          //   return false;
-          // }
-        // });
+
       },
       submitForm(data){
         const that = this

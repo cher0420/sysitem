@@ -20,6 +20,8 @@
 </template>
 <script>
 import {detail} from "../questionQuiz/constants";
+import store from '../../../../store/index'
+import {REPLACE} from "../../../../store/mutations";
 
 export default {
     data(){
@@ -29,6 +31,9 @@ export default {
         tapList: {weChat:'微信端',web:'网页端',desktop:'桌面',robot:'实体机器人'},
         str:''
       }
+    },
+    destroyed(){
+        store.dispatch(REPLACE,{navIndexSecond:''})
     },
     created(){
       const botCheckIndex = this.$route.query.botCheckIndex

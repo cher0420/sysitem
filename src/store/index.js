@@ -13,9 +13,11 @@ const store = new Vuex.Store({
       userName: '',
       userInfo: {},
       navIndex: '',
+      navIndexSecond:'',
       isCollapse: false,
       aSideWidth: '240px',
       breadArr:[{url:'/',name :'首页'}],
+
 
       PageIndex: 1,                                     //分页页数
       PageSize: 10,                                     //当前页的条数

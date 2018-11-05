@@ -4,7 +4,31 @@
       <el-breadcrumb-item class="primary-color align-middle" to="/bot">首页</el-breadcrumb-item>
       <el-breadcrumb-item class="primary-color align-middle" :to="{ path: item.url }" v-for="item in breadArr" @change="handle(item.name)">{{item.name}}</el-breadcrumb-item>
     </el-breadcrumb>
-    <section class="yoy-title box-sizing border-bottom text-title"><span class="align-middle dis-i-b line"></span><span class="align-middle">{{navIndex}}</span></section>
+
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="yoy-title box-sizing border-bottom text-title"  v-if="navIndexSecond">
+      <el-breadcrumb-item class="align-middle">
+        <span class="align-middle dis-i-b line"></span>
+        <span @click="back" class="backHover">
+          {{navIndex}}
+        </span>
+      </el-breadcrumb-item>
+      <el-breadcrumb-item class="align-middle" v-if="navIndexSecond">
+        {{navIndexSecond}}
+      </el-breadcrumb-item>
+    </el-breadcrumb>
+
+    <section class="yoy-title box-sizing border-bottom text-title" v-else>
+      <span class="align-middle dis-i-b line"></span>
+      <span class="align-middle">
+        {{navIndex}}
+      </span>
+      <!--<span class="align-middle" v-if="navIndexSecond">-->
+        <!--<span class="el-icon-arrow-right">{{navIndexSecond}}</span>-->
+      <!--</span>-->
+    </section>
+
+
+
   </section>
 </template>
 <script>
@@ -24,6 +48,9 @@
       navIndex(){
         const index=store.state.app.navIndex
         return STR[index]
+      },
+      navIndexSecond(){
+        return store.state.app.navIndexSecond
       }
     },
     created(){
@@ -42,6 +69,9 @@
 
           }
         )
+      },
+      back(){
+        store.dispatch(REPLACE,{componentName:'knowledgeQuiz'})
       }
     }
   }
@@ -51,6 +81,13 @@
   $bread-background: #2a8ce7;
   $bread-height: 48px;
   $title-height: 65px;
+  .backHover{
+    cursor: pointer;
+  }
+  .backHover:hover{
+    /*color:*/
+    color:$primary-color;
+  }
   .align-middle{
     vertical-align: middle;
   }
@@ -81,6 +118,13 @@
     line-height: 24px;
     background: $primary-color;
     margin-right: 6px;
+  }
+  .yoy-bread {
+    .el-breadcrumb.yoy-title{
+      height: $title-height;
+      line-height: $title-height;
+      padding-left: 0;
+    }
   }
 
 </style>

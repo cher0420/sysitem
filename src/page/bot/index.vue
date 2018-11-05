@@ -207,7 +207,7 @@
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消确认'
+            message: '已取消创建'
           });
         });
       }
@@ -258,7 +258,7 @@
           (err)=>{
             that.$message({
               type: 'error',
-              message: '删除失败',
+              message: '操作失败',
               duration: 2000
             });
           }
@@ -309,7 +309,7 @@
               () =>{
                 that.$message({
                   type: 'success',
-                  message: '删除成功！'
+                  message: '操作成功！'
                 });
               }
             )
@@ -318,7 +318,7 @@
           (res)=>{
             that.$message({
               type: 'error',
-              message: '删除失败，请稍后再试！'
+              message: '操作失败，请稍后再试！'
             });
           }
         )

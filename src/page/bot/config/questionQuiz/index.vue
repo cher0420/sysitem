@@ -8,7 +8,7 @@
         :value="item.value">
       </el-option>
     </el-select>
-      <el-input class='searchInput' size = 'small' v-model="keyWords" placeholder="搜索机器人名称或描述" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      <el-input class='searchInput' size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
     <el-table
       v-loading="loading"
@@ -26,13 +26,13 @@
       <el-table-column
         prop="title"
         label="知识"
-        width="600">
+        min-width="200">
       </el-table-column>
       <el-table-column
         prop="status"
         label="友好回答">
         <template slot-scope="scope">
-            <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index)">
+            <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.title)">
               <span class="p-absolute"
                     :style="{
                     background: 'url(' + require(`../../../../assets/bot/${key}.png`) + ')center center no-repeat'
@@ -107,8 +107,8 @@
           }
         )
       },
-      handleDetail(name,v,index){
-        store.dispatch(REPLACE,{componentName:'questionDetail',navIndex:'knowledgeQuiz'}).then(
+      handleDetail(name,v,index,title){
+        store.dispatch(REPLACE,{componentName:'questionDetail',navIndex:'knowledgeQuiz',navIndexSecond:title}).then(
           () => {
             this.$route.query.botCheckIndex = v
             this.$route.query.botName = name

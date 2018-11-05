@@ -4,6 +4,10 @@ $input-height: 32px;
   height:$input-height;
   line-height:$input-height;
 }
+.el-input.is-disabled .el-input__inner{
+  color:#777;
+  background: #fff;
+}
 //.el-form-item{
 //  margin-bottom: 12px;
 //}
