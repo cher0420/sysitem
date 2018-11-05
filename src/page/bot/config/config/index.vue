@@ -124,14 +124,14 @@
         ruleForm: {
           Bot_Name: '小华智能助理',
           Bot_Gender: 'f', // m:man,f:female
-          Bot_DayOfBirth: '',
+          Bot_DayOfBirth: moment().format('YYYY-MM-DD'),
           Bot_Constellation:'',
           Bot_BloodType: 'C',
           Bot_Height: 160,
           Bot_Weight:50,
           Bot_Birthplace: {
-          province:'',
-          city:''
+          province:'上海',
+          city:'上海'
           },
           Bot_Company:'上海灵羚科技有限公司',
           Bot_School:'上海灵羚科技有限公司',
@@ -180,13 +180,20 @@
           })
           // 更改出生日期格式
           const date = data.Bot_DayOfBirth
-          const arr = date.split(' ')
-          const dateArr = arr[0].split('/')
-          const year = dateArr[dateArr.length-1]
-          dateArr.pop()
-          dateArr.unshift(year)
-          data.Bot_DayOfBirth = dateArr.join('-')
+
+          if(data){
+            const arr = date.split(' ')
+            const dateArr = arr[0].split('/')
+            const year = dateArr[dateArr.length-1]
+            dateArr.pop()
+            dateArr.unshift(year)
+            data.Bot_DayOfBirth = dateArr.join('-')
+          }else{
+            data.Bot_DayOfBirth = moment().format('YYYY-MM-DD')
+            // console.log('====',data.Bot_DayOfBirth)
+          }
           that.ruleForm = data
+          this.getBot_Constellation(data.Bot_DayOfBirth)
         }
       )
     },
@@ -278,14 +285,17 @@
       },
       selectArea(k){
         const that = this
-        that.ruleForm.Bot_Birthplace.city = ''
+
         that.area.forEach(
           (v,key) =>{
             if(v.name === k){
               that.city = v.child
             }
+            return false;
           }
         )
+        that.ruleForm.Bot_Birthplace.city = that.city[0]
+        console.log('====',that.ruleForm.Bot_Birthplace.city)
       }
     },
   }
