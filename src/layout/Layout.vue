@@ -5,7 +5,7 @@
         <navBar></navBar>
       </el-header>
       <el-container class="full-height el-container">
-        <el-aside :width="aSideWidth" class="full-height" style="float:left">
+        <el-aside class="full-height" :width='aSideWidth' style="float:left;max-width: 280px;">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
         <el-container class="full-width full-height" v-loading="mainLoading">
@@ -72,7 +72,7 @@
   }
   .app-container{
     min-width: 1280px;
-    /*min-height: 800px;*/
+    min-height: 640px;
   }
   .el-main{
     /*margin-left: 180px;*/

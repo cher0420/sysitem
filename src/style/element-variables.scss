@@ -98,10 +98,10 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
   line-height: 48px;
   i{
     color: $primary-color;
+    margin-top: $iconH/2;
   }
   .yoy-menu-icon{
     display: inline-block;
-    height: 48px;
     width: $iconW;
     background: url("../assets/menu.png") center center no-repeat;
   }
@@ -122,11 +122,11 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 .el-menu-item{
   height:$side-item-height;
   line-height: $side-item-height;
-  .side-item-rightRow{
-    display:inline-block;
-    margin-left: 188px;
-    margin-right:-159px;
-  }
+  //.side-item-rightRow{
+  //  display:inline-block;
+  //  margin-left: 188px;
+  //  margin-right:-159px;
+  //}
 }
 .el-menu-item:hover, .el-menu-item:focus{
   background: $side-background;
@@ -155,9 +155,6 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
   }
 }
 
-.el-submenu .el-menu-item{
-  min-width: 180px;
-}
 .el-submenu__title{
   height:$side-item-height;
   line-height: $side-item-height;
@@ -238,3 +235,10 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
   color:$second-f-c-hover;
 }
 
+@media screen and (max-width:1280px){
+  .el-container.full-height.el-container{
+    .el-aside{
+      width: 180px !important;
+    }
+  }
+}

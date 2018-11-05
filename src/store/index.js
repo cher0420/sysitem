@@ -15,7 +15,7 @@ const store = new Vuex.Store({
       navIndex: '',
       navIndexSecond:'',
       isCollapse: false,
-      aSideWidth: '240px',
+      aSideWidth: '14vw',
       breadArr:[{url:'/',name :'首页'}],
 
 

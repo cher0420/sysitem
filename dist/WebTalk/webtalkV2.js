@@ -14,8 +14,8 @@
     return fmt;
 }
 
-//var apiHost = "https://hightalkadminapi-test.azurewebsites.net/api";
-var apiHost = "https://hightalkadminapi-staging.azurewebsites.net/api";
+var apiHost = "https://hightalkadminapi-test.azurewebsites.net/api";
+// var apiHost = "https://hightalkadminapi-staging.azurewebsites.net/api";
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};

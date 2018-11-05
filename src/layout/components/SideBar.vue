@@ -15,14 +15,16 @@
       :router="isRouter"
     >
       <el-menu-item :index="item.id" v-for="item in menus">
-        <p class="p-absolute">
+        <p class="p-relative iconContainer" style="">
           <i class="p-absolute yoy-menu-icon dis-i-b yoy-icon1" :style="{background: 'url(' + require(`../../assets/${item.id}.png`) + ')center center no-repeat'}"></i>
           <i class="p-absolute yoy-menu-icon dis-i-b yoy-icon2" :style="{background: 'url(' + require(`../../assets/${item.id}-hover.png`) + ')center center no-repeat'}"></i>
         </p>
-        <i v-show="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow"></i>
-        <span class="f-s-14 p-relative" slot="title">
+        <template slot="title">
+          <span class="f-s-14 dis-i-b align-middle side-menu-text p-relative" slot="title">
           {{item.chineseName}}
+            <i v-if="!isCollapse" class="el-icon-arrow-right f-s-14 side-item-rightRow" style="vertical-align: middle"></i>
         </span>
+        </template>
       </el-menu-item>
     </el-menu>
   </section>
@@ -90,7 +92,9 @@
       show(){
         store.dispatch(REPLACE, {isCollapse: !this.isCollapse}).then(
           ()=>{
-            this.isCollapse?store.dispatch(REPLACE,{aSideWidth: '60px'}):store.dispatch(REPLACE,{aSideWidth: '240px'})
+            this.isCollapse?
+              store.dispatch(REPLACE,{aSideWidth: '60px !important'}):
+              store.dispatch(REPLACE,{aSideWidth: '14vw'})
           }
         )
       },
@@ -133,7 +137,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   @import "../../style/index";
 
   .sidebar-container{ //菜单默认样式
@@ -152,19 +156,48 @@
     padding:0 $side-item-padding!important;
     /*text-align:center;*/
   }
-  .margin-l-159{
-    margin-left:-159px;
-  }
   // 控制各个项的选中效果
   .yoy-icon1,.yoy-icon2{
     top:0;
     left:0;
-    margin-top: $iconH/2-3;
     width:$iconW;
     height:$iconH;
     z-index: 0;
   }
   .yoy-icon1{
     z-index: 2;
+  }
+  .iconContainer{
+    height:$iconH;
+    width:$iconW;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 20px;
+  }
+  .side-menu-text{
+    width:72%;
+  }
+  @media screen and (max-width:1920px){
+    .side-menu-text{
+      width:83%;
+    }
+  }
+  @media screen and (max-width:1680px){
+    .side-menu-text{
+      width:78%;
+    }
+  }
+  @media screen and (max-width:1440px){
+    .side-menu-text{
+      width:72%;
+    }
+  }
+
+
+  .side-item-rightRow{
+    position:absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
   }
 </style>

@@ -14,8 +14,8 @@
     return fmt;
 }
 
-//var apiHost = "https://hightalkadminapi-test.azurewebsites.net/api";
-var apiHost = "https://hightalkadminapi-staging.azurewebsites.net/api";
+var apiHost = "https://hightalkadminapi-test.azurewebsites.net/api";
+// var apiHost = "https://hightalkadminapi-staging.azurewebsites.net/api";
 $(function () {
     var host = ""; //域名
     var cip = ""; //ip
