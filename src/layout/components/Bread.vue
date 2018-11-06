@@ -2,21 +2,20 @@
   <section class="yoy-bread f-s-14">
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item class="primary-color align-middle" to="/bot">首页</el-breadcrumb-item>
-      <el-breadcrumb-item class="primary-color align-middle" :to="{ path: item.url }" v-for="item in breadArr" @change="handle(item.name)">{{item.name}}</el-breadcrumb-item>
+      <el-breadcrumb-item class="primary-color align-middle" :to="{ path: item.url }" v-for="(item,key) in breadArr" @change="handle(item.name)">{{item.name}}</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="yoy-title box-sizing border-bottom text-title"  v-if="navIndexSecond">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="yoy-title box-sizing border-bottom text-title" v-if="navIndexSecond">
       <el-breadcrumb-item class="align-middle">
         <span class="align-middle dis-i-b line"></span>
         <span @click="back" class="backHover">
           {{navIndex}}
         </span>
       </el-breadcrumb-item>
-      <el-breadcrumb-item class="align-middle" v-if="navIndexSecond">
+      <el-breadcrumb-item class="align-middle">
         {{navIndexSecond}}
       </el-breadcrumb-item>
     </el-breadcrumb>
-
     <section class="yoy-title box-sizing border-bottom text-title" v-else>
       <span class="align-middle dis-i-b line"></span>
       <span class="align-middle">
@@ -56,7 +55,8 @@
     created(){
       const arr = this.$route.path.split('/')
       const index = arr[arr.length-1]
-      store.dispatch(REPLACE,{navIndex:index}).then(
+      // store.dispatch(REPLACE,{navIndex:index}).then(
+      store.dispatch(REPLACE,{}).then(
         () =>{
 
         }
@@ -71,7 +71,10 @@
         )
       },
       back(){
-        store.dispatch(REPLACE,{componentName:'knowledgeQuiz'})
+        const url={
+          path: this.$route.path,
+        }
+        this.$router.back()
       }
     }
   }

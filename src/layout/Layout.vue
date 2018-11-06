@@ -8,10 +8,12 @@
         <el-aside class="full-height" :width='aSideWidth' style="float:left;max-width: 280px;">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
-        <el-container class="full-width full-height" v-loading="mainLoading">
-          <secondary-menu v-if='config' class="yoy-second-menu full-height">
-          </secondary-menu>
-          <el-container class="full-width">
+        <el-container class="full-width full-height">
+          <section v-if="config">
+            <secondary-menu  class="yoy-second-menu full-height">
+            </secondary-menu>
+          </section>
+          <el-container class="full-width" v-loading="mainLoading">
             <el-main class="p-relative full-height">
               <app-main></app-main>
             </el-main>

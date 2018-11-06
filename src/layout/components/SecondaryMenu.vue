@@ -39,6 +39,11 @@
         }
       },
       name: "SecondaryMenu",
+      beforeCreate(){
+        const pathArr = this.$route.path.split('/')
+        const defaultActiveSecondM = pathArr[pathArr.length-1]
+        store.dispatch(REPLACE,{defaultActiveSecondM})
+      },
       computed:{
         defaultActiveSecondM(){
           return store.state.app.defaultActiveSecondM
@@ -58,8 +63,26 @@
             url:'/config'
           }
           arr.splice(1,arr.length-1,obj)
-          store.dispatch(REPLACE,{breadArr:arr,componentName:index,navIndex:index}).then(
+          const config = this.$route.name ==='config'
+          store.dispatch(REPLACE,{breadArr:arr,config,navIndex:index}).then(
             () =>{
+              //拼接路由，目前三级路由
+              const urlfir= this.$route.matched[0].path
+              const urlSec = this.$route.name
+              //当路由的name与index相等时，说明为二级菜单主页
+              let url =''
+              if(this.$route.name === index){
+                url = `${urlfir}/${urlSec}`
+              }else{
+                url = `${urlfir}/${urlSec}/${index}`
+              }
+              const pathObj={
+                query:this.$route.query,
+                path:url
+              }
+              this.$router.push(
+                pathObj
+              )
             }
           )
         }

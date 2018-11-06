@@ -39,6 +39,66 @@ let obj = {}
 // }
 arr = [
   {
+    path:'/dashboard',
+    component: Layout,
+    name: 'dashboard',
+    children:[
+      {
+        path:'/',
+        name: 'dashboard',
+        component: () => import('../page/wait/index'),
+      }
+    ]
+  },
+  {
+    path:'/skill',
+    name:'skill',
+    component: Layout,
+    children:[
+      {
+        path:'/',
+        name:'skill',
+        component:() =>import('../page/wait/index')
+      }
+    ]
+  },
+  {
+    path:'/custom',
+    name:'custom',
+    component: Layout,
+    children:[
+      {
+        path:'/',
+        name:'custom',
+        component:() =>import('../page/wait/index')
+      }
+    ]
+  },
+  {
+    path:'/authority',
+    name:'authority',
+    component: Layout,
+    children:[
+      {
+        path:'/',
+        name:'authority',
+        component:() =>import('../page/wait/index')
+      }
+    ]
+  },
+  {
+    path:'/opinion',
+    name:'opinion',
+    component: Layout,
+    children:[
+      {
+        path:'/',
+        name:'opinion',
+        component:() =>import('../page/wait/index')
+      }
+    ]
+  },
+  {
     path:'/bot',
     component: Layout,
     name: 'bot',
@@ -48,7 +108,6 @@ arr = [
         component: () =>import('../page/bot/index'),
         name: 'bot',
         children:[
-
         ]
       },
       {
@@ -56,9 +115,49 @@ arr = [
         component: () =>import('../page/bot/config/config/index'),
         name: 'config',
       },
+      // {
+      //   path:'config/config',
+      //   component: () =>import('../page/bot/config/config/index'),
+      //   name: 'config',
+      // },
       {
         path:'config/web',
         component: () =>import('../page/bot/config/web/index'),
+        name: 'config',
+      },
+      {
+        path:'config/questionBuild',
+        component: () =>import('../page/bot/config/questionBuild/index'),
+        name: 'config',
+      },
+      {
+        path:'config/knowledgeQuiz',
+        component: () =>import('../page/bot/config/knowledgeQuiz/index'),
+        name: 'config',
+      },
+      {
+        path:'config/knowledgeDetail',
+        component: () =>import('../page/bot/config/knowledgeDetail/index'),
+        name: 'config',
+      },
+      {
+        path:'config/weChatService',
+        component: () =>import('../page/bot/config/weChatService/index'),
+        name: 'config',
+      },
+      {
+        path:'config/weChatCompany',
+        component: () =>import('../page/wait/index'),
+        name: 'config',
+      },
+      {
+        path:'config/robot',
+        component: () =>import('../page/wait/index'),
+        name: 'config',
+      },
+      {
+        path:'config/desktopApp',
+        component: () =>import('../page/wait/index'),
         name: 'config',
       }
     ]

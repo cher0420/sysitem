@@ -8,7 +8,7 @@ const store = new Vuex.Store({
   state: {
     app: {
       config: false,
-      componentName:'config',
+      // componentName:'config',
       defaultActiveSecondM:'config',                   //二级菜单active-key
       userName: '',
       userInfo: {},

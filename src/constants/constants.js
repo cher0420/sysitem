@@ -199,6 +199,7 @@ export const STR = {
   robot:'实体机器人',
   desktopApp:'桌面应用',
   knowledgeQuiz:'知识问答',
+  knowledgeDetail:'知识问答'
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

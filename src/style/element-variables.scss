@@ -70,20 +70,16 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
   color:#999;
 }
 
-/*
-覆盖button
- */
-.el-button{
-  border-radius:2px;
-  padding:10px 30px;
-  font-size:14px;
-}
+
 
 /*
 覆盖收缩后的侧边栏
  */
 .el-menu--collapse{
   width:$side-bar-width;
+  .el-tooltip{
+    padding:0 !important;
+  }
 }
 
 /*
@@ -108,14 +104,14 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 }                     //菜单伸缩按钮
 .handle-item:hover{
   background-color: $side-transition;
+  cursor: pointer;
   i{
     color: $primary-color;
   }
 }               //保持样式，去除悬浮样式
 
 .el-menu-item{
-  padding-left:$side-item-padding;
-  padding-right:$side-item-padding;
+  padding:0 !important;
   color:$side-font-color; //侧边栏字体颜色
   //font-size: 0;
 }
@@ -229,7 +225,7 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 .yoy-second-menu .el-submenu .el-menu-item{
   font-weight:$second-f-w;
   color:$second-f-c-l;
-  padding-left: 45px !important;
+  padding-left: 45px ;
 }
 .yoy-second-menu .el-submenu .el-menu-item:hover{
   color:$second-f-c-hover;

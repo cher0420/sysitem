@@ -179,12 +179,12 @@
       }
         const arr = path.split('/')
         const index=arr[arr.length-1]
-        store.dispatch(REPLACE,{navIndex:index}).then(
+        const config = this.$route.name === 'config'
+        store.dispatch(REPLACE,{navIndex:index,config}).then(
           () =>{
             this.$router.push(url)
           }
         )
-
       },
       renderProductId(h, {column}) {
         return h(DrapDown,{

@@ -19,7 +19,7 @@
   </section>
 </template>
 <script>
-import {detail} from "../questionQuiz/constants";
+import {detail} from "../knowledgeQuiz/constants";
 import store from '../../../../store/index'
 import {REPLACE} from "../../../../store/mutations";
 

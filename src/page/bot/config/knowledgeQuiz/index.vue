@@ -108,11 +108,17 @@
         )
       },
       handleDetail(name,v,index,title){
-        store.dispatch(REPLACE,{componentName:'questionDetail',navIndex:'knowledgeQuiz',navIndexSecond:title}).then(
+        store.dispatch(REPLACE,{navIndex:'knowledgeQuiz',navIndexSecond:title}).then(
           () => {
-            this.$route.query.botCheckIndex = v
-            this.$route.query.botName = name
-            this.$route.query.botIndex = index
+            const url={
+              path:'/bot/config/knowledgeDetail',
+              query:{
+                botCheckIndex:v,
+                botName:name,
+                botIndex:index
+              }
+            }
+            this.$router.push(url)
           }
         )
       },

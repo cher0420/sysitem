@@ -8,20 +8,16 @@ $input-height: 32px;
   color:#777;
   background: #fff;
 }
-//.el-form-item{
-//  margin-bottom: 12px;
-//}
+
+
+/*
+覆盖button
+ */
+.el-button{
+  border-radius:2px;
+  padding:10px 30px;
+  font-size:14px;
+}
 .el-button--medium{
   padding:10px 25px;
 }
-//.el-radio__input.is-checked .el-radio__inner{
-//  background: #fff;
-//  border-color: #eaedf1;
-//}
-//.el-radio__input.is-checked .el-radio__inner::after{
-//  display: inline-block;
-//  width: 6px;
-//  height: 6px;
-//  border-radius: 50%;
-//  background: $primary-color;
-//}

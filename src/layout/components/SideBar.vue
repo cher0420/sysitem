@@ -52,40 +52,66 @@
     },
     watch: {
       '$route' (to, from) {
+        const that = this
         if(to&&from){
-          store.dispatch(REPLACE,{mainLoading: true}).then(
+          store.dispatch(REPLACE,{mainLoading: true,}).then(
             () =>{
-              const arr = this.$route.path.split('/')
-              const pathArr = arr.splice(1,arr.length-1)
-              const newArr = []
-              const navEnd = pathArr[pathArr.length-1]
-              for(let v of pathArr){
-                const url = '/'+v
-                const name = STR[v]
-                const obj = {
-                  url, name
-                }
-                newArr.push(obj)
+
+              // 面包屑，带优化
+              const arr = to.path.split('/')
+              if(arr.length>3){
+                arr.pop()
               }
+              arr.shift()
+              const newArr = []
+
+              arr&&arr.forEach(
+                (v,k,arr) =>{
+                  let obj ={}
+                  if(k === 0){
+                    const url = v
+                    const name = STR[v]
+                    obj = {
+                      url, name
+                    }
+                  }else if (k === 1){
+                    const url = '/'+arr[k-1]+'/'+v
+                    const name = STR[v]
+                    obj = {
+                      url, name
+                    }
+                  }
+                  newArr.push(obj)
+                }
+              )
               // 进入配置二级菜单页面
-              const config = navEnd === 'config'
-              const name = to.name
-              store.dispatch(REPLACE,{breadArr:newArr,config,navIndex:name}).then(
+              const navIndexArr = to.path.split('/')
+              const navIndex = navIndexArr[navIndexArr.length-1]
+              const config = to.name === 'config'
+              let aSideWidth = null;
+              if(to.name === 'config'){
+                aSideWidth = '60px'
+                if(that.isCollapse === false){
+                  store.dispatch(REPLACE,{isCollapse:true})
+                }
+              }else{
+                aSideWidth = '14vw'
+                store.dispatch(REPLACE,{isCollapse:false})
+              }
+              store.dispatch(REPLACE,{breadArr:newArr,config,navIndex,aSideWidth}).then(
                 () => {
                   setTimeout(
                     () =>{
                       store.dispatch(REPLACE,{mainLoading:false})
-                    },300
+                    },500
                   )
                 }
               )
             }
           )
-
         }else{
           this.$router.push('/dashboard')
         }
-
       }
     },
     methods: {
@@ -160,36 +186,36 @@
   .yoy-icon1,.yoy-icon2{
     top:0;
     left:0;
-    width:$iconW;
-    height:$iconH;
+    width:60px;
+    height:48px;
     z-index: 0;
   }
   .yoy-icon1{
     z-index: 2;
   }
   .iconContainer{
-    height:$iconH;
-    width:$iconW;
+    height:100%;
+    width:60px;
     display: inline-block;
     vertical-align: middle;
-    margin-right: 20px;
+    /*margin-right: 8%;*/
   }
   .side-menu-text{
     width:72%;
   }
   @media screen and (max-width:1920px){
     .side-menu-text{
-      width:83%;
+      width:70%;
     }
   }
   @media screen and (max-width:1680px){
     .side-menu-text{
-      width:78%;
+      width:67%;
     }
   }
   @media screen and (max-width:1440px){
     .side-menu-text{
-      width:72%;
+      width:63%;
     }
   }
 
