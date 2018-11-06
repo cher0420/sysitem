@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="150px" v-loading="loading" class="yoy-main">
+  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="180px" v-loading="loading" class="yoy-main">
     <el-form-item label="机器人姓名" prop='Bot_Name'>
       <el-col :span="18">
         <el-input v-model="ruleForm.Bot_Name" maxlength="15"></el-input>
@@ -9,8 +9,8 @@
     <el-form-item label="机器人性别" prop='Bot_Gender'>
       <el-col :span="11">
         <el-radio-group  v-model="ruleForm.Bot_Gender">
-          <el-radio label="m">男</el-radio>
-          <el-radio label="f">女</el-radio>
+          <el-radio label="男">男</el-radio>
+          <el-radio label="女">女</el-radio>
         </el-radio-group>
       </el-col>
     </el-form-item>
@@ -29,8 +29,8 @@
         <el-radio-group v-model="ruleForm.Bot_BloodType">
           <el-radio label="A">A型</el-radio>
           <el-radio label="B">B型</el-radio>
-          <el-radio label="C">O型</el-radio>
-          <el-radio label="D">AB型</el-radio>
+          <el-radio label="O">O型</el-radio>
+          <el-radio label="AB">AB型</el-radio>
         </el-radio-group>
       </el-col>
     </el-form-item>
@@ -109,11 +109,9 @@
           Bot_BloodType:[{required: true, message: '请选择血型!'}],
           Bot_Height: [
             {required: false, message: '请填写身高!'},
-            { type: 'number', message: '身高必须为数字值'}
           ],
           Bot_Weight:[
             {required: false, message: '请填写体重!'},
-            { type: 'number', message: '体重必须为数字值'}
           ],
           Bot_Birthplace:{
             province:[{required: true, message: '请选择省份和城市!'}],
@@ -123,10 +121,10 @@
         },
         ruleForm: {
           Bot_Name: '小华智能助理',
-          Bot_Gender: 'f', // m:man,f:female
+          Bot_Gender: '女', // m:man,f:female
           Bot_DayOfBirth: '',
           Bot_Constellation:'',
-          Bot_BloodType: 'C',
+          Bot_BloodType: 'O',
           Bot_Height: 160,
           Bot_Weight:50,
           Bot_Birthplace: {
@@ -161,13 +159,9 @@
               data[v] = that.ruleForm[v]
             }
           }
-
-          data.Bot_Height = data.Bot_Height-0
-          data.Bot_Weight = data.Bot_Weight-0
-
+          data.Bot_Height = data.Bot_Height.replace('cm','')
           // 判断获取到的城市
           const Bot_Birthplace = data.Bot_Birthplace?data.Bot_Birthplace.split('-'):[]
-
           data.Bot_Birthplace = {
             province:Bot_Birthplace[0],
             city:Bot_Birthplace[1],
@@ -176,6 +170,7 @@
           ADDRESS.forEach((key,value,arr) =>{
             if(data.Bot_Birthplace.province === key['name']){
               that.city = key['child']
+              return
             }
           })
           // 更改出生日期格式

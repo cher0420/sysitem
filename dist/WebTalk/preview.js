@@ -14,8 +14,8 @@
     return fmt;
 }
 
-var apiHost = "https://hightalkadminapi-test.azurewebsites.net/api";
-// var apiHost = "https://hightalkadminapi-staging.azurewebsites.net/api";
+// var apiHost = "https://hightalkadminapi-test.azurewebsites.net/api";
+var apiHost = "https://hightalkadminapi-staging.azurewebsites.net/api";
 $(function () {
     var host = ""; //域名
     var cip = ""; //ip
@@ -123,7 +123,7 @@ $(function () {
         }
         else {
             var rbg = (botObject.BotHeadPortrait == "" || botObject.BotHeadPortrait == null) ? "./robot.png" : botObject.BotHeadPortrait;
-            str += "<div class=\"msg robot\"><div class=\"msg-left\" worker=\"" + user + "\"><div class=\"msg-host photo\" style=\"background-image: url(" + rbg + ")\"></div><div class=\"msg-ball\" title=\"" + time + "\">" + content + "</div></div></div>";
+            str += "<div class=\"msg robot\"><div class=\"msg-left\" worker=\"" + user + "\"><div class=\"msg-host photo\" style=\"background-image: url(" + rbg.replace("normal", "").replace("custom","") + ")\"></div><div class=\"msg-ball\" title=\"" + time + "\">" + content + "</div></div></div>";
         }
         return str;
     }
