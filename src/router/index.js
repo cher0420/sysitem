@@ -164,17 +164,17 @@ arr = [
   }
 ]
 const root = [{
-    path: '/',
-    component: Layout,
-    redirect: '/bot',
+  path: '/',
+  component: Layout,
+  redirect: '/bot',
+  name: 'bot',
+  hidden: true,
+  children: [{
+    path: 'bot',
     name: 'bot',
-    hidden: true,
-    children: [{
-      path: 'bot',
-      name: 'bot',
-      component: () => import('../page/bot/index')
-    }]
-  },
+    component: () => import('../page/bot/index')
+  }]
+},
   {
     path:'/webTalk',
     component: () => import('../page/webtalk/index')
@@ -188,7 +188,7 @@ const root = [{
     name: 'Error',
     redirect: "/"
   }
-  ]
+]
 const routes = [...root,...arr]
 
 const router = {

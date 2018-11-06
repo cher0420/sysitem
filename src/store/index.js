@@ -1,5 +1,5 @@
-// import Vue from 'vue'
-// import Vuex from 'vuex'
+import Vue from 'vue'
+import Vuex from 'vuex'
 import { REPLACE,UPDATE } from '../store/mutations'
 
 Vue.use(Vuex)
