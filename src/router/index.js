@@ -159,6 +159,11 @@ arr = [
         path:'config/desktopApp',
         component: () =>import('../page/wait/index'),
         name: 'config',
+      },
+      {
+        path:'config/caseStore',
+        component: () =>import('../page/bot/config/caseStore/index'),
+        name: 'config',
       }
     ]
   }

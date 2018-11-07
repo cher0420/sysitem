@@ -11,6 +11,7 @@
         </div>
         <div class="item-assist-title-edit">
           <el-button plain size="mini" @click="editCase">编辑</el-button>
+
         </div>
 
       </div>
@@ -25,12 +26,13 @@
     </div>
     <!-- 编辑页-->
     <div v-if="!caseDetailShow == true">
-      <edit-case></edit-case>
+      <edit-case :navIndex="navIndex"></edit-case>
     </div>
   </div>
 </template>
 <script>
   import editCase from "./editCase";
+
   export default {
     name: "caseDetail",
     components:{
@@ -40,12 +42,15 @@
     data() {
       return {
         caseDetailShow:true,
+
       }
     },
     methods:{
       editCase(){
           this.caseDetailShow = false;
-      }
+      },
+
+
     }
   }
 </script>

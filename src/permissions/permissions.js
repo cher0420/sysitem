@@ -69,7 +69,7 @@ export const voildId = (sid) => {
           //验证url上的token是否存在并且与cookie的token一致
           voildToken(tokenUrl).then(
             () =>{
-
+              redirect(LOGIN)
             }
           )
         }

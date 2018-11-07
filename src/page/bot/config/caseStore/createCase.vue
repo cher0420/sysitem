@@ -2,16 +2,16 @@
   <div>
 
     <div class="container">
-          <div>
-            <div class="caseTitle">
-              案例标题：
-            </div>
-           <el-input v-model="title" placeholder="请输入标题"></el-input>
-
-          </div>
-      <div class="caseTitle">
-          案例内容：
+      <div>
+        <div class="caseTitle">
+          创建案例标题：
         </div>
+        <el-input v-model="title" placeholder="请输入标题"></el-input>
+
+      </div>
+      <div class="caseTitle">
+        创建案例内容：
+      </div>
       <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
       <el-button class="editor-btn" type="primary" @click="submit">保存</el-button>
       <el-button plain size="mini" @click="indexCaseShow">取消</el-button>
@@ -29,7 +29,7 @@
       // quillEditor
     },
     mounted(){
-      this.title = this.navIndex.title;
+
 
     },
     data() {
@@ -48,7 +48,7 @@
       submit() {
         console.log(this.title)
         console.log(this.content);
-        this.$alert('保存成功', '操作提示', {
+        this.$alert('是否保存？', '操作提示', {
           confirmButtonText: '确定',
           callback: action => {
 

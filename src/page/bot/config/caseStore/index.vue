@@ -1,8 +1,10 @@
 <template>
   <div>
+
+
     <section class="list-item" v-if="indexPage == true">
       <div class="button-style">
-        <el-button type="primary" size="mini">创建案例</el-button>
+        <el-button type="primary" size="mini" @click="createCase()">创建案例</el-button>
         <div class="button-style-input">
           <el-input class='' size='small' placeholder="输入关键词搜索" @keyup.enter.native="search" v-model="searchVal">
           </el-input>
@@ -67,7 +69,10 @@
     <div v-if="indexPageDetail == true">
       <case-detail :navIndex="propValue" ></case-detail>
     </div>
-
+    <!--  创建页 -->
+    <div v-if="createPage == true" class="createCase">
+      <create-case :navIndex="navIndex"></create-case>
+    </div>
   </div>
 
 
@@ -80,22 +85,28 @@
 
   import $ from 'jquery';
   import  caseDetail from "./caseDetail";
-  import store from '../../../../store/index'
+  import  createCase from "./createCase";
+ // import store from '../../../../store/index'
+     import {mapActions} from 'vuex'
 
   export default {
     name: 'caseStore',
+
     computed:{
       //  各个子组件是否显示
       indexPage(){
-          console.log('====', store.state)
-          return  store.state.indexPage
+        return this.$store.state.caseStore.indexPage
       },
       indexPageDetail(){
-        return false
+        return this.$store.state.caseStore.indexPageDetail
+      },
+      createPage(){
+        return this.$store.state.caseStore.createPage
       }
   },
     components:{
-      caseDetail
+      caseDetail,
+      createCase,
     },
     data() {
       return {
@@ -147,14 +158,17 @@
         this.getData();
         // console.log(this.searchVal)
       },
+      ...mapActions(
+        ["detailshow","createCaseShow"]
+      ),
       detailLis(row){
-        console.log("船只",row);
+        console.log("this值",row);
+
         this.propValue =  row ;
-        this.indexPage = false;
-        this.indexPageDetail = true;
-
-
-
+        this.detailshow();
+      },
+      createCase(){
+        this.createCaseShow();
       },
 
 
@@ -203,7 +217,9 @@
   color: #2a8ce7;
   cursor: pointer;
 }
-
+.createCase {
+  margin: 0 40px;
+}
 </style>
 <style>
   .list-detail-lis {
