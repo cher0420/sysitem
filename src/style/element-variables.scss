@@ -225,7 +225,7 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 .yoy-second-menu .el-submenu .el-menu-item{
   font-weight:$second-f-w;
   color:$second-f-c-l;
-  padding-left: 45px ;
+  padding-left: 45px !important;
 }
 .yoy-second-menu .el-submenu .el-menu-item:hover{
   color:$second-f-c-hover;
