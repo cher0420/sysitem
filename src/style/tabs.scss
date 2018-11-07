@@ -1,2 +1,39 @@
 @import './index';
+.el-tabs__content{
+  border-left: 1px solid $primary-color;
+  border-bottom: 1px solid $primary-color;
+  border-right: 1px solid $primary-color;
+}
+.el-tabs__header{
+  margin:0;
+}
+.el-tabs--card > .el-tabs__header .el-tabs__nav{
+  border:0;
+  border-radius: 0;
+  border-left: 1px solid #cecece;
+  border-top: 1px solid #cecece;
+}
+.el-tabs--card > .el-tabs__header .el-tabs__item{
+  border-bottom:1px solid $primary-color;
+  border-left:0;
+}
+.el-tabs--card > .el-tabs__header{
+  border-bottom: 1px solid $primary-color;
+}
+//.el-tabs--card > .el-tabs__header .el-tabs__item:first-child{
+//  border-left: none;
+//  border-left-width: initial;
+//  border-left-style: none;
+//  border-left-color: initial;
+//}
+//.el-tabs--card>.el-tabs__header .el-tabs__item:first-child{
+//  border-left: 1px solid $primary-color;
+//}
+.el-tabs--card > .el-tabs__header .el-tabs__item.is-active{
+  border-bottom-color: #fff;
+  border-left: 1px solid $primary-color;
+  border-right: 1px solid $primary-color;
+  margin-left: -1px;
+}
+
 
