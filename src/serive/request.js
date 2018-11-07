@@ -65,7 +65,8 @@ export const request = (api,params = {}) => {
                 case 200:
                   return response.json()
                 case 401:
-                  redirect(LOGIN)
+                  reject(response)
+                  // redirect(LOGIN)
                   break;
                 default:
                 alert('00000000')

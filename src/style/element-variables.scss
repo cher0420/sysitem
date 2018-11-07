@@ -69,6 +69,11 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 .el-pagination__total{
   color:#999;
 }
+.el-container {
+  .el-footer{
+    height:auto !important;
+  }
+}
 
 
 

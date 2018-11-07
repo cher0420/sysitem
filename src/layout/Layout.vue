@@ -74,7 +74,7 @@
   }
   .app-container{
     min-width: 1280px;
-    min-height: 640px;
+    min-height: 560px;
   }
   .el-main{
     /*margin-left: 180px;*/
