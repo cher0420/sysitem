@@ -68,11 +68,7 @@ export const request = (api,params = {}) => {
                   redirect(LOGIN)
                   break;
                 default:
-                // ElementUI.Message({
-                //   type: 'error',
-                //   message: '服务器错误！',
-                //   duration: 1500
-                // })
+                alert('00000000')
               }
             }
           ).then(
