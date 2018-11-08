@@ -162,9 +162,7 @@
 </script>
 <style lang="scss" scoped>
   $titleBackground: #f9fafc;
-  .yoy-main{
-    padding:20px 40px 40px 40px;
-  }
+
   .title{
     padding-left:10px;
     width: 100%;

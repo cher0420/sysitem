@@ -5,16 +5,18 @@
         <navBar></navBar>
       </el-header>
       <el-container class="full-height el-container">
-        <section class="el-aside full-height" :style="{float:'left',maxWidth: '280px',width:aSideWidth}">
-          {{aSideWidth}}
+        <el-aside v-if='isCollapse' class="el-aside full-height" width='60px' :style="{float:'left',maxWidth: '280px'}">
             <sidebar class="sidebar-container full-height"></sidebar>
-        </section>
-        <el-container class="full-width full-height">
+        </el-aside>
+        <el-aside v-else class="el-aside full-height" width='14vw' :style="{float:'left',maxWidth: '280px'}">
+          <sidebar class="sidebar-container full-height"></sidebar>
+        </el-aside>
+        <el-container class="full-height">
           <section v-if="config">
             <secondary-menu  class="yoy-second-menu full-height">
             </secondary-menu>
           </section>
-          <el-container class="full-width" v-loading="mainLoading">
+          <el-container class="" v-loading="mainLoading">
             <el-main class="p-relative scroll-content">
               <app-main></app-main>
             </el-main>
@@ -53,7 +55,10 @@
       },
       aSideWidth (){
         return store.state.app.aSideWidth
-      }
+      },
+      isCollapse () {
+        return store.state.app.isCollapse
+      },
     },
     beforeCreate(){
       const config = this.$route.name ==='config' //判断路由是否为配置二级菜单，是则为true，不是则false并隐藏二级菜单
