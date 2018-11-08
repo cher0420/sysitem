@@ -28,6 +28,7 @@ export function getLoginStatus(){
   // 如果cookie里的SID存在
 
   if(token){
+
     // 验证cookie里的SID与url上的是否一致
     voildToken(token).then(
       ()=>{
@@ -36,12 +37,14 @@ export function getLoginStatus(){
     )
 
   }else{
+
     // 如果cookie里的SID不存在则跳转到SSO登录
     const sid = getCookies(SID)
-    console.log(sid)
      if( sid ){
+
        voildId( sid )
      } else {
+
        redirect(LOGIN)
      }
   }
@@ -66,15 +69,18 @@ export const voildId = (sid) => {
     // url上的sid不空且与cookie的sid一致移除cookie的SID
       removeCookies(SID).then(
         () => {
+          const testText = getCookies(SID)
+
           //验证url上的token是否存在并且与cookie的token一致
           voildToken(tokenUrl).then(
-            () =>{
-              redirect(LOGIN)
-            }
+            // () =>{
+            //   redirect(LOGIN)
+            // }
           )
         }
       )
     } else {
+
         redirect(LOGIN)
     }
 }
@@ -83,6 +89,7 @@ export const voildId = (sid) => {
  * @param tokens
  */
 export async function voildToken (tokens) {
+
   const url = URL.SSOServerApi+ VOILD_TOKEN_URL
   const data = {
     Token: tokens,
@@ -96,7 +103,6 @@ export async function voildToken (tokens) {
     body: baseData
   }
   request(url, options).then((res) => {
-
     if (res.IsValid) {
 
       setCookies(TOKEN, tokens, { expires: 1 } ).then(
