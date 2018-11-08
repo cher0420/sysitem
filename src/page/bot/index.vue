@@ -50,6 +50,7 @@
       </el-table-column>
       <el-table-column
         label="操作"
+        width="230"
       >
         <template slot-scope="scope">
           <span class="yoy-list-todo c555">

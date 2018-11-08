@@ -1,13 +1,13 @@
 <template>
-  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="180px" v-loading="loading" class="yoy-main">
+  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="200px" v-loading="loading" class="yoy-main">
     <el-form-item label="机器人姓名" prop='Bot_Name'>
-      <el-col :span="18">
+      <el-col :span="13">
         <el-input v-model="ruleForm.Bot_Name" maxlength="15"></el-input>
         <section class="c999 f-s-12">请输入3-15个字符以内</section>
       </el-col>
     </el-form-item>
     <el-form-item label="机器人性别" prop='Bot_Gender'>
-      <el-col :span="11">
+      <el-col :span="13">
         <el-radio-group  v-model="ruleForm.Bot_Gender">
           <el-radio label="男">男</el-radio>
           <el-radio label="女">女</el-radio>
@@ -15,7 +15,7 @@
       </el-col>
     </el-form-item>
     <el-form-item label="出生日期">
-      <el-col :span="18">
+      <el-col :span="13">
         <el-date-picker v-model='ruleForm.Bot_DayOfBirth' :editable="editable" value-format="yyyy-MM-dd" format='yyyy 年 MM 月 dd 日' type="date" placeholder="请选择出生日期" style="width: 100%;" @change="getBot_Constellation"></el-date-picker>
       </el-col>
     </el-form-item>
@@ -25,7 +25,7 @@
       </el-col>
     </el-form-item>
     <el-form-item label="血型" prop="Bot_BloodType">
-      <el-col :span="18">
+      <el-col :span="13">
         <el-radio-group v-model="ruleForm.Bot_BloodType">
           <el-radio label="A">A型</el-radio>
           <el-radio label="B">B型</el-radio>
@@ -35,7 +35,7 @@
       </el-col>
     </el-form-item>
     <el-form-item label="出生地" prop='Bot_Birthplace.province'>
-      <el-col :span="5" >
+      <el-col :span="4" >
         <el-select placeholder="请选择省份" v-model="ruleForm.Bot_Birthplace.province" @change="selectArea">
           <el-option
             v-for="item in area"
@@ -45,7 +45,7 @@
           </el-option>
         </el-select>
       </el-col>
-      <el-col :span="5">
+      <el-col :span="4" style="margin-left: 10px;">
         <el-select placeholder="请选择城市" v-model="ruleForm.Bot_Birthplace.city">
           <el-option
             v-for="item in city"
@@ -57,13 +57,13 @@
       </el-col>
     </el-form-item>
     <el-form-item label="身高" prop='Bot_Height'>
-      <el-col :span="18">
+      <el-col :span="4">
         <el-input disabled v-model.number="ruleForm.Bot_Height" placeholder="请输入身高"><span slot="suffix" class="suffix">CM</span>
         </el-input>
       </el-col>
     </el-form-item>
     <el-form-item label="体重" prop="Bot_Weight">
-      <el-col :span="18">
+      <el-col :span="4">
         <el-input disabled v-model.number="ruleForm.Bot_Weight" placeholder="请输入体重"><span slot="suffix" class="suffix">KG</span>
         </el-input>
       </el-col>

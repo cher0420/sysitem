@@ -5,16 +5,17 @@
         <navBar></navBar>
       </el-header>
       <el-container class="full-height el-container">
-        <el-aside class="full-height" :width='aSideWidth' style="float:left;max-width: 280px;">
-          <sidebar class="sidebar-container full-height"></sidebar>
-        </el-aside>
+        <section class="el-aside full-height" :style="{float:'left',maxWidth: '280px',width:aSideWidth}">
+          {{aSideWidth}}
+            <sidebar class="sidebar-container full-height"></sidebar>
+        </section>
         <el-container class="full-width full-height">
           <section v-if="config">
             <secondary-menu  class="yoy-second-menu full-height">
             </secondary-menu>
           </section>
           <el-container class="full-width" v-loading="mainLoading">
-            <el-main class="p-relative full-height">
+            <el-main class="p-relative scroll-content">
               <app-main></app-main>
             </el-main>
             <el-footer style="height:65px;">
@@ -78,8 +79,9 @@
   }
   .el-main{
     /*margin-left: 180px;*/
-    min-height: 80vh;
+    /*min-height: 80vh;*/
     box-sizing: border-box;
+
   }
   .yoy-footer{
     bottom:0;

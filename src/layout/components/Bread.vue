@@ -1,6 +1,6 @@
 <template>
   <section class="yoy-bread f-s-14">
-    <el-breadcrumb separator-class="el-icon-arrow-right">
+    <el-breadcrumb separator-class="el-icon-arrow-right" class="single">
       <el-breadcrumb-item class="primary-color align-middle" to="/bot">首页</el-breadcrumb-item>
       <el-breadcrumb-item class="primary-color align-middle" :to="{ path: item.url }" v-for="(item,key) in breadArr" @change="handle(item.name)">{{item.name}}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -21,9 +21,6 @@
       <span class="align-middle">
         {{navIndex}}
       </span>
-      <!--<span class="align-middle" v-if="navIndexSecond">-->
-        <!--<span class="el-icon-arrow-right">{{navIndexSecond}}</span>-->
-      <!--</span>-->
     </section>
 
 
@@ -54,8 +51,6 @@
     },
     created(){
       const arr = this.$route.path.split('/')
-      const index = arr[arr.length-1]
-      // store.dispatch(REPLACE,{navIndex:index}).then(
       store.dispatch(REPLACE,{}).then(
         () =>{
 
@@ -88,7 +83,6 @@
     cursor: pointer;
   }
   .backHover:hover{
-    /*color:*/
     color:$primary-color;
   }
   .align-middle{
@@ -103,7 +97,10 @@
   .yoy-bread{
     margin-bottom: 30px;
   }
-  .yoy-bread .el-breadcrumb{
+  .yoy-bread .el-breadcrumb.single{
+    font-family: 宋体;
+    font-size: 14px;
+    color: #777;
     height: $bread-height;
     line-height: $bread-height;
     padding-right: 40px;
@@ -123,6 +120,9 @@
     margin-right: 6px;
   }
   .yoy-bread {
+    .el-breadcrumb__inner.is-link:hover{
+      text-decoration: underline;
+    }
     .el-breadcrumb.yoy-title{
       height: $title-height;
       line-height: $title-height;

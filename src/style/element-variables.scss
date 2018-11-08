@@ -15,6 +15,7 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 @import './bread';
 @import './form';
 @import './tabs';
+@import './message';
 /*
 覆盖原有element组件ui
  */
@@ -36,12 +37,7 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
   border-bottom-left-radius:0;
   border-bottom-right-radius:0;
 }
-.el-input__inner{
-  border-top-left-radius:0;
-  border-top-right-radius:0;
-  border-bottom-left-radius:0;
-  border-bottom-right-radius:0;
-}
+
 /*
 覆盖table
  */
@@ -123,11 +119,7 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 .el-menu-item{
   height:$side-item-height;
   line-height: $side-item-height;
-  //.side-item-rightRow{
-  //  display:inline-block;
-  //  margin-left: 188px;
-  //  margin-right:-159px;
-  //}
+
 }
 .el-menu-item:hover, .el-menu-item:focus{
   background: $side-background;
@@ -177,7 +169,7 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
     font-weight: $second-f-w;
   }
   i{
-    margin-left: 60px;
+    margin-left: 70px;
     font-size: 13px;
   }
 }
@@ -243,3 +235,14 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
     }
   }
 }
+.el-tooltip__popper.is-dark{
+  background: #324054;
+  white-space : nowrap;
+  border-radius:2px;
+}
+//.el-container.full-height.el-container{
+//  .el-aside{
+//    position: absolute;
+//    z-index: 9999;
+//  }
+//}

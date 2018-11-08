@@ -13,7 +13,7 @@
     </el-form-item>
     <title-item title="客服图标悬浮位置"></title-item>
     <el-form-item label="" class="margin-top30 margin-bottom-30">
-      <el-col :span="24">
+      <el-col :span="20">
           <el-radio-group v-model="formData.Position" class="full-width">
             <el-col :span="6">
               <el-radio label="right-down">右下角</el-radio>
@@ -33,11 +33,11 @@
     <title-item title="自定义机器人头像"></title-item>
     <el-form-item label="" class="margin-top30 margin-bottom-30">
       <el-radio-group v-model="headerPicture" class="full-width" @change="changeHeaderImage">
-          <el-col :span="6">
+          <el-col :span="10">
             <el-radio label="normal" class="align-middle margin-right-30">默认 : </el-radio>
             <img :src="defaultPicture" alt="默认头像" class="align-middle header">
           </el-col>
-          <el-col :span="18" class="">
+          <el-col :span="14" class="">
             <el-radio label="custom" class="align-middle margin-right-30 custom">自定义 : </el-radio>
             <section v-show="headerPicture === 'custom'" class="file-box f-s-11 c555 dis-i-b align-middle">
               <input type='file' accept="image/*" name="avatar" placeholder="上传" id="img" class="file-btn" @change="upLoadImg"/>选择文件
@@ -48,7 +48,7 @@
     </el-form-item>
     <title-item title="自定义标题栏背景颜色"></title-item>
     <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
-      <el-col :span="12">
+      <el-col :span="10">
         <el-col :span="2" v-for="item in titleColorItems" :index="index" >
           <span class="colorItem"
                 :style="{background:item,opacity:item === DialogColor?'1':'.6'}"
@@ -69,7 +69,7 @@
     </el-form-item>
     <title-item title="自定义标题栏字体颜色"></title-item>
     <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
-      <el-col :span="12">
+      <el-col :span="10">
         <el-col :span="2" v-for="item in textColorItems" :index="index">
           <span class="colorItem"
                 :style="{background:item,border:item === '#FFFFFF'?'1px solid #eaedf1':'none',opacity:item === DialogTitleColor?'1':'.6'}"
@@ -89,57 +89,57 @@
       </el-col>
     </el-form-item>
     <title-item title="功能开关"></title-item>
-    <el-form-item label="">
-      <el-col :span="5">
+    <el-form-item label="" style="margin-bottom: 10px;margin-top: 18px;">
+      <el-col :span="4" >
         <el-checkbox v-model="formData.LoginSwitch">登录验证</el-checkbox>
       </el-col>
       <span class="primary-color f-s-14">提示：开启后则需登录后才可进入网页版</span>
     </el-form-item>
-    <el-form-item label="">
-      <el-col :span="3">
+    <el-form-item label="" style="margin-bottom: 10px;">
+      <el-col :span="4">
         <el-checkbox v-model="formData.knowledge" disabled>知识分类功能</el-checkbox>
       </el-col>
-      <el-col :span="9">
+      <el-col :span="8">
         <el-radio-group class="full-width">
-          <el-col :span="18">
+          <el-col :span="17">
             <el-radio :label="1" disabled>默认：自助导航</el-radio>
           </el-col>
-          <el-radio :label="2" disabled>自定义：</el-radio>
+          <el-radio :label="2" disabled style="margin-left: 10px;">自定义：</el-radio>
         </el-radio-group>
       </el-col>
       <el-col :span="11">
         <el-col :span="15">
           <el-input placeholder="最多6个字符" disabled></el-input>
         </el-col>
-        <el-col :span="6" offset="1">
+        <el-col :span="7" offset="1">
           <a href="javascript:;" class="primary-color">什么是知识分类？</a>
         </el-col>
       </el-col>
     </el-form-item>
-    <el-form-item label="">
-      <el-col :span="3">
+    <el-form-item label="" style="margin-bottom: 48px;">
+      <el-col :span="4">
         <el-checkbox v-model="formData.demo" disabled>案例库</el-checkbox>
       </el-col>
-      <el-col :span="9">
+      <el-col :span="8">
         <el-radio-group class="full-width">
-          <el-col :span="18">
+          <el-col :span="17">
             <el-radio :label="1" disabled>默认：案例库</el-radio>
           </el-col>
-          <el-radio :label="2" disabled>自定义：</el-radio>
+          <el-radio :label="2" disabled style="margin-left: 10px;">自定义：</el-radio>
         </el-radio-group>
       </el-col>
       <el-col :span="11">
         <el-col :span="15">
           <el-input placeholder="最多6个字符" disabled></el-input>
         </el-col>
-        <el-col :span="6" offset="1">
+        <el-col :span="7" offset="1">
           <a href="javascript:;" class="primary-color">什么是案例库？</a>
         </el-col>
       </el-col>
     </el-form-item>
     <title-item title="自定义问候语"></title-item>
     <el-form-item label="" class="margin-top30" prop="DialogTitle">
-      <el-col :span="2" class="text-align-right">
+      <el-col :span="3" class="text-align-right">
         对话框标题：
       </el-col>
       <el-col :span="15">
@@ -150,7 +150,7 @@
       </el-col>
     </el-form-item>
     <el-form-item label="" class="margin-top30" prop="DialogGreetings">
-      <el-col :span="2" class="text-align-right">
+      <el-col :span="3" class="text-align-right">
         问候语：
       </el-col>
       <el-col :span="15">

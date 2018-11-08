@@ -49,9 +49,7 @@
   }
 
   .yoy-header-container{
-    .yoy-bread{
-
-    }
+    /*padding-top: 48px;*/
   }
   .yoy-bread .el-breadcrumb{
     height: $bread-height;

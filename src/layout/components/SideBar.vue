@@ -1,5 +1,5 @@
 <template>
-  <section class="">
+  <section>
     <section index="" class="handle-item text-a-c" @click="show">
       <i class="yoy-menu-icon"></i>
     </section>
@@ -48,6 +48,9 @@
       },
       isCollapse () {
         return store.state.app.isCollapse
+      },
+      aSideWidth (){
+        return store.state.app.aSideWidth
       }
     },
     watch: {
@@ -56,41 +59,15 @@
         if(to&&from){
           store.dispatch(REPLACE,{mainLoading: true,}).then(
             () =>{
-
               // 面包屑，带优化
-              const arr = to.path.split('/')
-              if(arr.length>3){
-                arr.pop()
-              }
-              arr.shift()
-              const newArr = []
-
-              arr&&arr.forEach(
-                (v,k,arr) =>{
-                  let obj ={}
-                  if(k === 0){
-                    const url = v
-                    const name = STR[v]
-                    obj = {
-                      url, name
-                    }
-                  }else if (k === 1){
-                    const url = '/'+arr[k-1]+'/'+v
-                    const name = STR[v]
-                    obj = {
-                      url, name
-                    }
-                  }
-                  newArr.push(obj)
-                }
-              )
+              this.setBreadArr(to)
               // 进入配置二级菜单页面
               const navIndexArr = to.path.split('/')
               const navIndex = navIndexArr[navIndexArr.length-1]
               const config = to.name === 'config'
               let aSideWidth = null;
               if(to.name === 'config'){
-                aSideWidth = '60px'
+                aSideWidth = '60px !important'
                 if(that.isCollapse === false){
                   store.dispatch(REPLACE,{isCollapse:true})
                 }
@@ -98,7 +75,7 @@
                 aSideWidth = '14vw'
                 store.dispatch(REPLACE,{isCollapse:false})
               }
-              store.dispatch(REPLACE,{breadArr:newArr,config,navIndex,aSideWidth}).then(
+              store.dispatch(REPLACE,{config,navIndex,aSideWidth}).then(
                 () => {
                   setTimeout(
                     () =>{
@@ -115,12 +92,43 @@
       }
     },
     methods: {
+      // leaveMouse(){
+      //   store.dispatch(
+      //     REPLACE,{isCollapse:true,aSideWidth: '60px !important'}
+      //   )
+      // },
+      // enterMouse(){
+      //   store.dispatch(
+      //     REPLACE,{isCollapse:false,aSideWidth: '14vw'}
+      //   )
+      // },
+      setBreadArr(to){
+        const arr = to.path.split('/')
+        arr.shift()
+        let newArr;
+        if(arr.length>2){
+          const obj1 = {url:`/${arr[0]}`,name:STR[arr[0]]}
+          const obj2 = {url:`/${arr[1]}/${arr[2]}`,name:STR[arr[2]]}
+          newArr=[obj1,obj2]
+        } else if(arr.length>1){
+          const obj1 = {url:`/${arr[0]}`,name:STR[arr[0]]}
+          const obj2 = {url:`/${arr[0]}/${arr[1]}`,name:STR[arr[1]]}
+          newArr=[obj1,obj2]
+        }else{
+          const obj1 = {url:`/${arr[0]}`,name:STR[arr[0]]}
+          newArr=[obj1]
+        }
+        store.dispatch(
+          REPLACE,{breadArr:newArr}
+        )
+      },
       show(){
         store.dispatch(REPLACE, {isCollapse: !this.isCollapse}).then(
           ()=>{
+            console.log(this.isCollapse)
             this.isCollapse?
-              store.dispatch(REPLACE,{aSideWidth: '60px !important'}):
-              store.dispatch(REPLACE,{aSideWidth: '14vw'})
+              store.commit(REPLACE,{aSideWidth: '60px !important'}):
+              store.commit(REPLACE,{aSideWidth: '14vw'})
           }
         )
       },
@@ -148,19 +156,20 @@
     },
     created(){
       const arr = this.$route.path.split('/')
-      const pathArr = arr.splice(1,arr.length-1)
-      const newArr = []
-      const navIndex = pathArr[0]
-      for(let v of pathArr){
-        const url = '/'+v
-        const name = STR[v]
-        const obj = {
-          url, name
+
+      const navIndex = arr[1]
+
+      const to = this.$route
+      if(to.name === 'config'){
+        if(this.isCollapse === false){
+          store.dispatch(REPLACE,{isCollapse:true,aSideWidth:'60px !important'})
         }
-        newArr.push(obj)
+      }else{
+        store.dispatch(REPLACE,{isCollapse:false,aSideWidth:'14vw'})
       }
-      store.dispatch(REPLACE,{navIndex:navIndex,breadArr:newArr})
-    }
+      this.setBreadArr(to)
+      store.dispatch(REPLACE,{navIndex:navIndex})
+    },
   }
 </script>
 <style lang="scss" scoped>

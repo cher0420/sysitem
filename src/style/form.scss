@@ -21,3 +21,25 @@ $input-height: 32px;
 .el-button--medium{
   padding:10px 25px;
 }
+/*
+覆盖input
+ */
+.el-input__inner{
+  border-top-left-radius:1px;
+  border-top-right-radius:1px;
+  border-bottom-left-radius:1px;
+  border-bottom-right-radius:1px;
+}
+.el-textarea__inner{
+  border-radius: 1px;
+}
+/*
+下拉菜单
+ */
+
+.yoy-nav{
+  .popper__arrow{
+    display: none !important;
+  }
+}
+

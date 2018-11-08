@@ -110,9 +110,9 @@ export const request = (api,params = {}) => {
                 case 200:
                   return response.json()
                 case 401:
-                  alert('没有权限')
+                  // alert('没有权限')
                   // return response.json()
-                  // redirect(LOGIN)
+                  redirect(LOGIN)
                   break;
                 default:
                 alert('00000000')

@@ -4,12 +4,12 @@
     </section>
     <section class="p-absolute right-0 yoy-intro">
       <section>
-        <el-dropdown class="f-s-14" @command="handleClick" trigger="click">
+        <el-dropdown class="f-s-14" @command="handleClick" trigger="click" placement="top-start">
           <span class="el-dropdown-link">
             {{userName}}<i class="el-icon-caret-bottom el-icon--right"></i>
           </span>
-          <el-dropdown-menu slot="dropdown" >
-            <el-dropdown-item class="f-s-14 font-primary">注销</el-dropdown-item>
+          <el-dropdown-menu slot="dropdown" class='yoy-nav' style="width: 120px;background: #365172;border-radius: 1px;margin-top: 1px;padding:0">
+            <el-dropdown-item class="f-s-14 font-primary" :style="{color:'#fff',background: hoverBackground}" ><section @mouseenter="changeBackground('#2d4460')" @mouseout="changeBackground('#365172')">注销</section></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <!--<span class="dis-i-b">English</span>-->
@@ -21,6 +21,11 @@
   import store from '../../store/index'
   import {logOut} from '../../permissions/permissions'
   export default {
+    data(){
+      return{
+        hoverBackground: '#365172'
+      }
+    },
     computed:{
       userName(){
         return store.state.app.userName
@@ -29,15 +34,17 @@
     methods: {
       handleClick() {
         logOut()
+      },
+      changeBackground(v){
+        this.hoverBackground = v
       }
     }
   }
 </script>
 <style lang="scss">
   @import '../../style/index';
-  $rightEH:20px;
+  $rightEH:66px;
   $rightEW:155px;
-
 
   .left-0{
     left:0;
@@ -61,9 +68,13 @@
     color:$fff;
     height:$rightEH;
     line-height: $rightEH;
-    margin-top: 22px;
+    cursor: pointer;
+    padding: 0 15px;
+  }
+  .yoy-intro .el-dropdown:hover{
+    background: #2d4460;
   }
   .yoy-intro{
-    margin-right:60px;
+    margin-right:100px;
   }
 </style>
