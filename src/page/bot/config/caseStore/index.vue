@@ -206,16 +206,17 @@
     display: inline-block;
     font-size: 17px;
     top: 2px;
-    left: 473px;
+    left: 443px;
     position: absolute;
     border-radius: 0 3px 3px 0;
-    height: 28px;
+    height: 30px;
     font-size: 17px;
     background: #EAF6FE;
     width: 30px;
-    padding-left: 10px;
+    padding-left: 7.5px;
     padding-top: 2px;
     color: #2A8CE7;
+    box-sizing: border-box;
   }
 .case-title {
   color: #2a8ce7;
