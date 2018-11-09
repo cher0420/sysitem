@@ -46,7 +46,9 @@ arr = [
       {
         path:'/',
         name: 'dashboard',
-        component: () => import('../page/wait/index'),
+        // component: () => import('../page/wait/index'),
+        component: resolve =>
+          require(["../page/wait/index"], resolve),
       }
     ]
   },
@@ -58,7 +60,9 @@ arr = [
       {
         path:'/',
         name:'skill',
-        component:() =>import('../page/wait/index')
+        //  component:() =>import('../page/wait/index')
+        component: resolve =>
+          require(["../page/wait/index"], resolve),
       }
     ]
   },
@@ -70,7 +74,9 @@ arr = [
       {
         path:'/',
         name:'custom',
-        component:() =>import('../page/wait/index')
+        //   component:() =>import('../page/wait/index')
+        component: resolve =>
+          require(["../page/wait/index"], resolve),
       }
     ]
   },
@@ -82,7 +88,9 @@ arr = [
       {
         path:'/',
         name:'authority',
-        component:() =>import('../page/wait/index')
+        //    component:() =>import('../page/wait/index')
+        component: resolve =>
+          require(["../page/wait/index"], resolve),
       }
     ]
   },
@@ -94,7 +102,9 @@ arr = [
       {
         path:'/',
         name:'opinion',
-        component:() =>import('../page/wait/index')
+        //  component:() =>import('../page/wait/index')
+        component: resolve =>
+          require(["../page/wait/index"], resolve),
       }
     ]
   },
@@ -105,14 +115,19 @@ arr = [
     children:[
       {
         path:'/',
-        component: () =>import('../page/bot/index'),
+        //   component: () =>import('../page/bot/index'),
+
+        component: resolve =>
+          require(["../page/bot/index"], resolve),
         name: 'bot',
         children:[
         ]
       },
       {
         path:'config',
-        component: () =>import('../page/bot/config/config/index'),
+        //   component: () =>import('../page/bot/config/config/index'),
+        component: resolve =>
+          require(["../page/bot/config/config/index"], resolve),
         name: 'config',
       },
       // {
@@ -122,47 +137,66 @@ arr = [
       // },
       {
         path:'config/web',
-        component: () =>import('../page/bot/config/web/index'),
+        //  component: () =>import('../page/bot/config/web/index'),
+        //  标记
+        component: resolve =>
+          require(["../page/bot/config/web/index"], resolve),
         name: 'config',
       },
       {
         path:'config/questionBuild',
-        component: () =>import('../page/bot/config/questionBuild/index'),
+        //   component: () =>import('../page/bot/config/questionBuild/index'),
+        component: resolve =>
+          require(["../page/bot/config/questionBuild/index"], resolve),
         name: 'config',
       },
       {
         path:'config/knowledgeQuiz',
-        component: () =>import('../page/bot/config/knowledgeQuiz/index'),
+        //    component: () =>import('../page/bot/config/knowledgeQuiz/index'),
+        component: resolve =>
+          require(["../page/bot/config/knowledgeQuiz/index"], resolve),
         name: 'config',
       },
       {
         path:'config/knowledgeDetail',
-        component: () =>import('../page/bot/config/knowledgeDetail/index'),
+        //    component: () =>import('../page/bot/config/knowledgeDetail/index'),、
+        component: resolve =>
+          require(["../page/bot/config/knowledgeDetail/index"], resolve),
         name: 'config',
       },
       {
         path:'config/weChatService',
-        component: () =>import('../page/bot/config/weChatService/index'),
+        //   component: () =>import('../page/bot/config/weChatService/index'),
+        component: resolve =>
+          require(["../page/bot/config/weChatService/index"], resolve),
         name: 'config',
       },
       {
         path:'config/weChatCompany',
-        component: () =>import('../page/wait/index'),
+        //   component: () =>import('../page/wait/index'),
+        component: resolve =>
+          require(["../page/wait/index"], resolve),
         name: 'config',
       },
       {
         path:'config/robot',
-        component: () =>import('../page/wait/index'),
+        //   component: () =>import('../page/wait/index'),
+        component: resolve =>
+          require(["../page/wait/index"], resolve),
         name: 'config',
       },
       {
         path:'config/desktopApp',
-        component: () =>import('../page/wait/index'),
+        //  component: () =>import('../page/wait/index'),
+        component: resolve =>
+          require(["../page/wait/index"], resolve),
         name: 'config',
       },
       {
         path:'config/caseStore',
-        component: () =>import('../page/bot/config/caseStore/index'),
+        //   component: () =>import('../page/bot/config/caseStore/index'),
+        component: resolve =>
+          require(["../page/bot/config/caseStore/index"], resolve),
         name: 'config',
       }
     ]
@@ -177,16 +211,22 @@ const root = [{
   children: [{
     path: 'bot',
     name: 'bot',
-    component: () => import('../page/bot/index')
+    //  component: () => import('../page/bot/index')
+    component: resolve =>
+      require(["../page/bot/index"], resolve),
   }]
 },
   {
     path:'/webTalk',
-    component: () => import('../page/webtalk/index')
+    //   component: () => import('../page/webtalk/index')
+    component: resolve =>
+      require(["../page/webtalk/index"], resolve),
   },
   {
     path:'/webTalk/v2',
-    component: () => import('../page/v2/index')
+    //  component: () => import('../page/v2/index')
+    component: resolve =>
+      require(["../page/v2/index"], resolve),
   },
   {
     path: '*',
