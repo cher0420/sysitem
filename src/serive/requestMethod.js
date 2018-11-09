@@ -23,7 +23,7 @@ export async function getList(api,params,key, loading=true){
         const data = {
           PageIndex: 1,                                     //分页页数
           PageSize: 10,                                     //当前页的条数
-          tenantId:TenantId,
+          // tenantId:TenantId,
           ...params.body,
         }
         const body = JSON.stringify(data)

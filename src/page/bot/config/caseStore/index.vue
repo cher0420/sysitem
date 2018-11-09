@@ -177,7 +177,9 @@
 
   }
 </script>
-<style scoped>
+<style scoped lang="scss">
+  @import  '../../../../style/index';
+
   .button-style {
     padding-left: 40px;
     position: relative;
@@ -235,6 +237,7 @@
 
   .list-detail {
     padding: 40px 30px;
+    padding-bottom: 0;
   }
 
 </style>
