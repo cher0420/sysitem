@@ -20,7 +20,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 // import 'quill/dist/quill.bubble.css'
 // Vue.use(VueQuillEditor, /* { default global options } */)
 
-
+//gai
 
 import 'whatwg-fetch'
 import './style/element-variables.scss';
