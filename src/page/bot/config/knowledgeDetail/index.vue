@@ -13,7 +13,9 @@
     <el-tabs v-model="activeName2" type="card" @tab-click="handleTip" class="yoy-tabs">
       <el-tab-pane label="标准回答" name="first" class="yoy-tab-pane" v-html="str">
       </el-tab-pane>
-      <el-tab-pane label="友好回答" name="second" v-html="str" class="yoy-tab-pane">
+      <el-tab-pane label="友好回答" name="second" class="yoy-tab-pane">
+        <section v-html="str">
+        </section>
       </el-tab-pane>
     </el-tabs>
   </section>
@@ -93,7 +95,9 @@ export default {
     margin-top: 20px;
   }
   .yoy-tab-pane{
-    padding-left: 20px;
-    padding-right: 20px;
+    height: 260px;
+    margin: 20px;
+    overflow-y: scroll;
+    box-sizing: border-box;
   }
 </style>

@@ -5,7 +5,7 @@
         <navBar></navBar>
       </el-header>
       <el-container class="full-height el-container">
-        <el-aside v-if='isCollapse' class="el-aside full-height" width='60px' :style="{float:'left',maxWidth: '280px'}">
+        <el-aside v-if='isCollapse' class="el-aside full-height" width='60px' :style="{float:'left',minWidth:'60px',maxWidth: '280px'}">
             <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
         <el-aside v-else class="el-aside full-height" width='14vw' :style="{float:'left',maxWidth: '280px'}">

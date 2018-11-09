@@ -380,6 +380,7 @@
     height:30px;
     margin-top:1px;
     margin-right: 1px;
+    margin-bottom: 1px;
     background-color: $light-blue;
   }
   .yoy-search-button:hover{
@@ -407,6 +408,9 @@
     transform: translateX(-50%);
   }
   .yoy-list-todo{
+    span{
+      cursor: pointer;
+    }
     a{
       text-underline: none;
     }

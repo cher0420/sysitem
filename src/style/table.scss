@@ -1,0 +1,27 @@
+@import "index";
+$table-background:#f9fafc;
+$table-title-color:#555;
+.yoy-main{
+  .el-table tr{
+    height: 48px;
+  }
+  .el-table th, .el-table td{
+    height: 48px;
+    padding:0;
+  }
+  .el-table--striped .el-table__body tr.el-table__row--striped td{
+    background: $table-background;
+  }
+  .el-table thead{
+    tr{
+      th{
+        color: $table-title-color;
+        background: $table-background;
+      }
+    }
+  }
+  .el-table tr{
+    padding:0;
+  }
+}
+

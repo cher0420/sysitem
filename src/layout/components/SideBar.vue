@@ -157,7 +157,7 @@
     created(){
       const arr = this.$route.path.split('/')
 
-      const navIndex = arr[1]
+      // const navIndex = arr[1]
 
       const to = this.$route
       if(to.name === 'config'){
@@ -168,7 +168,7 @@
         store.dispatch(REPLACE,{isCollapse:false,aSideWidth:'14vw'})
       }
       this.setBreadArr(to)
-      store.dispatch(REPLACE,{navIndex:navIndex})
+      // store.dispatch(REPLACE,{navIndex:navIndex})
     },
   }
 </script>
