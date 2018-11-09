@@ -13,12 +13,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 // import $ from 'jquery';
 // Vue.prototype.$= $;
 
-// 富文本编辑框
-// import VueQuillEditor from 'vue-quill-editor'
-// import 'quill/dist/quill.core.css'
-// import 'quill/dist/quill.snow.css'
-// import 'quill/dist/quill.bubble.css'
-// Vue.use(VueQuillEditor, /* { default global options } */)
+
 
 //改变顶顶顶
 
