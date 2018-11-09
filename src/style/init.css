@@ -1,7 +1,6 @@
 body, h1, h2, h3, h4, h5, h6, hr, p, blockquote, dl, dt, dd, ul, ol, li, pre, form, fieldset, legend, button, input, textarea, th, td { margin:0; padding:0; }
 body, button, input, select, textarea { font-size: 12px;
-  line-height: 1.5;
-  font-family: 'Microsoft Yahei',tahoma,arial,\5b8b\4f53,sans-serif; }
+  line-height: 1.5;font-family: "Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu }
 h1, h2, h3, h4, h5, h6{ font-size:100%; }
 address, cite, dfn, em, var { font-style:normal; }
 code, kbd, pre, samp { font-family:couriernew, courier, monospace; }
@@ -21,22 +20,34 @@ body,html,img {height:100%;}
 ::-webkit-scrollbar
 {
   width: 5px;
-  /*height: 16px;*/
-  background-color: #f0f0f0;
+  height: 5px;
+  /*background-color: #d9d9d9;*/
 }
 
 /*定义滚动条轨道 内阴影+圆角*/
 ::-webkit-scrollbar-track
 {
   /*-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,0.5);*/
-  /*!*border-radius: 10px;*!*/
+  border-radius: 10px;
   /*background-color: #f5f5f5;*/
 }
 
 /*定义滑块 内阴影+圆角*/
 ::-webkit-scrollbar-thumb
 {
-  border-radius: 1px;
+  border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
   background-color: #d9d9d9;
+}
+html{
+  /*三角箭头的颜色*/
+  scrollbar-arrow-color: #d9d9d9;
+  /*滚动条滑块按钮的颜色*/
+  scrollbar-face-color: #d9d9d9;
+  /*滚动条整体颜色*/
+  scrollbar-highlight-color: #f0f0f0;
+  /*滚动条阴影*/
+  scrollbar-shadow-color: #f0f0f0;
+  /*滚动条轨道颜色*/
+  scrollbar-track-color: #f0f0f0;
 }

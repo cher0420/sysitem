@@ -3,8 +3,10 @@
     {{/* 以后待更新面包屑 */}}
     <el-breadcrumb separator-class="el-icon-arrow-right" class="single">
       <el-breadcrumb-item class="primary-color align-middle index" to="/bot">首页</el-breadcrumb-item>
-      <el-breadcrumb-item class="primary-color align-middle first" :to="breadArr[0].url" @change="handle(breadArr[0].name)">{{breadArr[0].name}}</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="breadArr.length===2" class="primary-color align-middle second" @change="handle(breadArr[1].name)">{{breadArr[1].name}}</el-breadcrumb-item>
+      <el-breadcrumb-item
+        :class="breadArr.length == 1?'notAllow':'first'"
+        :to="breadArr[0].url" @change="handle(breadArr[0].name)">{{breadArr[0].name}}</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="breadArr.length===2" class="second" @change="handle(breadArr[1].name)">{{breadArr[1].name}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     {{/* 当有二级面包屑时，采用二级面包屑*/}}
@@ -36,10 +38,10 @@
   export default {
     data(){
       return{
-        underStyle:'none'
       }
     },
     computed: {
+
       breadArr(){
         return store.state.app.breadArr
       },
@@ -105,10 +107,11 @@
     height: $bread-height;
     line-height: $bread-height;
     padding-right: 40px;
+
     span:hover{
       /*text-decoration: underline;*/
     }
-    .second{
+    .second,.notAllow{
       span:hover{
         text-decoration: none;
         cursor: not-allowed;
@@ -117,6 +120,12 @@
     .first,.index{
       span:hover{
         text-decoration: underline;
+      }
+    }
+    .notAllow{
+      span:hover{
+        text-decoration: none;
+        cursor: not-allowed;
       }
     }
   }

@@ -96,7 +96,8 @@ export default {
   }
   .yoy-tab-pane{
     height: 260px;
-    margin: 20px;
+    margin: 20px 0;
+    padding: 0 20px;
     overflow-y: scroll;
     box-sizing: border-box;
   }
