@@ -5,15 +5,15 @@
         <navBar></navBar>
       </el-header>
       <el-container class="full-height el-container">
-        <el-aside v-if='isCollapse' class="el-aside full-height" width='60px' :style="{float:'left',maxWidth: '280px'}">
-          <sidebar class="sidebar-container full-height"></sidebar>
+        <el-aside v-if='isCollapse' class="el-aside full-height" width='60px' :style="{float:'left',minWidth:'60px',maxWidth: '280px'}">
+            <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
         <el-aside v-else class="el-aside full-height" width='14vw' :style="{float:'left',maxWidth: '280px'}">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
         <el-container class="full-height">
           <section v-if="config">
-            <secondary-menu class="yoy-second-menu full-height">
+            <secondary-menu  class="yoy-second-menu full-height">
             </secondary-menu>
           </section>
           <el-container class="" v-loading="mainLoading">
@@ -41,26 +41,28 @@
 
   export default {
     name: 'layout',
-    data() {
-      return {}
+    data(){
+      return{
+
+      }
     },
-    computed: {
-      mainLoading() {
+    computed:{
+      mainLoading(){
         return store.state.app.mainLoading
       },
       config() {
         return store.state.app.config
       },
-      aSideWidth() {
+      aSideWidth (){
         return store.state.app.aSideWidth
       },
-      isCollapse() {
+      isCollapse () {
         return store.state.app.isCollapse
       },
     },
-    beforeCreate() {
-      const config = this.$route.name === 'config' //判断路由是否为配置二级菜单，是则为true，不是则false并隐藏二级菜单
-      store.dispatch(REPLACE, {config})
+    beforeCreate(){
+      const config = this.$route.name ==='config' //判断路由是否为配置二级菜单，是则为true，不是则false并隐藏二级菜单
+      store.dispatch(REPLACE,{config})
     },
     components: {
       NavBar,
@@ -73,28 +75,22 @@
 </script>
 <style lang="scss">
   @import '../style/index';
-
-  .nav-height {
+  .nav-height{
     height: $nav-height !important; //顶栏高度
   }
-
-  .app-container {
-    height: 100%;
+  .app-container{
     min-width: 1280px;
     min-height: 560px;
-
   }
-
-  .el-main {
+  .el-main{
     /*margin-left: 180px;*/
     /*min-height: 80vh;*/
     box-sizing: border-box;
 
   }
-
-  .yoy-footer {
-    bottom: 0;
-    left: 50%;
+  .yoy-footer{
+    bottom:0;
+    left:50%;
     transform: translateX(-50%);
   }
 

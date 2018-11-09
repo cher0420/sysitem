@@ -3,10 +3,14 @@ $bread-current-color: #777;
 .el-breadcrumb__inner.is-link, .el-breadcrumb__inner a{
   font-weight: normal;
   color: $primary-color;
+  cursor: default;
 }
 .el-breadcrumb__item:last-child .el-breadcrumb__inner, .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover, .el-breadcrumb__item:last-child .el-breadcrumb__inner a, .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover{
    color: $bread-current-color;
  }
+.el-breadcrumb__item:last-child .el-breadcrumb__inner, .el-breadcrumb__item:last-child .el-breadcrumb__inner a, .el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover, .el-breadcrumb__item:last-child .el-breadcrumb__inner:hover{
+  cursor:default;
+}
 .el-breadcrumb__separator{
   color: $bread-current-color;
 }

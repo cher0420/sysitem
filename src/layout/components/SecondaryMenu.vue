@@ -39,9 +39,10 @@
         }
       },
       name: "SecondaryMenu",
-      beforeCreate(){
+      created(){
         const pathArr = this.$route.path.split('/')
         const defaultActiveSecondM = pathArr[pathArr.length-1]
+        console.log('====',pathArr,defaultActiveSecondM)
         store.dispatch(REPLACE,{defaultActiveSecondM})
       },
       computed:{

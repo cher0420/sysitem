@@ -1,7 +1,5 @@
 <template>
-  <div>
-
-
+  <div class="yoy-main">
     <section class="list-item" v-if="indexPage == true">
       <div class="button-style">
         <el-button type="primary" size="mini" @click="createCase()">创建案例</el-button>
@@ -181,30 +179,34 @@
   @import  '../../../../style/index';
 
   .button-style {
-    padding-left: 40px;
+    /*padding-left: 40px;*/
     position: relative;
   }
 
   .button-style button {
+
     width: 100px;
-    height: 30px;
-    line-height: 30px;
+    height: 32px;
+    line-height: 32px;
     padding: 0;
+    box-sizing: border-box;
   }
 
   .button-style .button-style-input {
     margin-left: 10px;
     display: inline-block;
     width: 360px !important;
-    height: 30px !important;
+    height: 32px !important;
+    box-sizing: border-box;
+    margin-top: -2px;
   }
 
   .search-icon {
     cursor: pointer;
     display: inline-block;
     font-size: 17px;
-    top: 1px;
-    left: 472px;
+    top: 2px;
+    left: 473px;
     position: absolute;
     border-radius: 0 3px 3px 0;
     height: 28px;
@@ -225,7 +227,7 @@
 </style>
 <style>
   .list-detail-lis {
-    height: 480px;
+    /*height: 480px;*/
     overflow: scroll;
   }
 
@@ -236,7 +238,7 @@
   }
 
   .list-detail {
-    padding: 40px 30px;
+    padding: 40px 0px;
     padding-bottom: 0;
   }
 

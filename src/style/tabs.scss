@@ -1,4 +1,5 @@
 @import './index';
+$tab-border-color :#cecece;
 .el-tabs__content{
   border-left: 1px solid $primary-color;
   border-bottom: 1px solid $primary-color;
@@ -10,12 +11,15 @@
 .el-tabs--card > .el-tabs__header .el-tabs__nav{
   border:0;
   border-radius: 0;
-  border-left: 1px solid #cecece;
-  border-top: 1px solid #cecece;
+  border-left: 1px solid $tab-border-color;
+  border-top: 0;
 }
 .el-tabs--card > .el-tabs__header .el-tabs__item{
   border-bottom:1px solid $primary-color;
   border-left:0;
+  border-top:1px solid $tab-border-color;
+  border-right:1px solid $tab-border-color;
+  background: #fff;
 }
 .el-tabs--card > .el-tabs__header{
   border-bottom: 1px solid $primary-color;
@@ -31,8 +35,9 @@
 //}
 .el-tabs--card > .el-tabs__header .el-tabs__item.is-active{
   border-bottom-color: #fff;
+  border-top-color:$primary-color;
   border-left: 1px solid $primary-color;
-  border-right: 1px solid $primary-color;
+  border-right-color: $primary-color;
   margin-left: -1px;
 }
 

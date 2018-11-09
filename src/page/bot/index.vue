@@ -376,10 +376,12 @@
 <style lang="scss">
   @import '../../style/index';
   .yoy-search-button{
-    width: 32px;
-    height:30px;
+    width: 32px!important;
+    height:30px!important;
+    line-height: 30px!important;
     margin-top:1px;
     margin-right: 1px;
+    margin-bottom: 1px;
     background-color: $light-blue;
   }
   .yoy-search-button:hover{
@@ -407,6 +409,9 @@
     transform: translateX(-50%);
   }
   .yoy-list-todo{
+    span{
+      cursor: pointer;
+    }
     a{
       text-underline: none;
     }
