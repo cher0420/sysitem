@@ -35,7 +35,7 @@ setTimeout(
       components: { App },
       template: '<App/>'
     })
-  },400
+  },500
 )
 
 

@@ -114,7 +114,7 @@
     .second,.notAllow{
       span:hover{
         text-decoration: none;
-        cursor: not-allowed;
+        cursor: default;
       }
     }
     .first,.index{
@@ -125,7 +125,7 @@
     .notAllow{
       span:hover{
         text-decoration: none;
-        cursor: not-allowed;
+        cursor: default;
       }
     }
   }
