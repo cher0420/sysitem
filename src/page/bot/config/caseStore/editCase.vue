@@ -12,7 +12,8 @@
       <div class="caseTitle">
           案例内容：
         </div>
-      <quill-editor ref="myTextEditor" v-model="content" :options="editorOption"></quill-editor>
+
+
       <el-button class="editor-btn" type="primary" @click="submit">保存</el-button>
       <el-button plain size="mini" @click="indexCaseShow">取消</el-button>
     </div>
@@ -25,6 +26,11 @@
   export default {
     name: "editCase",
     props: ['navIndex'],
+    created(){
+
+
+
+    },
     components: {
       // quillEditor
     },

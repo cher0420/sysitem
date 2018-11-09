@@ -1,7 +1,5 @@
 <template>
-  <div>
-
-
+  <div class="yoy-main">
     <section class="list-item" v-if="indexPage == true">
       <div class="button-style">
         <el-button type="primary" size="mini" @click="createCase()">创建案例</el-button>
@@ -177,41 +175,48 @@
 
   }
 </script>
-<style scoped>
+<style scoped lang="scss">
+  @import  '../../../../style/index';
+
   .button-style {
-    padding-left: 40px;
+    /*padding-left: 40px;*/
     position: relative;
   }
 
   .button-style button {
+
     width: 100px;
-    height: 30px;
-    line-height: 30px;
+    height: 32px;
+    line-height: 32px;
     padding: 0;
+    box-sizing: border-box;
   }
 
   .button-style .button-style-input {
     margin-left: 10px;
     display: inline-block;
     width: 360px !important;
-    height: 30px !important;
+    height: 32px !important;
+    box-sizing: border-box;
+    margin-top: -2px;
   }
 
   .search-icon {
     cursor: pointer;
     display: inline-block;
     font-size: 17px;
-    top: 1px;
-    left: 472px;
+    top: 2px;
+    left: 443px;
     position: absolute;
     border-radius: 0 3px 3px 0;
-    height: 28px;
+    height: 30px;
     font-size: 17px;
     background: #EAF6FE;
     width: 30px;
-    padding-left: 10px;
+    padding-left: 7.5px;
     padding-top: 2px;
     color: #2A8CE7;
+    box-sizing: border-box;
   }
 .case-title {
   color: #2a8ce7;
@@ -223,7 +228,7 @@
 </style>
 <style>
   .list-detail-lis {
-    height: 480px;
+    /*height: 480px;*/
     overflow: scroll;
   }
 
@@ -234,7 +239,8 @@
   }
 
   .list-detail {
-    padding: 40px 30px;
+    padding: 40px 0px;
+    padding-bottom: 0;
   }
 
 </style>
