@@ -16,11 +16,11 @@
             <secondary-menu  class="yoy-second-menu full-height">
             </secondary-menu>
           </section>
-          <el-container class="" v-loading="mainLoading">
+          <el-container class="p-relative" v-loading="mainLoading">
             <el-main class="p-relative scroll-content">
               <app-main></app-main>
             </el-main>
-            <el-footer style="height:65px;">
+            <el-footer class="p-absolute yoy-footer">
               <footer-bar></footer-bar>
             </el-footer>
           </el-container>
@@ -83,15 +83,17 @@
     min-height: 560px;
   }
   .el-main{
-    /*margin-left: 180px;*/
-    /*min-height: 80vh;*/
-    box-sizing: border-box;
+    /*max-height: 84vh;*/
+    padding-bottom: 130px;
+    /*box-sizing: border-box;*/
 
   }
   .yoy-footer{
+    width: 100%;
     bottom:0;
     left:50%;
     transform: translateX(-50%);
+    background: #fff;
   }
 
   /*
