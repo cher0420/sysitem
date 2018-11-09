@@ -4,7 +4,7 @@
       <i class="yoy-menu-icon"></i>
     </section>
     <el-menu
-      :default-active="navIndex"
+      :default-active="activeKey"
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
@@ -51,6 +51,9 @@
       },
       aSideWidth (){
         return store.state.app.aSideWidth
+      },
+      activeKey (){
+        return store.state.app.activeKey
       }
     },
     watch: {
@@ -63,6 +66,8 @@
               this.setBreadArr(to)
               // 进入配置二级菜单页面
               const navIndexArr = to.path.split('/')
+              const activeKey =navIndexArr[1]
+
               const navIndex = navIndexArr[navIndexArr.length-1]
               const config = to.name === 'config'
               let aSideWidth = null;
@@ -75,7 +80,7 @@
                 aSideWidth = '14vw'
                 store.dispatch(REPLACE,{isCollapse:false})
               }
-              store.dispatch(REPLACE,{config,navIndex,aSideWidth}).then(
+              store.dispatch(REPLACE,{config,navIndex,aSideWidth,activeKey}).then(
                 () => {
                   setTimeout(
                     () =>{
@@ -155,13 +160,15 @@
       }
     },
     created(){
+      const arr = this.$route.path.split('/')
+      const activeKey = arr[1]
       const to = this.$route
       if(to.name === 'config'){
         if(this.isCollapse === false){
-          store.dispatch(REPLACE,{isCollapse:true,aSideWidth:'60px !important'})
+          store.dispatch(REPLACE,{isCollapse:true,aSideWidth:'60px !important',activeKey})
         }
       }else{
-        store.dispatch(REPLACE,{isCollapse:false,aSideWidth:'14vw'})
+        store.dispatch(REPLACE,{isCollapse:false,aSideWidth:'14vw',activeKey})
       }
       this.setBreadArr(to)
     },

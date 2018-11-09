@@ -9,6 +9,7 @@ Vue.use(Vuex)
 
     app: {
       config: false,
+      activeKey: 'bot',
       defaultActiveSecondM:'config',                   //二级菜单active-key
       userName: '',
       userInfo: {},
