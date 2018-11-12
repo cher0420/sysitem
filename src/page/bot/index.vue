@@ -159,7 +159,7 @@
     created(){
       store.dispatch(REPLACE,{PageIndex:1,searchStatus:null,description:null}).then(
         ()=>{
-          wait(getList(URL.requestHost + BOT,{},ITEMKEY,false)).then(
+            getList(URL.requestHost + BOT,{},ITEMKEY,false).then(
             () =>{
               reloadListObj = setInterval(reloadList,10000)
             }
