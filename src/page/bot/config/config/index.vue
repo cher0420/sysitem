@@ -100,7 +100,7 @@
         address:{city:'',street:''},
         loading:false,
         area:ADDRESS,
-        city:ADDRESS[0].child,
+        city:ADDRESS[8].child,
         button:'保存',
         editable:false,
         rules: {
@@ -122,8 +122,8 @@
         ruleForm: {
           Bot_Name: '小华智能助理',
           Bot_Gender: '女', // m:man,f:female
-          Bot_DayOfBirth: '',
-          Bot_Constellation:'',
+          Bot_DayOfBirth: moment().format('YYYY-MM-DD'),
+          Bot_Constellation:'--',
           Bot_BloodType: 'O',
           Bot_Height: '160',
           Bot_Weight:'50',
@@ -134,11 +134,9 @@
           Bot_Company:'上海灵羚科技有限公司',
           Bot_School:'上海灵羚科技有限公司',
         },
-
       }
     },
     beforeCreate(){
-      const that = this
       const BotConfigId = this.$route.query.recordId
       const body = {
         BotConfigId,
@@ -154,35 +152,11 @@
       request(URL.requestHost+BOTINFO,option).then(
         (res) =>{
           const data = res['Data'][0]
-          for(let v in data){
-            if(!data[v]){
-              data[v] = that.ruleForm[v]
-            }
+          this.getBot_Constellation()
+          if(data){
+            this.filterData(data)
+          }else{
           }
-          data.Bot_Height = data.Bot_Height?data.Bot_Height.replace('cm',''):'160'
-          // 判断获取到的城市
-          const Bot_Birthplace = data.Bot_Birthplace?data.Bot_Birthplace.split('-'):[]
-          data.Bot_Birthplace = {
-            province:Bot_Birthplace[0],
-            city:Bot_Birthplace[1],
-          }
-          // 根据获取到的省份，更改城市
-          ADDRESS.forEach((key,value,arr) =>{
-            if(data.Bot_Birthplace.province === key['name']){
-              that.city = key['child']
-              return
-            }
-          })
-          // 更改出生日期格式
-          const date = data.Bot_DayOfBirth?data.Bot_DayOfBirth:moment()
-
-          const arr = date.split(' ')
-          const dateArr = arr[0].split('/')
-          const year = dateArr[dateArr.length-1]
-          dateArr.pop()
-          dateArr.unshift(year)
-          data.Bot_DayOfBirth = dateArr.join('-')
-          that.ruleForm = data
         }
       )
     },
@@ -209,17 +183,10 @@
         })
       },
       validate(formName){
-        // this.$refs[formName].validate((valid) => {
-        //   if (valid) {
-            const data  = JSON.parse(JSON.stringify(this.ruleForm))
-            data.Bot_Birthplace = `${data.Bot_Birthplace.province}-${data.Bot_Birthplace.city}`
-            delete data.Status
-            this.submitForm(data)
-          // } else {
-          //   console.log('error submit!!');
-          //   return false;
-          // }
-        // });
+        const data  = JSON.parse(JSON.stringify(this.ruleForm))
+        data.Bot_Birthplace = `${data.Bot_Birthplace.province}-${data.Bot_Birthplace.city}`
+        delete data.Status
+        this.submitForm(data)
       },
       submitForm(v){
         const that = this
@@ -263,9 +230,11 @@
       },
       getBot_Constellation(v){
         if(!v){
-          this.ruleForm.Bot_Constellation ='--'
+          const m = moment().format('MM')
+          const d = moment().format('DD')
+          const res = "魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯".substr(m*2-(d<"102223444433".charAt(m-1)- -19)*2,2);
+          this.ruleForm.Bot_Constellation = res+'座'
         }else{
-          this.ruleForm.Bot_DayOfBirth = v
           const m = moment(v).format('MM')
           const d = moment(v).format('DD')
           const res = "魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯".substr(m*2-(d<"102223444433".charAt(m-1)- -19)*2,2);
@@ -282,7 +251,45 @@
             }
           }
         )
-      }
+      },
+      filterData(data){
+        const that = this
+        for(let v in data){
+          if(!data[v]){
+            data[v] = that.ruleForm[v]
+          }
+        }
+        data.Bot_Height = data.Bot_Height?data.Bot_Height.replace('cm',''):'160'
+        // 判断获取到的城市
+        const Bot_Birthplace = data.Bot_Birthplace?data.Bot_Birthplace.split('-'):[]
+        data.Bot_Birthplace = {
+          province:Bot_Birthplace[0],
+          city:Bot_Birthplace[1],
+        }
+        // 根据获取到的省份，更改城市
+        ADDRESS.forEach((key,value,arr) =>{
+          if(data.Bot_Birthplace.province === key['name']){
+            that.city = key['child']
+            return
+          }
+        })
+
+        // 更改出生日期格式
+        const date = data.Bot_DayOfBirth?data.Bot_DayOfBirth:moment().format('YYYY-MM-DD')
+
+        const m = moment().format('MM')
+        const d = moment().format('DD')
+        const bot_Constellation = "魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯".substr(m*2-(d<"102223444433".charAt(m-1)- -19)*2,2);
+        data.Bot_Constellation = bot_Constellation+'座'
+
+        const arr = date.split(' ')
+        const dateArr = arr[0].split('/')
+        const year = dateArr[dateArr.length-1]
+        dateArr.pop()
+        dateArr.unshift(year)
+        data.Bot_DayOfBirth = dateArr.join('-')
+        that.ruleForm = data
+      },
     },
   }
 </script>

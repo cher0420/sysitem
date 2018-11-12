@@ -58,7 +58,8 @@
   .yoy-logo{
     width:$side-width;
     height:$nav-height;
-    background: url("../../assets/newLogo.png") center center no-repeat;
+    background: url("../../assets/logo.png") center center no-repeat;
+    background-size:cover;
   }
   // 覆盖原有组件样式
   .el-header{

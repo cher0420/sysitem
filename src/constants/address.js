@@ -258,7 +258,8 @@ export const ADDRESS=[
     "name": "其他",
     "id": 109
   }]
-}, {
+},
+  {
   "name": "上海",
   "id": 9,
   "child": [{

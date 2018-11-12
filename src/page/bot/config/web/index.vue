@@ -13,7 +13,7 @@
     </el-form-item>
     <title-item title="客服图标悬浮位置"></title-item>
     <el-form-item label="" class="margin-top30 margin-bottom-30">
-      <el-col :span="20">
+      <el-col :span="18">
           <el-radio-group v-model="formData.Position" class="full-width">
             <el-col :span="6">
               <el-radio label="right-down">右下角</el-radio>
@@ -33,7 +33,7 @@
     <title-item title="自定义机器人头像"></title-item>
     <el-form-item label="" class="margin-top30 margin-bottom-30">
       <el-radio-group v-model="headerPicture" class="full-width" @change="changeHeaderImage">
-          <el-col :span="10">
+          <el-col :span="9">
             <el-radio label="normal" class="align-middle margin-right-30">默认 : </el-radio>
             <img :src="defaultPicture" alt="默认头像" class="align-middle header">
           </el-col>
@@ -48,7 +48,7 @@
     </el-form-item>
     <title-item title="自定义标题栏背景颜色"></title-item>
     <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
-      <el-col :span="10">
+      <el-col :span="9">
         <el-col :span="2" v-for="item in titleColorItems" :index="index" >
           <span class="colorItem"
                 :style="{background:item,opacity:item === DialogColor?'1':'.6'}"
@@ -58,7 +58,7 @@
           </span>
         </el-col>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="14">
         <el-col :span="8">
           自定义标题栏背景颜色 ：
         </el-col>
@@ -69,7 +69,7 @@
     </el-form-item>
     <title-item title="自定义标题栏字体颜色"></title-item>
     <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
-      <el-col :span="10">
+      <el-col :span="9">
         <el-col :span="2" v-for="item in textColorItems" :index="index">
           <span class="colorItem"
                 :style="{background:item,border:item === '#FFFFFF'?'1px solid #eaedf1':'none',opacity:item === DialogTitleColor?'1':'.6'}"
@@ -79,7 +79,7 @@
           </span>
         </el-col>
       </el-col>
-      <el-col :span="12">
+      <el-col :span="14">
         <el-col :span="8">
           自定义标题栏字体颜色 ：
         </el-col>
@@ -90,7 +90,7 @@
     </el-form-item>
     <title-item title="功能开关"></title-item>
     <el-form-item label="" style="margin-bottom: 10px;margin-top: 18px;">
-      <el-col :span="4" >
+      <el-col :span="3" >
         <el-checkbox v-model="formData.LoginSwitch">登录验证</el-checkbox>
       </el-col>
       <span class="primary-color f-s-14">提示：开启后则需登录后才可进入网页版</span>
@@ -99,7 +99,7 @@
       <el-col :span="4">
         <el-checkbox v-model="formData.knowledge" disabled>知识分类功能</el-checkbox>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="9">
         <el-radio-group class="full-width">
           <el-col :span="17">
             <el-radio :label="1" disabled>默认：自助导航</el-radio>
@@ -120,7 +120,7 @@
       <el-col :span="4">
         <el-checkbox v-model="formData.demo" disabled>案例库</el-checkbox>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="9">
         <el-radio-group class="full-width">
           <el-col :span="17">
             <el-radio :label="1" disabled>默认：案例库</el-radio>

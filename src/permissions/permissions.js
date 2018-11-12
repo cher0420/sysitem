@@ -3,7 +3,7 @@ import {USERNAME, TOKEN, SID, TENANTID} from "../constants/constants";
 import {VOILD_TOKEN_URL, VOILD_USERINFO,LOGIN,LOGOUT} from "../constants/api";
 import URL from '../host/baseUrl'
 import {request,isIE9} from "../serive/request";
-import yoyStore from '../store/index'
+import yoyStore from '../store/index' ;// 命名为yoy空间的store
 import {REPLACE} from "../store/mutations";
 import {Loading} from 'element-ui';
 import {store} from '../storee/store';
@@ -75,9 +75,6 @@ export const voildId = (sid) => {
         () => {
           //验证url上的token是否存在并且与cookie的token一致
           voildToken(tokenUrl).then(
-            // () =>{
-            //   redirect(LOGIN)
-            // }
           )
         }
       )
@@ -149,6 +146,9 @@ export async function fetchUserInfo (token = null) {
         setCookies(USERNAME,name, {expires: 1}).then(
           setCookies(TENANTID,TenantId,{expires: 1}).then(
             () => {
+              /*
+              render 函数
+               */
               new Vue({
                 el: '#app',
                 store,
