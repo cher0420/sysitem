@@ -6,6 +6,7 @@
     <question-quiz v-else-if="componentName === 'knowledgeQuiz'"></question-quiz>
     <question-detail v-else-if="componentName === 'questionDetail'"></question-detail>
     <case-store v-else-if="componentName === 'caseStore'"></case-store>
+
   </section>
 </template>
 <script>
