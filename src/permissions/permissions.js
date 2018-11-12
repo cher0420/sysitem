@@ -7,6 +7,8 @@ import store from '../store/index'
 import {REPLACE} from "../store/mutations";
 import {Loading} from 'element-ui';
 import Router from '../router/index';
+import router from "../router";
+import App from '../App';
 
 export function redirect(type){
   let random = Math.floor(Math.random() * 1000000)
@@ -23,6 +25,7 @@ export function redirect(type){
  */
 let loadingInstance = Loading.service({fullscreen: true});
 export function getLoginStatus(){
+  Loading.service({fullscreen: true});
   // 获取cookie里的token
   const token = getCookies(TOKEN)
   // 如果cookie里的SID存在
@@ -69,8 +72,6 @@ export const voildId = (sid) => {
     // url上的sid不空且与cookie的sid一致移除cookie的SID
       removeCookies(SID).then(
         () => {
-          const testText = getCookies(SID)
-
           //验证url上的token是否存在并且与cookie的token一致
           voildToken(tokenUrl).then(
             // () =>{
@@ -108,7 +109,6 @@ export async function voildToken (tokens) {
       setCookies(TOKEN, tokens, { expires: 1 } ).then(
         ()=>{
           fetchUserInfo(tokens)
-          loadingInstance.close();
         }
       )
    } else {
@@ -145,10 +145,18 @@ export async function fetchUserInfo (token = null) {
     const TenantId  = res.UserInfo.TenantId
     store.dispatch(REPLACE,{userName: name, userInfo,}).then(
       ()=>{
-        setCookies('userName',name, {expires: 1}).then(
-          setCookies('TenantId',TenantId,{expires: 1}).then(
+        setCookies(USERNAME,name, {expires: 1}).then(
+          setCookies(TENANTID,TenantId,{expires: 1}).then(
             () => {
+              new Vue({
+                el: '#app',
+                store,
+                router,
+                components: { App },
+                template: '<App/>'
+              })
               hiddenTokenInUrl()
+              loadingInstance.close();
             }
           )
         )
@@ -174,12 +182,11 @@ export const hiddenTokenInUrl = () => {
 }
 
 export const logOut = () => {
-  let loadingInstance = Loading.service({fullscreen: true});
+  Loading.service({fullscreen: true});
   const token = getCookies('token')
   const redirectUrl = 'https://'+window.location.host
   removeCookies([USERNAME,TOKEN]).then(
     () => {
-      loadingInstance.close();
       window.location.href = URL.SSOWebUrl.zh+ LOGOUT + redirectUrl + '&token='+token
     }
   )
