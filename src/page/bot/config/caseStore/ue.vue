@@ -1,7 +1,10 @@
 <template>
   <div>
     <script id="ueid" type="text/plain"></script>
-    <button @click="getUEContent()">获取内容</button>
+
+    <el-button class="editor-btn" type="primary" @click="getUEContent">保存</el-button>
+    <el-button plain size="mini" @click="indexCaseShow">取消</el-button>
+    <!--<button @click="getUEContent()">获取内容</button>-->
   </div>
 
 
@@ -31,13 +34,23 @@
       });
     },
     methods: {
-      getUEContent() { // 获取内容方法
+      getUEContent() {    // 获取内容方法
         console.log(this.editor.getContent())
         return this.editor.getContent()
-      }
+      },
+
+
+
+
+
     },
     destroyed() {
       this.editor.destroy();
     }
   }
 </script>
+<style scoped>
+  .editor-btn {
+    margin-top: 20px;
+  }
+</style>
