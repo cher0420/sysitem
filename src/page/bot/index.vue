@@ -109,7 +109,7 @@
   import store from '../../store/index'
   import {getCookies} from "../../utils/cookie";
   import {TOKEN} from "../../constants/constants";
-  import {getList} from "../../serive/requestMethod";
+  import {getList} from "./service/requestMethod";
 
   let  reloadListObj=null
   async function reloadList(v){
@@ -155,17 +155,17 @@
     created(){
       store.dispatch(REPLACE,{PageIndex:1,searchStatus:null,description:null}).then(
         ()=>{
-            getList(URL.requestHost + BOT,{},ITEMKEY,false).then(
+            //1、获取列表
+          getList(URL.requestHost + BOT,{},ITEMKEY,false).then(
             () =>{
-
-              //1、获取列表
-              // this.filterData()
               //2、遍历data
+              const data = store.state.app.tableData
+              this.filterData(data)
               //3、找出正在删除或者正在创建的数据
               //4、组装成一个轮巡数组，询问是否删除
               //5、将每次数组与返回数据做对比
               //6、找出不同的状态的数据，更改页面状态
-              reloadListObj = setInterval(reloadList,10000)
+              // reloadListObj = setInterval(reloadList,10000)
             }
           )
         }
@@ -364,8 +364,18 @@
           }
         )
       },
-      filterData(){
-
+      filterData(data){
+        /*
+        排列顺序(0: 未创建, 1：创建中, 2：已创建, 3：删除中, 4: 已删除, 5: 删除失败, 6：创建失败)
+         */
+         // const res= data.filter((e)=> {e.Status ===1 || e.Status ===3});
+        const arr = []
+         data.forEach((e)=> {
+           if(e.Status ===1 || e.Status ===3){
+             arr.push(e.RecordId)
+           }
+         });
+        console.log(arr);
       }
     }
   }

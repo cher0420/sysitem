@@ -153,10 +153,11 @@
       request(URL.requestHost+BOTINFO,option).then(
         (res) =>{
           const data = res['Data'][0]
-          this.getBot_Constellation()
+          // this.getBot_Constellation()
           if(data){
             this.filterData(data)
           }else{
+            this.getBot_Constellation()
           }
         }
       )
@@ -277,12 +278,7 @@
 
         // 更改出生日期格式
         const date = data.Bot_DayOfBirth?data.Bot_DayOfBirth:moment().format('YYYY-MM-DD')
-
-        const m = moment().format('MM')
-        const d = moment().format('DD')
-        const bot_Constellation = "魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯".substr(m*2-(d<"102223444433".charAt(m-1)- -19)*2,2);
-        data.Bot_Constellation = bot_Constellation+'座'
-
+        
         const arr = date.split(' ')
         const dateArr = arr[0].split('/')
         const year = dateArr[dateArr.length-1]

@@ -1,8 +1,8 @@
-import {request} from "./request";
-import store from '../store/index'
-import {REPLACE} from "../store/mutations";
-import {getCookies} from "../utils/cookie";
-import {TOKEN,TENANTID} from "../constants/constants";
+import {request} from "../../../serive/request";
+import store from '../../../store/index'
+import {REPLACE} from "../../../store/mutations";
+import {getCookies} from "../../../utils/cookie";
+import {TOKEN,TENANTID} from "../../../constants/constants";
 
 export async function wait(callback){
     let reload = setInterval(function () {

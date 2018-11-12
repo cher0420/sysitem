@@ -19,7 +19,7 @@
   import {ITEMKEY} from "../page/bot/constants";
   import URL from '../host/baseUrl'
   import {BOTLIST} from "../page/bot/constants";
-  import {getList} from "../serive/requestMethod";
+  import {getList} from "../page/bot/service/requestMethod";
 
   export default {
     data(){

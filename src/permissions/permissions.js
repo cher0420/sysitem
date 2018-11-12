@@ -36,7 +36,7 @@ export function getLoginStatus(){
     // 验证cookie里的SID与url上的是否一致
     voildToken(token).then(
       ()=>{
-        console.log('voildToken'+token);
+        console.log(' 正确响应');
       }
     )
 
