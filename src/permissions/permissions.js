@@ -3,9 +3,10 @@ import {USERNAME, TOKEN, SID, TENANTID} from "../constants/constants";
 import {VOILD_TOKEN_URL, VOILD_USERINFO,LOGIN,LOGOUT} from "../constants/api";
 import URL from '../host/baseUrl'
 import {request,isIE9} from "../serive/request";
-import store from '../store/index'
+import yoyStore from '../store/index'
 import {REPLACE} from "../store/mutations";
 import {Loading} from 'element-ui';
+import {store} from '../storee/store';
 import Router from '../router/index';
 import router from "../router";
 import App from '../App';
@@ -143,7 +144,7 @@ export async function fetchUserInfo (token = null) {
     const name = res.UserInfo.FullName
     const userInfo  = res.UserInfo
     const TenantId  = res.UserInfo.TenantId
-    store.dispatch(REPLACE,{userName: name, userInfo,}).then(
+    yoyStore.dispatch(REPLACE,{userName: name, userInfo,}).then(
       ()=>{
         setCookies(USERNAME,name, {expires: 1}).then(
           setCookies(TENANTID,TenantId,{expires: 1}).then(

@@ -125,11 +125,11 @@
           Bot_DayOfBirth: '',
           Bot_Constellation:'',
           Bot_BloodType: 'O',
-          Bot_Height: 160,
-          Bot_Weight:50,
+          Bot_Height: '160',
+          Bot_Weight:'50',
           Bot_Birthplace: {
-          province:'',
-          city:''
+            province:'上海',
+            city:'上海'
           },
           Bot_Company:'上海灵羚科技有限公司',
           Bot_School:'上海灵羚科技有限公司',
@@ -159,7 +159,7 @@
               data[v] = that.ruleForm[v]
             }
           }
-          data.Bot_Height = data.Bot_Height.replace('cm','')
+          data.Bot_Height = data.Bot_Height?data.Bot_Height.replace('cm',''):'160'
           // 判断获取到的城市
           const Bot_Birthplace = data.Bot_Birthplace?data.Bot_Birthplace.split('-'):[]
           data.Bot_Birthplace = {
@@ -174,7 +174,8 @@
             }
           })
           // 更改出生日期格式
-          const date = data.Bot_DayOfBirth
+          const date = data.Bot_DayOfBirth?data.Bot_DayOfBirth:moment()
+
           const arr = date.split(' ')
           const dateArr = arr[0].split('/')
           const year = dateArr[dateArr.length-1]

@@ -109,7 +109,7 @@
   import store from '../../store/index'
   import {getCookies} from "../../utils/cookie";
   import {TOKEN} from "../../constants/constants";
-  import {getList,wait} from "../../serive/requestMethod";
+  import {getList} from "../../serive/requestMethod";
 
   let  reloadListObj=null
   async function reloadList(v){
@@ -125,10 +125,6 @@
     }
     getList(URL.requestHost + BOT,options,ITEMKEY,false).then(
       () =>{
-      }
-    ).catch(
-      ()=>{
-
       }
     )
   }
