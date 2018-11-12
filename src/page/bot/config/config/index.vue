@@ -16,7 +16,7 @@
     </el-form-item>
     <el-form-item label="出生日期">
       <el-col :span="13">
-        <el-date-picker v-model='ruleForm.Bot_DayOfBirth' :editable="editable" value-format="yyyy-MM-dd" format='yyyy 年 MM 月 dd 日' type="date" placeholder="请选择出生日期" style="width: 100%;" @change="getBot_Constellation"></el-date-picker>
+        <el-date-picker v-model='ruleForm.Bot_DayOfBirth' :editable="editable" :clearable="clearable" value-format="yyyy-MM-dd" format='yyyy 年 MM 月 dd 日' type="date" placeholder="请选择出生日期" style="width: 100%;" @change="getBot_Constellation"></el-date-picker>
       </el-col>
     </el-form-item>
     <el-form-item label="星座">
@@ -97,6 +97,7 @@
   export default {
     data() {
       return {
+        clearable:false,
         address:{city:'',street:''},
         loading:false,
         area:ADDRESS,

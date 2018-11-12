@@ -157,6 +157,14 @@
         ()=>{
             getList(URL.requestHost + BOT,{},ITEMKEY,false).then(
             () =>{
+
+              //1、获取列表
+              // this.filterData()
+              //2、遍历data
+              //3、找出正在删除或者正在创建的数据
+              //4、组装成一个轮巡数组，询问是否删除
+              //5、将每次数组与返回数据做对比
+              //6、找出不同的状态的数据，更改页面状态
               reloadListObj = setInterval(reloadList,10000)
             }
           )
@@ -191,9 +199,6 @@
           }
         );
       },
-      change(val) {
-        console.log(val);
-      },
       create(k,row){
         this.$confirm('确认创建机器人？', '警告！', {
           confirmButtonText: '确定',
@@ -207,8 +212,7 @@
             message: '已取消创建'
           });
         });
-      }
-      ,
+      },
       add(k,row){
         const that = this
         const token = getCookies(TOKEN)
@@ -360,11 +364,8 @@
           }
         )
       },
-      update(v){
-        this.data = {
-          ...this.data,
-          ...v
-        }
+      filterData(){
+
       }
     }
   }
