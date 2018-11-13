@@ -8,6 +8,7 @@ Vue.use(Vuex)
   state: {
 
     app: {
+      name:'小华智能助理',
       config: false,
       activeKey: 'bot',
       defaultActiveSecondM:'config',                   //二级菜单active-key

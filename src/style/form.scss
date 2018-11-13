@@ -8,11 +8,26 @@ $input-height: 32px;
   color:#777;
   background: #fff;
 }
-
-
 /*
-覆盖button
+form label
  */
+.el-form-item__label{
+  padding:0 24px 0 0;
+}
+.el-form-item.is-success .el-input__inner,.el-form-item.is-success .el-textarea__inner{
+  border-color:#dcdfe6;
+}
+.el-form-item.is-success .el-input__inner:focus,  .el-form-item.is-success .el-textarea__inner:focus{
+  border-color:$primary-color;
+}
+.none-label{
+  .el-form-item__error{
+    left: 100px;
+  }
+}
+  /*
+  覆盖button
+   */
 .el-button{
   border-radius:2px;
   padding:10px 30px;
@@ -20,6 +35,14 @@ $input-height: 32px;
 }
 .el-button--medium{
   padding:10px 25px;
+}
+.el-button--primary:focus{
+  background: $primary-color;
+  border-color: $primary-color;
+}
+.el-button--primary:hover{
+  background: rgba(40,140,231,.8);
+  border-color: rgba(40,140,231,.8);
 }
 /*
 覆盖input

@@ -19,8 +19,8 @@
     <el-form-item label="" class="margin-b-40">
       <el-col :span="20" class="tip f-s-11 c999 box-sizing">
         <section>
-          <i class="el-icon-question f-s-16"></i>
-          <span>如何开启公众账号开发模式？</span>
+          <i class="el-icon-question f-s-16 align-middle"></i>
+          <span class="align-middle">如何开启公众账号开发模式？</span>
         </section>
         <section class="padding-l-20px">登录到微信国内公众平台账号，进入菜单栏 <span class="primary-color">"开发者中心" </span> > <span class="primary-color"> "成为开发者" </span>,根据提示讲URL和Token复制到相应输入框中，点击 <span class="primary-color">"提交"</span>后，点击 <span class="primary-color">"启动"</span>启动开发者模式
         </section>
@@ -43,16 +43,16 @@
     <el-form-item label="" class="margin-b-40">
       <el-col :span="20" class="tip f-s-11 c999 box-sizing">
         <section>
-          <i class="el-icon-question f-s-16"></i>
-          <span>如何获得AppID和Secret？</span>
+          <i class="el-icon-question f-s-16 align-middle"></i>
+          <span class="align-middle">如何获得AppID和Secret？</span>
         </section>
         <section class="padding-l-20px">1.登陆到微信公众平台账号<span class="margin-l-40">2.进入菜单栏开发者中心
 </span><span class="margin-l-40">3.勾选协议，点击"成为开发者"，找到AppID和AppSercet填入即可</span>
         </section>
         <section class="padding-l-20px">注：目前只有服务号和认证订阅号才有AppID和AppSercet</section>
         <section class="margin-top-25px">
-          <i class="el-icon-warning f-s-16"></i>
-          <span>手动接入最多只可接入一个微信公众号哦</span>
+          <i class="el-icon-warning f-s-16 align-middle"></i>
+          <span class="align-middle">手动接入最多只可接入一个微信公众号哦</span>
         </section>
       </el-col>
     </el-form-item>
@@ -61,7 +61,7 @@
     </section>
     <el-form-item label="">
       <el-checkbox disabled>知识分类功能 </el-checkbox>
-      <a href="javascript:;" class="primary-color padding-l-20px">什么是知识分类</a>
+      <a href="javascript:;" class="primary-color padding-l-20px disabled">什么是知识分类</a>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit('formData')">保存</el-button>

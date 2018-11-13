@@ -21,7 +21,7 @@
       <el-table-column
         prop="id"
         label="序号"
-        width="180">
+        width="120">
       </el-table-column>
       <el-table-column
         prop="title"

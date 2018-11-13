@@ -43,7 +43,7 @@
 </script>
 <style lang="scss">
   @import '../../style/index';
-  $rightEH:66px;
+  $rightEH:60px;
   $rightEW:155px;
 
   .left-0{

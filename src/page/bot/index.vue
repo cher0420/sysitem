@@ -57,7 +57,7 @@
             <span v-if="scope.row.Status == 2||scope.row.Status == 5">
               <span class="config">
                 <i class="el-icon-setting"></i>
-                <a href="javascript:;" class="c555" @click="go('/bot/config',scope.row.RecordId)">配置</a>
+                <a href="javascript:;" class="c555" @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">配置</a>
               </span>
               <span class="del">
                 <i class="el-icon-delete"></i>
@@ -109,7 +109,7 @@
   import store from '../../store/index'
   import {getCookies} from "../../utils/cookie";
   import {TOKEN} from "../../constants/constants";
-  import {getList} from "./service/requestMethod";
+  import {getList,filterData} from "./service/requestMethod";
 
   let  reloadListObj=null
   async function reloadList(v){
@@ -159,8 +159,6 @@
           getList(URL.requestHost + BOT,{},ITEMKEY,false).then(
             () =>{
               //2、遍历data
-              const data = store.state.app.tableData
-              this.filterData(data)
               //3、找出正在删除或者正在创建的数据
               //4、组装成一个轮巡数组，询问是否删除
               //5、将每次数组与返回数据做对比
@@ -175,11 +173,12 @@
       clearInterval(reloadListObj)
     },
     methods:{
-      go(path,id){
+      go(path,id,name){
         const url = {
           path:path,
           query: {
-            recordId:id
+            recordId:id,
+            name:name
         }
       }
         const arr = path.split('/')
@@ -364,19 +363,7 @@
           }
         )
       },
-      filterData(data){
-        /*
-        排列顺序(0: 未创建, 1：创建中, 2：已创建, 3：删除中, 4: 已删除, 5: 删除失败, 6：创建失败)
-         */
-         // const res= data.filter((e)=> {e.Status ===1 || e.Status ===3});
-        const arr = []
-         data.forEach((e)=> {
-           if(e.Status ===1 || e.Status ===3){
-             arr.push(e.RecordId)
-           }
-         });
-        console.log(arr);
-      }
+
     }
   }
 </script>

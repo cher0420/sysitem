@@ -9,7 +9,7 @@
     :default-openeds='openArr'
   >
     <el-menu-item index="0" class="f-s-14" disabled>
-      <span slot="title">小华智能助理</span>
+      <span slot="title" class="dis-i-b omit" style="width:152px">{{name}}</span>
     </el-menu-item>
     {{/*基本资料*/}}
     <el-menu-item v-if='!item.children' v-for='item in secondMenus' :index="item.id" class="f-s-14">
@@ -39,16 +39,19 @@
         }
       },
       name: "SecondaryMenu",
-      created(){
-        const pathArr = this.$route.path.split('/')
-        const defaultActiveSecondM = pathArr[pathArr.length-1]
-        console.log('====',pathArr,defaultActiveSecondM)
-        store.dispatch(REPLACE,{defaultActiveSecondM})
-      },
       computed:{
         defaultActiveSecondM(){
           return store.state.app.defaultActiveSecondM
-        }
+        },
+        name(){
+          return store.state.app.name
+        },
+      },
+      created(){
+        const pathArr = this.$route.path.split('/')
+        const defaultActiveSecondM = pathArr[pathArr.length-1]
+        const name = this.$route.query.name
+        store.dispatch(REPLACE,{defaultActiveSecondM,name})
       },
       methods:{
         handleOpen(index,indexPath){
@@ -93,5 +96,14 @@
 
 <style lang="scss">
   @import '../../style/index';
-
+.omit{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap
+}
+  .omit-other:after{
+    display: inline;
+    content: "...";
+    font-size: 16px;
+  }
 </style>

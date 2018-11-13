@@ -93,6 +93,8 @@
   import {getCookies} from "../../../../utils/cookie";
   import {TOKEN} from "../../../../constants/constants";
   import moment from 'moment'
+  import {REPLACE} from "../../../../store/mutations";
+  import store from '../../../../store/index'
 
   export default {
     data() {
@@ -124,7 +126,7 @@
           Bot_Name: '小华智能助理',
           Bot_Gender: '女', // m:man,f:female
           Bot_DayOfBirth: moment().format('YYYY-MM-DD'),
-          Bot_Constellation:'--',
+          Bot_Constellation:'天蝎座',
           Bot_BloodType: 'O',
           Bot_Height: '160',
           Bot_Weight:'50',
@@ -153,11 +155,8 @@
       request(URL.requestHost+BOTINFO,option).then(
         (res) =>{
           const data = res['Data'][0]
-          // this.getBot_Constellation()
           if(data){
             this.filterData(data)
-          }else{
-            this.getBot_Constellation()
           }
         }
       )
@@ -195,7 +194,7 @@
         that.loading = true
         const BotConfigId = this.$route.query.recordId
         const body = {
-            ...v,
+          ...v,
           BotConfigId,
         }
         const token = getCookies(TOKEN)
@@ -261,6 +260,27 @@
             data[v] = that.ruleForm[v]
           }
         }
+        // 更改出生日期格式
+        const date = data.Bot_DayOfBirth
+        if(date){
+          const arr = date.split(' ')
+          const dateArr = arr[0].split('/')
+          const year = dateArr[dateArr.length-1]
+          dateArr.pop()
+          dateArr.unshift(year)
+          data.Bot_DayOfBirth = dateArr.join('-')
+          const m = moment(data.Bot_DayOfBirth).format('MM')
+          const d = moment(data.Bot_DayOfBirth).format('DD')
+          const bot_Constellation = "魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯".substr(m*2-(d<"102223444433".charAt(m-1)- -19)*2,2);
+          data.Bot_Constellation = bot_Constellation+'座'
+        }else{
+          data.Bot_DayOfBirth = moment().format('YYYY-MM-DD')
+          const m = moment().format('MM')
+          const d = moment().format('DD')
+          const bot_Constellation = "魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯".substr(m*2-(d<"102223444433".charAt(m-1)- -19)*2,2);
+          data.Bot_Constellation = bot_Constellation+'座'
+        }
+
         data.Bot_Height = data.Bot_Height?data.Bot_Height.replace('cm',''):'160'
         // 判断获取到的城市
         const Bot_Birthplace = data.Bot_Birthplace?data.Bot_Birthplace.split('-'):[]
@@ -275,17 +295,11 @@
             return
           }
         })
-
-        // 更改出生日期格式
-        const date = data.Bot_DayOfBirth?data.Bot_DayOfBirth:moment().format('YYYY-MM-DD')
-        
-        const arr = date.split(' ')
-        const dateArr = arr[0].split('/')
-        const year = dateArr[dateArr.length-1]
-        dateArr.pop()
-        dateArr.unshift(year)
-        data.Bot_DayOfBirth = dateArr.join('-')
-        that.ruleForm = data
+        store.dispatch(REPLACE,{Bot_Name:data.Bot_Name}).then(
+          ()=>{
+            that.ruleForm = data
+          }
+        )
       },
     },
   }

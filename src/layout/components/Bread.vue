@@ -107,6 +107,7 @@
     height: $bread-height;
     line-height: $bread-height;
     padding-right: 40px;
+    background: #f8f8f8;
 
     span:hover{
       /*text-decoration: underline;*/

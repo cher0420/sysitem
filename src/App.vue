@@ -14,7 +14,5 @@
 
   @import './style/index';
   @import './style/init.css';
-  #app {
 
-}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown @command="handleCommand" placement="bottom-start">
+  <el-dropdown @command="handleCommand" placement="bottom-start" class="p-absolute left-0">
   <span class="el-dropdown-link c333">
     {{title}}<i class="el-icon-arrow-down el-icon--right"></i>
   </span>

@@ -2,7 +2,7 @@
 //var
 $primary-color: #2a8ce7;
 $nav-b-color:#3b516f;
-$nav-height:66px;
+$nav-height:60px;
 $fff:#fff;
 $danger: #f04b4b;
 $light-blue: #eaf6fe;
@@ -152,6 +152,11 @@ $border-color:#eaedf1;
 }
 .borderAround{
   border:1px solid $border-color;
+}
+//disabled
+.disabled{
+  color:#c0c4cc;
+  cursor: not-allowed;
 }
 
 

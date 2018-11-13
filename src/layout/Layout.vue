@@ -20,7 +20,7 @@
             <el-main class="p-relative scroll-content">
               <app-main></app-main>
             </el-main>
-            <el-footer class="">
+            <el-footer>
               <footer-bar></footer-bar>
             </el-footer>
           </el-container>
@@ -76,7 +76,7 @@
 <style lang="scss">
   @import '../style/index';
   .nav-height{
-    height: $nav-height !important; //顶栏高度
+    line-height: $nav-height;
   }
   .app-container{
     min-width: 1280px;

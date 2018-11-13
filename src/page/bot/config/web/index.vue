@@ -93,7 +93,7 @@
       <el-col :span="3" >
         <el-checkbox v-model="formData.LoginSwitch">登录验证</el-checkbox>
       </el-col>
-      <span class="primary-color f-s-14">提示：开启后则需登录后才可进入网页版</span>
+      <span class="primary-color f-s-14 disabled">提示：开启后则需登录后才可进入网页版</span>
     </el-form-item>
     <el-form-item label="" style="margin-bottom: 10px;">
       <el-col :span="4">
@@ -112,7 +112,7 @@
           <el-input placeholder="最多6个字符" disabled></el-input>
         </el-col>
         <el-col :span="7" offset="1">
-          <a href="javascript:;" class="primary-color">什么是知识分类？</a>
+          <a href="javascript:;" class="primary-color disabled">什么是知识分类？</a>
         </el-col>
       </el-col>
     </el-form-item>
@@ -133,34 +133,31 @@
           <el-input placeholder="最多6个字符" disabled></el-input>
         </el-col>
         <el-col :span="7" offset="1">
-          <a href="javascript:;" class="primary-color">什么是案例库？</a>
+          <a href="javascript:;" class="primary-color disabled">什么是案例库？</a>
         </el-col>
       </el-col>
     </el-form-item>
     <title-item title="自定义问候语"></title-item>
-    <el-form-item label="" class="margin-top30" prop="DialogTitle">
-      <el-col :span="3" class="text-align-right">
-        对话框标题：
-      </el-col>
-      <el-col :span="15">
-        <el-input v-model="formData.DialogTitle" maxlength="15">
+    <el-form-item class="margin-top30 none-label" prop="DialogTitle">
+      <span style="width:70px;" class="dis-i-b text-align-right" >
+        对话框标题
+      </span>
+        <el-input v-model="formData.DialogTitle" maxlength="15" style="width: 60%;margin-left: 20px;">
           <span slot="suffix">最多15个字符 &nbsp;</span>
-
         </el-input>
-      </el-col>
     </el-form-item>
-    <el-form-item label="" class="margin-top30" prop="DialogGreetings">
-      <el-col :span="3" class="text-align-right">
-        问候语：
-      </el-col>
-      <el-col :span="15">
-        <el-input v-model="formData.DialogGreetings" type="textarea" :rows="5" maxlength="30">
-          <span slot="suffix">最多30个字符 &nbsp;</span>
+    <el-form-item label="" class="margin-top30 none-label" prop="DialogGreetings">
+      <span style="width:70px;line-height: 32px;" class="dis-i-b text-align-right align-top" >
+        问候语
+      </span>
+      <section class="dis-i-b full-width p-relative" style="width: 60%;">
+        <el-input v-model="formData.DialogGreetings" type="textarea" :rows="5" maxlength="50" style="margin-left: 20px;">
         </el-input>
-      </el-col>
+        <span class="p-absolute " style="bottom: 0;color:#c0c4cc;right: -20px;">最多50个字符 &nbsp;</span>
+      </section>
     </el-form-item>
     <title-item title="添加授信域名"></title-item>
-    <el-form-item label=" " prop="AuthorizedAddress">
+    <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:60px">
       <section>仅支持已添加的授信余名或IP地址的URL访问 <span class="c999">(授信域名： www...  IP地址：192.888.8.8)</span></section>
       <el-row>
         <el-col :span="18">
@@ -203,7 +200,7 @@
         rules: {
           AuthorizedAddress:[{required: true, message: '请填写授信域名!'}],
           DialogTitle:[{required: true, message: '请填写对话框标题!'},{max:15,message:'最多15个字符！'}],
-          DialogGreetings:[{required: true, message: '请填写问候语!'},{max:30,message:'最多30个字符！'}],
+          DialogGreetings:[{required: true, message: '请填写问候语!'},{max:50,message:'最多30个字符！'}],
         },
         DialogColor:'#3B65B7',
         DialogTitleColor:'#FFFFFF',
@@ -470,16 +467,6 @@
     padding-right:30px;
     background: #fff;
   }
-  .yoy-upload{
-    /*display: inline-block;*/
-    /*width: 80px ;*/
-    /*height: 30px;*/
-    /*line-height: 30px;*/
-    /*border: 1px solid #ccc;*/
-    /*background-size: contain;*/
-    /*background-repeat: no-repeat;*/
-    /*background-position: center center;*/
-  }
   .file-box{
     font-size: 12px;
     -webkit-border-radius: 2px;
@@ -543,4 +530,8 @@
   .f-w-900{
     font-weight: 900;
   }
+  .align-top{
+    vertical-align: top;
+  }
+
 </style>

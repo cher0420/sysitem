@@ -15,3 +15,4 @@ export const BOTINFO = '/api/BotProfile/QueryBotConfigInfo'
 
 export const WEBINFO = '/api/ChatBot/WebPageSetting'
 export const UPDATEWEB = '/api/ChatBot/UpdateWebPageSetting'
+export const UPDATESTATUS = '/api/ChatBot/QueryBotStatus'

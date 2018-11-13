@@ -107,6 +107,7 @@
       //     REPLACE,{isCollapse:false,aSideWidth: '14vw'}
       //   )
       // },
+
       setBreadArr(to){
         const arr = to.path.split('/')
         arr.shift()

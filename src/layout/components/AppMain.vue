@@ -1,5 +1,5 @@
 <template>
-  <section class="p-relative yoy-header-container">
+  <section class="p-relative yoy-header-container" ref="scrollTop">
     <bread></bread>
     <router-view></router-view>
   </section>
@@ -21,6 +21,8 @@
     },
     watch: {
       '$route'(to, from) {
+        if(to&&from)
+        this.scrollTop()
       }
     },
     created() {
@@ -29,7 +31,10 @@
     methods: {
       regUrl() {
 
-      }
+      },
+      scrollTop(){
+        this.$refs.scrollTop.offsetParent.scrollTop = 0
+      },
     }
   }
 </script>

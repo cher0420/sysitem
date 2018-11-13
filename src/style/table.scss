@@ -20,8 +20,11 @@ $table-title-color:#555;
       }
     }
   }
-  .el-table tr{
-    padding:0;
+  .el-table{
+    .cell{
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
   }
 }
 
