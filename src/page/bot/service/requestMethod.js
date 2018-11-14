@@ -19,15 +19,13 @@ const token = getCookies(TOKEN)
 // }
 
 export async function getList(api,params,key, loading=true){
-
     const TenantId = getCookies(TENANTID)
-
     store.dispatch(REPLACE, {loading: loading}).then(
       () => {
         const data = {
           PageIndex: 1,                                     //分页页数
           PageSize: 10,                                     //当前页的条数
-          tenantId:TenantId,
+          // tenantId:TenantId,
           ...params.body,
         }
         const body = JSON.stringify(data)
@@ -73,10 +71,7 @@ export async function getList(api,params,key, loading=true){
             }
             store.dispatch(REPLACE, {tableData: newData, total: res.TotalCount}).then(
               () =>{
-                const answer = filterData(newData)
-                if(answer.length>0){
-                  reload(answer)
-                }
+                reload(newData)
               }
             )
           }
@@ -104,14 +99,20 @@ export const filterData = (originalData)=>{
   return arr
 }
 export function reload (arr){
-  let reload = setInterval(function () {
-    if(arr.length === 0){
-      clearInterval(reload);
-    }else{
-      askIsDoing(arr)
-    }
-  },3000)
+  const answer = filterData(arr)
+  let reloadId = setInterval(function () {
+    store.dispatch(REPLACE,{reloadId}).then(
+      () =>{
+        if(answer.length === 0){
+          clearInterval(reloadId);
+        }else{
+          askIsDoing(answer)
+        }
+      }
+    )
+  },10000)
 }
+
 export function askIsDoing(arr) {
   const body = {
     BotIds:arr
@@ -128,12 +129,7 @@ export function askIsDoing(arr) {
       //2、遍历data
       //3、找出正在删除或者正在创建的数据
       // resData 数据格式 {ID: "824ffc5e-95fe-482f-91c5-5db61f4e8f80",Status: "3"}
-      // let resData = v['BotStatusList']
-      // console.log('调用了',resData)
-      const resData = [{ID: "824ffc5e-95fe-482f-91c5-5db61f4e8f80", Status: "1"},
-      {ID: "8cae8a3c-fdf6-4c78-ad63-bf44af7c6635", Status: "6"},
-      {ID: "b819c8e4-7aea-4b3f-b81e-ac4281d4d581", Status: "0"},
-      {ID: "eac4f4cc-33dd-475d-879e-cd9fe036ff4b", Status: "1"}]
+      let resData = v['BotStatusList']
       //深拷贝resData
       copyArr = JSON.parse(JSON.stringify(resData))
       const replaceArr = []
@@ -165,20 +161,36 @@ export function askIsDoing(arr) {
             (value,index) =>{
               if(v.ID == value.RecordId){
                 value.Status = v.Status-0
+                switch (value.Status) {
+                  // 0: 未创建, 1：创建中, 2：已创建, 3：删除中, 4: 已删除, 5: 删除失败, 6：创建失败
+                  case 0:
+                    value.StatusString = '未创建'
+                    break;
+                  case 1:
+                    value.StatusString = '未创建'
+                    break;
+                  case 2:
+                    value.StatusString = '已创建'
+                    break;
+                  case 3:
+                    value.StatusString = '已创建'
+                    break;
+                  case 4:
+                    value.StatusString = '未创建'
+                    break;
+                  case 5:
+                    value.StatusString = '已创建'
+                    break;
+                  case 6:
+                    value.StatusString = '未创建'
+                    break;
+                }
               }
             }
           )
         }
       )
-      store.dispatch(REPLACE,{tableData}).then(
-        () => {
-          // console.log(store.state.app.tableData)
-        }
-      )
-      // reloadListObj = setInterval(reloadList,10000)
-      //4、组装成一个轮巡数组，询问是否删除
-      //5、将每次数组与返回数据做对比
-      //6、找出不同的状态的数据，更改页面状态
+      store.dispatch(REPLACE,{tableData})
     }
   )
 }

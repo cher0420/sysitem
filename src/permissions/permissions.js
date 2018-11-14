@@ -45,7 +45,6 @@ export function getLoginStatus(){
     // 如果cookie里的SID不存在则跳转到SSO登录
     const sid = getCookies(SID)
      if( sid ){
-
        voildId( sid )
      } else {
 
@@ -185,7 +184,7 @@ export const hiddenTokenInUrl = () => {
 export const logOut = () => {
   Loading.service({fullscreen: true});
   const token = getCookies('token')
-  const redirectUrl = 'https://'+window.location.host
+  const redirectUrl = 'http://'+window.location.host
   removeCookies([USERNAME,TOKEN]).then(
     () => {
       window.location.href = URL.SSOWebUrl.zh+ LOGOUT + redirectUrl + '&token='+token

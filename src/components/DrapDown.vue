@@ -67,6 +67,10 @@
                 searchStatus,
               }
             }
+
+            const reloadId = store.state.app.reloadId
+            clearInterval(reloadId)
+
             getList(URL.requestHost + BOT,options,ITEMKEY).then(
               ()=>{
                 store.dispatch(REPLACE,{ PageIndex: 1 })

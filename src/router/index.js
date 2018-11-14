@@ -179,7 +179,6 @@ const root = [{
 const routes = [...root,...arr]
 
 const router = {
-
   routes: routes,
   scrollBehavior(to,from,savedPosition){
     if(savedPosition){

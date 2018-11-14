@@ -60,6 +60,8 @@
       '$route' (to, from) {
         const that = this
         if(to&&from){
+          const reloadId = store.state.app.reloadId
+          clearInterval(reloadId)
           store.dispatch(REPLACE,{mainLoading: true,}).then(
             () =>{
               // 面包屑，带优化

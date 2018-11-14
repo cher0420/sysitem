@@ -78,7 +78,7 @@
                 <span class="wait">（ 预计需要三分钟 ）</span>
               </span>
             </span>
-            <span v-else class="create" v-else-if="scope.row.Status==0||scope.row.Status">
+            <span v-else class="create" v-else-if="scope.row.Status==0||scope.row.Status==6">
                 <i class="el-icon-plus"></i>
                 <a href="javascript:;" class="c555" @click="create(scope.$index,scope.row)">创建</a>
               </span>
@@ -109,13 +109,16 @@
   import store from '../../store/index'
   import {getCookies} from "../../utils/cookie";
   import {TOKEN} from "../../constants/constants";
-  import {getList,filterData} from "./service/requestMethod";
+  import {getList,reload} from "./service/requestMethod";
 
-  let  reloadListObj=null
   async function reloadList(v){
     const PageIndex = store.state.app.PageIndex
     const description = store.state.app.description
     const searchStatus = store.state.app.searchStatus
+
+    const reloadId = store.state.app.reloadId
+    clearInterval(reloadId)
+
     const options = {
       body:{
         PageIndex,
@@ -123,10 +126,7 @@
         searchStatus
       }
     }
-    getList(URL.requestHost + BOT,options,ITEMKEY,false).then(
-      () =>{
-      }
-    )
+    getList(URL.requestHost + BOT,options,ITEMKEY,false)
   }
 
   export default {
@@ -153,24 +153,29 @@
       DrapDown,
     },
     created(){
+
+      const reloadId = store.state.app.reloadId
+      clearInterval(reloadId)
+
       store.dispatch(REPLACE,{PageIndex:1,searchStatus:null,description:null}).then(
         ()=>{
             //1、获取列表
-          getList(URL.requestHost + BOT,{},ITEMKEY,false).then(
-            () =>{
+          getList(URL.requestHost + BOT,{},ITEMKEY,true)
+            // .then(
+            // () =>{
               //2、遍历data
               //3、找出正在删除或者正在创建的数据
               //4、组装成一个轮巡数组，询问是否删除
               //5、将每次数组与返回数据做对比
               //6、找出不同的状态的数据，更改页面状态
-              // reloadListObj = setInterval(reloadList,10000)
-            }
-          )
+            // }
+          // )
         }
       ).catch(err=>err)
     },
     destroyed: function () {
-      clearInterval(reloadListObj)
+      const id = store.state.app.reloadId
+      clearInterval(id)
     },
     methods:{
       go(path,id,name){
@@ -335,11 +340,11 @@
                 searchStatus: searchStatus
               }
             }
-            getList(URL.requestHost + BOT,options,ITEMKEY).then(
-              () =>{
-                console.log('获取列表了')
-              }
-            )
+
+            const reloadId = store.state.app.reloadId
+            clearInterval(reloadId)
+
+            getList(URL.requestHost + BOT,options,ITEMKEY)
           }
         )
       },
@@ -355,11 +360,11 @@
                 searchStatus,
               }
             }
-            getList(URL.requestHost + BOT,options,ITEMKEY).then(
-              ()=>{
-                console.log('获取列表')
-              }
-            )
+
+            const reloadId = store.state.app.reloadId
+            clearInterval(reloadId)
+
+            getList(URL.requestHost + BOT,options,ITEMKEY)
           }
         )
       },

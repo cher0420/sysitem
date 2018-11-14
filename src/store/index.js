@@ -8,6 +8,7 @@ Vue.use(Vuex)
   state: {
 
     app: {
+      reloadId:0,
       name:'小华智能助理',
       config: false,
       activeKey: 'bot',
