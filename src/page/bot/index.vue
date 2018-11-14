@@ -175,6 +175,7 @@
     },
     destroyed: function () {
       const id = store.state.app.reloadId
+      console.log('====',id)
       clearInterval(id)
     },
     methods:{
@@ -220,11 +221,13 @@
       add(k,row){
         const that = this
         const token = getCookies(TOKEN)
+
         let obj = JSON.parse(JSON.stringify(row))
         let newObj = {...obj,Status:1}
         const tableData = store.state.app.tableData
         tableData.splice(k,1,newObj)
         store.dispatch(REPLACE,{tableData:tableData})
+
         const userInfo = store.state.app.userInfo
         const data = {
           botId:row.RecordId,
@@ -249,15 +252,17 @@
         }
         request(URL.requestHost+CREATEBOT,options).then(
           (res) => {
-            reloadList().then(
-              () =>{
-                that.$message({
-                  type: 'success',
-                  message: '创建中，请稍后',
-                  duration: 2000,
-                });
-              }
-            )
+            that.$message({
+              type: 'success',
+              message: '创建中，请稍后',
+              duration: 2000,
+            });
+
+            const newData = store.state.app.tableData
+            // const reloadId = store.state.app.reloadId
+            // clearInterval(reloadId)
+            reload(newData)
+
           }
         ).catch(
           (err)=>{
@@ -275,7 +280,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.delItem(row)
+          this.delItem(k,row)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -283,8 +288,15 @@
           });
         });
       },
-      delItem(row){
+      delItem(k,row){
         const that = this
+
+        let obj = JSON.parse(JSON.stringify(row))
+        let newObj = {...obj,Status:3}
+        const tableData = store.state.app.tableData
+        tableData.splice(k,1,newObj)
+        store.dispatch(REPLACE,{tableData:tableData})
+
         const userInfo = store.state.app.userInfo
         const data = {
           botId:row.RecordId,
@@ -310,14 +322,17 @@
         }
         request(URL.requestHost + DELETEBOT,options).then(
           (res)=>{
-            reloadList().then(
-              () =>{
-                that.$message({
-                  type: 'success',
-                  message: '操作成功！'
-                });
-              }
-            )
+            that.$message({
+              type: 'success',
+              message: '操作成功！'
+            });
+
+            const newData = store.state.app.tableData
+            // const reloadId = store.state.app.reloadId
+            // clearInterval(reloadId)
+
+            reload(newData)
+
           }
         ).catch(
           (res)=>{
@@ -341,9 +356,6 @@
               }
             }
 
-            const reloadId = store.state.app.reloadId
-            clearInterval(reloadId)
-
             getList(URL.requestHost + BOT,options,ITEMKEY)
           }
         )
@@ -360,9 +372,6 @@
                 searchStatus,
               }
             }
-
-            const reloadId = store.state.app.reloadId
-            clearInterval(reloadId)
 
             getList(URL.requestHost + BOT,options,ITEMKEY)
           }

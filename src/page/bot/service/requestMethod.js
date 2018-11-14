@@ -85,14 +85,14 @@ export async function getList(api,params,key, loading=true){
 }
 
 let copyArr = [] //需对比数据
-let reloadListObj = {}
+
 export const filterData = (originalData)=>{
   /*
   排列顺序(0: 未创建, 1：创建中, 2：已创建, 3：删除中, 4: 已删除, 5: 删除失败, 6：创建失败)
    */
   const arr = []
   originalData.forEach((e)=> {
-    if(e.Status ===1 || e.Status ===3){
+    if(e.Status ==1 || e.Status ==3){
       arr.push(e.RecordId)
     }
   });
@@ -100,17 +100,17 @@ export const filterData = (originalData)=>{
 }
 export function reload (arr){
   const answer = filterData(arr)
+  const reload = store.state.app.reloadId
+  console.log(reload)
+  clearInterval(reload);
   let reloadId = setInterval(function () {
-    store.dispatch(REPLACE,{reloadId}).then(
-      () =>{
-        if(answer.length === 0){
-          clearInterval(reloadId);
-        }else{
-          askIsDoing(answer)
-        }
-      }
-    )
+    if(answer.length === 0){
+      clearInterval(reloadId);
+    }else{
+      askIsDoing(answer)
+    }
   },10000)
+  store.dispatch(REPLACE,{reloadId})
 }
 
 export function askIsDoing(arr) {
@@ -155,10 +155,11 @@ export function askIsDoing(arr) {
         }
       )
       const tableData = store.state.app.tableData
+
       replaceArr.forEach(
         (v,index,arr) =>{
           tableData.forEach(
-            (value,index) =>{
+            (value,index,tableData) =>{
               if(v.ID == value.RecordId){
                 value.Status = v.Status-0
                 switch (value.Status) {
@@ -176,7 +177,7 @@ export function askIsDoing(arr) {
                     value.StatusString = '已创建'
                     break;
                   case 4:
-                    value.StatusString = '未创建'
+                    tableData.splice(index,1)
                     break;
                   case 5:
                     value.StatusString = '已创建'
