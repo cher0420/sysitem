@@ -102,7 +102,6 @@ export const filterData = (originalData)=>{
 export function reload (arr){
   const answer = filterData(arr)
   const reload = store.state.app.reloadId
-  console.log(reload)
   clearInterval(reload);
   let reloadId = setInterval(function () {
     if(answer.length === 0){

@@ -60,8 +60,7 @@
       '$route' (to, from) {
         const that = this
         if(to&&from){
-          const reloadId = store.state.app.reloadId
-          clearInterval(reloadId)
+
           store.dispatch(REPLACE,{mainLoading: true,}).then(
             () =>{
               // 面包屑，带优化
@@ -69,11 +68,17 @@
               // 进入配置二级菜单页面
               const navIndexArr = to.path.split('/')
               const activeKey =navIndexArr[1]
-
-              const navIndex = navIndexArr[navIndexArr.length-1]
-              const config = to.name === 'config'
+              //设置标题
+              if(to.name === 'detail'){
+                const navIndex = to.query.title
+                store.dispatch(REPLACE,{navIndex})
+              }else{
+                const navIndex = STR[navIndexArr[navIndexArr.length-1]]
+                store.dispatch(REPLACE,{navIndex})
+              }
+              const config = navIndexArr[2] === 'config'
               let aSideWidth = null;
-              if(to.name === 'config'){
+              if(config){
                 aSideWidth = '60px !important'
                 if(that.isCollapse === false){
                   store.dispatch(REPLACE,{isCollapse:true})
@@ -82,7 +87,7 @@
                 aSideWidth = '14vw'
                 store.dispatch(REPLACE,{isCollapse:false})
               }
-              store.dispatch(REPLACE,{config,navIndex,aSideWidth,activeKey}).then(
+              store.dispatch(REPLACE,{config,aSideWidth,activeKey}).then(
                 () => {
                   setTimeout(
                     () =>{
@@ -114,9 +119,15 @@
         const arr = to.path.split('/')
         arr.shift()
         let newArr;
-        if(arr.length>2){
+        if(arr.length>3){
           const obj1 = {url:`/${arr[0]}`,name:STR[arr[0]]}
-          const obj2 = {url:`/${arr[1]}/${arr[2]}`,name:STR[arr[2]]}
+          const obj2 = {url:`/${arr[0]}/${arr[1]}/${arr[2]}`,name:STR[arr[2]]}
+          const name = to.query.title
+          const obj3 = {url:`/${arr[0]}/${arr[1]}/${arr[2]}/${arr[3]}`,name}
+          newArr=[obj1,obj2,obj3]
+        } else if(arr.length>2){
+          const obj1 = {url:`/${arr[0]}`,name:STR[arr[0]]}
+          const obj2 = {url:`/${arr[0]}/${arr[1]}/${arr[2]}`,name:STR[arr[2]]}
           newArr=[obj1,obj2]
         } else if(arr.length>1){
           const obj1 = {url:`/${arr[0]}`,name:STR[arr[0]]}
@@ -164,15 +175,18 @@
     },
     created(){
       const arr = this.$route.path.split('/')
-      const activeKey = arr[1]
+      const config = arr[2] ==='config'// 判断路由是否进入配置页面
+      const activeKey = arr[1] //初始化一级菜单的选中值
       const to = this.$route
-      if(to.name === 'config'){
+      if(config){ //如果是进入二级配置菜单，则显示二级菜单，且缩小一级菜单
         if(this.isCollapse === false){
-          store.dispatch(REPLACE,{isCollapse:true,aSideWidth:'60px !important',activeKey})
+          store.dispatch(REPLACE,{isCollapse:true,aSideWidth:'60px !important',activeKey,config})
         }
       }else{
+        //显示一级菜单
         store.dispatch(REPLACE,{isCollapse:false,aSideWidth:'14vw',activeKey})
       }
+      // 初始化面包屑
       this.setBreadArr(to)
     },
   }

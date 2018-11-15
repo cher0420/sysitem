@@ -108,14 +108,17 @@
         )
       },
       handleDetail(name,v,index,title){
-        store.dispatch(REPLACE,{navIndex:'knowledgeQuiz',navIndexSecond:title}).then(
+        store.dispatch(REPLACE,{navIndex:title}).then(
           () => {
+            const query = this.$route.query
             const url={
-              path:'/bot/config/knowledgeDetail',
+              path:'/bot/config/knowledgeQuiz/knowledgeDetail',
               query:{
+                ...query,
                 botCheckIndex:v,
                 botName:name,
-                botIndex:index
+                botIndex:index,
+                title:title,
               }
             }
             this.$router.push(url)

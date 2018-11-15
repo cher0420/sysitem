@@ -109,10 +109,10 @@ const arr = [
         name: 'config',
       },
       {
-        path:'config/knowledgeDetail',
+        path:'config/knowledgeQuiz/knowledgeDetail',
         component: resolve =>
           require(["../page/bot/config/knowledgeDetail/index"], resolve),
-        name: 'config',
+        name: 'detail',
       },
       {
         path:'config/weChatService',

@@ -2,27 +2,45 @@
   <section class="yoy-bread f-s-14">
     {{/* 以后待更新面包屑 */}}
     <el-breadcrumb separator-class="el-icon-arrow-right" class="single">
+
       <el-breadcrumb-item class="primary-color align-middle index" to="/bot">首页</el-breadcrumb-item>
+
+      <!--<el-breadcrumb-item-->
+        <!--:class="breadArr.length == 1?'notAllow':'first'"-->
+        <!--:to="breadArr[0].url" @change="handle(breadArr[0].name)">-->
+        <!--{{breadArr[0].name}}-->
+      <!--</el-breadcrumb-item>-->
+
+      <!--<el-breadcrumb-item v-if="breadArr.length===2" class="second" @change="handle(breadArr[1].name)">-->
+        <!--{{breadArr[1].name}}-->
+      <!--</el-breadcrumb-item>-->
+
       <el-breadcrumb-item
-        :class="breadArr.length == 1?'notAllow':'first'"
-        :to="breadArr[0].url" @change="handle(breadArr[0].name)">{{breadArr[0].name}}</el-breadcrumb-item>
-      <el-breadcrumb-item v-if="breadArr.length===2" class="second" @change="handle(breadArr[1].name)">{{breadArr[1].name}}</el-breadcrumb-item>
+        v-for="(item,index) in breadArr"
+        :class="index===breadArr.length-1?'notAllow':'first'"
+        :to="index===breadArr.length-1?null:item.url"
+      >
+        <span>
+          {{item.name}}
+        </span>
+      </el-breadcrumb-item>
+
     </el-breadcrumb>
 
     {{/* 当有二级面包屑时，采用二级面包屑*/}}
-    <el-breadcrumb separator-class="el-icon-arrow-right" class="yoy-title box-sizing border-bottom text-title" v-if="navIndexSecond">
-      <el-breadcrumb-item class="align-middle">
-        <span class="align-middle dis-i-b line"></span>
-        <span @click="back" class="backHover">
-          {{navIndex}}
-        </span>
-      </el-breadcrumb-item>
-      <el-breadcrumb-item class="align-middle">
-        {{navIndexSecond}}
-      </el-breadcrumb-item>
-    </el-breadcrumb>
+    <!--<el-breadcrumb separator-class="el-icon-arrow-right" class="yoy-title box-sizing border-bottom text-title" v-if="navIndexSecond">-->
+      <!--<el-breadcrumb-item class="align-middle">-->
+        <!--<span class="align-middle dis-i-b line"></span>-->
+        <!--<span @click="back" class="backHover">-->
+          <!--{{navIndex}}-->
+        <!--</span>-->
+      <!--</el-breadcrumb-item>-->
+      <!--<el-breadcrumb-item class="align-middle">-->
+        <!--{{navIndexSecond}}-->
+      <!--</el-breadcrumb-item>-->
+    <!--</el-breadcrumb>-->
 
-    <section class="yoy-title box-sizing border-bottom text-title" v-else>
+    <section class="yoy-title box-sizing border-bottom text-title">
       <span class="align-middle dis-i-b line"></span>
       <span class="align-middle">
         {{navIndex}}
@@ -46,26 +64,30 @@
         return store.state.app.breadArr
       },
       navIndex(){
-        const index=store.state.app.navIndex
-        return STR[index]
+        return store.state.app.navIndex
       },
       navIndexSecond(){
         return store.state.app.navIndexSecond
       }
     },
     created(){
-      const arr = this.$route.path.split('/')
-      const navIndex = arr[arr.length-1]
-      store.dispatch(REPLACE,{navIndex})
+      //判断面包屑初始化时是否为详情页
+      const to = this.$route
+      const arr = to.path.split('/')
+      const last = to.name === 'detail'
+
+      if(last){
+        const navIndex = to.query.title
+        store.dispatch(REPLACE,{navIndex})
+      }else{
+        const navIndex = STR[arr[arr.length-1]]
+        store.dispatch(REPLACE,{navIndex})
+      }
     },
     methods:{
-      handle(name){
-        store.dispatch(REPLACE,{navIndex:name}).then(
-          () =>{
-
-          }
-        )
-      },
+      // handle(name){
+      //   store.dispatch(REPLACE,{navIndex:name})
+      // },
       back(){
         const url={
           path: this.$route.path,

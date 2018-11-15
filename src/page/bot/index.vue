@@ -110,6 +110,7 @@
   import {getCookies} from "../../utils/cookie";
   import {TOKEN} from "../../constants/constants";
   import {getList,reload} from "./service/requestMethod";
+  import {STR} from "../../constants/constants";
 
   async function reloadList(v){
     const PageIndex = store.state.app.PageIndex
@@ -188,7 +189,7 @@
         }
       }
         const arr = path.split('/')
-        const index=arr[arr.length-1]
+        const index=STR[arr[arr.length-1]]
         const config = this.$route.name === 'config'
         store.dispatch(REPLACE,{navIndex:index,config}).then(
           () =>{

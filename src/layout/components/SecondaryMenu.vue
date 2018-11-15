@@ -55,10 +55,10 @@
       },
       methods:{
         handleOpen(index,indexPath){
-          console.log(index,indexPath)
+
         },
         handleClose(index,indexPath){
-          console.log(index,indexPath)
+
         },
         select(index,indexPath){
           const arr = store.state.app.breadArr
@@ -67,12 +67,13 @@
             url:'/config'
           }
           arr.splice(1,arr.length-1,obj)
-          const config = this.$route.name ==='config'
-          store.dispatch(REPLACE,{breadArr:arr,config,navIndex:index}).then(
+          const to =  this.$route.path.split('/')
+          const config = to[2] ==='config'
+          store.dispatch(REPLACE,{breadArr:arr,config,navIndex:STR[index]}).then(
             () =>{
               //拼接路由，目前三级路由
               const urlfir= this.$route.matched[0].path
-              const urlSec = this.$route.name
+              const urlSec = 'config'
               //当路由的name与index相等时，说明为二级菜单主页
               let url =''
               if(this.$route.name === index){
