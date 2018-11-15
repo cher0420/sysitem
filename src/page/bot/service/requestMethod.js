@@ -5,6 +5,7 @@ import {getCookies} from "../../../utils/cookie";
 import {TOKEN,TENANTID} from "../../../constants/constants";
 import URL from '../../../host/baseUrl'
 import {UPDATESTATUS} from "../../../constants/api";
+import moment from 'moment'
 
 const token = getCookies(TOKEN)
 
@@ -133,6 +134,7 @@ export function askIsDoing(arr) {
       //深拷贝resData
       copyArr = JSON.parse(JSON.stringify(resData))
       const replaceArr = []
+      //获取返回数据里已更新的数据，组成新数据，与原有table做比对
       copyArr.forEach(
         (v,index,arr) => {
           switch (v.Status) {
@@ -155,15 +157,18 @@ export function askIsDoing(arr) {
         }
       )
       const tableData = store.state.app.tableData
-
+      let total = store.state.app.total
+      //与原有table做比对
       replaceArr.forEach(
         (v,index,arr) =>{
           tableData.forEach(
             (value,index,tableData) =>{
               if(v.ID == value.RecordId){
+                //将tableData中命中的id状态更改
                 value.Status = v.Status-0
                 switch (value.Status) {
                   // 0: 未创建, 1：创建中, 2：已创建, 3：删除中, 4: 已删除, 5: 删除失败, 6：创建失败
+                  //将tableData状态显示值及总数，及日期均需要更改
                   case 0:
                     value.StatusString = '未创建'
                     break;
@@ -172,12 +177,15 @@ export function askIsDoing(arr) {
                     break;
                   case 2:
                     value.StatusString = '已创建'
+                    value.CreateDate = moment().format('YYYY-MM-DD')
                     break;
                   case 3:
                     value.StatusString = '已创建'
                     break;
                   case 4:
                     tableData.splice(index,1)
+                    total--
+                    store.dispatch(REPLACE,{total})
                     break;
                   case 5:
                     value.StatusString = '已创建'
