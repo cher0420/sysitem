@@ -20,7 +20,7 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
-# 项目路由文件：router/index.js
+### 项目路由文件：router/index.js
 >- 二级菜单（配置或设置页面）请配置
 >/bot/config... 即一级菜单/config/...
 >- 二级菜单内列表数据详情页，请配置
