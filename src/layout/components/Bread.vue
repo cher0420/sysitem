@@ -89,8 +89,12 @@
       //   store.dispatch(REPLACE,{navIndex:name})
       // },
       back(){
+        const to = this.$route
         const url={
-          path: this.$route.path,
+          path: to.path,
+          query:{
+            ...to.query,
+          }
         }
         this.$router.back()
       },

@@ -27,9 +27,9 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 >/bot/config/.../... 并赋予name名为'detail'
 >```
 >{
-         path:'config/knowledgeQuiz/knowledgeDetail',
-         component: resolve =>
-           require(["../page/bot/config/knowledgeDetail/index"], resolve),
-         name: 'detail',
-       },
+>         path:'config/knowledgeQuiz/knowledgeDetail',
+>         component: resolve =>
+>           require(["../page/bot/config/knowledgeDetail/index"], resolve),
+>        name: 'detail',
+>       },
 >```
