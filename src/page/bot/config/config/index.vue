@@ -3,7 +3,7 @@
     <el-form-item label="机器人姓名" prop='Bot_Name'>
       <el-col :span="13">
         <el-input v-model="ruleForm.Bot_Name" maxlength="15"></el-input>
-        <section class="c999 f-s-12">请输入3-15个字符以内</section>
+        <section class="c999 f-s-12" style="line-height: 11px;margin-top:8px">请输入3-15个字符以内</section>
       </el-col>
     </el-form-item>
     <el-form-item label="机器人性别" prop='Bot_Gender'>
@@ -123,7 +123,7 @@
           Bot_School:[{required: false},{max:50,message:'最多50个字符！'}],
         },
         ruleForm: {
-          Bot_Name: '小华智能助理',
+          Bot_Name: '',
           Bot_Gender: '女', // m:man,f:female
           Bot_DayOfBirth: moment().format('YYYY-MM-DD'),
           Bot_Constellation:'天蝎座',
@@ -260,6 +260,10 @@
             data[v] = that.ruleForm[v]
           }
         }
+        //更改机器人的名字
+        const name = this.$route.query.name
+        data.Bot_Name=data.Bot_Name?data.Bot_Name:name
+
         // 更改出生日期格式
         const date = data.Bot_DayOfBirth
         if(date){
@@ -282,6 +286,7 @@
         }
 
         data.Bot_Height = data.Bot_Height?data.Bot_Height.replace('cm',''):'160'
+        data.Bot_Weight = data.Bot_Weight?data.Bot_Weight.replace('KG',''):'50'
         // 判断获取到的城市
         const Bot_Birthplace = data.Bot_Birthplace?data.Bot_Birthplace.split('-'):[]
         data.Bot_Birthplace = {

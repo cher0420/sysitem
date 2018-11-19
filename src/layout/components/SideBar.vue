@@ -119,11 +119,13 @@
         const arr = to.path.split('/')
         arr.shift()
         let newArr;
+        // const to = this.$route
+
         if(arr.length>3){
           const obj1 = {url:`/${arr[0]}`,name:STR[arr[0]]}
           const obj2 = {url:`/${arr[0]}/${arr[1]}/${arr[2]}`,name:STR[arr[2]]}
           const name = to.query.title
-          const obj3 = {url:`/${arr[0]}/${arr[1]}/${arr[2]}/${arr[3]}`,name}
+          const obj3 = {url:{path:`/${arr[0]}/${arr[1]}/${arr[2]}/${arr[3]}`},name}
           newArr=[obj1,obj2,obj3]
         } else if(arr.length>2){
           const obj1 = {url:`/${arr[0]}`,name:STR[arr[0]]}

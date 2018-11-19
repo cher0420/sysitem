@@ -5,7 +5,7 @@
     </section>
     <el-form-item label="URL :">
       <el-col :span="20">
-        <section>
+        <section style="line-height: 1.5">
           {{formData.SvcUrl}}
         </section>
       </el-col>
@@ -13,7 +13,8 @@
     <el-form-item label="Token :">
       <el-col :span="20">
         <el-input v-model="formData.Token"></el-input>
-        <section class="f-s-11 c999">请将URL和Token复制到您的微信公众平台账号开发模式下的接口配置中</section>
+        <section class="f-s-11 c999" style="line-height: 11px;
+    margin-top: 8px;">请将URL和Token复制到您的微信公众平台账号开发模式下的接口配置中</section>
       </el-col>
     </el-form-item>
     <el-form-item label="" class="margin-b-40">

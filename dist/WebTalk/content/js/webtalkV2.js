@@ -1,4 +1,4 @@
-﻿Date.prototype.Format = function (fmt) { //author: meizz
+Date.prototype.Format = function (fmt) { //author: meizz
     var o = {
         "M+": this.getMonth() + 1, //月份
         "d+": this.getDate(), //日
@@ -14,12 +14,13 @@
     return fmt;
 }
 
-// var apiHost = "https://hightalkadminapi-test.azurewebsites.net/api";
-var apiHost = "https://hightalkadminapi-staging.azurewebsites.net/api";
+var adminApiUrl = "https://hightalkadminapi-test.azurewebsites.net/api";
+//var adminApiUrl = "https://hightalkadminapi-staging.azurewebsites.net/api";
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};
 var FAQAnswerList = {};
+var _channels = "WebChat";
 $(function () {
     var host = ""; //域名
     var cip = ""; //ip
@@ -73,13 +74,20 @@ $(function () {
         }
     });
 
+    // 如果返回的答案里包含图片，当点击图片时新打开一个窗口显示。
+    $(document).on("click", "#msgs .msg-ball img", function(){
+        var src = $(this).attr("src");
+        window.open(src);
+
+    });
+
     var urlParamId = $.getUrlParam('id');
     init();
     function init() {
         if (urlParamId != "" && urlParamId != null && urlParamId != undefined) {
             GetCategoryList();
             botObject = {};
-            $.post(apiHost + "/WebTalk/GetWebTalkInfo", { id: urlParamId }, function (result) {
+            $.post(adminApiUrl + "/WebTalk/GetWebTalkInfo", { id: urlParamId }, function (result) {
                 botObject = result.model;
                 renderPage();
                 if (botObject.BotConfigId == null) {
@@ -132,7 +140,7 @@ $(function () {
 
     // 验证是否被授权
     function verifyAuthorization(host, cip, callback) {
-        $.post(apiHost + "/WebTalk/VerifyAuthorization", { id: botObject.BotConfigId, host: host, cip: cip }, function (result) {
+        $.post(adminApiUrl + "/WebTalk/VerifyAuthorization", { id: botObject.BotConfigId, host: host, cip: cip }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     isAuthorize = result.isAuthorization;
@@ -146,7 +154,7 @@ $(function () {
     }
 
     function callWebTalkService(question) {
-        $.post(apiHost + "/V2/WebTalk/GetWebTalkAnswer", { id: botObject.BotConfigId, webtalkid: botObject.WebTalkId, question: question, channels: "Robot" }, function (result) {
+      $.post(adminApiUrl + "/V2/WebTalk/GetWebTalkAnswer", { id: botObject.BotConfigId, webtalkid: botObject.WebTalkId, question: question, channels: _channels }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     var answer = "";
@@ -193,7 +201,7 @@ $(function () {
                                 answer += drawImageElement(result.answer.ImageUrl[i]);
                             }
 
-                            answer += "<div class='answer-image'>"
+                            answer += "<div class='answer-image'>";
                         }
 
                         if (result.answer.VideoUrl != null && result.answer.VideoUrl.length > 0) {
@@ -284,7 +292,7 @@ $(function () {
             str += "<div class=\"msg guest\"><div class=\"msg-right\"><div class=\"msg-host headDefault\"></div><div class=\"msg-ball\" title=\"" + time + "\">" + content + "</div></div></div>"
         }
         else {
-            var rbg = (botObject.BotHeadPortrait == "" || botObject.BotHeadPortrait == null) ? "../robot.png" : botObject.BotHeadPortrait;
+            var rbg = (botObject.BotHeadPortrait == "" || botObject.BotHeadPortrait == null) ? "../content/image/robot.png" : botObject.BotHeadPortrait;
             str += "<div class=\"msg robot\"><div class=\"msg-left\" worker=\"" + user + "\"><div class=\"msg-host photo\" style=\"background-image: url(" + rbg.replace("normal", "").replace("custom","") + ")\"></div><div class=\"msg-ball\" title=\"" + time + "\">" + content + "</div></div></div>";
         }
         return str;
@@ -535,58 +543,58 @@ $(function () {
     }
 
     function getKnowledgeBase(intentName, name) {
-        $.post(apiHost + "/WebTalk/GetKnowledgeBase", { id: botObject.BotConfigId, intentName: intentName, channels: "Robot" }, function (result) {
-            if (result != undefined && result != null) {
-                if (result.status == 1) {
-                    var knowledgeBase = "";
-                    if (result.knowledgeBase.Text.length == 0 && result.knowledgeBase.ImageUrl.length == 0 && result.knowledgeBase.VideoUrl.length == 0) {
-                        sendErrorMsg();
-                        return;
-                    }
+      $.post(adminApiUrl + "/V2/WebTalk/GetKnowledgeBase", { id: botObject.BotConfigId, intentName: intentName, channels: _channels }, function (result) {
+          if (result != undefined && result != null) {
+              if (result.status == 1) {
+                  var knowledgeBase = "";
+                  if (result.knowledgeBase.Text.length == 0 && result.knowledgeBase.ImageUrl.length == 0 && result.knowledgeBase.VideoUrl.length == 0) {
+                      sendErrorMsg();
+                      return;
+                  }
 
-                    if (name != "" && name != null && name != undefined) {
-                        knowledgeBase += "您好！您的问题是：" + result.FriendlyName + "，相关条款如下：\n";
-                    }
+                  if (name != "" && name != null && name != undefined) {
+                      knowledgeBase += "您好！您的问题是：" + result.knowledgeBase.FriendlyName + "，相关条款如下：\n";
+                  }
 
-                    var i = 0;
-                    if (result.knowledgeBase.Text.length > 0) {
-                        for (i = 0; i < result.knowledgeBase.Text.length; i++) {
-                            knowledgeBase += filterMsgSpechars(result.knowledgeBase.Text[i]);
-                            knowledgeBase += "\n"
-                        }
-                    }
+                  var i = 0;
+                  if (result.knowledgeBase.Text.length > 0) {
+                      for (i = 0; i < result.knowledgeBase.Text.length; i++) {
+                        knowledgeBase += filterMsgSpechars(result.knowledgeBase.Text[i].KnowledgeBase);
+                        knowledgeBase += "\n";
+                      }
+                  }
 
-                    if (result.knowledgeBase.ImageUrl.length > 0) {
-                        knowledgeBase += "<div class='answer-image'>"
-                        for (i = 0; i < result.knowledgeBase.ImageUrl.length; i++) {
-                            knowledgeBase += drawImageElement(result.knowledgeBase.ImageUrl[i]);
-                        }
+                  if (result.knowledgeBase.ImageUrl.length > 0) {
+                      knowledgeBase += "<div class='answer-image'>"
+                      for (i = 0; i < result.knowledgeBase.ImageUrl.length; i++) {
+                        knowledgeBase += drawImageElement(result.knowledgeBase.ImageUrl[i].KnowledgeBase);
+                      }
 
-                        knowledgeBase += "</div>"
-                        knowledgeBase += "\n"
-                    }
+                    knowledgeBase += "</div>";
+                    knowledgeBase += "\n";
+                  }
 
-                    if (result.knowledgeBase.VideoUrl.length > 0) {
-                        for (i = 0; i < result.knowledgeBase.VideoUrl.length; i++) {
-                            knowledgeBase += filterMsgSpechars(result.knowledgeBase.ImageUrl[i]);
-                            knowledgeBase += "\n"
-                        }
-                    }
+                  if (result.knowledgeBase.VideoUrl.length > 0) {
+                      for (i = 0; i < result.knowledgeBase.VideoUrl.length; i++) {
+                        knowledgeBase += filterMsgSpechars(result.knowledgeBase.VideoUrl[i].KnowledgeBase);
+                        knowledgeBase += "\n";
+                      }
+                  }
 
-                    knowledgeBase += "\n亲，请问我还有什么可以帮助您的么？"
-                    addMsg("Hightalk", sendMsgDispose(knowledgeBase));
-                } else {
-                    sendErrorMsg();
-                }
-            }
-        }).error(function () {
-            sendErrorMsg();
-        });;
+                  knowledgeBase += "\n亲，请问我还有什么可以帮助您的么？";
+                  addMsg("Hightalk", sendMsgDispose(knowledgeBase));
+              } else {
+                sendErrorMsg();
+              }
+          }
+      }).error(function () {
+          sendErrorMsg();
+      });
     }
 
     function getNavigation(id, name) {
         var navId = id == "homepage" ? null : id;
-        $.post(apiHost + "/WebTalk/GetNavigation", { id: botObject.BotConfigId, navId: navId }, function (result) {
+        $.post(adminApiUrl + "/WebTalk/GetNavigation", { id: botObject.BotConfigId, navId: navId }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     buildNavigationList(result.data);
@@ -598,7 +606,7 @@ $(function () {
     }
 
     function getFAQList(parentID) {
-        $.post(apiHost + "/WebTalk/GetFAQList", { id: botObject.BotConfigId, parentID: parentID }, function (result) {
+        $.post(adminApiUrl + "/WebTalk/GetFAQList", { id: botObject.BotConfigId, parentID: parentID }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     buildFAQList(result.data);
@@ -610,7 +618,7 @@ $(function () {
     }
 
     function GetCategoryList() {
-        $.post(apiHost + "/WebTalk/GetCategoryList", { id: urlParamId }, function (result) {
+        $.post(adminApiUrl + "/WebTalk/GetCategoryList", { id: urlParamId }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     buildCategoryList(result.data);

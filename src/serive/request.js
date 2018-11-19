@@ -18,7 +18,6 @@ export const IE9Request = (api,params) => {
 export const request = (api,params = {}) => {
   const status = isIE9()
   if(status){
-
     $.support.cors = true;
     const headers = {
       "Content-Type": "application/json; charset=utf-8",
@@ -29,19 +28,6 @@ export const request = (api,params = {}) => {
 
     return new Promise(
       (resolve, reject) => {
-        // const data = {
-        //   Token:'8f24399bc33744f43a59e0be5ebe42ecc042417e047b9c784999954ac776f56b'
-        // }
-        // var xdr = new XDomainRequest();
-        // xdr.contentType = 'application/json; charset=utf-8'
-        // xdr.open("POST", "https://hightalkssoapi-test.azurewebsites.net/api/Tenant/ValidateToken");
-        // xdr.onload = function (ev) {
-        //   console.log('XDomainRequest',ev.responseText)
-        // }
-        // xdr.onerror = function (v) { console.log(v)}
-        // xdr.ontimeout = function () {}
-        // xdr.onprogress = function () {}
-        // xdr.send(encodeURI(JSON.stringify(data)));
         $.ajax({
           url:api,
           headers,
@@ -57,8 +43,6 @@ export const request = (api,params = {}) => {
             }
           },
           error: function(res){
-
-            // alert('error'+res)
             return reject(res)
           }
         })
@@ -110,8 +94,6 @@ export const request = (api,params = {}) => {
                 case 200:
                   return response.json()
                 case 401:
-                  // alert('没有权限')
-                  // return response.json()
                   redirect(LOGIN)
                   break;
                 default:

@@ -112,24 +112,6 @@
   import {getList,reload} from "./service/requestMethod";
   import {STR} from "../../constants/constants";
 
-  async function reloadList(v){
-    const PageIndex = store.state.app.PageIndex
-    const description = store.state.app.description
-    const searchStatus = store.state.app.searchStatus
-
-    const reloadId = store.state.app.reloadId
-    clearInterval(reloadId)
-
-    const options = {
-      body:{
-        PageIndex,
-        description,
-        searchStatus
-      }
-    }
-    getList(URL.requestHost + BOT,options,ITEMKEY,false)
-  }
-
   export default {
     data() {
       return {
@@ -167,7 +149,6 @@
     },
     destroyed: function () {
       const id = store.state.app.reloadId
-      console.log('====',id)
       clearInterval(id)
     },
     methods:{
@@ -251,8 +232,6 @@
             });
 
             const newData = store.state.app.tableData
-            // const reloadId = store.state.app.reloadId
-            // clearInterval(reloadId)
             reload(newData)
 
           }

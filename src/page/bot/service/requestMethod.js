@@ -176,7 +176,7 @@ export function askIsDoing(arr) {
                     break;
                   case 2:
                     value.StatusString = '已创建'
-                    value.CreateDate = moment().format('YYYY-MM-DD')
+                    value.CreateDate = v.CreateDate
                     break;
                   case 3:
                     value.StatusString = '已创建'

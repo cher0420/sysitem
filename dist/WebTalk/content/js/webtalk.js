@@ -14,8 +14,8 @@
     return fmt;
 }
 
-// var apiHost = "https://hightalkadminapi-test.azurewebsites.net/api";
-var apiHost = "https://hightalkadminapi-staging.azurewebsites.net/api";
+var adminApiUrl = "https://hightalkadminapi-test.azurewebsites.net/api";
+//var adminApiUrl = "https://hightalkadminapi-staging.azurewebsites.net/api";
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};
@@ -73,13 +73,19 @@ $(function () {
         }
     });
 
+    // 如果返回的答案里包含图片，当点击图片时新打开一个窗口显示。
+    $(document).on("click", "#msgs .msg-ball img", function(){
+        var src = $(this).attr("src");
+        window.open(src);
+    });
+
     var urlParamId = $.getUrlParam('id');
     init();
     function init() {
         if (urlParamId != "" && urlParamId != null && urlParamId != undefined) {
             GetCategoryList();
             botObject = {};
-            $.post(apiHost + "/WebTalk/GetWebTalkInfo", { id: urlParamId }, function (result) {
+            $.post(adminApiUrl + "/WebTalk/GetWebTalkInfo", { id: urlParamId }, function (result) {
                 botObject = result.model;
                 renderPage();
                 if (botObject.BotConfigId == null) {
@@ -132,7 +138,7 @@ $(function () {
 
     // 验证是否被授权
     function verifyAuthorization(host, cip, callback) {
-        $.post(apiHost + "/WebTalk/VerifyAuthorization", { id: botObject.BotConfigId, host: host, cip: cip }, function (result) {
+        $.post(adminApiUrl + "/WebTalk/VerifyAuthorization", { id: botObject.BotConfigId, host: host, cip: cip }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     isAuthorize = result.isAuthorization;
@@ -146,7 +152,7 @@ $(function () {
     }
 
     function callWebTalkService(question) {
-        $.post(apiHost + "/WebTalk/GetWebTalkAnswer", { id: botObject.BotConfigId, webtalkid: botObject.WebTalkId, question: question }, function (result) {
+        $.post(adminApiUrl + "/WebTalk/GetWebTalkAnswer", { id: botObject.BotConfigId, webtalkid: botObject.WebTalkId, question: question }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     if (result.answer != "" && result.answer != null && result.answer != undefined) {
@@ -228,7 +234,7 @@ $(function () {
             str += "<div class=\"msg guest\"><div class=\"msg-right\"><div class=\"msg-host headDefault\"></div><div class=\"msg-ball\" title=\"" + time + "\">" + content + "</div></div></div>"
         }
         else {
-            var rbg = (botObject.BotHeadPortrait == "" || botObject.BotHeadPortrait == null) ? "./robot.png" : botObject.BotHeadPortrait;
+            var rbg = (botObject.BotHeadPortrait == "" || botObject.BotHeadPortrait == null) ? "./content/image/robot.png" : botObject.BotHeadPortrait;
             str += "<div class=\"msg robot\"><div class=\"msg-left\" worker=\"" + user + "\"><div class=\"msg-host photo\" style=\"background-image: url(" + rbg.replace("normal", "").replace("custom","") + ")\"></div><div class=\"msg-ball\" title=\"" + time + "\">" + content + "</div></div></div>";
         }
         return str;
@@ -479,7 +485,7 @@ $(function () {
     }
 
     function getKnowledgeBase(intentName, name) {
-        $.post(apiHost + "/WebTalk/GetKnowledgeBase", { id: botObject.BotConfigId, intentName: intentName }, function (result) {
+        $.post(adminApiUrl + "/WebTalk/GetKnowledgeBase", { id: botObject.BotConfigId, intentName: intentName }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     if (result.knowledgeBase != "" && result.knowledgeBase != null && result.knowledgeBase != undefined) {
@@ -501,7 +507,7 @@ $(function () {
 
     function getNavigation(id, name) {
         var navId = id == "homepage" ? null : id;
-        $.post(apiHost + "/WebTalk/GetNavigation", { id: botObject.BotConfigId, navId: navId }, function (result) {
+        $.post(adminApiUrl + "/WebTalk/GetNavigation", { id: botObject.BotConfigId, navId: navId }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     buildNavigationList(result.data);
@@ -513,7 +519,7 @@ $(function () {
     }
 
     function getFAQList(parentID) {
-        $.post(apiHost + "/WebTalk/GetFAQList", { id: botObject.BotConfigId, parentID: parentID }, function (result) {
+        $.post(adminApiUrl + "/WebTalk/GetFAQList", { id: botObject.BotConfigId, parentID: parentID }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     buildFAQList(result.data);
@@ -525,7 +531,7 @@ $(function () {
     }
 
     function GetCategoryList() {
-        $.post(apiHost + "/WebTalk/GetCategoryList", { id: urlParamId }, function (result) {
+        $.post(adminApiUrl + "/WebTalk/GetCategoryList", { id: urlParamId }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     buildCategoryList(result.data);

@@ -3,6 +3,7 @@ $input-height: 32px;
 .el-input__inner{
   height:$input-height;
   line-height:$input-height;
+  padding:0 10px;
 }
 .el-input.is-disabled .el-input__inner{
   color:#777;

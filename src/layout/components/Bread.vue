@@ -85,9 +85,6 @@
       }
     },
     methods:{
-      // handle(name){
-      //   store.dispatch(REPLACE,{navIndex:name})
-      // },
       back(){
         const to = this.$route
         const url={
@@ -127,7 +124,6 @@
 
   }
   .yoy-bread .el-breadcrumb.single{
-    font-family: 宋体;
     font-size: 14px;
     color: #777;
     height: $bread-height;
@@ -159,7 +155,7 @@
   .yoy-title{
     height: $title-height;
     line-height: $title-height;
-    padding-top: 10px;
+    padding-top: 7px;
     margin-left: 40px;
     margin-right: 40px;
   }
@@ -168,7 +164,7 @@
     height: 24px;
     line-height: 24px;
     background: $primary-color;
-    margin-right: 6px;
+    margin-right: 2px;
   }
   .yoy-bread {
     .el-breadcrumb.yoy-title{

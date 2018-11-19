@@ -25,7 +25,7 @@
     }
 
     .webtalk-panel .headDefault {
-        background-image: url(./guest.png);
+        background-image: url(../image/guest.png);
         border: none;
     }
 
@@ -424,6 +424,11 @@
         border-color: transparent #F7F7F7 transparent transparent;
     }
 
+    #msgs .msg-ball img{
+        max-width: 100%;
+        cursor: pointer;
+    }
+    
 #msgs .msg-ball {
     color: #333333;
     padding: 13px 1em;

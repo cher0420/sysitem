@@ -225,6 +225,9 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
   color:$second-f-c-l;
   padding-left: 45px !important;
 }
+.yoy-second-menu .el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow{
+  transform: rotate(-180deg);
+}
 .yoy-second-menu .el-submenu .el-menu-item:hover{
   color:$second-f-c-hover;
 }
