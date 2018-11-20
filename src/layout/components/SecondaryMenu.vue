@@ -18,11 +18,17 @@
         <i class="el-icon-arrow-right"></i>
       </template>
     </el-menu-item>
-    <el-submenu v-if="item.children" v-for='item in secondMenus' :index="item.id" class="f-s-14">
+    <el-submenu v-if="item.children" v-for='item in secondMenus' :index="item.id" class="f-s-14" ref="test">
       <template slot="title">{{item.chineseName}}</template>
       <el-menu-item v-for='items in item.children' :index="items.id">{{items.chineseName}}</el-menu-item>
     </el-submenu>
   </el-menu>
+  <!--<section>-->
+    <!--<section></section>-->
+    <!--<section v-for="item in secondMenus">-->
+      <!--{{item.chineseName}}-->
+    <!--</section>-->
+  <!--</section>-->
 </template>
 
 <script>
@@ -55,7 +61,8 @@
       },
       methods:{
         handleOpen(index,indexPath){
-
+          this.$refs.test['aria-expanded'] = 'false'
+          console.log(this.$refs.test);
         },
         handleClose(index,indexPath){
 
