@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown @command="handleCommand" placement="bottom-start" class="p-absolute left-0">
+  <el-dropdown @command="handleCommand" placement="bottom-start" class="p-absolute left-0 yoy-dropDown">
   <span class="el-dropdown-link c333">
     {{title}}<i class="el-icon-arrow-down el-icon--right"></i>
   </span>
@@ -7,6 +7,7 @@
       <el-dropdown-item :command="key" v-for="(value, key, index) in options">{{value}}</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
+
 </template>
 
 <script>
@@ -80,10 +81,11 @@
   }
 </script>
 
-<style lang="scss">
-@import '../style/index';
-.el-table th > .cell .el-dropdown{
-  height:30px;
-  line-height: 30px;
-}
+<style lang="scss" scoped>
+  @import '../style/index';
+  .yoy-main .el-table .cell .yoy-dropDown{
+    height: 28px;
+    line-height: 28px;
+    color:#333;
+  }
 </style>

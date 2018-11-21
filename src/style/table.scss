@@ -1,6 +1,6 @@
 @import "index";
 $table-background:#f9fafc;
-$table-title-color:#555;
+$table-title-color:#333;
 .yoy-main{
   .el-table tr{
     height: 48px;
@@ -17,13 +17,18 @@ $table-title-color:#555;
       th{
         color: $table-title-color;
         background: $table-background;
+        .cell{
+          min-height: 28px;
+          height: 28px;
+          line-height: 28px;
+        }
       }
     }
   }
   .el-table{
     .cell{
-      //height: 28px;
-      //line-height: 28px;
+      min-height: 24px;
+      line-height: 24px;
       margin-top: 11px;
       margin-bottom: 11px;
       text-overflow:inherit;
