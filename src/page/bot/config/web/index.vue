@@ -41,8 +41,7 @@
             <el-radio label="custom" class="align-middle margin-right-30 custom">自定义 : </el-radio>
             <section class="file-box f-s-11 c555 dis-i-b align-middle" :style="{borderColor:headerPicture === 'custom'?'#2a8ce7':'#c0c4cc'}">
               <section :class="[headerPicture === 'custom'?'normal':'notAllow']">
-                <input :disabled="fileDisabled" type='file' accept="image/*" name="avatar" placeholder="上传" id="img" @click="upLoadImg"
-                />选择文件
+                <input :disabled="fileDisabled" type='file' accept="image/*" name="avatar" placeholder="上传" id="img" class="file-btn" @change="upLoadImg"/>选择文件
               </section>
             </section>
             <img v-show="headerPicture === 'custom'&&formData.BotHeadPortrait" :src="formData.BotHeadPortrait" alt="自定义头像" class="align-middle header">
@@ -296,7 +295,7 @@
         this.formData = data
       },
       upLoadImg(e) {
-        // if(this.headerPicture === 'custom'){
+        if(this.headerPicture === 'custom') {
           const that = this
           let files = e.target.files || e.dataTransfer.files;
           if (!files.length) return;
@@ -312,11 +311,11 @@
           const reader = new FileReader();
           reader.onload = (function (file) {
             return function (e) {
-              that.formData.BotHeadPortrait =this.result
+              that.formData.BotHeadPortrait = this.result
             };
           })(e.target.files[0]);
           reader.readAsDataURL(e.target.files[0]);
-        // }
+        }
       },
       changeHeaderImage(v){
         //如果上传头像为自定义，则清空头像数据
@@ -462,7 +461,7 @@
     margin-right: 30px;
   }
   .htmlContent{
-    padding:10px 10px 40px 10px;
+    padding:10px 18px 40px 18px;
     min-height: 100px;
     section{
       font-size:10px;
@@ -476,7 +475,7 @@
     padding-right:30px;
     background: #fff;
   }
-  .file-box {
+  .file-box{
     font-size: 12px;
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -488,46 +487,45 @@
     display: inline-block;
     position: relative;
     overflow: hidden;
-    color: $primary-color;
+    color:$primary-color;
     background-color: #fff;
-    border: 1px solid #c0c4cc;
-    cursor: pointer;
+    border:1px solid #c0c4cc;
+    cursor:pointer;
     margin-right: 20px;
-    input{
-      cursor: pointer;
-      font-size: 0;
-      display: inline-block;
-      text-align: center;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 30px;
-      line-height: 30px;
-      outline: none;
-      filter:alpha(opacity=0);
-      -moz-opacity:0;
-      -khtml-opacity: 0;
-      opacity: 0;
-      z-index: 999;
-    }
     .notAllow{
-      color:#c0c4cc;
-    }
+       color:#c0c4cc;
+        cursor: pointer;
+     }
     .notAllow:hover{
-      color:#c0c4cc;
-      background: #fff;
-    }
-    .normal{
-      cursor: pointer;
-    }
-    .normal:hover{
+       color:#c0c4cc;
+       background: #fff;
+     }
+  }
+  .normal:hover{
       background: $primary-color;
       color:#fff;
     }
+  .file-box:hover{
+    cursor:pointer;
+    /*color:#fff !important;*/
   }
-
-
+  .file-btn{
+    width: 100%;
+    height: 100%;
+    cursor:pointer;
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    outline: none;
+    filter:alpha(opacity=0);
+    -moz-opacity:0;
+    -khtml-opacity: 0;
+    opacity: 0;
+  }
+  .file-btn:hover{
+    cursor: pointer;
+  }
   .colorItem{
     display: inline-block;
     width: 27px;
