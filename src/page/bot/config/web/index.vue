@@ -264,8 +264,10 @@
           if(that.headerPicture === 'normal'){
             // 则将form表单的头像设置为默认头像
             data.BotHeadPortrait = IMAGE
+            that.fileDisabled = true
           }else{
             data.BotHeadPortrait = data.BotHeadPortrait.substr(6,data.BotHeadPortrait.length-1)
+            that.fileDisabled = false
           }
         }else{
           // 头像为null,设置状态为nomal,头像数据为IMAGE
@@ -295,7 +297,7 @@
         this.formData = data
       },
       upLoadImg(e) {
-        if(this.headerPicture === 'custom') {
+        // if(this.headerPicture === 'custom') {
           const that = this
           let files = e.target.files || e.dataTransfer.files;
           if (!files.length) return;
@@ -315,7 +317,7 @@
             };
           })(e.target.files[0]);
           reader.readAsDataURL(e.target.files[0]);
-        }
+        // }
       },
       changeHeaderImage(v){
         //如果上传头像为自定义，则清空头像数据
