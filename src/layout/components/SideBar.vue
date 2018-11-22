@@ -92,7 +92,7 @@
                   setTimeout(
                     () =>{
                       store.dispatch(REPLACE,{mainLoading:false})
-                    },500
+                    },1200
                   )
                 }
               )

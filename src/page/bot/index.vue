@@ -37,7 +37,7 @@
       <el-table-column
         prop="CreateDate"
         label="创建时间"
-        min-width="40"
+        min-width="50"
       >
         <template slot-scope="scope">
           <span v-if="scope.row.Status == 0||scope.row.Status == 1||scope.row.Status == 6">
