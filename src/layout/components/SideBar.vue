@@ -61,7 +61,7 @@
         const that = this
         if(to&&from){
 
-          store.dispatch(REPLACE,{mainLoading: true,}).then(
+          store.dispatch(REPLACE,{}).then(
             () =>{
               // 面包屑，带优化
               this.setBreadArr(to)
@@ -89,11 +89,11 @@
               }
               store.dispatch(REPLACE,{config,aSideWidth,activeKey}).then(
                 () => {
-                  setTimeout(
-                    () =>{
-                      store.dispatch(REPLACE,{mainLoading:false})
-                    },500
-                  )
+                  // setTimeout(
+                  //   () =>{
+                  //     store.dispatch(REPLACE,{mainLoading:false})
+                  //   },1200
+                  // )
                 }
               )
             }

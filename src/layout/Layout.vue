@@ -19,8 +19,8 @@
             <secondary-menu class="yoy-second-menu full-height">
             </secondary-menu>
           </section>
-          <el-container v-loading="mainLoading" class="robotDetail">
-            <el-main class="p-relative scroll-content ">
+          <el-container v-loading="mainLoading" class="full-width robotDetail">
+            <el-main class="p-relative scroll-content">
               <app-main></app-main>
             </el-main>
             <el-footer class="robotFoot">
