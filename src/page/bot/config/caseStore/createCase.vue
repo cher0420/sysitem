@@ -1,94 +1,70 @@
 <template>
   <div>
-
-    <div class="container">
+    <div class="containerr">
       <div>
         <div class="caseTitle">
           案例标题：
         </div>
-        <el-input v-model="title" placeholder="请输入标题"></el-input>
-
+        <div class="caseTitleInput">
+          <el-input v-model="title" placeholder="请输入标题"></el-input>
+        </div>
       </div>
       <div class="caseTitle">
         案例内容：
       </div>
+      <div class="msg">
+        <div class="summernote"></div>
+      </div>
       <div>
-        <script id="ueid" type="text/plain"></script>
-
-        <el-button class="editor-btn" type="primary" @click="getUEContent">保存</el-button>
+        <el-button class="editor-btn" type="primary" @click="getContent">保存</el-button>
         <el-button plain size="mini" @click="indexCaseShow">取消</el-button>
-        <!--<button @click="getUEContent()">获取内容</button>-->
       </div>
     </div>
   </div>
 </template>
 <script>
-  // import UE from './ue.vue';
   import {mapActions} from 'vuex'
+
+  import 'bootstrap/dist/css/bootstrap.min.css'
+  import 'bootstrap/dist/js/bootstrap.min.js'
 
   export default {
     name: "editCase",
- //   props: ['navIndex'],
-    components: {
-      UE
-      // quillEditor
-    },
-    // mounted(){
-    //   this.title = this.navIndex.title;
-    //
-    // },
+    components: {},
     data() {
       return {
-        editor: null,
-        title:"",
-        // content: '',
-        // editorOption: {
-        //   placeholder: '请输入案例内容！'
-        // },
-        uetest:'<p>sss44444444444444ss</p>',
-
-        config: {
-          initialFrameWidth: null,
-          initialFrameHeight: 350
-        }
+        myVar: "",
+        title: "",
       }
     },
     mounted() {
-   //   this.title = this.navIndex.title;
 
-      const _this = this;
-      this.editor = UE.getEditor("ueid", this.config); // 初始化UE
-      this.editor.addListener("ready", function () {
-        _this.editor.setContent(_this.defaultMsg); // 确保UE加载完成后，放入内容。
+      $(function () {
+        $('.summernote').summernote({
+          height: 370,
+          tabsize: 2,
+          lang: 'zh-CN'
+        });
       });
+
+      // 去掉style
+      this.myVar = setInterval(function () {
+        $(".note-editable").find("*").removeAttr("style");
+      }, 100)
+
     },
     methods: {
-      getUEContent() {    // 获取内容方法
-        console.log(this.editor.getContent())
-        return this.editor.getContent()
-      },
 
-      // onEditorChange({editor, html, text}) {
-      //   this.content = html;
-      // },
-      // submit() {
-      //   console.log(this.title)
-      //   console.log(this.content);
-      //   this.$alert('保存成功', '操作提示', {
-      //     confirmButtonText: '确定',
-      //     callback: action => {
-      //
-      //
-      //     }
-      //   });
-      // },
       ...mapActions(
         ["indexCaseShow"]
       ),
+      getContent() {
+        console.log($('.summernote').summernote('code'));
+      },
 
     },
     destroyed() {
-      this.editor.destroy();
+      // clearInterval(this.myVar);
     }
   }
 </script>
@@ -103,9 +79,15 @@
   .editor-btn {
     margin-top: 20px;
   }
-</style>
-<style>
-  .ql-editor {
-    height: 400px;
+
+  .caseTitleInput {
+    width: 960px;
   }
+
+  .msg {
+    width: 960px;
+    margin: 0;
+  }
+
 </style>
+

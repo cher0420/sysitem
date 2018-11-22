@@ -1,20 +1,20 @@
 <template>
-  <div class="yoy-main">
+  <div class="yoy-main" >
     <section class="list-item" v-if="indexPage == true">
       <div class="button-style">
         <el-button type="primary" size="mini" @click="createCase()">创建案例</el-button>
         <div class="button-style-input">
           <el-input class='' size='small' placeholder="输入关键词搜索" @keyup.enter.native="search" v-model="searchVal">
           </el-input>
+          <div class="search-icon">
+            <i class="el-icon-search" @click="search"></i>
+          </div>
+        </div>
 
-        </div>
-        <div class="search-icon">
-          <i class="el-icon-search" @click="search"></i>
-        </div>
 
       </div>
       <div class="list-detail"  >
-        <template>
+
           <div class="list-detail-lis">
             <el-table
               :data="tableData" stripe
@@ -50,7 +50,7 @@
             </el-table>
           </div>
 
-        </template>
+
 
         <div class="pagination-padding">
           <el-pagination
@@ -175,7 +175,7 @@
 
   }
 </script>
-<style scoped lang="scss">
+<style  lang="scss" scoped>
   @import  '../../../../style/index';
 
   .button-style {
@@ -199,22 +199,23 @@
     height: 32px !important;
     box-sizing: border-box;
     margin-top: -2px;
+    position: relative;
   }
 
   .search-icon {
     cursor: pointer;
     display: inline-block;
     font-size: 17px;
-    top: 2px;
-    left: 443px;
+    top: 1px;
+    right: 1px;
     position: absolute;
     border-radius: 0 3px 3px 0;
     height: 30px;
     font-size: 17px;
     background: #EAF6FE;
     width: 30px;
-    padding-left: 7.5px;
-    padding-top: 2px;
+    padding-left:6.5px;
+    padding-top:3.5px;
     color: #2A8CE7;
     box-sizing: border-box;
   }
@@ -225,11 +226,9 @@
 .createCase {
   margin: 0 40px;
 }
-</style>
-<style>
+
   .list-detail-lis {
-    /*height: 480px;*/
-    overflow: scroll;
+
   }
 
   .pagination-padding {
@@ -240,7 +239,11 @@
 
   .list-detail {
     padding: 40px 0px;
+    padding-top: 20px;
     padding-bottom: 0;
+    box-sizing: border-box;
+    width: 80%;
   }
 
 </style>
+

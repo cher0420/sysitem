@@ -8,17 +8,19 @@ import 'element-ui/lib/theme-chalk/index.css';
 import $ from 'jquery';
 Vue.prototype.$= $;
 
-// 富文本框
-import '../static/UE/ueditor.config.js'
-import '../static/UE/ueditor.all.min.js'
-import '../static/UE/lang/zh-cn/zh-cn.js'
-import '../static/UE/ueditor.parse.min.js'
+
 
 import 'whatwg-fetch'
 import './style/element-variables.scss';
 
 import {getLoginStatus} from "./permissions/permissions";
 Vue.config.productionTip = false
+
+// 富文本框
+import '../static/summernote/dist/summernote.css'
+import '../static/summernote/dist/lang/summernote-zh-CN.js'
+
+
 
 //登录
 //vue render 函数在 getLoginStatus 内部执行，
