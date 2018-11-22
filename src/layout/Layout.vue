@@ -1,26 +1,29 @@
 <template>
   <section class="app-container full-height">
-    <el-container class="full-height el-container">
-      <el-header class="full-height nav-b-color el-header nav-height">
+    <el-container class="full-height el-container robotFull">
+      <el-header class="full-height nav-b-color el-header nav-height robotHeader">
         <navBar></navBar>
       </el-header>
       <el-container class="full-height el-container">
-        <el-aside v-if='isCollapse' class="el-aside full-height" width='60px' :style="{float:'left',minWidth:'60px',maxWidth: '240px'}">
-            <sidebar class="sidebar-container full-height"></sidebar>
+        <!-- menu -->
+        <el-aside v-if='isCollapse' class="el-aside full-height" width='60px'
+                  :style="{float:'left',minWidth:'60px',maxWidth: '240px'}">
+          <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
         <el-aside v-else class="el-aside full-height" width='14vw' :style="{float:'left',maxWidth: '240px'}">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
-        <el-container class="full-height">
+        <!-- display area -->
+        <el-container class="full-height robotDisplayArea">
           <section v-if="config">
-            <secondary-menu  class="yoy-second-menu full-height">
+            <secondary-menu class="yoy-second-menu full-height">
             </secondary-menu>
           </section>
-          <el-container v-loading="mainLoading">
-            <el-main class="p-relative scroll-content">
+          <el-container v-loading="mainLoading" class="robotDetail">
+            <el-main class="p-relative scroll-content ">
               <app-main></app-main>
             </el-main>
-            <el-footer>
+            <el-footer class="robotFoot">
               <footer-bar></footer-bar>
             </el-footer>
           </el-container>
@@ -41,28 +44,26 @@
 
   export default {
     name: 'layout',
-    data(){
-      return{
-
-      }
+    data() {
+      return {}
     },
-    computed:{
-      mainLoading(){
+    computed: {
+      mainLoading() {
         return store.state.app.mainLoading
       },
       config() {
         return store.state.app.config
       },
-      aSideWidth (){
+      aSideWidth() {
         return store.state.app.aSideWidth
       },
-      isCollapse () {
+      isCollapse() {
         return store.state.app.isCollapse
       },
     },
-    beforeCreate(){
-      const config = this.$route.name ==='config' //判断路由是否为配置二级菜单，是则为true，不是则false并隐藏二级菜单
-      store.dispatch(REPLACE,{config})
+    beforeCreate() {
+      const config = this.$route.name === 'config' //判断路由是否为配置二级菜单，是则为true，不是则false并隐藏二级菜单
+      store.dispatch(REPLACE, {config})
     },
     components: {
       NavBar,
@@ -73,23 +74,58 @@
     },
   }
 </script>
+<style lang="scss" scoped>
+  .robotFoot{
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 4444;
+  }
+  .robotDisplayArea {
+    height: 100%;
+    width: 100%;
+  }
+  .robotFull {
+    position: relative;
+    padding-top: 60px;
+  }
+  .robotHeader {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 4444;
+  }
+
+  .robotDetail {
+    height: 100%;
+    height: 100%;
+    width: 100%;
+    overflow: scroll;
+  }
+</style>
 <style lang="scss">
   @import '../style/index';
-  .nav-height{
+
+  .nav-height {
     line-height: $nav-height;
   }
-  .app-container{
+
+  .app-container {
     min-width: 1280px;
     min-height: 560px;
   }
-  .el-main{
+
+  .el-main {
     /*padding-bottom: 130px;*/
     /*box-sizing: border-box;*/
   }
-  .yoy-footer{
+
+  .yoy-footer {
     width: 100%;
-    bottom:0;
-    left:50%;
+    bottom: 0;
+    left: 50%;
     transform: translateX(-50%);
     background: #fff;
   }

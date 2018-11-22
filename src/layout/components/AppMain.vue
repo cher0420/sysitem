@@ -1,5 +1,5 @@
 <template>
-  <section class="p-relative yoy-header-container" ref="scrollTop">
+  <section class="p-relative yoy-header-container robotWidth" ref="scrollTop">
     <bread></bread>
     <router-view></router-view>
   </section>
@@ -38,6 +38,12 @@
     }
   }
 </script>
+<style scoped>
+  .robotWidth {
+    width: 100%;
+
+  }
+</style>
 <style lang="scss">
   @import '../../style/index';
   $bread-background: #2a8ce7;
