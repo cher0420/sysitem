@@ -22,7 +22,7 @@
           </section>
            <!-- main -->
           <el-container v-loading="mainLoading" class="full-width robotDetail" style="position:static;width: 70vw;">
-            <el-main class="p-relative scroll-content">
+            <el-main class="p-relative scroll-content" style="display: flex;height: 100%;">
 
               <app-main></app-main>
             </el-main>
