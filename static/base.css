@@ -3,10 +3,23 @@ html,body{
   height: 100%;
   margin: 0;
   padding: 0;
+
+}
+body{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
   position: relative;
 }
+
 *{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+/*#app {*/
+  /*position: relative;*/
+  /*left: 0;*/
+  /*top: 0;*/
+/*}*/

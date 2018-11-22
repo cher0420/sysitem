@@ -4,31 +4,35 @@
       <el-header class="full-height nav-b-color el-header nav-height robotHeader">
         <navBar></navBar>
       </el-header>
-      <el-container class="full-height el-container">
+      <div class="full-height el-container">
         <!-- menu -->
-        <el-aside v-if='isCollapse' class="el-aside full-height" width='60px'
+        <div  v-if='isCollapse' class="el-aside full-height" width='60px'
                   :style="{float:'left',minWidth:'60px',maxWidth: '240px'}">
           <sidebar class="sidebar-container full-height"></sidebar>
-        </el-aside>
+        </div>
         <el-aside v-else class="el-aside full-height" width='14vw' :style="{float:'left',maxWidth: '240px'}">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
         <!-- display area -->
-        <el-container class="full-height robotDisplayArea">
+           <!-- second -->
+        <el-container class="full-height robotDisplayArea" style="position:static;width: 80vw;">
           <section v-if="config">
             <secondary-menu class="yoy-second-menu full-height">
             </secondary-menu>
           </section>
-          <el-container v-loading="mainLoading" class="full-width robotDetail">
+           <!-- main -->
+          <el-container v-loading="mainLoading" class="full-width robotDetail" style="position:static;width: 70vw;">
             <el-main class="p-relative scroll-content">
+
               <app-main></app-main>
             </el-main>
             <el-footer class="robotFoot">
               <footer-bar></footer-bar>
             </el-footer>
           </el-container>
+
         </el-container>
-      </el-container>
+      </div>
     </el-container>
   </section>
 </template>
@@ -75,21 +79,24 @@
   }
 </script>
 <style lang="scss" scoped>
-  .robotFoot{
-    position: relative;
+  .robotFoot {
+    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
     z-index: 4444;
   }
+
   .robotDisplayArea {
     height: 100%;
     width: 100%;
   }
+
   .robotFull {
     position: relative;
     padding-top: 60px;
   }
+
   .robotHeader {
     width: 100%;
     position: absolute;
@@ -100,9 +107,8 @@
 
   .robotDetail {
     height: 100%;
-    height: 100%;
-    width: 100%;
-    overflow: scroll;
+    /*width: 100%;*/
+    /*overflow: scroll;*/
   }
 </style>
 <style lang="scss">
