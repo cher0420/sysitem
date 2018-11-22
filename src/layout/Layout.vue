@@ -6,10 +6,10 @@
       </el-header>
       <div class="full-height el-container">
         <!-- menu -->
-        <div  v-if='isCollapse' class="el-aside full-height" width='60px'
+        <el-aside  v-if='isCollapse' class="el-aside full-height" width='60px'
                   :style="{float:'left',minWidth:'60px',maxWidth: '240px'}">
           <sidebar class="sidebar-container full-height"></sidebar>
-        </div>
+        </el-aside>
         <el-aside v-else class="el-aside full-height" width='14vw' :style="{float:'left',maxWidth: '240px'}">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
@@ -21,7 +21,7 @@
             </secondary-menu>
           </section>
            <!-- main -->
-          <el-container v-loading="mainLoading" class="full-width robotDetail" style="position:static;width: 70vw;">
+          <el-container v-loading="mainLoading" class="full-width robotDetail" style="position:relative;width: 70vw;">
             <el-main class="p-relative scroll-content" style="display: flex;height: 100%;">
 
               <app-main></app-main>
@@ -80,11 +80,12 @@
 </script>
 <style lang="scss" scoped>
   .robotFoot {
-    position: fixed;
+    position: absolute;
     left: 0;
     bottom: 0;
     width: 100%;
     z-index: 4444;
+    background: #fff;
   }
 
   .robotDisplayArea {
@@ -106,6 +107,7 @@
   }
 
   .robotDetail {
+    padding-bottom: 60px;
     height: 100%;
     /*width: 100%;*/
     /*overflow: scroll;*/
