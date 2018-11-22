@@ -1,8 +1,6 @@
 import $ from 'jquery'
 import {redirect} from "../permissions/permissions";
 import {LOGIN} from "../constants/api";
-import store from "../store";
-import {REPLACE} from "../store/mutations";
 
 export const isIE9 = () => {
   if(!-[1,]){
@@ -15,10 +13,7 @@ export const isIE9 = () => {
     }
   }
 }
-export const IE9Request = (api,params) => {
-}
 export const request = (api,params = {}) => {
-  store.dispatch(REPLACE, {mainLoading: true})
   const status = isIE9()
   if(status){
     $.support.cors = true;
@@ -106,24 +101,14 @@ export const request = (api,params = {}) => {
           ).then(
             (res)=>{
               if (res.Status) {
-                store.dispatch(REPLACE, {mainLoading: false}).then(
-                  ()=>{
-                    resolve(res)
-                  }
-                )
+                 resolve(res)
               } else {
-                store.dispatch(REPLACE, {mainLoading: false}).then(
-                  ()=> {
-                    reject(res)
-                  })
+                 reject(res)
               }
             }
           ).catch(
             (err)=>{
-              store.dispatch(REPLACE, {mainLoading: false}).then(
-                ()=> {
-                  reject(err)
-                })
+               reject(err)
             }
           )
         }

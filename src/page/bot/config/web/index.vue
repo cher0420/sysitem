@@ -183,6 +183,7 @@
   import {TOKEN,TENANTID} from "../../../../constants/constants";
   import{unhtml,htmlDecodeByRegExp} from "../../../../utils/utils";
   import store from '../../../../store/index'
+  import {REPLACE} from "../../../../store/mutations";
 
   export default {
     data(){
@@ -222,6 +223,7 @@
       TitleItem,
     },
     created(){
+      store.dispatch(REPLACE, {mainLoading: true})
       const recordId = this.$route.query.recordId
       const token =getCookies(TOKEN)
       const body = {
@@ -295,6 +297,7 @@
         data.Position = data.Position?data.Position:'right-down'
         //判断对话标题的颜色
         this.formData = data
+        store.dispatch(REPLACE, {mainLoading: false})
       },
       upLoadImg(e) {
         // if(this.headerPicture === 'custom') {

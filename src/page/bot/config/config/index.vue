@@ -140,6 +140,7 @@
       }
     },
     beforeCreate(){
+      store.dispatch(REPLACE, {mainLoading: true})
       const BotConfigId = this.$route.query.recordId
       const body = {
         BotConfigId,
@@ -158,6 +159,7 @@
           if(data){
             this.filterData(data)
           }
+          store.dispatch(REPLACE, {mainLoading: false})
         }
       )
     },
