@@ -16,7 +16,7 @@
             <secondary-menu  class="yoy-second-menu full-height">
             </secondary-menu>
           </section>
-          <el-container v-loading="mainLoading">
+          <el-container v-loading="mainLoading" class="full-width">
             <el-main class="p-relative scroll-content">
               <app-main></app-main>
             </el-main>
