@@ -95,7 +95,7 @@ export const request = (api,params = {}) => {
                   redirect(LOGIN)
                   break;
                 default:
-                alert('00000000')
+                alert('服务器异常，请联系工作人员')
               }
             }
           ).then(
