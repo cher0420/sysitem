@@ -14,8 +14,8 @@
   return fmt;
 }
 
-// var adminApiUrl = "https://hightalkadminapi-test.azurewebsites.net/api";
-var adminApiUrl = "https://hightalkadminapi-staging.azurewebsites.net/api";
+var adminApiUrl = "https://hightalkadminapi-test.azurewebsites.net/api";
+// var adminApiUrl = "https://hightalkadminapi-staging.azurewebsites.net/api";
 $(function () {
   var host = ""; //域名
   var cip = ""; //ip
