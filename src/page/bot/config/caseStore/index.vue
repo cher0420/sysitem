@@ -85,7 +85,8 @@
   import  caseDetail from "./caseDetail";
   import  createCase from "./createCase";
  // import store from '../../../../store/index'
-     import {mapActions} from 'vuex'
+     import {mapActions} from 'vuex';
+     import {obj} from "../../../../../static/api";
 
   export default {
     name: 'caseStore',
@@ -131,17 +132,20 @@
           cur_page: this.cur_page,
           searchVal: this.searchVal,
         };
-        $.ajax({
-          type: "POST",
-          url: "/api",
-          data: data,
-          dataType: "json",
-          async: true,
-          success: function (msg) {
-            that.tableData = msg.data.projects;
-            that.total = 70;
-          }
-        })
+
+        that.tableData = obj.data.projects;
+        that.total = 70;
+        // $.ajax({
+        //   type: "POST",
+        //   url: "/api",
+        //   data: data,
+        //   dataType: "json",
+        //   async: true,
+        //   success: function (msg) {
+        //     that.tableData = msg.data.projects;
+        //     that.total = 70;
+        //   }
+        // })
       },
 
       // 分页导航
