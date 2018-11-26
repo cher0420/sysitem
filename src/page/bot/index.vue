@@ -352,7 +352,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   @import '../../style/index';
   .yoy-search-button{
     width: 32px!important;
