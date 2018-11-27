@@ -1,6 +1,8 @@
 import $ from 'jquery'
 import {redirect} from "../permissions/permissions";
 import {LOGIN} from "../constants/api";
+import URL from '../host/baseUrl'
+import {IMG_UPLOADORDELETE} from "../constants/api";
 
 export const isIE9 = () => {
   if(!-[1,]){
@@ -115,4 +117,23 @@ export const request = (api,params = {}) => {
       )
     }
   }
+}
+export const upload_delete_img = (params) => {
+  const options = {
+    method: 'POST',
+    ...params
+  }
+  return new Promise(
+    (resolve,reject) =>{
+      request(URL.requestHost+IMG_UPLOADORDELETE,options).then(
+        (res) => {
+          resolve (res['Data'])
+        }
+      ).catch(
+        (err) =>{
+          reject(err['Data'])
+        }
+      )
+    }
+  )
 }

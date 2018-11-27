@@ -98,7 +98,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   @import '../../style/index';
   $bread-background: #2a8ce7;
   $bread-height: 48px;

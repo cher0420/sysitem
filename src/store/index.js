@@ -29,6 +29,8 @@ Vue.use(Vuex)
       tableData:[],
       loading: false,
       description: '',
+      Key:'',
+      SkillNo:'',
 
       mainLoading:false
     },

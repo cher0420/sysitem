@@ -138,12 +138,12 @@ const arr = [
           require(["../page/wait/index"], resolve),
         name: 'config',
       },
-      // {
-      //   path:'config/caseStore',
-      //   component: resolve =>
-      //     require(["../page/bot/config/caseStore/index"], resolve),
-      //   name: 'config',
-      // }
+      {
+        path:'config/caseStore',
+        component: resolve =>
+          require(["../page/bot/config/caseStore/index"], resolve),
+        name: 'config',
+      }
     ]
   }
 ]
