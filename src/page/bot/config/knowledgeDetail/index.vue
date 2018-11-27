@@ -29,8 +29,8 @@ export default {
     data(){
       return{
         activeName2: 'first',
-        botCheckIndex: 'weChat',
-        tapList: {weChat:'微信端',web:'网页端',desktop:'桌面',robot:'实体机器人'},
+        botCheckIndex: 'Wechat',
+        tapList: {Wechat:'微信端',web:'网页端',desktop:'桌面',Robot:'实体机器人'},
         str:''
       }
     },
