@@ -1,7 +1,7 @@
 export const tableData={
   all:[
-    {id:1, index:0,name:'residentialPass',title:'居住证_办理_查询办理流程', status:{weChat: true,web: true,desktop: true, robot: true}},
-    {id:2, index:1,name:'residentialPass',title:'居住证_办理_查询办理条件', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:1, index:0,IntentName:'residentialPass',title:'居住证_办理_查询办理流程', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:2, index:1,IntentName:'residentialPass',title:'居住证_办理_查询办理条件', status:{weChat: true,web: true,desktop: true, robot: true}},
     {id:3,index:2,name:'residentialPass',title:'居住证_办理_查询所需材料',status:{weChat: true,web: false,desktop: true, robot: true}},
     {id:4, index:0,name:'socialSecurityCards',title:'社保卡_办理_查询办理流程', status:{weChat: true,web: true,desktop: true, robot: true}},
     {id:5, index:1,name:'socialSecurityCards',title:'社保卡_办理_查询办理条件', status:{weChat: true,web: true,desktop: true, robot: true}},

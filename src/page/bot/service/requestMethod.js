@@ -9,16 +9,6 @@ import moment from 'moment'
 
 const token = getCookies(TOKEN)
 
-// export async function wait(callback){
-//     let reload = setInterval(function () {
-//       const TenantId = getCookies(TENANTID);
-//       if(TenantId){
-//         clearInterval(reload);
-//         callback
-//       }
-//     },50)
-// }
-
 export async function getList(api,params,key, loading=true){
     const TenantId = getCookies(TENANTID)
     store.dispatch(REPLACE, {loading: loading}).then(

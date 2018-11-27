@@ -3,9 +3,9 @@
     <el-select v-model="value4" clearable placeholder="请选择" class="select" @change="select">
       <el-option
         v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value">
+        :key="item.ID"
+        :label="item.SkillName"
+        :value="item.SkillNo">
       </el-option>
     </el-select>
       <el-input class='searchInput' size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
@@ -19,12 +19,12 @@
       class="table"
       style="width: 100%">
       <el-table-column
-        prop="id"
+        prop="index"
         label="序号"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="title"
+        prop="IntentName"
         label="知识"
         min-width="200">
       </el-table-column>
@@ -32,7 +32,7 @@
         prop="status"
         label="友好回答">
         <template slot-scope="scope">
-            <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.title)">
+            <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.IntentName)">
               <span class="p-absolute"
                     :style="{
                     background: 'url(' + require(`../../../../assets/bot/${key}.png`) + ')center center no-repeat'
@@ -63,47 +63,119 @@
   import store from '../../../../store/index'
   import {REPLACE} from "../../../../store/mutations";
   import {tableData} from './constants'
+  import {BOTKNOWQUIZSKILL,BOTKNOWQUIZLIST} from "../../../../constants/api";
+  import {getList} from "./service";
+  import URL from '../../../../host/baseUrl'
+
 
   export default {
     data() {
       return {
-        options: [{
-          value: 'residentialPass',
-          label: '居住证'
-        }, {
-          value: 'socialSecurityCards',
-          label: '社保卡'
-        }, {
-          value: 'separation',
-          label: '人户分离'
-        }],
-        PageIndex:'1',
-        total:9,
+        options: [],
         value4: '',
         loading:false,
-        tableData:tableData.all
+        keyWords:''
       }
     },
     computed:{
+      PageIndex(){
+        return store.state.app.PageIndex
+      },
+      PageSize(){
+        return store.state.app.PageSize
+      },
+      Key(){
+        return store.state.app.Key
+      },
+      tableData(){
+        return store.state.app.tableData
+      },
+      total(){
+        return store.state.app.total
+      },
+      SkillNo(){
+        return store.state.app.SkillNo
+      }
+    },
+    created(){
+      /*获取答案列表*/
+      this.get_Answer_List()
+      /*获取技能列表*/
+      this.get_Skill_List()
     },
     methods:{
-      search(){
-        const that = this
-        const description = this.keyWords
-        const searchStatus = store.state.app.searchStatus
-        store.dispatch(REPLACE,{PageIndex:1,description}).then(
-          () =>{
-            const options={
-              body:{
-                description,
-                searchStatus,
+      get_Answer_List(){
+        /*获取知识列表*/
+        /*初始化请求参数*/
+        this.loading = true
+        const recordId = this.$route.query.recordId
+        const data = {
+          Data:{
+            PageIndex:this.PageIndex,
+            PageSize:this.PageSize,
+            Key:this.Key,
+            SkillNo:this.SkillNo,
+          },
+          BotConfigRecordId: recordId,
+        }
+        /*序列化请求参数*/
+        const body = JSON.stringify(data)
+        const options = {
+          body,
+        }
+        getList(URL.requestHost + BOTKNOWQUIZLIST,options,'Data').then(
+          (res)=>{
+            res.forEach(
+              (v,k) =>{
+                v.index = k+1
+                v.status = {
+                  DeskTopChat:v.DeskTopChat ,
+                  Robot:v.Robot ,
+                  WebChat:v.WebChat ,
+                  Wechat:v.Wechat ,
               }
-            }
-            getList(URL.requestHost + BOT,options,ITEMKEY).then(
-              ()=>{
-                console.log('获取列表')
+                delete v.DeskTopChat
+                delete v.Robot
+                delete v.WebChat
+                delete v.Wechat
               }
             )
+            store.dispatch(REPLACE,{tableData: res}).then(
+              () =>{
+                this.loading = false
+              }
+            )
+          }
+        )
+      },
+      get_Skill_List(){
+        const recordId = this.$route.query.recordId
+        const that = this
+        /*获取技能列表*/
+        /*初始化请求数据*/
+        const skillData = {
+          BotConfigId: recordId,
+        }
+        /*序列化请求数据*/
+        const bodyData = JSON.stringify(skillData)
+        const params = {
+          body:bodyData
+        }
+        getList(URL.requestHost + BOTKNOWQUIZSKILL,params,'TenantBotSkillSets').then(
+          (res) => {
+            /*请求成功时*/
+            that.options = res
+          }
+        ).catch(
+          (err) =>{
+            /*捕获到错误时*/
+          }
+        )
+      },
+      search(v){
+        store.dispatch(REPLACE,{Key:this.keyWords}).then(
+          () =>{
+            this.get_Answer_List()
           }
         )
       },
@@ -117,7 +189,6 @@
                 ...query,
                 botCheckIndex:v,
                 botName:name,
-                botIndex:index,
                 title:title,
               }
             }
@@ -129,25 +200,18 @@
 
       },
       select(v){
-        if(v){
-          this.loading = true
-          this.total = 3
-          this.tableData = tableData[v]
-        }else{
-          this.loading = true
-          this.tableData = tableData.all
-          this.total = 9
-        }
-        setTimeout(
+        this.loading = true
+        store.dispatch(REPLACE, {SkillNo:v}).then(
           () =>{
-            this.loading = false
-          },800
+            this.get_Answer_List()
+          }
         )
       }
     }
   }
 </script>
 <style scoped lang="scss">
+  @import '../../../../style/index';
   .pagination{
     left: 50%;
     top: 40px;
@@ -174,5 +238,24 @@
       height: 30px;
       cursor: pointer;
     }
+  }
+  .yoy-search-button{
+    width: 32px!important;
+    height:30px!important;
+    line-height: 30px!important;
+    margin-top:1px;
+    margin-right: 1px;
+    margin-bottom: 1px;
+    background-color: $light-blue;
+    cursor:pointer;
+  }
+  .search{
+    width: 360px;
+    height: 32px;
+  }
+  .el-icon-search:before {
+    font-weight: 900;
+    font-size: 14px;
+    color: $primary-color;
   }
 </style>

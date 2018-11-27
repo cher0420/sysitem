@@ -362,11 +362,8 @@
     margin-right: 1px;
     margin-bottom: 1px;
     background-color: $light-blue;
-  }
-  .yoy-search-button:hover{
     cursor:pointer;
   }
-
   .search{
     width: 360px;
     height: 32px;
