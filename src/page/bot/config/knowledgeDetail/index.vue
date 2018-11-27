@@ -1,5 +1,5 @@
 <template>
-  <section class="yoy-main c777">
+  <section class="yoy-main c999 f-s-14">
     <section class="tapList">
       <span class="firTap">选择渠道：</span>
       <span v-for="(data,key) in tapList"  class="text-a-c" v-bind:class="{isChecked:key === botCheckIndex}" @click="handleClick(key)" :index="key">
@@ -10,51 +10,60 @@
         {{data}}
       </span>
     </section>
-    <el-tabs v-model="activeName2" type="card" @tab-click="handleTip" class="yoy-tabs">
-      <el-tab-pane label="标准回答" name="second" class="yoy-tab-pane" v-html="BasicText">
-      </el-tab-pane>
-      <el-tab-pane label="友好回答" name="first" class="yoy-tab-pane">
-        <textarea
-          class="c777 friend-answer"
-          rows="10" cols="10"
-          placeholder="请输入内容"
-          v-model="friendlyAnswer"
-        >
-        </textarea>
-      </el-tab-pane>
-    </el-tabs>
-    <section>
-
-    </section>
-    <section class="uploadContainer">
-      <el-row class="el-upload-list el-upload-list--picture-card" style="float: left;">
-        <el-col v-for="(item,index) in uploadList"  class="p-relative picItem text-a-c">
-          <img :src="item.url" alt="知识回答内容图片" class="align-middle-img"/>
-          <section class="p-absolute opacity f-s-20">
-            <span class="dis-i-b">
-              <i class="el-icon-zoom-in" @click="preview(item.url)"></i>
-              <i class="el-icon-delete" @click="handleDel(item.url,index)"></i>
-            </span>
-          </section>
-        </el-col>
-      </el-row>
+    <el-row v-loading="loading">
+      <el-tabs v-model="activeName2" type="card" @tab-click="handleTip" class="yoy-tabs">
+        <el-tab-pane label="标准回答" name="second" class="yoy-tab-pane" v-html="BasicText">
+        </el-tab-pane>
+        <el-tab-pane label="友好回答" name="first" class="yoy-tab-pane">
+          <textarea
+            class="c999 friend-answer"
+            rows="8" cols="10"
+            placeholder="请输入自定义友好回答，最多500字符"
+            v-model="friendlyAnswer"
+            @input="getTextTotal"
+            v-bind:maxlength="500"
+          >
+          </textarea>
+          <span style="    display: inline-block;
+    width: 100%;
+    text-align: right;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;">{{textTotal}}/500字</span>
+        </el-tab-pane>
+      </el-tabs>
       <section>
-        <section>
-          <section v-show="uploadList.length<3" class="el-upload el-upload--picture-card" @click="uploadContainer" style="float: left;margin-right: 20px">
-            <i class="el-icon-plus">
-            </i>
-            <input type="file" class="el-upload__input" ref="yoy-image-upload" accept="image/*" @change="uploadHandle">
-          </section>
-          <section class="tips">
-            (上传照片，支持jpg,jpeg,png,gif,svg格式，最大不超过200k,最多3张)
-          </section>
-        </section>
-        <el-button type="primary" class="save" @click="save">保存</el-button>
       </section>
-      <el-dialog :visible.sync="dialogVisible" class="text-a-c">
-        <img width="400" :src="dialogImageUrl" alt="">
-      </el-dialog>
-    </section>
+      <section class="uploadContainer" v-show="editableStatus">
+        <el-row class="el-upload-list el-upload-list--picture-card" style="float: left;">
+          <el-col v-for="(item,index) in uploadList"  class="p-relative picItem text-a-c">
+            <img :src="item.KnowledgeBase" alt="知识回答内容图片" class="align-middle-img"/>
+            <section class="p-absolute opacity f-s-20">
+              <span class="dis-i-b">
+                <i class="el-icon-zoom-in" @click="preview(item.KnowledgeBase)"></i>
+                <i class="el-icon-delete" @click="handleDel(item,index)"></i>
+              </span>
+            </section>
+          </el-col>
+        </el-row>
+        <section>
+          <section>
+            <section v-show="uploadList.length<3" class="el-upload el-upload--picture-card" @click="uploadContainer" style="float: left;margin-right: 20px">
+              <i class="el-icon-plus">
+              </i>
+              <input type="file" class="el-upload__input" style="display: none" ref="yoy-image-upload" accept="image/*" @change="uploadHandle">
+            </section>
+            <section class="tips">
+              (上传照片，支持jpg,jpeg,png,gif,svg格式，最大不超过200k,最多3张)
+            </section>
+          </section>
+          <el-button type="primary" class="save" @click="save">保存</el-button>
+        </section>
+        <el-dialog :visible.sync="dialogVisible" class="text-a-c">
+          <img width="400" :src="dialogImageUrl" alt="">
+        </el-dialog>
+      </section>
+    </el-row>
   </section>
 </template>
 <script>
@@ -64,6 +73,8 @@ import {handleDetail} from './service';
 import URL from '../../../../host/baseUrl'
 import {BOTKNOWDETAIL,UPDATEKNOWDETAIL} from "../../../../constants/api";
 import {upload_delete_img} from "../../../../serive/request";
+import {TENANTID,USERNAME} from "../../../../constants/constants";
+import {getCookies} from "../../../../utils/cookie";
 
 export default {
     data(){
@@ -73,33 +84,39 @@ export default {
         activeName2: 'first',
         botCheckIndex: 'WeChat',
         tapList: {Wechat:'微信端',WebChat:'网页端',DeskTopChat:'桌面',Robot:'实体机器人'},
-        str:'',
         dialogImageUrl: '',
         dialogVisible: false,
         uploadList:[],
         friendlyAnswer:'',
-        imgUrl:[]
+        editableStatus: true,
+        loading: false,
+        DeleteIds:[],
+        deleteImgArr:[],
+        textTotal:0
       }
     },
     destroyed(){
         store.dispatch(REPLACE,{navIndexSecond:''})
     },
     created(){
-      this.get_knowledge_detail()
-      // const botIndex = this.$route.query.botIndex
-      // const str = detail[botName][botIndex]
-      // this.str=str.replace(/\n+/g, "<br/>")
+      const query = this.$route.query
+      const botCheckIndex = query.botCheckIndex // 选中项
+      this.botCheckIndex = botCheckIndex
+      this.get_knowledge_detail(botCheckIndex)
+
     },
     methods: {
-      get_knowledge_detail(){
+      getTextTotal(){
+        this.textTotal = this.friendlyAnswer.length
+      },
+      get_knowledge_detail(channel){
+        this.loading = true
         const query = this.$route.query
-        const botCheckIndex = query.botCheckIndex
-        this.botCheckIndex = botCheckIndex
         const body = {
           BotConfigRecordId:query.recordId,
           Data:{
             IntentName:query.title, // 意图
-            Channels:query.botCheckIndex, //渠道
+            Channels:channel, //渠道
           }
         }
         const params = {
@@ -108,22 +125,19 @@ export default {
         handleDetail(URL.requestHost+BOTKNOWDETAIL,params,'Data').then(
           (res) => {
             this.detail = res
-            this.BasicText = res.Basic.Text[0].KnowledgeBase
+            const BasicText = res.Basic.Text[0].KnowledgeBase
+            this.BasicText = BasicText.replace(/\n+/g, "<br/>")
             this.friendlyAnswer = res.Friendly.Text[0].KnowledgeBase
+            this.textTotal = this.friendlyAnswer.length
             const images = res.Friendly.Image
-            images.forEach(
-              (value,key) => {
-                // value.url = value.KnowledgeBase
-                // value.url = 'https://hightalksqsw2staging.blob.core.windows.net/picturecontainer/6e93bdf7-d49b-4ee4-94e7-28fe5882664a/636788281303336106.svg'
-                value.url = 'https://hightalksqsw2staging.blob.core.windows.net/picturecontainer/6e93bdf7-d49b-4ee4-94e7-28fe5882664a/636788286214785551.png'
-              }
-            )
             this.uploadList = images
+            this.loading=false
           }
         )
       },
       handleClick(v) {
         this.botCheckIndex=v
+        this.get_knowledge_detail(v)
       },
       preview(v){
         this.dialogVisible = true
@@ -136,7 +150,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          that.delRequest(v,index)
+          that.del(v,index)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -144,21 +158,13 @@ export default {
           });
         });
       },
-      delRequest(v,index){
+      del(v,index){
         const arr = this.uploadList
         arr.splice(index,1)
-        const body ={
-          Command: 'delete',
+        if(v.ID){
+          this.DeleteIds.push(v.ID)
+          this.deleteImgArr.push(v.KnowledgeBase)
         }
-        const params = {
-          body: JSON.stringify(body)
-        }
-        upload_delete_img(params).then((res) => {
-          this.uploadList = [
-            ...this.uploadList,
-            ...res.FilesName,
-          ]
-        })
       },
       handleDel(v,index){
         this.confirm(v,index)
@@ -166,7 +172,12 @@ export default {
       uploadHandle(v){
         const that = this
         const file = v.target.files[0];
-          if(!file){
+        debugger;
+          if(!file||file.size>200*1024){
+            this.$message({
+              type: 'error',
+              message: '请上传文件不大于200KB的图片！'
+            })
             return;
           }
           // 读取文件:
@@ -176,17 +187,19 @@ export default {
         //获取文件名字
         const name = file.name
           reader.onload = function(e) {
-            const url = e.target.result;
+            const KnowledgeBase = e.target.result;
             //获取文件base64内容
             // const url = str.match(/base64,(\S*)/)[1]
             //图像对象赋值
             const type = name.substring(name.lastIndexOf(".")).replace('.','')
             obj = {
               name,
-              url,
+              KnowledgeBase,
               type,
             }
+
             that.uploadList.push(obj)
+
             that.$refs['yoy-image-upload'].value = ''
           };
           // 以DataURL的形式读取文件:
@@ -199,26 +212,32 @@ export default {
         // 监听change事件:
       },
       save(){
+        this.loading = true
         const that = this
-        // that.upload_img()
-        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+
+        this.$confirm('确定保存以上信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           this.upload_img()
         }).catch(() => {
-
+          that.loading = false
+          this.$message({
+            type: 'info',
+            message: '取消保存'
+          });
         });
       },
       upload_img(){
         const Id = this.$route.query.recordId
         const Files = []
+
         let imageArr = this.uploadList.slice(0)
         imageArr.forEach(
           (v,key,arr) => {
-            if(v.url.match(/base64,(\S*)/)){
-              const Context = v.url.match(/base64,(\S*)/)[1]
+            if(v.KnowledgeBase.match(/base64,(\S*)/)){
+              const Context = v.KnowledgeBase.match(/base64,(\S*)/)[1]
               const obj = {
                 Context,
                 Suffix:v.type
@@ -238,34 +257,110 @@ export default {
         }
         upload_delete_img(params).then((res) => {
           const arr = []
-          imageArr.forEach(
-            (v,key) => {
-              arr.push(v.url)
+          res.FilesName.forEach(
+            (v,k) => {
+              const obj = {
+                KnowledgeBase : v,
+                Id : ''
+              }
+              arr.push(obj)
             }
           )
-          const content = [...arr,...res.FilesName]
-          console.log('imageArr',content)
-          this.update_Detail(content)
+          const _image_arr = [...arr,...imageArr]
+
+          this.update_Detail(_image_arr)
         })
       },
-      update_Detail(params){
+      update_Detail(arr){
+        const CreateUserId = getCookies(TENANTID)
+        const CreateUserName = getCookies(USERNAME)
         const BotConfigRecordId = this.$route.query.recordId
-        const ID = this.detail.Friendly.Text[0].ID
+        const IntentID = this.$route.query.IntentID
+        const Channels = this.botCheckIndex
         const KnowledgeBase = this.friendlyAnswer
-        const options =
-          {
-            BotConfigRecordId,
-            "Data":{
-              "BaseModels":[{
-                ID,
-                KnowledgeBase,
-              }]
-            }}
-        handleDetail(URL.requestHost+UPDATEKNOWDETAIL,null).then(
-          (res) =>{
+        const text = this.detail.Friendly.Text[0]
+        const DeleteIds = this.DeleteIds
 
+        const options ={
+          BotConfigRecordId,
+          "Data":{
+            IntentID,
+            DeleteIds,
+            Channels,
+            "Text":{
+              ...text,
+              KnowledgeBase
+            },
+            "Image":arr,
+            "Video":[
+              {
+                "ID":"",
+                "KnowledgeBase":""
+              }
+            ],
+            "Media":[
+              {
+                "ID":"",
+                "KnowledgeBase":""
+              }
+            ],
+            CreateUserId,
+            CreateUserName
+        }
+      }
+      const params = {
+          body: JSON.stringify(options)
+      }
+        handleDetail(URL.requestHost+UPDATEKNOWDETAIL,params,null).then(
+          (res) =>{
+            console.log(this.uploadList)
+            this.deleteRequest()
+            this.loading = false
+            this.$message({
+              type: 'success',
+              message: '更新成功',
+              duration: 2000,
+            });
+          }
+        ).catch(
+          (err) => {
+            this.loading = false
+            this.$message({
+              type: 'error',
+              message: '更新失败',
+              duration: 2000,
+            });
           }
         )
+      },
+      handleTip(v){
+        this.DeleteIds = []
+        this.deleteImgArr = []
+
+        this.editableStatus=v.name === 'first'
+      },
+      deleteRequest(){
+        const Id = this.$route.query.recordId
+        const Files = []
+        this.deleteImgArr.forEach(
+          (v,index) =>{
+            const obj = {
+              Context:v
+            }
+            Files.push(obj)
+          }
+        )
+        const body ={
+          Command: 'delete',
+          Id,
+          Files,
+        }
+        const params = {
+          body: JSON.stringify(body)
+        }
+        upload_delete_img(params).then((res) => {
+
+        })
       }
     }
   }
@@ -382,4 +477,5 @@ export default {
     width: 100%;
     resize:none;
   }
+  .friend-answer::-webkit-input-placeholder{color:#999;}
 </style>

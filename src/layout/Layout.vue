@@ -102,7 +102,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    z-index: 4444;
+    z-index: 0;
   }
 
   .robotDetail {

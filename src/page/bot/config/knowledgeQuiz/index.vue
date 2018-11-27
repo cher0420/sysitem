@@ -32,7 +32,7 @@
         prop="status"
         label="友好回答">
         <template slot-scope="scope">
-            <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.IntentName)">
+            <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.IntentName,scope.row.ID)">
               <span class="p-absolute"
                     :style="{
                     background: 'url(' + require(`../../../../assets/bot/${key}.png`) + ')center center no-repeat'
@@ -123,9 +123,9 @@
         const options = {
           body,
         }
-        getList(URL.requestHost + BOTKNOWQUIZLIST,options,'Data').then(
+        getList(URL.requestHost + BOTKNOWQUIZLIST,options).then(
           (res)=>{
-            res.forEach(
+            res['Data'].forEach(
               (v,k) =>{
                 v.index = k+1
                 v.status = {
@@ -140,7 +140,10 @@
                 delete v.Wechat
               }
             )
-            store.dispatch(REPLACE,{tableData: res}).then(
+            const TotalCount = res['TotalCount']
+            const PageIndex = res['PageIndex']
+            const PageSize = res['PageSize']
+            store.dispatch(REPLACE,{tableData: res['Data'],total:TotalCount,PageIndex,PageSize}).then(
               () =>{
                 this.loading = false
               }
@@ -161,10 +164,10 @@
         const params = {
           body:bodyData
         }
-        getList(URL.requestHost + BOTKNOWQUIZSKILL,params,'TenantBotSkillSets').then(
+        getList(URL.requestHost + BOTKNOWQUIZSKILL,params).then(
           (res) => {
             /*请求成功时*/
-            that.options = res
+            that.options = res['TenantBotSkillSets']
           }
         ).catch(
           (err) =>{
@@ -179,7 +182,7 @@
           }
         )
       },
-      handleDetail(name,v,index,title){
+      handleDetail(name,v,index,title,ID){
         store.dispatch(REPLACE,{navIndex:title}).then(
           () => {
             const query = this.$route.query
@@ -190,14 +193,19 @@
                 botCheckIndex:v,
                 botName:name,
                 title:title,
+                IntentID:ID
               }
             }
             this.$router.push(url)
           }
         )
       },
-      handleCurrentChange(){
-
+      handleCurrentChange(v){
+        store.dispatch(REPLACE,{PageIndex:v}).then(
+          () => {
+            this.get_Answer_List()
+          }
+        )
       },
       select(v){
         this.loading = true
