@@ -28,10 +28,15 @@
     width: 100%;
     text-align: right;
     position: absolute;
+    height: 14px;
+    line-height: 14px;
     right: 20px;
     bottom: 20px;">{{textTotal}}/500字</span>
         </el-tab-pane>
       </el-tabs>
+      <section style="text-align: right;height: 12px;line-height: 12px;margin-top: 6px;margin-bottom: 2px;" class="f-s-12">
+        提示：设置友好回答则会优先显示友好回答内容
+      </section>
       <section>
       </section>
       <section class="uploadContainer" v-show="editableStatus">
@@ -55,13 +60,14 @@
     margin-top: -14px;
     margin-left: -14px;">
               </i>
-              <input type="file" class="el-upload__input" style="display: none" ref="yoy-image-upload" accept="image/*" @change="uploadHandle">
+              <input type="file" accept="image/*" class="el-upload__input" style="display: none" ref="yoy-image-upload" @change="uploadHandle">
             </section>
             <section class="tips">
               (上传照片，支持jpg,jpeg,png,gif,svg格式，最大不超过200k,最多3张)
             </section>
           </section>
           <el-button type="primary" class="save" @click="save">保存</el-button>
+          <el-button type="danger" class="save" style="margin-right: 20px;" @click="deleteDetail">删除</el-button>
         </section>
         <el-dialog :visible.sync="dialogVisible" class="text-a-c">
           <img width="400" :src="dialogImageUrl" alt="">
@@ -75,7 +81,7 @@ import store from '../../../../store/index'
 import {REPLACE} from "../../../../store/mutations";
 import {handleDetail} from './service';
 import URL from '../../../../host/baseUrl'
-import {BOTKNOWDETAIL,UPDATEKNOWDETAIL} from "../../../../constants/api";
+import {BOTKNOWDETAIL,UPDATEKNOWDETAIL,DELETEKMOWDETAIL} from "../../../../constants/api";
 import {upload_delete_img} from "../../../../serive/request";
 import {TENANTID,USERNAME} from "../../../../constants/constants";
 import {getCookies} from "../../../../utils/cookie";
@@ -107,9 +113,57 @@ export default {
       const botCheckIndex = query.botCheckIndex // 选中项
       this.botCheckIndex = botCheckIndex
       this.get_knowledge_detail(botCheckIndex)
-
     },
     methods: {
+      deleteDetail(){
+        const that = this
+        this.$confirm('确定删除以上信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          that.deleteAnswer()
+        }).catch(() => {
+          that.loading = false
+          that.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+      deleteAnswer(){
+        const that = this
+        const list = that.uploadList
+        const textId = that.detail.Friendly.Text.length>0?that.detail.Friendly.Text[0].ID:''
+        list.length>0&&list.forEach(
+          (v,index) => {
+            that.DeleteIds.push(v.ID)
+            that.deleteImgArr.push(v.KnowledgeBase)
+          }
+        )
+        that.DeleteIds = [textId,...that.DeleteIds]
+        const BotConfigRecordId = this.$route.query.recordId
+        const body = {
+          BotConfigRecordId,
+          Data:{
+            DeleteIds:that.DeleteIds
+          }
+        }
+        const params = {
+          body:JSON.stringify(body)
+        }
+        handleDetail(URL.requestHost+DELETEKMOWDETAIL,params).then(
+          (res)=>{
+            this.DeleteIds = []
+            this.deleteImgArr = []
+            this.get_knowledge_detail(this.botCheckIndex)
+            that.$message({
+              type: 'success',
+              message: '删除成功'
+            });
+          }
+        )
+      },
       getTextTotal(){
         this.textTotal = this.friendlyAnswer.length
       },
@@ -129,9 +183,9 @@ export default {
         handleDetail(URL.requestHost+BOTKNOWDETAIL,params,'Data').then(
           (res) => {
             this.detail = res
-            const BasicText = res.Basic.Text[0].KnowledgeBase
+            const BasicText = res.Basic.Text.length !== 0?res.Basic.Text[0].KnowledgeBase:''
             this.BasicText = BasicText.replace(/\n+/g, "<br/>")
-            this.friendlyAnswer = res.Friendly.Text[0].KnowledgeBase
+            this.friendlyAnswer = res.Friendly.Text.length !== 0?res.Friendly.Text[0].KnowledgeBase:''
             this.textTotal = this.friendlyAnswer.length
             const images = res.Friendly.Image
             this.uploadList = images
@@ -176,7 +230,14 @@ export default {
       uploadHandle(v){
         const that = this
         const file = v.target.files[0];
-        debugger;
+        const type = file.type
+          if(!/image\/\w+/.test(type)){
+            this.$message({
+              type: 'error',
+              message: '只能上传图片类型的文件！'
+            })
+            return;
+          }
           if(!file||file.size>200*1024){
             this.$message({
               type: 'error',
@@ -312,9 +373,9 @@ export default {
             CreateUserName
         }
       }
-      const params = {
-          body: JSON.stringify(options)
-      }
+        const params = {
+            body: JSON.stringify(options)
+        }
         handleDetail(URL.requestHost+UPDATEKNOWDETAIL,params,null).then(
           (res) =>{
             console.log(this.uploadList)
@@ -415,9 +476,6 @@ export default {
     box-sizing: border-box;
   }
 
-  .uploadContainer{
-    margin-top: 20px;
-  }
   .picItem{
     width: 80px;
     height: 80px;
@@ -458,7 +516,7 @@ export default {
   }
   .save{
     float: right;
-    margin-top: 22px;
+    margin-top: 24px;
   }
   .tips{
     float: left;

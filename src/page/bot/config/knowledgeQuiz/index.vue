@@ -129,10 +129,10 @@
               (v,k) =>{
                 v.index = k+1
                 v.status = {
+                  Wechat:v.Wechat ,
+                  WebChat:v.WebChat ,
                   DeskTopChat:v.DeskTopChat ,
                   Robot:v.Robot ,
-                  WebChat:v.WebChat ,
-                  Wechat:v.Wechat ,
               }
                 delete v.DeskTopChat
                 delete v.Robot
@@ -239,11 +239,14 @@
   }
   .handleIcon{
     height: 30px;
-    width: 40px;
+    width: 30px;
+    margin-right: 20px;
+    cursor: pointer;
     span{
       display: inline-block;
-      width: 40px;
+      width: 30px;
       height: 30px;
+      margin-right: 20px;
       cursor: pointer;
     }
   }
