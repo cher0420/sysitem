@@ -24,7 +24,7 @@
             v-bind:maxlength="500"
           >
           </textarea>
-          <span style="    display: inline-block;
+          <span style="display: inline-block;
     width: 100%;
     text-align: right;
     position: absolute;
@@ -35,7 +35,7 @@
       <section>
       </section>
       <section class="uploadContainer" v-show="editableStatus">
-        <el-row class="el-upload-list el-upload-list--picture-card" style="float: left;">
+        <el-row v-show='uploadList.length>0' class="el-upload-list el-upload-list--picture-card" style="float: left;">
           <el-col v-for="(item,index) in uploadList"  class="p-relative picItem text-a-c">
             <img :src="item.KnowledgeBase" alt="知识回答内容图片" class="align-middle-img"/>
             <section class="p-absolute opacity f-s-20">
@@ -48,8 +48,12 @@
         </el-row>
         <section>
           <section>
-            <section v-show="uploadList.length<3" class="el-upload el-upload--picture-card" @click="uploadContainer" style="float: left;margin-right: 20px">
-              <i class="el-icon-plus">
+            <section v-show="uploadList.length<3" class="el-upload el-upload--picture-card p-relative" @click="uploadContainer" style="float: left;margin-right: 20px">
+              <i class="el-icon-plus" style="position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -14px;
+    margin-left: -14px;">
               </i>
               <input type="file" class="el-upload__input" style="display: none" ref="yoy-image-upload" accept="image/*" @change="uploadHandle">
             </section>
