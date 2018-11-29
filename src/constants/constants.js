@@ -185,6 +185,12 @@ export const SECONDMENUS = [
         chineseName:'案例库',
         englishName:'caseStore',
         path:'caseStore',
+      },
+      {
+        id:'quicklyQA',
+        chineseName:'快速问答',
+        englishName:'quicklyQA',
+        path:'quicklyQA',
       }
     ]
   }
@@ -206,7 +212,8 @@ export const STR = {
   desktopApp:'桌面应用',
   knowledgeQuiz:'知识问答',
   knowledgeDetail:'知识问答',
-  caseStore:'案例库'
+  caseStore:'案例库',
+  quicklyQA:'快速问答'
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';
