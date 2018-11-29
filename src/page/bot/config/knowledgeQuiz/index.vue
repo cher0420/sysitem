@@ -103,6 +103,16 @@
       /*获取技能列表*/
       this.get_Skill_List()
     },
+    destroyed(){
+      store.dispatch(
+        REPLACE,{
+          PageIndex:1,
+          PageSize:10,
+          Key:'',
+          SkillNo:'',
+        }
+      )
+    },
     methods:{
       get_Answer_List(){
         /*获取知识列表*/
@@ -176,7 +186,7 @@
         )
       },
       search(v){
-        store.dispatch(REPLACE,{Key:this.keyWords}).then(
+        store.dispatch(REPLACE,{Key:this.keyWords,PageIndex:1}).then(
           () =>{
             this.get_Answer_List()
           }
@@ -209,7 +219,7 @@
       },
       select(v){
         this.loading = true
-        store.dispatch(REPLACE, {SkillNo:v}).then(
+        store.dispatch(REPLACE, {SkillNo:v,PageIndex:1}).then(
           () =>{
             this.get_Answer_List()
           }

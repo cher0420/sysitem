@@ -25,24 +25,23 @@
           >
           </textarea>
           <span style="display: inline-block;
-    width: 100%;
-    text-align: right;
-    position: absolute;
-    height: 14px;
-    line-height: 14px;
-    right: 20px;
-    bottom: 20px;">{{textTotal}}/500字</span>
+            width: 100%;
+            text-align: right;
+            position: absolute;
+            height: 14px;
+            line-height: 14px;
+            right: 20px;
+            bottom: 20px;"
+          >{{textTotal}}/500字</span>
         </el-tab-pane>
       </el-tabs>
-      <section style="text-align: right;height: 12px;line-height: 12px;margin-top: 6px;margin-bottom: 2px;" class="f-s-12">
-        提示：设置友好回答则会优先显示友好回答内容
-      </section>
-      <section>
-      </section>
-      <section class="uploadContainer" v-show="editableStatus">
+      <section class="uploadContainer" v-if="editableStatus">
+        <section style="text-align: right;height: 12px;line-height: 12px;margin-top: 6px;margin-bottom: 2px;" class="f-s-12">
+          提示：设置友好回答则会优先显示友好回答内容
+        </section>
         <el-row v-show='uploadList.length>0' class="el-upload-list el-upload-list--picture-card" style="float: left;">
           <el-col v-for="(item,index) in uploadList"  class="p-relative picItem text-a-c">
-            <img :src="item.KnowledgeBase" alt="知识回答内容图片" class="align-middle-img"/>
+            <img :src="item.KnowledgeBase" alt="图片" class="align-middle-img"/>
             <section class="p-absolute opacity f-s-20">
               <span class="dis-i-b">
                 <i class="el-icon-zoom-in" @click="preview(item.KnowledgeBase)"></i>
@@ -73,6 +72,25 @@
           <img width="400" :src="dialogImageUrl" alt="">
         </el-dialog>
       </section>
+      <section class="uploadContainer" v-else>
+        <section style="text-align: right;height: 12px;line-height: 12px;margin-top: 6px;margin-bottom: 2px;" class="f-s-12">
+        </section>
+        <el-row v-show='detail.Basic.Image.length>0' class="el-upload-list el-upload-list--picture-card" style="float: left;">
+          <el-col v-for="(item,index) in detail.Basic.Image"  class="p-relative picItem text-a-c">
+            <img :src="item.KnowledgeBase" alt="图片" class="align-middle-img"/>
+            <section class="p-absolute opacity f-s-20">
+              <span class="dis-i-b">
+                <i class="el-icon-zoom-in" @click="preview(item.KnowledgeBase)"></i>
+              </span>
+            </section>
+          </el-col>
+        </el-row>
+        <section>
+        </section>
+        <el-dialog :visible.sync="dialogVisible" class="text-a-c">
+          <img width="400" :src="dialogImageUrl" alt="">
+        </el-dialog>
+      </section>
     </el-row>
   </section>
 </template>
@@ -89,6 +107,7 @@ import {getCookies} from "../../../../utils/cookie";
 export default {
     data(){
       return{
+        // svgName:'https://hightalksqsw2staging.blob.core.windows.net/picturecontainer/754c9f57-17d8-4465-81e0-ab90e08-test/636789999175646986.svg',
         detail:{},
         BasicText:'',
         activeName2: 'first',
@@ -115,6 +134,38 @@ export default {
       this.get_knowledge_detail(botCheckIndex)
     },
     methods: {
+      getBase64(imgUrl) {
+  window.URL = window.URL || window.webkitURL;
+  var xhr = new XMLHttpRequest();
+  xhr.open("get", imgUrl, true);
+  // 至关重要
+  xhr.responseType = "blob";
+  xhr.onload = function () {
+    if (this.status == 200) {
+      //得到一个blob对象
+      var blob = this.response;
+      console.log("blob", blob)
+      // 至关重要
+      let oFileReader = new FileReader();
+      oFileReader.onloadend = function (e) {
+        let base64 = e.target.result;
+        console.log("方式一》》》》》》》》》", base64)
+      };
+      oFileReader.readAsDataURL(blob);
+      //====为了在页面显示图片，可以删除====
+      var img = document.createElement("img");
+      img.onload = function (e) {
+        window.URL.revokeObjectURL(img.src); // 清除释放
+      };
+      let src = window.URL.createObjectURL(blob);
+      img.src = src
+      document.getElementById("container1").appendChild(img);
+      //====为了在页面显示图片，可以删除====
+
+    }
+  }
+  xhr.send();
+},
       deleteDetail(){
         const that = this
         this.$confirm('确定删除以上信息?', '提示', {
@@ -253,8 +304,6 @@ export default {
         const name = file.name
           reader.onload = function(e) {
             const KnowledgeBase = e.target.result;
-            //获取文件base64内容
-            // const url = str.match(/base64,(\S*)/)[1]
             //图像对象赋值
             const type = name.substring(name.lastIndexOf(".")).replace('.','')
             obj = {
