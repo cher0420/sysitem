@@ -143,6 +143,12 @@ const arr = [
         component: resolve =>
           require(["../page/bot/config/caseStore/index"], resolve),
         name: 'config',
+      },
+      {
+        path:'config/QuicklyQA',
+        component: resolve =>
+          require(["../page/bot/config/QuicklyQA/index"], resolve),
+        name: 'config',
       }
     ]
   }

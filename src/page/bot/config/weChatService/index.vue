@@ -1,11 +1,12 @@
 <template>
-  <el-form ref="formData" label-width="120px" :model="formData" class="yoy-main full-height c555" v-loading="loading">
+  <el-form ref="formData" label-width="120px" :model="formData" class="full-height c555" v-loading="loading">
     <section class="title f-s-16 c555 box-sizing margin-b-30px">
       基础设置
     </section>
     <el-form-item label="URL :">
       <el-col :span="20">
-        <section style="line-height: 1.5">
+        <section style="line-height: 1.5;position: absolute;top: 50%;transform: translateY(-50%);
+">
           {{formData.SvcUrl}}
         </section>
       </el-col>
