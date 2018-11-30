@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formData" label-width="120px" :model="formData" class="yoy-main full-height c555" v-loading="loading">
+  <el-form ref="formData" label-width="120px" :model="formData" class="full-height c555" v-loading="loading">
     <section class="title f-s-16 c555 box-sizing margin-b-30px">
       基础设置
     </section>

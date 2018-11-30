@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="200px" v-loading="loading" class="yoy-main">
+  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="200px" v-loading="loading">
     <el-form-item label="机器人姓名" prop='Bot_Name'>
       <el-col :span="13">
         <el-input v-model="ruleForm.Bot_Name" maxlength="15"></el-input>

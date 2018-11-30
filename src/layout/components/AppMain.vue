@@ -1,7 +1,7 @@
 <template>
   <section class="p-relative yoy-header-container robotWidth" ref="scrollTop">
     <bread></bread>
-    <router-view></router-view>
+    <router-view class="yoy-main"></router-view>
   </section>
 </template>
 <script>

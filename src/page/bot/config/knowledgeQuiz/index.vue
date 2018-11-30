@@ -1,5 +1,5 @@
 <template>
-  <section class="yoy-main">
+  <section>
     <el-select v-model="value4" clearable placeholder="请选择" class="select" @change="select">
       <el-option
         v-for="item in options"

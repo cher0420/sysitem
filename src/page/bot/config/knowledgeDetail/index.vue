@@ -1,5 +1,5 @@
 <template>
-  <section class="yoy-main c999 f-s-14">
+  <section class="c999 f-s-14">
     <section class="tapList">
       <span class="firTap">选择渠道：</span>
       <span v-for="(data,key) in tapList"  class="text-a-c" v-bind:class="{isChecked:key === botCheckIndex}" @click="handleClick(key)" :index="key">

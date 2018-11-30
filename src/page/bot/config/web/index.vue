@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="formData" :rules="rules" label-width="38px" :model="formData" class="yoy-main full-height c555" v-loading="loading">
+  <el-form ref="formData" :rules="rules" label-width="38px" :model="formData" class=" full-height c555" v-loading="loading">
     <title-item title="网站中嵌入代码"></title-item>
     <el-form-item label="" class="margin-top30 margin-bottom-30">
       <el-col :span="23" class="borderAround htmlContent p-relative">
