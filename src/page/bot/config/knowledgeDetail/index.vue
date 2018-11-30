@@ -185,14 +185,16 @@ export default {
       deleteAnswer(){
         const that = this
         const list = that.uploadList
-        const textId = that.detail.Friendly.Text.length>0?that.detail.Friendly.Text[0].ID:''
+        const textId = that.detail.Friendly.Text.length>0?[that.detail.Friendly.Text[0].ID]:[]
         list.length>0&&list.forEach(
           (v,index) => {
-            that.DeleteIds.push(v.ID)
-            that.deleteImgArr.push(v.KnowledgeBase)
+            if(v.ID){
+              that.DeleteIds.push(v.ID)
+              that.deleteImgArr.push(v.KnowledgeBase)
+            }
           }
         )
-        that.DeleteIds = [textId,...that.DeleteIds]
+        that.DeleteIds = [...textId,...that.DeleteIds]
         const BotConfigRecordId = this.$route.query.recordId
         const body = {
           BotConfigRecordId,
@@ -313,7 +315,6 @@ export default {
             }
 
             that.uploadList.push(obj)
-
             that.$refs['yoy-image-upload'].value = ''
           };
           // 以DataURL的形式读取文件:
@@ -357,10 +358,10 @@ export default {
                 Suffix:v.type
               }
               Files.push(obj)
-              imageArr.splice(key,1)
             }
           }
         )
+
         const body ={
           Command: 'upload',
           Id,
@@ -380,9 +381,7 @@ export default {
               arr.push(obj)
             }
           )
-          const _image_arr = [...arr,...imageArr]
-
-          this.update_Detail(_image_arr)
+          this.update_Detail(arr)
         })
       },
       update_Detail(arr){
@@ -406,18 +405,8 @@ export default {
               KnowledgeBase
             },
             "Image":arr,
-            "Video":[
-              {
-                "ID":"",
-                "KnowledgeBase":""
-              }
-            ],
-            "Media":[
-              {
-                "ID":"",
-                "KnowledgeBase":""
-              }
-            ],
+            "Video":[],
+            "Media":[],
             CreateUserId,
             CreateUserName
         }
@@ -427,14 +416,15 @@ export default {
         }
         handleDetail(URL.requestHost+UPDATEKNOWDETAIL,params,null).then(
           (res) =>{
-            console.log(this.uploadList)
             this.deleteRequest()
-            this.loading = false
             this.$message({
               type: 'success',
               message: '更新成功',
               duration: 2000,
             });
+            this.get_knowledge_detail(this.botCheckIndex)
+
+            this.loading = false
           }
         ).catch(
           (err) => {

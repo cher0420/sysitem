@@ -55,7 +55,7 @@
       },
       created(){
         const pathArr = this.$route.path.split('/')
-        const defaultActiveSecondM = pathArr[pathArr.length-1]
+        const defaultActiveSecondM = pathArr.length>4?pathArr[3]:pathArr[pathArr.length-1]
         const name = this.$route.query.name
         store.dispatch(REPLACE,{defaultActiveSecondM,name})
       },

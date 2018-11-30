@@ -180,12 +180,12 @@ export const SECONDMENUS = [
         englishName:'knowledgeQuiz',
         path:'knowledgeQuiz',
       },
-      {
-        id:'caseStore',
-        chineseName:'案例库',
-        englishName:'caseStore',
-        path:'caseStore',
-      },
+      // {
+      //   id:'caseStore',
+      //   chineseName:'案例库',
+      //   englishName:'caseStore',
+      //   path:'caseStore',
+      // },
       {
         id:'quicklyQA',
         chineseName:'快速问答',

@@ -257,15 +257,16 @@
       },
       filterData(data){
         const that = this
-        for(let v in data){
-          if(!data[v]){
-            data[v] = that.ruleForm[v]
-          }
-        }
         //更改机器人的名字
         const name = this.$route.query.name
         data.Bot_Name=data.Bot_Name?data.Bot_Name:name
+        //更改机器人的性别
+        data.Bot_Gender = data.Bot_Gender?data.Bot_Gender:'女'
+        //更改机器人的血型
+        data.Bot_BloodType = data.Bot_BloodType?data.Bot_BloodType:'O'
 
+        data.Bot_Company = data.Bot_Company?data.Bot_Company:'上海灵羚科技有限公司'
+          data.Bot_School=data.Bot_School?data.Bot_School:'上海灵羚科技有限公司'
         // 更改出生日期格式
         const date = data.Bot_DayOfBirth
         if(date){
@@ -290,7 +291,7 @@
         data.Bot_Height = data.Bot_Height?data.Bot_Height.replace('cm',''):'160'
         data.Bot_Weight = data.Bot_Weight?data.Bot_Weight.replace('KG',''):'50'
         // 判断获取到的城市
-        const Bot_Birthplace = data.Bot_Birthplace?data.Bot_Birthplace.split('-'):[]
+        const Bot_Birthplace = data.Bot_Birthplace?data.Bot_Birthplace.split('-'):['上海','上海']
         data.Bot_Birthplace = {
           province:Bot_Birthplace[0],
           city:Bot_Birthplace[1],
@@ -299,7 +300,7 @@
         ADDRESS.forEach((key,value,arr) =>{
           if(data.Bot_Birthplace.province === key['name']){
             that.city = key['child']
-            return
+            return;
           }
         })
         store.dispatch(REPLACE,{Bot_Name:data.Bot_Name}).then(

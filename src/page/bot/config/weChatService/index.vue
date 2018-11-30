@@ -5,7 +5,8 @@
     </section>
     <el-form-item label="URL :">
       <el-col :span="20">
-        <section style="line-height: 1.5">
+        <section style="line-height: 1.5;position: absolute;top: 50%;transform: translateY(-50%);
+">
           {{formData.SvcUrl}}
         </section>
       </el-col>
