@@ -61,12 +61,8 @@
         </el-col>
       </el-col>
       <el-col :span="14">
-        <el-col :span="8">
           自定义标题栏背景颜色 ：
-        </el-col>
-        <el-col :span="16">
-          <el-input v-model="formData.DialogColor" placeholder="请输入标题栏背景色色值（如#999999) " @blur="typeColor('DialogColor','titleColorItems')"></el-input>
-        </el-col>
+          <el-input v-model="formData.DialogColor" placeholder="请输入标题栏背景色色值（如#999999) " @blur="typeColor('DialogColor','titleColorItems')" style="width: 360px;"></el-input>
       </el-col>
     </el-form-item>
     <title-item title="自定义标题栏字体颜色"></title-item>
@@ -82,61 +78,45 @@
         </el-col>
       </el-col>
       <el-col :span="14">
-        <el-col :span="8">
           自定义标题栏字体颜色 ：
-        </el-col>
-        <el-col :span="16">
-          <el-input v-model="formData.DialogTitleColor" placeholder="请输入标题栏字体色值（如#999999)" @blur="typeColor('DialogTitleColor','textColorItems')"></el-input>
-        </el-col>
+          <el-input v-model="formData.DialogTitleColor" placeholder="请输入标题栏字体色值（如#999999)" @blur="typeColor('DialogTitleColor','textColorItems')" style="width: 360px;"></el-input>
       </el-col>
     </el-form-item>
     <title-item title="功能开关"></title-item>
     <el-form-item label="" style="margin-bottom: 10px;margin-top: 18px;">
-      <el-col :span="3" >
-        <el-checkbox v-model="formData.LoginSwitch">登录验证</el-checkbox>
+      <el-col :span="12" >
+        <el-checkbox v-model="formData.LoginSwitch" style="width: 134px;">登录验证</el-checkbox>
+        <span class="primary-color f-s-14 disabled">提示：开启后则需登录后才可进入网页版</span>
       </el-col>
-      <span class="primary-color f-s-14 disabled">提示：开启后则需登录后才可进入网页版</span>
     </el-form-item>
     <el-form-item label="" style="margin-bottom: 10px;">
-      <el-col :span="4">
-        <el-checkbox v-model="formData.knowledge" disabled>知识分类功能</el-checkbox>
-      </el-col>
-      <el-col :span="9">
-        <el-radio-group class="full-width">
-          <el-col :span="17">
+      <el-col :span="24">
+        <el-radio-group style="width: 100%;">
+          <el-col :span="9" style="height: 32px;line-height: 32px">
+          <el-checkbox v-model="formData.knowledge" disabled style="width: 134px;">知识分类功能</el-checkbox>
             <el-radio :label="1" disabled>默认：自助导航</el-radio>
           </el-col>
-          <el-radio :label="2" disabled style="margin-left: 10px;">自定义：</el-radio>
+            <el-col :span="15">
+              <el-radio :label="2" disabled>自定义：</el-radio>
+              <el-input placeholder="最多6个字符" disabled style="width: 360px;margin-right:10px;"></el-input>
+              <a href="javascript:;" class="primary-color disabled f-s-14">什么是知识分类？</a>
+            </el-col>
         </el-radio-group>
-      </el-col>
-      <el-col :span="11">
-        <el-col :span="15">
-          <el-input placeholder="最多6个字符" disabled></el-input>
-        </el-col>
-        <el-col :span="7" offset="1">
-          <a href="javascript:;" class="primary-color disabled">什么是知识分类？</a>
-        </el-col>
       </el-col>
     </el-form-item>
-    <el-form-item label="" style="margin-bottom: 48px;">
-      <el-col :span="4">
-        <el-checkbox v-model="formData.demo" disabled>案例库</el-checkbox>
-      </el-col>
-      <el-col :span="9">
-        <el-radio-group class="full-width">
-          <el-col :span="17">
+    <el-form-item label="" style="margin-bottom: 40px;">
+      <el-col :span="24">
+        <el-radio-group style="width: 100%;">
+          <el-col :span="9" style="height: 32px;line-height: 32px">
+            <el-checkbox v-model="formData.demo" disabled style="width: 134px;">案例库</el-checkbox>
             <el-radio :label="1" disabled>默认：案例库</el-radio>
           </el-col>
-          <el-radio :label="2" disabled style="margin-left: 10px;">自定义：</el-radio>
+          <el-col :span="15">
+            <el-radio :label="2" disabled >自定义：</el-radio>
+            <el-input placeholder="最多6个字符" disabled style="width: 360px;margin-right:10px;"></el-input>
+            <a href="javascript:;" class="primary-color disabled f-s-14">什么是案例库？</a>
+          </el-col>
         </el-radio-group>
-      </el-col>
-      <el-col :span="11">
-        <el-col :span="15">
-          <el-input placeholder="最多6个字符" disabled></el-input>
-        </el-col>
-        <el-col :span="7" offset="1">
-          <a href="javascript:;" class="primary-color disabled">什么是案例库？</a>
-        </el-col>
       </el-col>
     </el-form-item>
     <title-item title="自定义问候语"></title-item>
@@ -487,7 +467,8 @@
     border-radius: 2px;
     width: 80px;
     height: 30px;
-    line-height: 30px;
+    box-sizing: border-box;
+    line-height: 28px;
     text-align: center;
     display: inline-block;
     position: relative;

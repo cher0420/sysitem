@@ -88,4 +88,7 @@
     line-height: 28px;
     color:#333;
   }
+  .yoy-dropDown:hover{
+    cursor: pointer;
+  }
 </style>

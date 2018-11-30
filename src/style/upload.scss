@@ -1,9 +1,15 @@
 $width:80px;
 $height:80px;
+@import './index';
 .el-upload--picture-card{
   width: $width;
   height: $height;
   line-height: $height;
+}
+.el-upload--picture-card:hover{
+  i{
+    color: $primary-color;
+  }
 }
 .el-upload-list--picture-card .el-upload-list__item{
   width: $width;

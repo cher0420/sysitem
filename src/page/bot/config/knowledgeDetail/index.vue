@@ -59,10 +59,10 @@
     margin-top: -14px;
     margin-left: -14px;">
               </i>
-              <input type="file" accept="image/*" class="el-upload__input" style="display: none" ref="yoy-image-upload" @change="uploadHandle">
+              <input type="file" accept="image/*" class="el-upload__input" style="display: none" ref="yoy-image-upload" @change="uploadHandle"/>
             </section>
             <section class="tips">
-              (上传照片，支持jpg,jpeg,png,gif,svg格式，最大不超过200k,最多3张)
+              （上传照片，支持jpg, jpeg, png, gif, svg格式，最大不超过200k, 最多3张）
             </section>
           </section>
           <el-button type="primary" class="save" @click="save">保存</el-button>

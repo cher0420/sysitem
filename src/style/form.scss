@@ -58,6 +58,14 @@ form label
 .el-textarea__inner{
   border-radius: 1px;
 }
+.el-select .el-input__inner{
+  color:$primary-color;
+}
+.el-select .el-input__inner:focus{
+  .el-select__caret{
+    color: $primary-color;
+  }
+}
 /*
 下拉菜单
  */
