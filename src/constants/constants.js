@@ -180,12 +180,12 @@ export const SECONDMENUS = [
         englishName:'knowledgeQuiz',
         path:'knowledgeQuiz',
       },
-      {
-        id:'caseStore',
-        chineseName:'案例库',
-        englishName:'caseStore',
-        path:'caseStore',
-      }
+      // {
+      //   id:'caseStore',
+      //   chineseName:'案例库',
+      //   englishName:'caseStore',
+      //   path:'caseStore',
+      // }
     ]
   }
 ]
@@ -212,6 +212,3 @@ export const USERNAME = 'userName';
 export const TOKEN = 'token';
 export const TENANTID = 'TenantId'
 export const SID = 'SID'
-
-
-
