@@ -8,15 +8,15 @@
  */
 let baseUrl = '';
 let routerMode = 'hash';
-let baseImgPath;
+let baseImgPath="";
 
-if (process.env.NODE_ENV == 'development') {
-  baseUrl = '';
-  baseImgPath = '/img/';
-}else{
-  baseUrl = '';
-  baseImgPath = '';
-}
+// if (process.env.NODE_ENV == 'development') {
+//   baseUrl = '';
+//   baseImgPath = '/img/';
+// }else{
+//   baseUrl = '';
+//   baseImgPath = '';
+// }
 
 export {
   baseUrl,
