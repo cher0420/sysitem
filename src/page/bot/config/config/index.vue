@@ -2,8 +2,7 @@
   <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="200px" v-loading="loading">
     <el-form-item label="机器人姓名" prop='Bot_Name'>
       <el-col :span="13">
-        <el-input v-model="ruleForm.Bot_Name" maxlength="15"></el-input>
-        <section class="c999 f-s-12" style="line-height: 11px;margin-top:8px">请输入3-15个字符以内</section>
+        <el-input v-model="ruleForm.Bot_Name" maxlength="15" placeholder="请输入3-15个字符以内"></el-input>
       </el-col>
     </el-form-item>
     <el-form-item label="机器人性别" prop='Bot_Gender'>

@@ -1,14 +1,13 @@
 <template>
   <section>
-    <el-select v-model="value4" clearable placeholder="请选择" class="select" @change="select">
+    <el-select v-model="value4" clearable placeholder="请选择技能集" class="select" @change="select">
       <el-option
         v-for="item in options"
         :key="item.ID"
         :label="item.SkillName"
         :value="item.SkillNo">
       </el-option>
-    </el-select>
-      <el-input class='searchInput' size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+    </el-select><el-input class='searchInput' size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
     <el-table
       v-loading="loading"
@@ -19,9 +18,11 @@
       class="table"
       style="width: 100%">
       <el-table-column
+        align="center"
         prop="index"
         label="序号"
-        width="120">
+        width='90'
+      >
       </el-table-column>
       <el-table-column
         prop="IntentName"
@@ -62,7 +63,6 @@
 <script>
   import store from '../../../../store/index'
   import {REPLACE} from "../../../../store/mutations";
-  import {tableData} from './constants'
   import {BOTKNOWQUIZSKILL,BOTKNOWQUIZLIST} from "../../../../constants/api";
   import {getList} from "./service";
   import URL from '../../../../host/baseUrl'
