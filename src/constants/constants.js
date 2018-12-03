@@ -191,7 +191,8 @@ export const SECONDMENUS = [
         chineseName:'快速问答',
         englishName:'quicklyQA',
         path:'quicklyQA',
-      }
+      },
+
     ]
   }
 ]
@@ -213,7 +214,9 @@ export const STR = {
   knowledgeQuiz:'知识问答',
   knowledgeDetail:'知识问答',
   caseStore:'案例库',
-  quicklyQA:'快速问答'
+  quicklyQA:'快速问答',
+  createrNewQA:'创建新问答',
+  updateQA:'创建新问答',
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

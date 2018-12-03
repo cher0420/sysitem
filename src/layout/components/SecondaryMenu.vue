@@ -92,6 +92,7 @@
                 query:this.$route.query,
                 path:url
               }
+              console.log("路由",pathObj)
               this.$router.push(
                 pathObj
               )

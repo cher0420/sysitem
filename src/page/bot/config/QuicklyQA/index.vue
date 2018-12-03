@@ -1,8 +1,12 @@
 <template>
   <section>
     <section class="p-relative">
-      <el-button type="primary" class="text-a-c createAnswer">创建新问答</el-button><el-input class='searchInput' size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
-      </el-input><el-button type="primary" class="p-absolute right-0">选择</el-button>
+      <el-button type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button>
+      <el-input class='searchInput' size='small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix"
+                                                                                                       class="el-input__icon el-icon-search yoy-search-button"
+                                                                                                       @click="search"></i>
+      </el-input>
+      <el-button type="primary" class="p-absolute right-0">选择</el-button>
     </section>
     <el-table
       :data="tableData"
@@ -40,6 +44,7 @@
 <script>
   import DrapDown from './DrapDown.vue'
   import questionOptions from './constants'
+
   export default {
     data() {
       return {
@@ -72,6 +77,15 @@
       DrapDown,
     },
     methods: {
+      newQA() {
+        this.$router.push({
+          path:'/bot/config/createrNewQA',
+          params:{
+            id:111
+          },
+        })
+
+      },
       renderProductId(h, {column}) {
         return h(DrapDown, {
             props: {
@@ -88,28 +102,36 @@
 </script>
 <style scoped lang="scss">
   @import '../../../../style/index';
-  .yoy-search-button{
-    width: 32px!important;
-    height:30px!important;
-    line-height: 30px!important;
-    margin-top:1px;
+
+  .yoy-search-button {
+    width: 32px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+    margin-top: 1px;
     margin-right: 1px;
     margin-bottom: 1px;
     background-color: $light-blue;
-    cursor:pointer;
+    cursor: pointer;
   }
+
   .el-icon-search:before {
     font-weight: 900;
     font-size: 14px;
     color: $primary-color;
   }
-  .createAnswer{
-    width: 100px;padding-left:0;padding-right:0;margin-right: 20px;
+
+  .createAnswer {
+    width: 100px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 20px;
   }
-  .searchInput{
+
+  .searchInput {
     width: 360px;
   }
-  .margin-top20{
+
+  .margin-top20 {
     margin-top: 20px;
   }
 </style>

@@ -17,9 +17,13 @@ body{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  line-height: 1;
 }
-/*#app {*/
-  /*position: relative;*/
-  /*left: 0;*/
-  /*top: 0;*/
-/*}*/
+.clearfix:after{
+  content: ".";
+  clear: both;
+  display: block;
+  overflow: hidden;
+  font-size: 0;
+  height: 0;
+}

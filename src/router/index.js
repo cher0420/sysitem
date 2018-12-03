@@ -91,7 +91,6 @@ const arr = [
       },
       {
         path:'config/web',
-        //  标记
         component: resolve =>
           require(["../page/bot/config/web/index"], resolve),
         name: 'config',
@@ -149,7 +148,21 @@ const arr = [
         component: resolve =>
           require(["../page/bot/config/QuicklyQA/index"], resolve),
         name: 'config',
-      }
+      },
+      {
+        path:'config/createrNewQA',  // 创建新问答
+        component: resolve =>
+          require(["../page/bot/config/createrNewQA/index"], resolve),
+        name: 'config',
+      },
+      {
+        path:'config/updateQA',  // 创建新问答/更新问答
+        component: resolve =>
+          require(["../page/bot/config/createrNewQA/updateQA"], resolve),
+        name: 'config',
+      },
+
+
     ]
   }
 ]
