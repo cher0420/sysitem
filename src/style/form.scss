@@ -46,6 +46,16 @@ form label
   background: rgba(40,140,231,.8);
   border-color: rgba(40,140,231,.8);
 }
+.cancel{
+  color: #555;
+  background: #fff;
+  border-color: #c3c3c3;
+}
+.cancel:hover{
+  color: #555;
+  background: #f8f8f8;
+  border-color: #c3c3c3;
+}
 /*
 覆盖input
  */
