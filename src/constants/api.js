@@ -26,3 +26,7 @@ export const DELETEKMOWDETAIL = '/api/V2/WebTalk/DeleteKnowledge'
 
 /*图片上传或删除*/
 export const IMG_UPLOADORDELETE = '/api/KnowledgeQA/UploadAndDeleteAsync'
+
+/*快速问答列表*/
+export const QUICKLYLIST = '/api/QuickQA/QueryKeyWordsList'
+export const DELETEQUESTION = '/api/QuickQA/DeleteAnswer'

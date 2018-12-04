@@ -37,4 +37,9 @@ $table-title-color:#333;
     }
   }
 }
+.pagination{
+  left: 50%;
+  top: 40px;
+  transform: translateX(-50%);
+}
 
