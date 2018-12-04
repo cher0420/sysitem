@@ -5,7 +5,7 @@
       </el-input>
         <el-button v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;color: #fff;background: #2a8ce7;border-color: #2a8ce7;">选择</el-button>
       <span v-else class="p-absolute right-0">
-        <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="testButtonStatus" type="primary" style="margin-right: 10px;">测试</el-button><el-button type="primary" :disabled="publishButtonStatus" >发布</el-button>
+        <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="buttonStatus" type="primary" style="margin-right: 10px;">测试</el-button><el-button type="primary" :disabled="buttonStatus" >发布</el-button>
       </span>
     </section>
     <el-table
@@ -101,8 +101,7 @@
         PageIndex:1,
         arr:[],
         showDel:false,
-        testButtonStatus:true,
-        publishButtonStatus:true,
+        buttonStatus:true,
       }
     },
     /*
@@ -175,10 +174,22 @@
             this.loading=false
           },600
         )
+        /*
+        当操作状态为取消选择时
+        */
         if(!this.enableChecked){
           /*
             初始化列表复选框状态
           */
+          this.tableData.forEach(
+            (v) =>{
+              v.checkedStatus = false
+            }
+          )
+          /*
+          初始化数组状态
+          */
+          this.arr = []
           const params = {
             Keys:this.keys,
             PageIndex:this.PageIndex,
@@ -189,9 +200,25 @@
               console.log(res)
             }
           )
+
+        }else{
           /*
-           初始化arr
-         */
+          当操作状态时选择时，初始化arr
+          */
+          this.tableData.forEach(
+            (v,index) =>{
+              switch (v.checkedStatus) {
+                case 3:
+                  this.arr.push(v.ID)
+                      break;
+                case 5:
+                  this.arr.push(v.ID)
+                      break;
+                default:
+                  break;
+              }
+            }
+          )
         }
       },
       search() {
@@ -231,6 +258,13 @@
                 message: '删除成功'
               });
             }
+          ).catch(
+            () =>{
+              this.$message({
+                type: 'error',
+                message: '删除失败，请稍后重试'
+              });
+            }
           )
         }).catch(() => {
           this.$message({
@@ -255,7 +289,7 @@
         /*
           根据arr长度更改测试按钮状态
          */
-        this.arr.length>0?this.testButtonStatus = false:this.testButtonStatus = true
+        this.arr.length>0?this.buttonStatus = false:this.buttonStatus = true
 
       }
     },

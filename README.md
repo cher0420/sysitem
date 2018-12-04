@@ -33,3 +33,5 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 >        name: 'detail',
 >       },
 >```
+
+用户信息存储在store.state.app.userInfo
