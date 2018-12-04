@@ -40,7 +40,7 @@
       <!--</el-breadcrumb-item>-->
     <!--</el-breadcrumb>-->
     {{/* title部分 */}}
-    <section class="yoy-title box-sizing border-bottom text-title">
+    <section class="yoy-titlee box-sizing border-bottom text-title line-h vertical-m">
       <span class=" dis-i-b line"></span>
       <span class="">
         {{navIndex}}
@@ -154,10 +154,10 @@
       }
     }
   }
-  .yoy-title{
+  .yoy-titlee{
     height: $title-height;
     line-height: $title-height;
-    padding-top: 7px;
+    /*padding-top: 7px;*/
     margin-left: 40px;
     margin-right: 40px;
   }
@@ -184,6 +184,14 @@
     height: 48px;
     line-height: 48px;
     display: inline-block;
+  }
+  .line-h *{
+    line-height: 65px;
+    display: inline-block;
+  }
+  .vertical-m {
+    margin-bottom: -4px;
+
   }
 
 </style>

@@ -57,6 +57,7 @@
         const pathArr = this.$route.path.split('/')
         const defaultActiveSecondM = pathArr.length>4?pathArr[3]:pathArr[pathArr.length-1]
         const name = this.$route.query.name
+        console.log("路由参数",this.$route.query.name)
         store.dispatch(REPLACE,{defaultActiveSecondM,name})
       },
       methods:{
@@ -92,7 +93,7 @@
                 query:this.$route.query,
                 path:url
               }
-              console.log("路由",pathObj)
+             // console.log("路由",pathObj)
               this.$router.push(
                 pathObj
               )

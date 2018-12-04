@@ -1,18 +1,18 @@
 <template>
   <div class="yoy-main">
-    <div v-if="false">
+    <div v-if="true">
       <div class="addQuestion">
         第一步:添加问题
       </div>
       <div v-if="questionDis">
         <div class="addContent">
-          <el-input v-model="question" placeholder="例如:2018年年会举办地点"></el-input>
+          <el-input v-model="Question" placeholder="例如:2018年年会举办地点"></el-input>
         </div>
         <div class="questionTit">
           请用最简洁的方式描述你的问题
         </div>
         <div class="nextStep">
-          <el-button type="primary" size="mini" @click="questionNext">下一步</el-button>
+          <el-button type="primary" size="mini" @click="getKeywords">下一步</el-button>
         </div>
       </div>
       <div class="addContent addContentDis" v-else>
@@ -27,8 +27,9 @@
           <div class="keywords">
             <el-checkbox-group v-model="keywords" :min="0"
                                :max="4">
-              <div class="checkboxContent">
-                <el-checkbox label="美食/餐厅线上活动1" name="keywords"></el-checkbox>
+              <div class="checkboxContent" v-for="ite in keywordsOption" :key="item">
+                <el-checkbox label="ite" name="keywords"></el-checkbox>
+                {{item}}
               </div>
               <div class="checkboxContent">
                 <el-checkbox label="美食/餐厅线上活动2" name="keywords"></el-checkbox>
@@ -87,12 +88,15 @@
   import updateQA from "./updateQA";
   import {mapGetters} from 'vuex';
   import {mapActions} from 'vuex';
+  import {getCookies} from "../../../../utils/cookie";
+  import base from "../../../../host/baseUrl"
 
   export default {
     name: "Allen-CreateNewQA",
     data() {
       return {
-        question: "问个问题",
+        Question: "公积金如何办理", // 题目
+        keywordsOption: ["豆腐", "馒头", "萝卜卷", "空心菜", "香蕉"], // 关键词
         keywords: [],
         textarea: "",
         timer: "",
@@ -114,12 +118,14 @@
     },
 
     created() {
+
       this.checkSize()
+
 
     },
     watch: {
       keywords(curVal, oldVal) {
-        if (1 < curVal.length &&curVal.length <5) {
+        if (1 < curVal.length && curVal.length < 5) {
           this.checkboxDisabled = false;
           return false;
         }
@@ -132,6 +138,33 @@
       ...mapActions(
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast"]
       ),
+      getKeywords() {  // 获取关键词
+        this.questionNext();
+        const token = getCookies(TOKEN);
+        // let recordId = JSON.parse(sessionStorage.getItem('recordId'));
+        // console.log("recordId",recordId)
+        let data = {
+          "Question": this.Question
+        }
+        $.ajax({
+          type: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            'Access-Token': token
+          },
+          url: base.requestHost + "/api/QuickQA/GetKeyWords",
+          data: JSON.stringify(data),
+          success: function (msg) {
+            if (msg.status == "1") {
+                this.keywordsOption = msg
+
+            }
+
+          }
+        })
+
+
+      },
       checkSize() {
         let that = this;
         this.timer = setInterval(function () {
