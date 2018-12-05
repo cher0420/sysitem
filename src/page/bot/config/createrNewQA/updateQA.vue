@@ -6,7 +6,7 @@
           已有问题
         </div>
         <div class="createTime">
-          创建时间 : {{"2018.01.01"}}
+          创建时间 : {{CreateDate}}
         </div>
       </div>
       <div class="questionDetail">
@@ -27,11 +27,11 @@
       </div>
       <div class="updateTextareaa">
         <el-input
-          type="textarea"
+          type="textarea" :disabled="true"
           placeholder="请输入自定义回答,最多500个字符"
-          v-model="Answer" class="CreateNewQAtextarea">
+          v-model="receiveText.Answer" class="CreateNewQAtextarea">
         </el-input>
-        <span class="fontCount">{{Answer.length}}/500字</span>
+        <span class="fontCount">{{receiveText.Answer.length}}/500字</span>
       </div>
     </div>
     <div class="newQA">
@@ -46,7 +46,7 @@
       </div>
       <div class="existingQuestion">
         <div class="existingQues">
-         第二步 : 确认关键词 ( 可选择2-4个 )
+          第二步 : 确认关键词 ( 可选择2-4个 )
         </div>
       </div>
       <div class="questionDetail">
@@ -61,9 +61,9 @@
         <el-input
           type="textarea"
           placeholder="请输入自定义回答,最多500个字符"
-          v-model="AnswerEdit" class="CreateNewQAtextarea">
+          v-model="Answer" class="CreateNewQAtextarea">
         </el-input>
-        <span class="fontCount">{{AnswerEdit.length}}/500字</span>
+        <span class="fontCount">{{Answer.length}}/500字</span>
       </div>
       <div class="nextStep clearfix">
         <div class="photoUp">
@@ -89,11 +89,11 @@
 
       </div>
       <div>
-        ( 支持.jpg,.jpeg,.png,.gif,svg格式,最大不超过200k , 虽多三张  )
+        ( 支持.jpg,.jpeg,.png,.gif,svg格式,最大不超过200k , 虽多三张 )
       </div>
       <div class="alterKey">
         <el-button type="primary" plain size="mini" @click="alterKeyWords()">修改关键词</el-button>
-        <el-button type="primary" size="mini"  @click="getPhotoUrl()" >更新回答</el-button>
+        <el-button type="primary" size="mini" @click="getPhotoUrl()">更新回答</el-button>
       </div>
     </div>
   </div>
@@ -109,22 +109,26 @@
     name: "Allen-updateQA",
     data() {
       return {
-        AnswerEdit:"",
-        Question:"",
-        Keyword:"",
+        Question: "",
+        Keyword: "",
+
+
+        receiveText: {},  //  未修改达案
         Answer:"",
-        Text:{
-          Answer:"",
-          ID:""
-        },
-        Image:[],
+        ID:"",
+
+
+        imgListNew: [],
+        Image: [],
+        CreateDate: "",
+        KeyId: "",
+        DeleteIds:[],
 
 
         // 图片上传
         imgList: [],
         size: 0,
-        imgListNew: [],
-        Image: []
+
 
       }
     },
@@ -138,18 +142,26 @@
     },
 
     methods: {
-      getData(){
+      getData() {
         let data = JSON.parse(sessionStorage.getItem('Data'));
         this.Question = data.Question;
         this.Keyword = data.Keyword;
+
+        this.CreateDate = data.CreateDate;
+        this.KeyId = data.KeyId;
+
+        this.receiveText = data.Text;  //  未修改达案
+
         this.Answer = data.Text.Answer;
-        this.AnswerEdit = data.Text.Answer
-        console.log("属性穿的值",data);
+        this.ID = data.Text.ID;
+
+        console.log("属性传的值", data);
+        // debugger
       },
-      updataAnswer(){ // 更新问题
+      updataAnswer() { // 更新问题
 
 
-        console.log("存储答案userInerInfo", store.state.app.userInfo)
+        // console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
         const token = getCookies(TOKEN);
         this.token = token;
@@ -160,12 +172,10 @@
         let data = {
           "BotConfigId": recordId,
           "TenantId": TenantId,
+          "KeyId": that.KeyId,
           "Question": that.Question,
           "Keyword": this.keywordsNew,
-          "Text": {
-            "ID": "",
-            "Answer ": this.textarea,
-          },
+          "Text": that.Text,
           "Image": that.Image,
           "Email": Email,
           "FullName": FullName
@@ -179,7 +189,7 @@
           url: base.requestHost + "/api/QuickQA/StoreQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-            console.log("存储答案", msg)
+            // console.log("存储答案", msg)
             if (msg.Status == "1") {
 
               that.$message({
@@ -194,7 +204,7 @@
 
       },
 
-      alterKeyWords(){
+      alterKeyWords() {
         this.$router.push({
           path: '/bot/config/index',
           params: {
@@ -227,7 +237,7 @@
           };
         });
         this.imgListNew = Files;
-       // console.log("change", this.imgListNew)
+        // console.log("change", this.imgListNew)
 
         data = {
           "Id": "",
@@ -289,12 +299,13 @@
           "BotConfigId": recordId,
           "TenantId": TenantId,
           "Question": that.Question,
-          "Keyword": this.keywordsNew,
+          "Keyword":"办理,公积金",
           "Text": {
-            "ID": "",
-            "Answer": this.textarea,
+            "ID": that.ID,
+            "Answer":that.Answer,
           },
           "Image": that.Image,
+          "DeleteIds":that.DeleteIds,
           "Email": Email,
           "FullName": FullName
         };
@@ -307,11 +318,11 @@
           url: base.requestHost + "/api/QuickQA/StoreQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-            console.log("存储答案", msg)
+            console.log("存储答案1111", msg)
             if (msg.Status == "1") {
 
               that.$message({
-                message: '创建新问答成功',
+                message: '更改新问答成功',
                 type: 'success'
               });
 
@@ -454,23 +465,26 @@
 
   }
 
-
   .fontCount {
     position: absolute;
-    right:-20px;
+    right: -20px;
     bottom: 40px;
     color: #999;
   }
+
   .updataQuestions {
     padding-left: 0;
   }
-  .updataQuestions .fontCount{
+
+  .updataQuestions .fontCount {
     right: 10px;
   }
+
   .nextStep {
     padding-bottom: 30px;
     text-align: right;
   }
+
   .nextStep button {
     width: 100px;
     text-align: center;
@@ -486,6 +500,7 @@
     height: 300px !important;
     color: #999;
   }
+
   .updateTextareaa {
     padding-top: 30px;
     /*padding-left: 32px;*/
@@ -557,7 +572,8 @@
     top: 3px;
 
   }
-.alterKey {
-  text-align: right;
-}
+
+  .alterKey {
+    text-align: right;
+  }
 </style>
