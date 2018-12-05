@@ -5,7 +5,7 @@
       </el-input>
         <el-button v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;color: #fff;background: #2a8ce7;border-color: #2a8ce7;">选择</el-button>
       <span v-else class="p-absolute right-0">
-        <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="buttonStatus" type="primary" style="margin-right: 10px;">测试</el-button><el-button type="primary" :disabled="buttonStatus" >发布</el-button>
+        <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="buttonStatus" type="primary" style="margin-right: 10px;" @click="test">测试</el-button><el-button type="primary" :disabled="buttonStatus" >发布</el-button>
       </span>
     </section>
     <el-table
@@ -82,7 +82,7 @@
 </template>
 <script>
   import questionOptions from './constants'
-  import {getList,del,_ask} from './service'
+  import {getList,del,_ask,train} from './service'
 
   export default {
     data() {
@@ -155,7 +155,7 @@
       },
       handleCommand(command){
         this.title = this.options[command]
-        this.status= command
+        this.status= command-0
         const status = {Status:this.status}
         this.keys = ''
         this.loading = true
@@ -304,6 +304,24 @@
          */
         this.arr.length>0?this.buttonStatus = false:this.buttonStatus = true
 
+      },
+      test(){
+        this.$confirm('确定测试以上问题?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          const params = {
+            Ids: this.arr,
+            Action:'train',
+          }
+          train()
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消测试'
+          });
+        });
       }
     },
 

@@ -2,17 +2,24 @@ import {request} from "../../../../serive/request";
 import {getCookies} from "../../../../utils/cookie";
 import {TOKEN} from "../../../../constants/constants";
 import URL from '../../../../host/baseUrl';
-import {DELETEQUESTION, QUICKLYLIST} from "../../../../constants/api";
+import {DELETEQUESTION, QUICKLYLIST,QUERYSTATUS} from "../../../../constants/api";
 import route from '../../../../router/index'
 import store from '../../../../store/index'
 import {REPLACE} from "../../../../store/mutations";
 import moment from 'moment';
 
+/*
+机器人id
+*/
+
 export const getList  = (params) =>{
-  /*
-  无参数情况下请求数据初始化
-   */
+
+    /*
+    无参数情况下请求数据初始化
+     */
   const BotConfigId = route.currentRoute.query.recordId
+  const token = getCookies(TOKEN)
+
   const body = {
     BotConfigId,
     PageSize:50,
@@ -21,7 +28,7 @@ export const getList  = (params) =>{
     Status:null,
     ...params,
   }
-  const token = getCookies(TOKEN)
+
   const option = {
     headers: {
       'Access-Token': token,
@@ -77,6 +84,7 @@ export const getList  = (params) =>{
 }
 export const del = (params) => {
   const token = getCookies(TOKEN)
+
   const option = {
     headers: {
       'Access-Token':token
@@ -100,8 +108,23 @@ export const del = (params) => {
   )
 }
 export const _ask = () => {
+  const token = getCookies(TOKEN)
+
+  const BotConfigId = route.currentRoute.query.recordId
+  const params = {
+    headers:{
+      'Access-Token':token
+    },
+    method:'POST',
+    body:JSON.stringify({BotConfigId}),
+  }
   return new Promise(
     (resolve,reject) => {
+      // request(URL.requestHost+QUERYSTATUS,{params}).then(
+      //   (res) =>{
+      //     console.log(res)
+      //   }
+      // )
       // store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
       return resolve(1)
     }
