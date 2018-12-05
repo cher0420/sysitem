@@ -272,7 +272,7 @@
               });
 
               // 跳转到列表页
-              this.$router.push({
+              that.$router.push({
                 path: '/bot/config/QuicklyQA',
                 params: {
                   id: "uprateQA"
@@ -606,7 +606,7 @@
 
   }
 
-  .updateTextareaa textarea {
+  .updateTextarea textarea {
     width: 450px;
     height: 300px !important;
     color: #999;
