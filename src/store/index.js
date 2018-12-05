@@ -32,7 +32,8 @@ Vue.use(Vuex)
       Key:'',
       SkillNo:'',
 
-      mainLoading:false
+      mainLoading:false,
+      loadingText:null,
     },
   },
   mutations: {

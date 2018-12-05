@@ -21,7 +21,7 @@
             </secondary-menu>
           </section>
            <!-- main -->
-          <el-container v-loading="mainLoading" class="full-width robotDetail" style="position:relative;width: 70vw;">
+          <el-container v-loading="mainLoading" :element-loading-text="loadingText" class="full-width robotDetail" style="position:relative;width: 70vw;">
             <el-main class="p-relative scroll-content" style="display: flex;height: 100%;">
 
               <app-main></app-main>
@@ -64,6 +64,9 @@
       isCollapse() {
         return store.state.app.isCollapse
       },
+      loadingText(){
+        return store.state.app.loadingText
+      }
     },
     beforeCreate() {
       const config = this.$route.name === 'config' //判断路由是否为配置二级菜单，是则为true，不是则false并隐藏二级菜单
