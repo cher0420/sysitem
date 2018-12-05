@@ -1,11 +1,11 @@
 <template>
   <section>
     <section class="p-relative">
-      <el-button type="primary" class="text-a-c createAnswer">创建新问答</el-button><el-input v-model='keys' class='searchInput' size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      <el-button type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-model='keys' class='searchInput' size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
         <el-button v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;color: #fff;background: #2a8ce7;border-color: #2a8ce7;">选择</el-button>
       <span v-else class="p-absolute right-0">
-        <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="buttonStatus" type="primary" style="margin-right: 10px;">测试</el-button><el-button type="primary" :disabled="buttonStatus" >发布</el-button>
+        <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="buttonStatus" type="primary" style="margin-right: 10px;" @click="train">测试</el-button><el-button type="primary" :disabled="buttonStatus" @click="publish" >发布</el-button>
       </span>
     </section>
     <el-table
@@ -62,9 +62,12 @@
         </template>
         <template slot-scope="scope">
           <section class="handle">
-            <span class="edit"><i class="el-icon-edit" style="margin-right: 5px;"></i><span>编辑</span></span><span class="delete" @click="handDel(scope.row.ID,scope.$index)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
+            <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px" @click="editSomething(scope.row.Status)">
+              <i class="el-icon-edit" style="margin-right: 5px;"></i>
+              <span>编辑</span>
+            </span>
+            <span :class="[scope.row.Status == '5'?'un-handle':'delete']" @click="handDel(scope.row.ID,scope.$index)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
           </section>
-
         </template>
       </el-table-column>
     </el-table>
@@ -83,25 +86,32 @@
 </template>
 <script>
   import questionOptions from './constants'
-  import {getList,del} from './service'
+  import {getList,del,_ask,doSomething} from './service'
+  import URL from '../../../../host/baseUrl'
+  import {QUERYSTATUS,PUBLISHORTRAIN} from "../../../../constants/api";
+  import store from '../../../../store';
+  import {REPLACE} from "../../../../store/mutations";
 
   export default {
     data() {
       return {
         loading: false,
+        workStatus: false,
         tableDataCopy:[],
         tableData: [],
         enableChecked: false,
         options: questionOptions.status,
         title:'状态',
         status:'',
-        statusString:{0:'不可用',1:'未发布',2:'培训中',3:'已培训',4:'发布中',5:'已发布'},
+        statusString:{0:'不可用',1:'未发布',2:'未发布',3:'未发布',4:'未发布',5:'已发布'},
         keys:'',
         total:0,
         PageIndex:1,
         arr:[],
         showDel:false,
         buttonStatus:true,
+        reloadId:null,
+        workingStatus:null,
       }
     },
     /*
@@ -111,28 +121,42 @@
       /*
       获取初始列表
        */
-      this.loading = true
-      getList().then(
+      const that = this
+      _ask().then(
         (res) => {
-          /*
-          自定义列表内容
-           */
-          this.tableData  = res.Data
-          this.total = res.TotalCount
-          this.PageIndex = res.PageIndex
-          this.loading = false
+          this.loading = true
+          getList().then(
+            (res) => {
+              /*
+              自定义列表内容,没有在发布中的内容
+               */
+              this.tableData  = res.Data
+              this.total = res.TotalCount
+              this.PageIndex = res.PageIndex
+              this.loading = false
+            }
+          ).catch(
+            (err) =>{
+              /*
+              抛出错误
+               */
+            }
+          )
         }
       ).catch(
-        (err) =>{
-          /*
-          抛出错误
-           */
-          this.$message({
-            type:'error',
-            message:'服务器异常，请稍后重试'
-          })
+        () =>{
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'}).then(
+            () =>{
+              that._reload_ask()
+            }
+          )
         }
       )
+
+    },
+    destroyed(){
+      store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
+      clearInterval(this.reloadId);
     },
     methods: {
       newQA() {
@@ -141,8 +165,55 @@
           params:{
             id:111
           },
-        })
+        })},
+      editSomething(v){
+        if(v == 5){
+          return;
+        }else{
+          console.log('123')
+        }
+      },
+      go(){
+        const id = this.$route.query.recordId
+        const host = 'https://'+window.location.host
+        const url = `${host}/WebTalk/validaiml.html?id=${id}`
+        window.open(url)
+      },
+      _reload_ask(){
+        const that = this
+        this.reloadId = setInterval(function () {
+          _ask().then(
+            () =>{
+              /*
+              不存在发布
+              */
+              that.workingStatus = false
+              store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
+              const params = {
+                Keys:that.keys,
+                PageIndex:that.PageIndex,
+                Status: that.status
+              }
+              that.showDel = false
+              that.enableChecked = false
+              getList(params).then(
+                (res) =>{
+                  that.tableData = res['Data']
+                  clearInterval(that.reloadId);
+                  that.go()
+                }
+              )
+              /*
+               获取列表
+              */
 
+            }
+          ).catch(
+            () =>{
+              that.workingStatus = true
+            }
+          )
+        },3000)
       },
       renderProductId(h, {column}) {
         return h(DrapDown, {
@@ -154,7 +225,7 @@
       },
       handleCommand(command){
         this.title = this.options[command]
-        this.status= command
+        this.status= command-0
         const status = {Status:this.status}
         this.keys = ''
         this.loading = true
@@ -206,7 +277,10 @@
           }
           getList(params).then(
             (res) => {
-              console.log(res)
+              /*
+              给table重新赋值
+              */
+              this.tableData = res['Data']
             }
           )
 
@@ -216,7 +290,7 @@
           */
           this.tableData.forEach(
             (v,index) =>{
-              switch (v.checkedStatus) {
+              switch (v.Status) {
                 case 3:
                   this.arr.push(v.ID)
                       break;
@@ -228,6 +302,7 @@
               }
             }
           )
+          this.buttonStatus=this.arr.length <= 0
         }
       },
       search() {
@@ -300,6 +375,80 @@
          */
         this.arr.length>0?this.buttonStatus = false:this.buttonStatus = true
 
+      },
+      train(){
+        const that = this
+        this.$confirm('确定测试以上问题?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
+          const params = {
+            Ids: this.arr,
+            Action:'train',
+          }
+          doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
+            (res) =>{
+              this.$message({
+                type:'success',
+                message:'操作成功',
+                duration:2000,
+              })
+              that._reload_ask()
+            }
+          ).catch(
+            () =>{
+              this.$message({
+                type:'error',
+                message:'操作失败',
+                duration:2000,
+              })
+            }
+          )
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消测试'
+          });
+        });
+      },
+      publish(){
+        const that = this
+        this.$confirm('确定发布以上问题?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
+          const params = {
+            Ids: this.arr,
+            Action:'publish',
+          }
+          doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
+            (res) =>{
+              this.$message({
+                type: 'success',
+                message: '操作成功',
+                duration:2000,
+              });
+              that._reload_ask()
+            }
+          ).catch(
+            () =>{
+              this.$message({
+                type: 'error',
+                message: '服务器错误',
+                duration:2000,
+              });
+            }
+          )
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消发布'
+          });
+        });
       }
     },
 
@@ -332,24 +481,26 @@
     margin-top: 20px;
   }
   .handle{
-    span:hover{
-      cursor: pointer;
-    }
     .edit:hover{
       color:$primary-color;
+      cursor: pointer;
       span:hover{
         text-decoration: underline;
       }
     }
     .delete:hover{
+      cursor: pointer;
       color:$danger;
       span:hover{
         text-decoration: underline;
       }
     }
-  }
-  .edit{
-    margin-right: 20px;
+    .un-handle{
+      span{
+        cursor: not-allowed;
+        color:$disabled;
+      }
+    }
   }
   .yoy-main .el-table .cell .yoy-dropDown{
     height: 28px;
@@ -358,5 +509,9 @@
   }
   .yoy-dropDown:hover{
     cursor: pointer;
+  }
+  .un-handle{
+    color:$disabled;
+    cursor: not-allowed;
   }
 </style>
