@@ -21,7 +21,7 @@
             </secondary-menu>
           </section>
            <!-- main -->
-          <el-container v-loading="mainLoading" :element-loading-text="loadingText" :element-loading-spinner="elIconLoading" class="full-width robotDetail" style="position:relative;width: 70vw;">
+          <el-container v-loading="mainLoading" :element-loading-text="loadingText" class="full-width robotDetail" style="position:relative;width: 70vw;">
             <el-main class="p-relative scroll-content" style="display: flex;height: 100%;">
 
               <app-main></app-main>
