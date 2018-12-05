@@ -5,4 +5,4 @@ import fetch from '@/config/fetch'
  * api请求量
  */
 
-export const addCategory = data => fetch('/api', data, 'POST'); // url parameter  methor
+export const getCategory = restaurant_id => fetch('/shopping/getcategory/' + restaurant_id); // url parameter  methor

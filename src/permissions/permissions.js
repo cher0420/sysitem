@@ -12,6 +12,7 @@ import router from "../router";
 import App from '../App';
 
 export function redirect(type){
+  // debugger;
   let random = Math.floor(Math.random() * 1000000)
   const host = window.location.host
   setCookies('SID',random,{ expires: 1 }).then(

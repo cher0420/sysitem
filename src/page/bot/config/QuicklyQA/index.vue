@@ -135,6 +135,15 @@
       )
     },
     methods: {
+      newQA() {
+        this.$router.push({
+          path:'/bot/config/createrNewQA',
+          params:{
+            id:111
+          },
+        })
+
+      },
       renderProductId(h, {column}) {
         return h(DrapDown, {
             props: {

@@ -6,6 +6,7 @@ const TEST_URL = {
   },
   SSOServerApi:"https://hightalkssoapi-test.azurewebsites.net",
   requestHost: 'https://hightalkadminapi-test.azurewebsites.net',
+
 }
 const UAT_URL = {
   baseUrl:'https://hightalkadminweb-uat.azurewebsites.net',
