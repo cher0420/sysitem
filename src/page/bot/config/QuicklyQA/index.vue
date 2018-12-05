@@ -56,7 +56,7 @@
         v-if="!showDel"
       >
         <template slot='header' slot-scope="scope">
-          <section class="handle" >
+          <section class="handle" style="height: 28px;line-height: 28px">
             操作
           </section>
         </template>
