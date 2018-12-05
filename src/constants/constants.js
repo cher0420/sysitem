@@ -186,12 +186,12 @@ export const SECONDMENUS = [
       //   englishName:'caseStore',
       //   path:'caseStore',
       // },
-      {
-        id:'quicklyQA',
-        chineseName:'快速问答',
-        englishName:'quicklyQA',
-        path:'quicklyQA',
-      }
+      // {
+      //   id:'quicklyQA',
+      //   chineseName:'快速问答',
+      //   englishName:'quicklyQA',
+      //   path:'quicklyQA',
+      // }
     ]
   }
 ]

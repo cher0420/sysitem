@@ -1,5 +1,5 @@
 <template>
-  <section class="p-relative yoy-header-container robotWidth" ref="scrollTop">
+  <section class="yoy-header-container robotWidth" ref="scrollTop" style="flex:1">
     <bread></bread>
     <router-view class="yoy-main"></router-view>
   </section>
