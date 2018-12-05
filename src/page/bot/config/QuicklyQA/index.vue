@@ -62,9 +62,8 @@
         </template>
         <template slot-scope="scope">
           <section class="handle">
-            <span class="edit"><i class="el-icon-edit" style="margin-right: 5px;"></i><span>编辑</span></span><span class="delete" @click="handDel(scope.row.ID,scope.$index)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
+            <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px"><i class="el-icon-edit" style="margin-right: 5px;"></i><span>编辑</span></span><span :class="[scope.row.Status == '5'?'un-handle':'delete']" @click="handDel(scope.row.ID,scope.$index)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
           </section>
-
         </template>
       </el-table-column>
     </el-table>
@@ -83,19 +82,20 @@
 </template>
 <script>
   import questionOptions from './constants'
-  import {getList,del} from './service'
+  import {getList,del,_ask} from './service'
 
   export default {
     data() {
       return {
         loading: false,
+        // workingLoading:true,
         tableDataCopy:[],
         tableData: [],
         enableChecked: false,
         options: questionOptions.status,
         title:'状态',
         status:'',
-        statusString:{0:'不可用',1:'未发布',2:'培训中',3:'已培训',4:'发布中',5:'已发布'},
+        statusString:{0:'不可用',1:'未发布',2:'未发布',3:'未发布',4:'未发布',5:'已发布'},
         keys:'',
         total:0,
         PageIndex:1,
@@ -111,28 +111,38 @@
       /*
       获取初始列表
        */
-      this.loading = true
-      getList().then(
-        (res) => {
-          /*
-          自定义列表内容
-           */
-          this.tableData  = res.Data
-          this.total = res.TotalCount
-          this.PageIndex = res.PageIndex
-          this.loading = false
+      _ask().then(
+        () => {
+          this.loading = true
+          getList().then(
+            (res) => {
+              /*
+              自定义列表内容
+               */
+              this.tableData  = res.Data
+              this.total = res.TotalCount
+              this.PageIndex = res.PageIndex
+              this.loading = false
+            }
+          ).catch(
+            (err) =>{
+              /*
+              抛出错误
+               */
+              this.$message({
+                type:'error',
+                message:'服务器异常，请稍后重试'
+              })
+            }
+          )
         }
       ).catch(
-        (err) =>{
-          /*
-          抛出错误
-           */
-          this.$message({
-            type:'error',
-            message:'服务器异常，请稍后重试'
-          })
+        () =>{
+          alert(2)
         }
+
       )
+
     },
     methods: {
       renderProductId(h, {column}) {
@@ -197,7 +207,10 @@
           }
           getList(params).then(
             (res) => {
-              console.log(res)
+              /*
+              给table重新赋值
+              */
+              this.tableData = res['Data']
             }
           )
 
@@ -323,24 +336,27 @@
     margin-top: 20px;
   }
   .handle{
-    span:hover{
-      cursor: pointer;
-    }
     .edit:hover{
       color:$primary-color;
+      cursor: pointer;
       span:hover{
         text-decoration: underline;
       }
     }
     .delete:hover{
+      cursor: pointer;
       color:$danger;
       span:hover{
         text-decoration: underline;
       }
     }
-  }
-  .edit{
-    margin-right: 20px;
+    .un-handle{
+      span{
+        margin-right: 20px;
+        cursor: not-allowed;
+        color:$disabled;
+      }
+    }
   }
   .yoy-main .el-table .cell .yoy-dropDown{
     height: 28px;
@@ -349,5 +365,9 @@
   }
   .yoy-dropDown:hover{
     cursor: pointer;
+  }
+  .un-handle{
+    color:$disabled;
+    cursor: not-allowed;
   }
 </style>

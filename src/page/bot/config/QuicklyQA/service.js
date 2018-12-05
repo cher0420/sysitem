@@ -50,6 +50,9 @@ export const getList  = (params) =>{
                 case 2:
                   store.dispatch(REPLACE,{mainLoading:true})
                   break;
+                case 3:
+                  v.checkedStatus = true;
+                  break;
                 case 5:
                   v.checkedStatus = true;
                   break;
@@ -95,4 +98,15 @@ export const del = (params) => {
       )
     }
   )
+}
+export const _ask = () => {
+  return new Promise(
+    (resolve,reject) => {
+      // store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
+      return resolve(1)
+    }
+  )
+}
+export const train = () =>{
+
 }
