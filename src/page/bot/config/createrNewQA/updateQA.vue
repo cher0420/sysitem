@@ -113,6 +113,12 @@
         Question:"",
         Keyword:"",
         Answer:"",
+        Text:{
+          Answer:"",
+          ID:""
+        },
+        Image:[],
+
 
         // 图片上传
         imgList: [],
@@ -221,7 +227,7 @@
           };
         });
         this.imgListNew = Files;
-        console.log("change", this.imgListNew)
+       // console.log("change", this.imgListNew)
 
         data = {
           "Id": "",
@@ -269,6 +275,62 @@
 
 
       },
+      saveKeywords() {  // 	存储答案
+
+        console.log("存储答案userInerInfo", store.state.app.userInfo)
+        let that = this;
+        const token = getCookies(TOKEN);
+        this.token = token;
+        let recordId = JSON.parse(sessionStorage.getItem('recordId'));
+        let TenantId = store.state.app.userInfo.TenantId;
+        let Email = store.state.app.userInfo.Email;
+        let FullName = store.state.app.userInfo.FullName;
+        let data = {
+          "BotConfigId": recordId,
+          "TenantId": TenantId,
+          "Question": that.Question,
+          "Keyword": this.keywordsNew,
+          "Text": {
+            "ID": "",
+            "Answer": this.textarea,
+          },
+          "Image": that.Image,
+          "Email": Email,
+          "FullName": FullName
+        };
+        $.ajax({
+          type: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            'Access-Token': token
+          },
+          url: base.requestHost + "/api/QuickQA/StoreQAData",
+          data: JSON.stringify(data),
+          success: function (msg) {
+            console.log("存储答案", msg)
+            if (msg.Status == "1") {
+
+              that.$message({
+                message: '创建新问答成功',
+                type: 'success'
+              });
+
+              // 跳转到列表页
+              this.$router.push({
+                path: '/bot/config/QuicklyQA',
+                params: {
+                  id: "uprateQA"
+                },
+              })
+
+            }
+
+          }
+        })
+
+
+      },
+
       fileList(fileList) {
         let files = fileList.files;
         for (let i = 0; i < files.length; i++) {
