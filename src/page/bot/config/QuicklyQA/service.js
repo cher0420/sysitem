@@ -7,6 +7,7 @@ import route from '../../../../router/index'
 import store from '../../../../store/index'
 import {REPLACE} from "../../../../store/mutations";
 import moment from 'moment';
+import {askIsDoing, filterData} from "../../service/requestMethod";
 
 /*
 机器人id
@@ -107,9 +108,9 @@ export const del = (params) => {
     }
   )
 }
+
 export const _ask = () => {
   const token = getCookies(TOKEN)
-
   const BotConfigId = route.currentRoute.query.recordId
   const params = {
     headers:{
@@ -120,16 +121,54 @@ export const _ask = () => {
   }
   return new Promise(
     (resolve,reject) => {
-      // request(URL.requestHost+QUERYSTATUS,{params}).then(
-      //   (res) =>{
-      //     console.log(res)
-      //   }
-      // )
-      // store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
-      return resolve(1)
+      request(URL.requestHost+QUERYSTATUS,params).then(
+        (res) =>{
+          if(res.Data){
+            /*
+            如果res.Data结果为true,不存在培训中或者发布中的数据
+             */
+            reject(res)
+          }else{
+            /*
+            false:还存在培训中或者发布中的数据
+             */
+            resolve (res)
+          }
+        }
+      ).catch(
+        // () =>{
+        //     const id = BotConfigId
+        //     const host = 'https://'+window.location.host
+        //     const url = `${host}/WebTalk/Index.html?id=${id}`
+        //     window.open(url)
+        // }
+      )
     }
   )
 }
-export const train = () =>{
-
+export const doSomething = (url,params) =>{
+  const BotConfigId = route.currentRoute.query.recordId
+  const token = getCookies(TOKEN)
+  const body = {
+    ...params,
+    BotConfigId
+  }
+  const options = {
+    headers:{'Access-Token':token},
+    method:'POST',
+    body:JSON.stringify(body)
+  }
+  return new Promise(
+    (resolve,reject) =>{
+      request(url,options).then(
+        (res) =>{
+          resolve(res)
+        }
+      ).catch(
+        (err) =>{
+          reject(err)
+        }
+      )
+    }
+  )
 }

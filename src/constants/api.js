@@ -31,4 +31,5 @@ export const IMG_UPLOADORDELETE = '/api/KnowledgeQA/UploadAndDeleteAsync'
 export const QUICKLYLIST = '/api/QuickQA/QueryKeyWordsList'
 export const DELETEQUESTION = '/api/QuickQA/DeleteAnswer'
 export const QUERYSTATUS = '/api/QuickQA/QueryDataStaus'  //获取数据状态接口
+export const PUBLISHORTRAIN = '/api/QuickQA/PublishAiml'  //发布或测试接口
 

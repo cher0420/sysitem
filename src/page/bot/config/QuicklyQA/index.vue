@@ -5,7 +5,7 @@
       </el-input>
         <el-button v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;color: #fff;background: #2a8ce7;border-color: #2a8ce7;">选择</el-button>
       <span v-else class="p-absolute right-0">
-        <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="buttonStatus" type="primary" style="margin-right: 10px;" @click="test">测试</el-button><el-button type="primary" :disabled="buttonStatus" >发布</el-button>
+        <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="buttonStatus" type="primary" style="margin-right: 10px;" @click="train">测试</el-button><el-button type="primary" :disabled="buttonStatus" @click="publish" >发布</el-button>
       </span>
     </section>
     <el-table
@@ -82,13 +82,17 @@
 </template>
 <script>
   import questionOptions from './constants'
-  import {getList,del,_ask,train} from './service'
+  import {getList,del,_ask,doSomething} from './service'
+  import URL from '../../../../host/baseUrl'
+  import {QUERYSTATUS,PUBLISHORTRAIN} from "../../../../constants/api";
+  import store from '../../../../store';
+  import {REPLACE} from "../../../../store/mutations";
 
   export default {
     data() {
       return {
         loading: false,
-        // workingLoading:true,
+        workStatus: false,
         tableDataCopy:[],
         tableData: [],
         enableChecked: false,
@@ -102,6 +106,8 @@
         arr:[],
         showDel:false,
         buttonStatus:true,
+        reloadId:null,
+        workingStatus:null,
       }
     },
     /*
@@ -111,13 +117,14 @@
       /*
       获取初始列表
        */
+      const that = this
       _ask().then(
-        () => {
+        (res) => {
           this.loading = true
           getList().then(
             (res) => {
               /*
-              自定义列表内容
+              自定义列表内容,没有在发布中的内容
                */
               this.tableData  = res.Data
               this.total = res.TotalCount
@@ -129,22 +136,67 @@
               /*
               抛出错误
                */
-              this.$message({
-                type:'error',
-                message:'服务器异常，请稍后重试'
-              })
             }
           )
         }
       ).catch(
         () =>{
-          alert(2)
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'}).then(
+            () =>{
+              that._reload_ask()
+            }
+          )
         }
-
       )
 
     },
+    destroyed(){
+      store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
+      clearInterval(this.reloadId);
+    },
     methods: {
+      go(){
+        const id = this.$route.query.recordId
+        const host = 'https://'+window.location.host
+        const url = `${host}/WebTalk/Index.html?id=${id}`
+        window.open(url)
+      },
+      _reload_ask(){
+        const that = this
+        this.reloadId = setInterval(function () {
+          _ask().then(
+            () =>{
+              /*
+              不存在发布
+              */
+              that.workingStatus = false
+              store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
+              const params = {
+                Keys:that.keys,
+                PageIndex:that.PageIndex,
+                Status: that.status
+              }
+              that.showDel = false
+              that.enableChecked = false
+              getList(params).then(
+                (res) =>{
+                  that.tableData = res['Data']
+                  clearInterval(that.reloadId);
+                  that.go()
+                }
+              )
+              /*
+               获取列表
+              */
+
+            }
+          ).catch(
+            () =>{
+              that.workingStatus = true
+            }
+          )
+        },3000)
+      },
       renderProductId(h, {column}) {
         return h(DrapDown, {
             props: {
@@ -220,7 +272,7 @@
           */
           this.tableData.forEach(
             (v,index) =>{
-              switch (v.checkedStatus) {
+              switch (v.Status) {
                 case 3:
                   this.arr.push(v.ID)
                       break;
@@ -232,6 +284,7 @@
               }
             }
           )
+          this.buttonStatus=this.arr.length <= 0
         }
       },
       search() {
@@ -305,21 +358,77 @@
         this.arr.length>0?this.buttonStatus = false:this.buttonStatus = true
 
       },
-      test(){
+      train(){
+        const that = this
         this.$confirm('确定测试以上问题?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
           const params = {
             Ids: this.arr,
             Action:'train',
           }
-          train()
+          doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
+            (res) =>{
+              this.$message({
+                type:'success',
+                message:'操作成功',
+                duration:2000,
+              })
+              that._reload_ask()
+            }
+          ).catch(
+            () =>{
+              this.$message({
+                type:'error',
+                message:'操作失败',
+                duration:2000,
+              })
+            }
+          )
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消测试'
+          });
+        });
+      },
+      publish(){
+        const that = this
+        this.$confirm('确定发布以上问题?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
+          const params = {
+            Ids: this.arr,
+            Action:'publish',
+          }
+          doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
+            (res) =>{
+              this.$message({
+                type: 'success',
+                message: '操作成功',
+                duration:2000,
+              });
+              that._reload_ask()
+            }
+          ).catch(
+            () =>{
+              this.$message({
+                type: 'error',
+                message: '服务器错误',
+                duration:2000,
+              });
+            }
+          )
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消发布'
           });
         });
       }
@@ -370,7 +479,6 @@
     }
     .un-handle{
       span{
-        margin-right: 20px;
         cursor: not-allowed;
         color:$disabled;
       }
