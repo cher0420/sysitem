@@ -103,8 +103,8 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
-        Question: "公积金如何办理", // 题目
-        // Question: "", // 题目
+        // Question: "公积金如何办理", // 题目
+         Question: "", // 题目
         keywordsOption: [], // 关键词
         keywords: [], // 选中的关键字
         textarea: "",
