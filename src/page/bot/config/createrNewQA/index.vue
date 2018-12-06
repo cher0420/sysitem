@@ -481,7 +481,9 @@
   }
 </script>
 <style lang="scss" scoped>
+  /*@import "../../../../../static/base.css";*/
   @import '../../../../style/index';
+
 
   .mt30 {
     margin-top: 30px;

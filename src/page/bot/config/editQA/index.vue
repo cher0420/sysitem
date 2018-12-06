@@ -20,6 +20,7 @@
     </div>
     <div class="photoUp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
+      <!-- show photo -->
       <div class="upload_warp_img" v-show="imgList.length!=0">
         <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
           <div class="upload_warp_img_div_top">
@@ -66,7 +67,7 @@
 
         "Text": {
           "ID": "",
-          "Answer":"上海市徐汇区天华信息科技园",
+          "Answer": "上海市徐汇区天华信息科技园",
         },
       }
     },
@@ -83,12 +84,6 @@
     watch: {},
 
     methods: {
-
-
-
-
-
-
 
 
       // 图片上传
@@ -149,7 +144,7 @@
               if (msg.Data.FilesName.length == 0) {
                 // obj.Answer = "",
                 //   obj.ID = "";
-                that.Image = [] ;
+                that.Image = [];
               }
               that.saveKeywords();
 
@@ -242,12 +237,6 @@
       },
 
 
-
-
-
-
-
-
     },
     destroyed() {
       clearInterval(this.timer);
@@ -258,6 +247,7 @@
 </script>
 <style lang="scss" scoped>
   @import '../../../../style/index';
+  /*@import "../../../../../static/base.css";*/
 
   .keywordTip {
     height: 36px;
@@ -267,30 +257,87 @@
     padding-left: 10px;
 
   }
+
   .kwShow {
     padding-bottom: 40px;
     padding-top: 30px;
     padding-left: 40px;
     font-size: 16px;
   }
+
   .edit_textarea {
     margin-top: 30px;
     padding-left: 40px;
+    position: relative;
   }
-
-
 
   .edit_textarea .fontCount {
     position: absolute;
-    left: 1020px;
+    left: 980px;
     bottom: 10px;
   }
 
+  .upload_warp_img {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+  }
 
+  .upload_warp_img_div_top {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80px;
+    height: 16px;
+    background: rgba(226, 226, 226, 0.4);
+  }
+
+  .upload_warp_left {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .upload_warp_left {
+    width: 80px;
+    height: 80px;
+    border: 1px dashed #c3c3c3;
+    text-align: center;
+    line-height: 80px;
+    font-size: 30px;
+    color: #c3c3c3;
+  }
+
+  .upload_warp_img_div {
+    width: 80px;
+    height: 80px;
+    /*border: 1px solid red;*/
+    margin-right: 20px;
+    -webkit-box-shadow: 0 0 10px #c0c4cc;
+    -moz-box-shadow: 0 0 10px #c0c4cc;
+    box-shadow: 0 0 10px #c0c4cc;
+  }
+  .upload_warp_img_div img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .photoUp {
+    margin-top: 22px;
+    margin-left: 40px;
+  }
+  .upload_warp_img_div_text {
+    text-align: right;
+    padding-right: 2px;
+    padding-top: 2px;
+  }
+  .upload_warp_img_div  {
+    position: relative;
+    display: inline-block;
+  }
 </style>
 <style>
 
-  .edit_textarea  textarea {
+  .edit_textarea textarea {
     width: 1000px;
     height: 300px !important;
     position: relative;

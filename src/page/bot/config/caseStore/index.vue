@@ -181,6 +181,8 @@
 </script>
 <style  lang="scss" scoped>
   @import  '../../../../style/index';
+  /*@import "../../../../../static/base.css";*/
+
 
   .button-style {
     /*padding-left: 40px;*/
