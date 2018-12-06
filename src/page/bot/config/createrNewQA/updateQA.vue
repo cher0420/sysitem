@@ -89,7 +89,7 @@
 
       </div>
       <div class="support_format">
-        ( 支持.jpg,.jpeg,.png,.gif,svg格式,最大不超过200k , 最多3张 )
+        ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
       </div>
       <div class="alterKey">
         <el-button type="primary" plain size="mini" @click="alterKeyWords()">修改关键词</el-button>
@@ -445,6 +445,7 @@
 
   }
 
+
   .oldQA {
     float: left;
     width: 50%;
@@ -579,6 +580,7 @@
 
   .photoUp {
     text-align: left;
+    position: relative;
   }
 
   .upload_warp_img_div_text span {

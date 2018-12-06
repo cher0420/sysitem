@@ -38,6 +38,13 @@
         <i class="el-icon-plus"></i>
       </div>
 
+      <div class="imgLimit">
+        ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
+      </div>
+      <div class="subFinsh">
+        <el-button type="primary" size="mini" @click="getPhotoUrl">完成</el-button>
+      </div>
+
     </div>
 
 
@@ -257,7 +264,17 @@
     padding-left: 10px;
 
   }
-
+  .subFinsh {
+    position: absolute;
+    right: 0;
+    top: 30px;
+  }
+  .imgLimit{
+    position: absolute;
+    left: 340px;
+    top: 33px;
+    color: #c3c3c3;
+  }
   .kwShow {
     padding-bottom: 40px;
     padding-top: 30px;
@@ -314,7 +331,7 @@
     margin-right: 20px;
     -webkit-box-shadow: 0 0 10px #c0c4cc;
     -moz-box-shadow: 0 0 10px #c0c4cc;
-    box-shadow: 0 0 10px #c0c4cc;
+    /*box-shadow: 0 0 10px #c0c4cc;*/
   }
   .upload_warp_img_div img {
     width: 100%;
@@ -324,6 +341,8 @@
   .photoUp {
     margin-top: 22px;
     margin-left: 40px;
+    position: relative;
+    width: 1000px;
   }
   .upload_warp_img_div_text {
     text-align: right;
@@ -333,6 +352,9 @@
   .upload_warp_img_div  {
     position: relative;
     display: inline-block;
+  }
+  .imgLimit {
+
   }
 </style>
 <style>
