@@ -61,12 +61,12 @@
           </section>
         </template>
         <template slot-scope="scope">
-          <section class="handle">
+          <section class="handle" style="height: 28px;line-height: 28px">
             <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px" @click="editSomething(scope.row.Status)">
               <i class="el-icon-edit" style="margin-right: 5px;"></i>
               <span>编辑</span>
             </span>
-            <span :class="[scope.row.Status == '5'?'un-handle':'delete']" @click="handDel(scope.row.ID,scope.$index)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
+            <span :class="[scope.row.Status == '5'?'un-handle':'delete']" @click="handDel(scope.row.ID,scope.$index,scope.row.Status)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
           </section>
         </template>
       </el-table-column>
@@ -145,7 +145,7 @@
         }
       ).catch(
         () =>{
-          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'}).then(
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
             () =>{
               that._reload_ask()
             }
@@ -187,6 +187,7 @@
               /*
               不存在发布
               */
+              that.loading = true
               that.workingStatus = false
               store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
               const params = {
@@ -199,6 +200,7 @@
               getList(params).then(
                 (res) =>{
                   that.tableData = res['Data']
+                  that.loading = false
                   clearInterval(that.reloadId);
                   that.go()
                 }
@@ -213,7 +215,7 @@
               that.workingStatus = true
             }
           )
-        },3000)
+        },5000)
       },
       renderProductId(h, {column}) {
         return h(DrapDown, {
@@ -322,7 +324,10 @@
           }
         )
       },
-      handDel(v,index) {
+      handDel(v,index,status) {
+        if(status == 5){
+          return;
+        }
         this.$confirm('是否删除此条问题?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -420,7 +425,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
           const params = {
             Ids: this.arr,
             Action:'publish',

@@ -128,12 +128,12 @@ export const _ask = () => {
         (res) =>{
           if(res.Data){
             /*
-            如果res.Data结果为true,不存在培训中或者发布中的数据
+            如果res.Data结果为true,存在培训中或者发布中的数据
              */
             reject(res)
           }else{
             /*
-            false:还存在培训中或者发布中的数据
+            false:不存在培训中或者发布中的数据
              */
             resolve (res)
           }
