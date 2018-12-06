@@ -10,6 +10,7 @@ const createrNewQA = {
     keywordsDis: true ,// 关键词可修改
     Question:"",  // 问题
     keywords:"" , // 关键词
+    newDataDis:true, // 创建 修改 页面展示
 
 
   },
@@ -19,6 +20,9 @@ const createrNewQA = {
     },
     keywordsDis: (state) => {
       return state.keywordsDis; // 关键词可修改
+    },
+    newDataDis: (state) => {
+      return state.newDataDis; // // 展示
     },
 
 
@@ -38,6 +42,12 @@ const createrNewQA = {
     keywordsLast: (state) => {
       state.keywordsDis = true; // 关键词可修改
     },
+    newDataDis:(state) => {
+      state.newDataDis = true; // 展示
+    },
+    newDataHidd:(state) => {
+      state.newDataDis = false; // 隐藏
+    },
   },
   actions: {
 
@@ -52,6 +62,12 @@ const createrNewQA = {
     },
     keywordsLast: (context) => {
       context.commit("keywordsLast")  // 关键词可修改
+    },
+    newDataDis:(context) => {
+      context.commit("newDataDis") // 展示
+    },
+    newDataHid:(context) => {
+      context.commit("newDataHidd")// 隐藏
     },
 
 

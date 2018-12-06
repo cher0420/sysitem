@@ -110,7 +110,7 @@
         textarea: "",
         timer: "",
         checkboxDisabled: true,
-        newDataDis: true, // 展示新建答案
+        // newDataDis: true, // 展示新建答案
         token: "",
 
         // 图片上传
@@ -125,10 +125,13 @@
       ...mapGetters([
         'questionDis',  // 问题可修改展示
         'keywordsDis',  // 关键词可修改展示
+        "newDataDis",
       ]),
       keywordsNew() {
         return this.keywords.join(","); //  关键词拼接展示
       },
+
+
     },
     components: {
       updateQA
@@ -157,7 +160,7 @@
 
     methods: {
       ...mapActions(
-        ["questionNext", "questionLast", "keywordsNext", "keywordsLast"]
+        ["questionNext", "questionLast", "keywordsNext", "keywordsLast","newDataHid"]
       ),
 
       getKeywords() {  // 将一句话分成多个词汇
@@ -217,8 +220,10 @@
                 that.keywordsNext(that.keywords.length);
               }
               if (msg.Data != null) {
+                that.newDataHid();
+                console.log("+++++++++++++++")
                 that.questionLast();
-                that.newDataDis = false; // 跳到 更新组件展示
+               //   跳到 更新组件展示
                 sessionStorage.setItem('Data', JSON.stringify(msg.Data));  //  属性传参到子组件
 
 
