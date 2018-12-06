@@ -491,7 +491,8 @@
     color: #999;
     font-size: 12px;
     font-family: "Microsoft YaHei";
-    padding-right: 30px;
+    /*padding-right: 30px;*/
+    width: 996px;
   }
 
   .nextStep {
@@ -504,6 +505,7 @@
     text-align: right;
     margin-top: 33px;
     margin-right: 11px;
+    width: 996px;
   }
 
   .nextStep button {
