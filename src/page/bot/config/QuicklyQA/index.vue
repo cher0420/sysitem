@@ -20,7 +20,7 @@
         align="center"
       >
         <template slot-scope="scope">
-          <el-checkbox v-model="scope.row.checkedStatus" v-if="enableChecked" @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index)"></el-checkbox>
+          <el-checkbox v-model="scope.row.checkedStatus" v-if="enableChecked" @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index,scope.row.Status)"></el-checkbox>
           <span v-else>{{scope.$index+1}}</span>
         </template>
       </el-table-column>
@@ -61,12 +61,12 @@
           </section>
         </template>
         <template slot-scope="scope">
-          <section class="handle">
+          <section class="handle" style="height: 28px;line-height: 28px">
             <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px" @click="editSomething(scope.row.Status)">
               <i class="el-icon-edit" style="margin-right: 5px;"></i>
               <span>编辑</span>
             </span>
-            <span :class="[scope.row.Status == '5'?'un-handle':'delete']" @click="handDel(scope.row.ID,scope.$index)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
+            <span :class="[scope.row.Status == '5'?'un-handle':'delete']" @click="handDel(scope.row.ID,scope.$index,scope.row.Status)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
           </section>
         </template>
       </el-table-column>
@@ -76,6 +76,7 @@
         @current-change="handleCurrentChange"
         class="pagination p-absolute"
         background
+        page-size="50"
         layout="total, prev, pager, next"
         :total="total"
         :current-page.sync="PageIndex"
@@ -112,6 +113,7 @@
         buttonStatus:true,
         reloadId:null,
         workingStatus:null,
+        hasPublishArr:[]
       }
     },
     /*
@@ -130,10 +132,10 @@
               /*
               自定义列表内容,没有在发布中的内容
                */
-              this.tableData  = res.Data
-              this.total = res.TotalCount
-              this.PageIndex = res.PageIndex
-              this.loading = false
+              that.tableData  = res.Data
+              that.total = res.TotalCount
+              that.PageIndex = res.PageIndex
+              that.loading = false
             }
           ).catch(
             (err) =>{
@@ -145,7 +147,7 @@
         }
       ).catch(
         () =>{
-          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'}).then(
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
             () =>{
               that._reload_ask()
             }
@@ -187,6 +189,7 @@
               /*
               不存在发布
               */
+              that.loading = true
               that.workingStatus = false
               store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
               const params = {
@@ -199,6 +202,7 @@
               getList(params).then(
                 (res) =>{
                   that.tableData = res['Data']
+                  that.loading = false
                   clearInterval(that.reloadId);
                   that.go()
                 }
@@ -213,7 +217,7 @@
               that.workingStatus = true
             }
           )
-        },3000)
+        },5000)
       },
       renderProductId(h, {column}) {
         return h(DrapDown, {
@@ -225,7 +229,7 @@
       },
       handleCommand(command){
         this.title = this.options[command]
-        this.status= command-0
+        this.status= command?command-0:null
         const status = {Status:this.status}
         this.keys = ''
         this.loading = true
@@ -239,6 +243,7 @@
         )
       },
       typeCheckedStatus(v){
+        const that = this
         this.enableChecked = !this.enableChecked
         /*
         优化页面闪烁视觉不适
@@ -246,22 +251,22 @@
         this.loading=true
         setTimeout(
           () => {
-            this.showDel = !this.showDel
+            that.showDel = !that.showDel
           },300
         )
         setTimeout(
           () =>{
-            this.loading=false
+            that.loading=false
           },600
         )
         /*
         当操作状态为取消选择时
         */
-        if(!this.enableChecked){
+        if(!that.enableChecked){
           /*
             初始化列表复选框状态
           */
-          this.tableData.forEach(
+          that.tableData.forEach(
             (v) =>{
               v.checkedStatus = false
             }
@@ -269,18 +274,19 @@
           /*
           初始化数组状态
           */
-          this.arr = []
+          that.arr = []
+          that.hasPublishArr = []
           const params = {
-            Keys:this.keys,
-            PageIndex:this.PageIndex,
-            Status: this.status
+            Keys:that.keys,
+            PageIndex:that.PageIndex,
+            Status: that.status
           }
           getList(params).then(
             (res) => {
               /*
               给table重新赋值
               */
-              this.tableData = res['Data']
+              that.tableData = res['Data']
             }
           )
 
@@ -288,21 +294,25 @@
           /*
           当操作状态时选择时，初始化arr
           */
-          this.tableData.forEach(
+          that.arr = []
+          that.hasPublishArr = []
+          that.tableData.forEach(
             (v,index) =>{
               switch (v.Status) {
                 case 3:
-                  this.arr.push(v.ID)
+                  that.arr.push(v.ID)
                       break;
                 case 5:
-                  this.arr.push(v.ID)
+                  that.arr.push(v.ID)
+                  that.hasPublishArr.push(v.ID)
                       break;
                 default:
                   break;
               }
             }
           )
-          this.buttonStatus=this.arr.length <= 0
+          console.log(that.arr,that.hasPublishArr)
+          that.buttonStatus=that.arr.length <= 0
         }
       },
       search() {
@@ -322,7 +332,10 @@
           }
         )
       },
-      handDel(v,index) {
+      handDel(v,index,status) {
+        if(status == 5){
+          return;
+        }
         this.$confirm('是否删除此条问题?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -357,11 +370,14 @@
           });
         });
       },
-      checked(v,id,index){
+      checked(v,id,index,status){
         /*
           选中时，arr添加ID，
          */
         if(v){
+          if(status == 5){
+            this.hasPublishArr.push(id)
+          }
           this.arr.push(id)
         }else{
           /*
@@ -369,6 +385,7 @@
          */
           const index = this.arr.indexOf(id);
           this.arr.splice(index,1)
+
         }
         /*
           根据arr长度更改测试按钮状态
@@ -384,8 +401,48 @@
           type: 'warning'
         }).then(() => {
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
+          if(that.hasPublishArr.length>0){
+            that.arr.forEach(
+              (v,index,arr) =>{
+
+                that.hasPublishArr.forEach(
+                  (value,k) => {
+                    if (v === value)
+                    {
+                      that.arr.splice(index,1)
+                    }
+                  }
+                )
+              }
+            )
+          }
+          if(that.arr.length === 0){
+            store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
+              () =>{
+                const params = {
+                  Keys:that.keys,
+                  PageIndex:that.PageIndex,
+                  Status: that.status
+                }
+                getList(params).then(
+                  (res) => {
+                    /*
+                    给table重新赋值
+                    */
+                    that.showDel = false
+                    that.enableChecked = false
+                    that.tableData = res['Data']
+                    that.go()
+                  }
+                )
+              }
+            )
+            return;
+          }
+          // console.log(that.arr,that.hasPublishArr)
+          // debugger;
           const params = {
-            Ids: this.arr,
+            Ids: that.arr,
             Action:'train',
           }
           doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
@@ -420,7 +477,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
           const params = {
             Ids: this.arr,
             Action:'publish',
