@@ -32,7 +32,7 @@
             </el-checkbox-group>
             <!--{{keywords}}-->
           </div>
-          <div class="nextStep">
+          <div class="nextStep mt30">
             <el-button type="primary" plain size="mini" @click="questionLast">上一步</el-button>
             <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
               下一步
@@ -483,6 +483,9 @@
 <style lang="scss" scoped>
   @import '../../../../style/index';
 
+  .mt30 {
+    margin-top: 30px;
+  }
   .addQuestion {
     color: #555;
     font-size: 16px;
@@ -537,6 +540,7 @@
 
   .keywords {
     padding: 0 40px;
+    width: 1200px;
   }
 
   .checkboxContent {

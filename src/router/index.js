@@ -161,6 +161,12 @@ const arr = [
           require(["../page/bot/config/createrNewQA/updateQA"], resolve),
         name: 'config',
       },
+      {
+        path:'config/editQA',  //  编辑答案
+        component: resolve =>
+          require(["../page/bot/config/editQA/index"], resolve),
+        name: 'config',
+      },
 
 
     ]

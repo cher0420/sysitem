@@ -175,14 +175,25 @@
           query:{
             ...query,
           }
-
-
-        })},
+        })
+      },
       editSomething(v){
         if(v == 5){
           return;
         }else{
-          console.log('123')
+
+          console.log('调到编辑页面');
+          const query = this.$route.query;
+          this.$router.push({
+            path:'/bot/config/editQA',
+            query:{
+              ...query,
+            }
+          })
+
+
+
+
         }
       },
       go(){
