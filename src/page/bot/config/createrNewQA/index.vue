@@ -164,6 +164,17 @@
       ),
 
       getKeywords() {  // 将一句话分成多个词汇
+        if(this.Question == ""){
+          this.$alert('请添加问题', '友情提示', {
+            confirmButtonText: '确定',
+            callback: action => {
+               //
+            }
+          });
+          return false;
+        }
+
+
         var that = this;
 
         const token = getCookies(TOKEN);
