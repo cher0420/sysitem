@@ -14,6 +14,5 @@
 
   @import './style/index';
   @import './style/init.css';
-  @import "../static/base.css";
 
 </style>

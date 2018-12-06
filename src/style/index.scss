@@ -157,8 +157,13 @@ $border-color:#eaedf1;
 //disabled
 .disabled{
   color:#c0c4cc;
-  cursor: not-allowed;
+  cursor: default !important;
 }
-
+.yoy-second-menu .el-menu-item.is-disabled{
+  cursor: default !important;
+}
+.el-input.is-disabled .el-input__inner{
+  cursor: default !important;
+}
 
 

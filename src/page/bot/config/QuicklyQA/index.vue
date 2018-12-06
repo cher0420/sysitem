@@ -140,10 +140,7 @@
               /*
               自定义列表内容,没有在发布中的内容
                */
-              that.tableData  = res.Data
-              that.total = res.TotalCount
-              that.PageIndex = res.PageIndex
-              that.loading = false
+              that.complateGetList(res)
             }
           ).catch(
             (err) =>{
@@ -257,6 +254,12 @@
           )
         },5000)
       },
+      complateGetList(res){
+        this.tableData = res['Data']
+        this.total = res.TotalCount
+        this.PageIndex = res.PageIndex
+        this.loading = false
+      },
       handleCommand(command){
         this.title = this.options[command]
         this.status= command?command-0:null
@@ -265,10 +268,7 @@
         this.loading = true
         getList(status).then(
           (res) => {
-            this.tableData = res['Data']
-            this.total = res.TotalCount
-            this.PageIndex = res.PageIndex
-            this.loading = false
+            this.complateGetList(res)
           }
         )
       },
@@ -577,7 +577,7 @@
     }
     .un-handle{
       span{
-        cursor: not-allowed;
+        cursor: default;
         color:$disabled;
       }
     }
@@ -592,7 +592,7 @@
   }
   .un-handle{
     color:$disabled;
-    cursor: not-allowed;
+    cursor: default;
   }
   .link{
     cursor: pointer;

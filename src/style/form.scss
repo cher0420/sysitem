@@ -68,9 +68,9 @@ form label
 .el-textarea__inner{
   border-radius: 1px;
 }
-.el-select .el-input__inner{
-  color:$primary-color;
-}
+//.el-select .el-input__inner{
+//  color:$primary-color;
+//}
 .el-select .el-input__inner:focus{
   .el-select__caret{
     color: $primary-color;
@@ -87,6 +87,9 @@ form label
 }
 .select {
   width: 190px;
+  .el-input__inner{
+    color:$primary-color;
+  }
   .el-input__inner::-webkit-input-placeholder {
         color: #C7CAD1 !important;
         font-size: 13px !important;
