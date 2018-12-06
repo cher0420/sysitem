@@ -34,7 +34,7 @@
           </div>
           <div class="nextStep">
             <el-button type="primary" plain size="mini" @click="questionLast">上一步</el-button>
-            <el-button type="primary" size="mini" @click="getCheckKeywords" :disabled="checkboxDisabled">
+            <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
               下一步
             </el-button>
           </div>
@@ -104,6 +104,7 @@
     data() {
       return {
         Question: "公积金如何办理", // 题目
+        // Question: "", // 题目
         keywordsOption: [], // 关键词
         keywords: [], // 选中的关键字
         textarea: "",
@@ -216,10 +217,9 @@
                 that.keywordsNext(that.keywords.length);
               }
               if (msg.Data != null) {
-                that.newDataDis = false;
-                //  属性传参到子组件
-
-                sessionStorage.setItem('Data', JSON.stringify(msg.Data));
+                that.questionLast();
+                that.newDataDis = false; // 跳到 更新组件展示
+                sessionStorage.setItem('Data', JSON.stringify(msg.Data));  //  属性传参到子组件
 
 
               }
@@ -270,6 +270,9 @@
                 message: '创建新问答成功',
                 type: 'success'
               });
+              that.keywordsLast();
+              that.questionLast();
+
 
               // 跳转到列表页
               that.$router.push({
