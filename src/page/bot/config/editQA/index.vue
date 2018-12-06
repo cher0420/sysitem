@@ -247,7 +247,7 @@
 </script>
 <style lang="scss" scoped>
   @import '../../../../style/index';
-  @import "../../../../../static/base.css";
+  /*@import "../../../../../static/base.css";*/
 
   .keywordTip {
     height: 36px;
