@@ -223,7 +223,7 @@
           data: JSON.stringify(data),
           success: function (msg) {
 
-            console.log("根据关键字获取答案", msg)
+            // console.log("根据关键字获取答案", msg)
             if (msg.Status == "1") {
               // 修改答案
 
@@ -291,11 +291,18 @@
 
 
               // 跳转到列表页
+              const query = that.$route.query;
+
+              console.log("que",query )
+
+
               that.$router.push({
                 path: '/bot/config/QuicklyQA',
-                params: {
-                  id: "uprateQA"
-                },
+                query:{
+                  ...query,
+                }
+
+
               })
 
             }
