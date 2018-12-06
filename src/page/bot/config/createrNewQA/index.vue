@@ -32,9 +32,9 @@
             </el-checkbox-group>
             <!--{{keywords}}-->
           </div>
-          <div class="nextStep">
+          <div class="nextStep mt30">
             <el-button type="primary" plain size="mini" @click="questionLast">上一步</el-button>
-            <el-button type="primary" size="mini" @click="getCheckKeywords" :disabled="checkboxDisabled">
+            <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
               下一步
             </el-button>
           </div>
@@ -46,7 +46,7 @@
           <div class="addQuestion">
             第三步: 设置答案
           </div>
-          <div class="CreateNewQAtextareaParent">
+          <div class="CreateNewQAtextareaParentAdd">
             <el-input
               type="textarea"
               placeholder="请输入自定义回答,最多500个字符"
@@ -103,13 +103,14 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
-        Question: "公积金如何办理", // 题目
+        // Question: "公积金如何办理", // 题目
+         Question: "", // 题目
         keywordsOption: [], // 关键词
         keywords: [], // 选中的关键字
         textarea: "",
         timer: "",
         checkboxDisabled: true,
-        newDataDis: true, // 展示新建答案
+        // newDataDis: true, // 展示新建答案
         token: "",
 
         // 图片上传
@@ -124,10 +125,13 @@
       ...mapGetters([
         'questionDis',  // 问题可修改展示
         'keywordsDis',  // 关键词可修改展示
+        "newDataDis",
       ]),
       keywordsNew() {
         return this.keywords.join(","); //  关键词拼接展示
       },
+
+
     },
     components: {
       updateQA
@@ -156,10 +160,21 @@
 
     methods: {
       ...mapActions(
-        ["questionNext", "questionLast", "keywordsNext", "keywordsLast"]
+        ["questionNext", "questionLast", "keywordsNext", "keywordsLast","newDataHid"]
       ),
 
       getKeywords() {  // 将一句话分成多个词汇
+        if(this.Question == ""){
+          this.$alert('请添加问题', '友情提示', {
+            confirmButtonText: '确定',
+            callback: action => {
+               //
+            }
+          });
+          return false;
+        }
+
+
         var that = this;
 
         const token = getCookies(TOKEN);
@@ -208,7 +223,7 @@
           data: JSON.stringify(data),
           success: function (msg) {
 
-            console.log("根据关键字获取答案", msg)
+            // console.log("根据关键字获取答案", msg)
             if (msg.Status == "1") {
               // 修改答案
 
@@ -216,10 +231,11 @@
                 that.keywordsNext(that.keywords.length);
               }
               if (msg.Data != null) {
-                that.newDataDis = false;
-                //  属性传参到子组件
-
-                sessionStorage.setItem('Data', JSON.stringify(msg.Data));
+                that.newDataHid();
+                console.log("+++++++++++++++")
+                that.questionLast();
+               //   跳到 更新组件展示
+                sessionStorage.setItem('Data', JSON.stringify(msg.Data));  //  属性传参到子组件
 
 
               }
@@ -270,13 +286,23 @@
                 message: '创建新问答成功',
                 type: 'success'
               });
+              that.keywordsLast();
+              that.questionLast();
+
 
               // 跳转到列表页
+              const query = that.$route.query;
+
+              console.log("que",query )
+
+
               that.$router.push({
                 path: '/bot/config/QuicklyQA',
-                params: {
-                  id: "uprateQA"
-                },
+                query:{
+                  ...query,
+                }
+
+
               })
 
             }
@@ -457,6 +483,9 @@
 <style lang="scss" scoped>
   @import '../../../../style/index';
 
+  .mt30 {
+    margin-top: 30px;
+  }
   .addQuestion {
     color: #555;
     font-size: 16px;
@@ -483,19 +512,22 @@
     color: #999;
     font-size: 12px;
     font-family: "Microsoft YaHei";
-    padding-right: 30px;
+    /*padding-right: 30px;*/
+    width: 996px;
   }
 
   .nextStep {
     text-align: right;
     /*margin-top: 33px;*/
     margin-right: 11px;
+    width: 1000px;
   }
 
   .nextStepTop {
     text-align: right;
     margin-top: 33px;
     margin-right: 11px;
+    width: 996px;
   }
 
   .nextStep button {
@@ -508,6 +540,7 @@
 
   .keywords {
     padding: 0 40px;
+    width: 1200px;
   }
 
   .checkboxContent {
@@ -521,19 +554,21 @@
     position: relative;
     padding-top: 30px;
     padding-bottom: 20px;
+    /*width: 1000px;*/
+    /*height: 300px;*/
   }
 
   .fontCount {
     position: absolute;
-    right: 20px;
-    bottom: 30px;
+    left: 980px;
+    bottom: 10px;
     color: #999;
   }
 
-  .CreateNewQAtextarea textarea {
-    width: 1000px;
-    height: 300px !important;
-  }
+  /*.CreateNewQAtextareaParent textarea {*/
+    /*width: 1000px;*/
+    /*height: 300px !important;*/
+  /*}*/
 
 
 
@@ -613,3 +648,11 @@
   }
 </style>
 
+<style>
+  .CreateNewQAtextareaParentAdd textarea {
+    width: 1000px;
+    height: 300px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+</style>

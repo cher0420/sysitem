@@ -93,6 +93,9 @@
   import store from '../../../../store';
   import {REPLACE} from "../../../../store/mutations";
 
+  import {mapGetters} from 'vuex';
+  import {mapActions} from 'vuex';
+
   export default {
     data() {
       return {
@@ -161,18 +164,36 @@
       clearInterval(this.reloadId);
     },
     methods: {
+      ...mapActions(
+        ["newDataDis",]
+      ),
       newQA() {
+        const query = this.$route.query;
+        this.newDataDis(); // 进入创建问题 首页
         this.$router.push({
           path:'/bot/config/createrNewQA',
-          params:{
-            id:111
-          },
-        })},
+          query:{
+            ...query,
+          }
+        })
+      },
       editSomething(v){
         if(v == 5){
           return;
         }else{
-          console.log('123')
+
+          console.log('调到编辑页面');
+          const query = this.$route.query;
+          this.$router.push({
+            path:'/bot/config/editQA',
+            query:{
+              ...query,
+            }
+          })
+
+
+
+
         }
       },
       go(){

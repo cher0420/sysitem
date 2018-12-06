@@ -88,8 +88,8 @@
         </div>
 
       </div>
-      <div>
-        ( 支持.jpg,.jpeg,.png,.gif,svg格式,最大不超过200k , 虽多三张 )
+      <div class="support_format">
+        ( 支持.jpg,.jpeg,.png,.gif,svg格式,最大不超过200k , 最多3张 )
       </div>
       <div class="alterKey">
         <el-button type="primary" plain size="mini" @click="alterKeyWords()">修改关键词</el-button>
@@ -99,6 +99,8 @@
   </div>
 </template>
 <script>
+
+  import {mapActions} from 'vuex';
 
   import {TOKEN} from "../../../../constants/constants";
   import {getCookies} from "../../../../utils/cookie";
@@ -142,6 +144,9 @@
     },
 
     methods: {
+      ...mapActions(
+        ["questionNext", "questionLast", "keywordsNext", "keywordsLast","newDataDis",]
+      ),
       getData() {
         let data = JSON.parse(sessionStorage.getItem('Data'));
         this.Question = data.Question;
@@ -156,61 +161,70 @@
         this.ID = data.Text.ID;
 
         console.log("属性传的值", data);
-        // debugger
       },
-      updataAnswer() { // 更新问题
-
-
-        // console.log("存储答案userInerInfo", store.state.app.userInfo)
-        let that = this;
-        const token = getCookies(TOKEN);
-        this.token = token;
-        let recordId = JSON.parse(sessionStorage.getItem('recordId'));
-        let TenantId = store.state.app.userInfo.TenantId;
-        let Email = store.state.app.userInfo.Email;
-        let FullName = store.state.app.userInfo.FullName;
-        let data = {
-          "BotConfigId": recordId,
-          "TenantId": TenantId,
-          "KeyId": that.KeyId,
-          "Question": that.Question,
-          "Keyword": this.keywordsNew,
-          "Text": that.Text,
-          "Image": that.Image,
-          "Email": Email,
-          "FullName": FullName
-        };
-        $.ajax({
-          type: "POST",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-            'Access-Token': token
-          },
-          url: base.requestHost + "/api/QuickQA/StoreQAData",
-          data: JSON.stringify(data),
-          success: function (msg) {
-            // console.log("存储答案", msg)
-            if (msg.Status == "1") {
-
-              that.$message({
-                message: '更新新问答成功',
-                type: 'success'
-              });
-
-            }
-
-          }
-        })
-
-      },
+      // updataAnswer() { // 更新问题
+      //
+      //
+      //   // console.log("存储答案userInerInfo", store.state.app.userInfo)
+      //   let that = this;
+      //   const token = getCookies(TOKEN);
+      //   this.token = token;
+      //   let recordId = JSON.parse(sessionStorage.getItem('recordId'));
+      //   let TenantId = store.state.app.userInfo.TenantId;
+      //   let Email = store.state.app.userInfo.Email;
+      //   let FullName = store.state.app.userInfo.FullName;
+      //   let data = {
+      //     "BotConfigId": recordId,
+      //     "TenantId": TenantId,
+      //     "KeyId": that.KeyId,
+      //     "Question": that.Question,
+      //     "Keyword": this.keywordsNew,
+      //     "Text": that.Text,
+      //     "Image": that.Image,
+      //     "Email": Email,
+      //     "FullName": FullName
+      //   };
+      //   $.ajax({
+      //     type: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json;charset=utf-8",
+      //       'Access-Token': token
+      //     },
+      //     url: base.requestHost + "/api/QuickQA/StoreQAData",
+      //     data: JSON.stringify(data),
+      //     success: function (msg) {
+      //       // console.log("存储答案", msg)
+      //       if (msg.Status == "1") {
+      //
+      //         that.$message({
+      //           message: '更新新问答成功',
+      //           type: 'success'
+      //         });
+      //         setTimeout(function () {
+      //           that.$router.push({
+      //               path: '/bot/config/quicklyQA',
+      //             })
+      //         },1500)
+      //
+      //       }else{
+      //         that.$message({
+      //           message: '更新新问答失败',
+      //           type: 'success'
+      //         });
+      //       }
+      //
+      //     }
+      //   })
+      //
+      // },
 
       alterKeyWords() {
+
         this.$router.push({
-          path: '/bot/config/index',
-          params: {
-            "alterKeyWords": "alterKeyWords"
-          },
+          path: '/bot/config/createrNewQA',
         })
+        this.newDataDis();
+
       },
 
       // 图片上传
@@ -285,7 +299,7 @@
 
 
       },
-      saveKeywords() {  // 	存储答案
+      saveKeywords() {  // 	更新答案
 
         console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
@@ -299,7 +313,7 @@
           "BotConfigId": recordId,
           "TenantId": TenantId,
           "Question": that.Question,
-          "Keyword":"办理,公积金",
+          "Keyword":that.Keyword,
           "Text": {
             "ID": that.ID,
             "Answer":that.Answer,
@@ -327,11 +341,12 @@
               });
 
               // 跳转到列表页
-              this.$router.push({
+              const query = that.$route.query;
+              that.$router.push({
                 path: '/bot/config/QuicklyQA',
-                params: {
-                  id: "uprateQA"
-                },
+                query:{
+                  ...query,
+                }
               })
 
             }
@@ -467,7 +482,7 @@
 
   .fontCount {
     position: absolute;
-    right: -20px;
+    left: 390px;
     bottom: 40px;
     color: #999;
   }
@@ -481,7 +496,7 @@
   }
 
   .nextStep {
-    padding-bottom: 30px;
+    padding-bottom:15px;
     text-align: right;
   }
 
@@ -491,6 +506,10 @@
     height: 32px;
     line-height: 32px;
     padding: 0;
+  }
+  .support_format {
+    padding-bottom: 30px;
+
   }
 </style>
 
