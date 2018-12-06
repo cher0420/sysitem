@@ -28,6 +28,11 @@
         prop="Question"
         label="问题"
         >
+        <template slot-scope="scope">
+          <section class='link' style="height: 28px;line-height: 28px;" @click="pathToDetail">
+            {{scope.row.Question}}
+          </section>
+        </template>
       </el-table-column>
       <el-table-column
         prop="Status"
@@ -190,11 +195,16 @@
               ...query,
             }
           })
-
-
-
-
         }
+      },
+      pathToDetail(){
+        const query = this.$route.query;
+        this.$router.push({
+          path:'',
+          query:{
+            ...query,
+          }
+        })
       },
       go(){
         const id = this.$route.query.recordId
@@ -583,5 +593,11 @@
   .un-handle{
     color:$disabled;
     cursor: not-allowed;
+  }
+  .link{
+    cursor: pointer;
+  }
+  .link:hover{
+    text-decoration: underline;
   }
 </style>
