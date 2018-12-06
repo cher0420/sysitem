@@ -112,8 +112,8 @@
         showDel:false,
         buttonStatus:true,
         reloadId:null,
-        workingStatus:null,
-        hasPublishArr:[]
+        hasPublishArr:[],
+        originArr:[]
       }
     },
     /*
@@ -124,9 +124,9 @@
       获取初始列表
        */
       const that = this
+      this.loading = true
       _ask().then(
         (res) => {
-          this.loading = true
           getList().then(
             (res) => {
               /*
@@ -181,7 +181,7 @@
         const url = `${host}/WebTalk/validaiml.html?id=${id}`
         window.open(url)
       },
-      _reload_ask(){
+      _reload_ask(v = true){
         const that = this
         this.reloadId = setInterval(function () {
           _ask().then(
@@ -190,7 +190,6 @@
               不存在发布
               */
               that.loading = true
-              that.workingStatus = false
               store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
               const params = {
                 Keys:that.keys,
@@ -203,8 +202,16 @@
                 (res) =>{
                   that.tableData = res['Data']
                   that.loading = false
+                  that.total = res.TotalCount
                   clearInterval(that.reloadId);
-                  that.go()
+                  that.$message({
+                    type: 'success',
+                    message: '操作成功',
+                    duration:2000,
+                  });
+                  if(v){
+                    that.go()
+                  }
                 }
               )
               /*
@@ -214,18 +221,10 @@
             }
           ).catch(
             () =>{
-              that.workingStatus = true
+              // that.workingStatus = true
             }
           )
         },5000)
-      },
-      renderProductId(h, {column}) {
-        return h(DrapDown, {
-            props: {
-              options: questionOptions.status,
-            },
-          }
-        );
       },
       handleCommand(command){
         this.title = this.options[command]
@@ -311,8 +310,8 @@
               }
             }
           )
-          console.log(that.arr,that.hasPublishArr)
           that.buttonStatus=that.arr.length <= 0
+          that.originArr = that.arr.slice(0)
         }
       },
       search() {
@@ -391,7 +390,7 @@
           根据arr长度更改测试按钮状态
          */
         this.arr.length>0?this.buttonStatus = false:this.buttonStatus = true
-
+        console.log(this.arr)
       },
       train(){
         const that = this
@@ -402,21 +401,25 @@
         }).then(() => {
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
           if(that.hasPublishArr.length>0){
-            that.arr.forEach(
-              (v,index,arr) =>{
-
-                that.hasPublishArr.forEach(
-                  (value,k) => {
-                    if (v === value)
-                    {
-                      that.arr.splice(index,1)
-                    }
-                  }
-                )
+            that.hasPublishArr.forEach(
+              (v,k) =>{
+                const index = that.arr.indexOf(v);
+                if(index>-1){
+                  that.arr.splice(index,1)
+                }
               }
             )
           }
-          if(that.arr.length === 0){
+          let equal = true;
+          that.arr.forEach(
+            (v,index) =>{
+              const value = that.originArr.indexOf(v);
+              if(value <= -1){
+                equal = false
+              }
+            }
+          )
+          if(that.arr.length === 0 ||equal){
             store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
               () =>{
                 const params = {
@@ -437,34 +440,28 @@
                 )
               }
             )
-            return;
-          }
-          // console.log(that.arr,that.hasPublishArr)
-          // debugger;
-          const params = {
-            Ids: that.arr,
-            Action:'train',
-          }
-          doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
-            (res) =>{
-              this.$message({
-                type:'success',
-                message:'操作成功',
-                duration:2000,
-              })
-              that._reload_ask()
+          }else{
+            const params = {
+              Ids: that.arr,
+              Action:'train',
             }
-          ).catch(
-            () =>{
-              this.$message({
-                type:'error',
-                message:'操作失败',
-                duration:2000,
-              })
-            }
-          )
+            doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
+              (res) =>{
+                that._reload_ask()
+              }
+            ).catch(
+              () =>{
+                that.$message({
+                  type:'error',
+                  message:'操作失败',
+                  duration:2000,
+                })
+              }
+            )
+          }
+
         }).catch(() => {
-          this.$message({
+          that.$message({
             type: 'info',
             message: '已取消测试'
           });
@@ -479,17 +476,12 @@
         }).then(() => {
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
           const params = {
-            Ids: this.arr,
+            Ids: that.arr,
             Action:'publish',
           }
           doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
             (res) =>{
-              this.$message({
-                type: 'success',
-                message: '操作成功',
-                duration:2000,
-              });
-              that._reload_ask()
+              that._reload_ask(false)
             }
           ).catch(
             () =>{
