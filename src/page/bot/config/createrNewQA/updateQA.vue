@@ -105,7 +105,10 @@
   import {TOKEN} from "../../../../constants/constants";
   import {getCookies} from "../../../../utils/cookie";
   import base from "../../../../host/baseUrl";
-  import store from "../../../../store/index"
+  import store from "../../../../store/index";
+
+
+
 
   export default {
     name: "Allen-updateQA",
@@ -433,6 +436,7 @@
 </script>
 <style lang="scss" scoped>
   @import '../../../../style/index';
+  @import "../../../../../static/base.css";
 
   .mainStyle {
     font-size: 12px;

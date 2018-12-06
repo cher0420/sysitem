@@ -55,6 +55,7 @@
   }
 </script>
 <style scoped>
+  @import "../../../../../static/base.css";
   .itemDetail {
     margin: 10px 40px;
   }
