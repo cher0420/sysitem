@@ -1,10 +1,8 @@
 <template>
-  <div class="yoy-main mainStyle clearfix">
+  <div class="mainStyle">
     <div class="oldQA">
-      <div class="existingQuestion">
-        <div class="existingQues">
-          已有问题
-        </div>
+      <div class="existingQues">
+        <span>已有问题</span>
         <div class="createTime">
           创建时间 : {{CreateDate}}
         </div>
@@ -26,49 +24,43 @@
         </div>
       </div>
       <div class="updateTextareaa">
-        <el-input
-          type="textarea" :disabled="true"
-          placeholder="请输入自定义回答,最多500个字符"
-          v-model="receiveText.Answer" class="CreateNewQAtextarea">
-        </el-input>
-        <span class="fontCount">{{receiveText.Answer.length}}/500字</span>
+        <div class="answerDis">
+          {{receiveText.Answer}}
+        </div>
+
       </div>
     </div>
     <div class="newQA">
-      <div class="existingQuestion">
-        <div class="existingQues">
-          第一步: 添加问题
+      <div class="editQuestionBac">
+        <div class="editQuestion">
+          第一步： 添加问题
         </div>
-
       </div>
       <div class="questionDetail">
         问题 : {{Question}}
       </div>
-      <div class="existingQuestion">
-        <div class="existingQues">
+      <div class="editQuestionBac">
+        <div class="editQuestion">
           第二步 : 确认关键词 ( 可选择2-4个 )
         </div>
       </div>
       <div class="questionDetail">
         关键词 : {{Keyword}}
       </div>
-      <div class="existingQuestion">
-        <div class="existingQues">
+      <div class="editQuestionBac">
+        <div class="editQuestion">
           第三步 : 设置答案
         </div>
       </div>
-      <div class="updateTextareaa updataQuestions">
-        <el-input
-          type="textarea"
-          placeholder="请输入自定义回答,最多500个字符"
-          v-model="Answer" class="CreateNewQAtextarea">
-        </el-input>
+      <div class="editAnswerQA">
+        <textarea v-model="Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
         <span class="fontCount">{{Answer.length}}/500字</span>
       </div>
-      <div class="nextStep clearfix">
-        <div class="photoUp">
+      <!-- upload photo -->
+      <div class="m20">
+        <div class="">
           <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
-          <div class="upload_warp_img" v-show="imgList.length!=0">
+          <div class="upload_warp_imgg" v-show="imgList.length!=0">
             <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
               <div class="upload_warp_img_div_top">
                 <div class="upload_warp_img_div_text">
@@ -81,13 +73,14 @@
             </div>
           </div>
 
-          <div class="upload_warp_left" @click="fileClick">
+          <div class="upload_warp_leftt" @click="fileClick">
             <i class="el-icon-plus"></i>
           </div>
 
         </div>
 
       </div>
+
       <div class="support_format">
         ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
       </div>
@@ -95,7 +88,10 @@
         <el-button type="primary" plain size="mini" @click="alterKeyWords()">修改关键词</el-button>
         <el-button type="primary" size="mini" @click="getPhotoUrl()">更新回答</el-button>
       </div>
+
+
     </div>
+
   </div>
 </template>
 <script>
@@ -108,8 +104,6 @@
   import store from "../../../../store/index";
 
 
-
-
   export default {
     name: "Allen-updateQA",
     data() {
@@ -119,15 +113,15 @@
 
 
         receiveText: {},  //  未修改达案
-        Answer:"",
-        ID:"",
+        Answer: "",
+        ID: "",
 
 
         imgListNew: [],
         Image: [],
         CreateDate: "",
         KeyId: "",
-        DeleteIds:[],
+        DeleteIds: [],
 
 
         // 图片上传
@@ -148,7 +142,7 @@
 
     methods: {
       ...mapActions(
-        ["questionNext", "questionLast", "keywordsNext", "keywordsLast","newDataDis",]
+        ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataDis",]
       ),
       getData() {
         let data = JSON.parse(sessionStorage.getItem('Data'));
@@ -222,9 +216,12 @@
       // },
 
       alterKeyWords() {
-
+        const query = this.$route.query;
         this.$router.push({
           path: '/bot/config/createrNewQA',
+          query: {
+            ...query,
+          }
         })
         this.newDataDis();
 
@@ -316,13 +313,13 @@
           "BotConfigId": recordId,
           "TenantId": TenantId,
           "Question": that.Question,
-          "Keyword":that.Keyword,
+          "Keyword": that.Keyword,
           "Text": {
             "ID": that.ID,
-            "Answer":that.Answer,
+            "Answer": that.Answer,
           },
           "Image": that.Image,
-          "DeleteIds":that.DeleteIds,
+          "DeleteIds": that.DeleteIds,
           "Email": Email,
           "FullName": FullName
         };
@@ -347,7 +344,7 @@
               const query = that.$route.query;
               that.$router.push({
                 path: '/bot/config/QuicklyQA',
-                query:{
+                query: {
                   ...query,
                 }
               })
@@ -435,45 +432,106 @@
   }
 </script>
 <style lang="scss" scoped>
-  @import '../../../../style/index';
+  /*@import '../../../../style/index';*/
   /*@import "../../../../../static/base.css";*/
+.m20{
+  margin-top: 20px;
+}
+  .upload_warp_imgg {
+    display: inline-block;
+   vertical-align: middle;
+  }
+  .upload_warp_leftt {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+    border: 1px dashed #c3c3c3;
+    font-size: 30px;
+    color: #c3c3ce;
+    line-height: 80px;
+    text-align: center;
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: 22px;
+    vert-align: middle;
+  }
+  .editQuestion {
+    color: #555;
+    font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+
+    /*width: 100%;*/
+    padding-left: 10px;
+  }
+
+  .editQuestionBac {
+    background: #F9FAFC;
+    /*width: 100%;*/
+  }
 
   .mainStyle {
     font-size: 12px;
     color: #999;
     font-family: "Microsoft YaHei";
+    /*width: 100%;*/
+    /*height: 100%;*/
+    line-height: 1;
+    position: relative;
+    padding-left: 543px;
 
+    /*overflow: hidden;*/
   }
 
+  .answerDis {
+    box-sizing: border-box;
+    width: 450px;
+    height: 300px;
+    border: 1px solid #e1e1e1;
+
+    padding: 20px;
+  }
 
   .oldQA {
-    float: left;
-    width: 50%;
-    border-right: 1px solid rgba(227, 227, 227, 0.7);
+
     padding-right: 50px;
+    border-right: 1px solid #F9FAFC;
+    position: absolute;
+    left: 0;
+    top: 0px;
+
   }
 
   .newQA {
-    float: left;
-    width: 50%;
-    /*border: 1px solid green;*/
-    padding-left: 50px;
-  }
 
-  .existingQuestion {
-    position: relative;
+    vertical-align: top;
+    padding-left: 50px;
+    box-sizing: border-box;
   }
 
   .createTime {
+    /*display: inline-block;*/
+    font-size: 12px;
+    height: 30px;
+    line-height: 30px;
+    color: #999;
+    padding-right: 10px;
+    max-width: 250px;
+    text-align: right;
     position: absolute;
     right: 0;
-    top: 2px;
-
+    top: 0;
   }
 
   .existingQues {
     color: #555;
     font-size: 16px;
+    height: 30px;
+    line-height: 30px;
+    background: #F9FAFC;
+    padding-left: 10px;
+    max-width: 490px;
+    position: relative;
   }
 
   .questionDetail {
@@ -485,23 +543,12 @@
 
   }
 
-  .fontCount {
-    position: absolute;
-    left: 390px;
-    bottom: 40px;
-    color: #999;
-  }
-
   .updataQuestions {
     padding-left: 0;
   }
 
-  .updataQuestions .fontCount {
-    right: 10px;
-  }
-
   .nextStep {
-    padding-bottom:15px;
+    padding-bottom: 15px;
     text-align: right;
   }
 
@@ -512,7 +559,9 @@
     line-height: 32px;
     padding: 0;
   }
+
   .support_format {
+    margin-top: 15px;
     padding-bottom: 30px;
 
   }
@@ -535,6 +584,7 @@
 </style>
 
 <style scoped>
+
   .upload_warp_left {
     width: 80px;
     height: 80px;
@@ -600,5 +650,29 @@
 
   .alterKey {
     text-align: right;
+    max-width: 500px;
+  }
+</style>
+<style>
+  .editAnswerQA {
+    position: relative;
+
+  }
+
+  .editAnswerQA textarea {
+    box-sizing: border-box;
+    width: 450px !important;
+    height: 300px !important;
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #e1e1e1;
+
+  }
+
+  .editAnswerQA .fontCount {
+    position: absolute;
+    left: 400px;
+    bottom: 10px;
+    word-break: keep-all;
   }
 </style>

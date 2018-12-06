@@ -67,7 +67,7 @@
         </template>
         <template slot-scope="scope">
           <section class="handle" style="height: 28px;line-height: 28px">
-            <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px" @click="editSomething(scope.row.Status)">
+            <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px" @click="editSomething(scope.row)">
               <i class="el-icon-edit" style="margin-right: 5px;"></i>
               <span>编辑</span>
             </span>
@@ -180,7 +180,7 @@
         })
       },
       editSomething(v){
-        if(v == 5){
+        if(v.Status == 5){
           return;
         }else{
 
@@ -190,6 +190,7 @@
             path:'/bot/config/editQA',
             query:{
               ...query,
+              v
             }
           })
         }

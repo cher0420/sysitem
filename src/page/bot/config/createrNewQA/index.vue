@@ -1,5 +1,5 @@
 <template>
-  <div class="yoy-main">
+  <div class="yoy-main cc">
     <div v-if="newDataDis">
       <div class="addQuestion">
         第一步:添加问题
@@ -47,18 +47,21 @@
             第三步: 设置答案
           </div>
           <div class="CreateNewQAtextareaParentAdd">
-            <el-input
-              type="textarea"
-              placeholder="请输入自定义回答,最多500个字符"
-              v-model="textarea" class="CreateNewQAtextarea">
-            </el-input>
+            <div>
+              <el-input
+                type="textarea"
+                placeholder="请输入自定义回答,最多500个字符"
+                v-model="textarea" class="CreateNewQAtextarea">
+              </el-input>
+            </div>
             <span class="fontCount">{{textarea.length}}/500字</span>
           </div>
           <div class="nextStep">
             <div class="photoUp">
               <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
               <div class="upload_warp_img" v-show="imgList.length!=0">
-                <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
+                <!-- li -->
+                <div class="upload_warp_img_div " v-for="(item,index) of imgList">
                   <div class="upload_warp_img_div_top">
                     <div class="upload_warp_img_div_text">
                       <span></span>
@@ -73,7 +76,9 @@
               <div class="upload_warp_left" @click="fileClick">
                 <i class="el-icon-plus"></i>
               </div>
-
+              <div class="imgLimit">
+                ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
+              </div>
             </div>
 
             <el-button type="primary" plain size="mini" @click="keywordsLast">上一步</el-button>
@@ -104,7 +109,7 @@
     data() {
       return {
         // Question: "公积金如何办理", // 题目
-         Question: "", // 题目
+        Question: "", // 题目
         keywordsOption: [], // 关键词
         keywords: [], // 选中的关键字
         textarea: "",
@@ -160,15 +165,15 @@
 
     methods: {
       ...mapActions(
-        ["questionNext", "questionLast", "keywordsNext", "keywordsLast","newDataHid"]
+        ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
 
       getKeywords() {  // 将一句话分成多个词汇
-        if(this.Question == ""){
+        if (this.Question == "") {
           this.$alert('请添加问题', '友情提示', {
             confirmButtonText: '确定',
             callback: action => {
-               //
+              //
             }
           });
           return false;
@@ -234,7 +239,7 @@
                 that.newDataHid();
                 console.log("+++++++++++++++")
                 that.questionLast();
-               //   跳到 更新组件展示
+                //   跳到 更新组件展示
                 sessionStorage.setItem('Data', JSON.stringify(msg.Data));  //  属性传参到子组件
 
 
@@ -293,12 +298,12 @@
               // 跳转到列表页
               const query = that.$route.query;
 
-              console.log("que",query )
+              console.log("que", query)
 
 
               that.$router.push({
                 path: '/bot/config/QuicklyQA',
-                query:{
+                query: {
                   ...query,
                 }
 
@@ -371,7 +376,7 @@
               if (msg.Data.FilesName.length == 0) {
                 // obj.Answer = "",
                 //   obj.ID = "";
-                that.Image = [] ;
+                that.Image = [];
               }
               that.saveKeywords();
 
@@ -484,10 +489,10 @@
   /*@import "../../../../../static/base.css";*/
   @import '../../../../style/index';
 
-
   .mt30 {
     margin-top: 30px;
   }
+
   .addQuestion {
     color: #555;
     font-size: 16px;
@@ -498,7 +503,7 @@
     padding-top: 30px;
     padding-left: 40px;
     /*padding-right: 40px;*/
-    width: 997px;
+    max-width: 997px;
     color: #999;
     font-size: 12px;
   }
@@ -560,27 +565,6 @@
     /*height: 300px;*/
   }
 
-  .fontCount {
-    position: absolute;
-    left: 980px;
-    bottom: 10px;
-    color: #999;
-  }
-
-  /*.CreateNewQAtextareaParent textarea {*/
-    /*width: 1000px;*/
-    /*height: 300px !important;*/
-  /*}*/
-
-
-
-
-
-
-
-
-
-
   .upload_warp_left {
     width: 80px;
     height: 80px;
@@ -589,8 +573,8 @@
     color: #c3c3ce;
     line-height: 80px;
     text-align: center;
-    float: left;
-    /*vert-align: middle;*/
+    vertical-align: middle;
+    display: inline-block;
     margin-right: 22px;
   }
 
@@ -608,6 +592,7 @@
 
   .upload_warp_img {
     display: inline-block;
+    vertical-align: middle;
 
   }
 
@@ -648,13 +633,34 @@
     height: 300px !important;
     color: #999;
   }
+
+  .CreateNewQAtextareaParentAdd {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    position: relative;
+  }
+
+  .CreateNewQAtextareaParentAdd .fontCount {
+    position: absolute;
+    right: 33px;
+    bottom: 10px;
+    word-break: keep-all;
+    display: inline-block;
+    color: #999;
+  }
+
+  .imgLimit {
+    display: inline-block;
+    color: #c3c3c3;
+    margin-left: 20px;
+  }
 </style>
 
 <style>
   .CreateNewQAtextareaParentAdd textarea {
-    width: 1000px;
+    max-width: 1000px;
     height: 300px;
-    margin-top: 30px;
-    margin-bottom: 30px;
+
   }
+
 </style>

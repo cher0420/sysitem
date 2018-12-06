@@ -1,11 +1,13 @@
 <template>
   <div class="yoy-main">
-
+    <div class="questionTitl">
+      {{ Question }}
+    </div>
     <div class="keywordTip">
       关键词
     </div>
     <div class="kwShow">
-      {{"2018年,年会,地点"}}
+      {{Keyword}}
     </div>
     <div class="keywordTip">
       设置答案
@@ -14,9 +16,9 @@
       <el-input
         type="textarea"
         placeholder="请输入自定义回答,最多500个字符"
-        v-model="Text.Answer" class="editTextarea">
+        v-model="Answer" class="editTextarea">
       </el-input>
-      <span class="fontCount">{{Text.Answer.length}}/500字</span>
+      <span class="fontCount">{{Answer.length}}/500字</span>
     </div>
     <div class="photoUp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
@@ -42,7 +44,7 @@
         ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
       </div>
       <div class="subFinsh">
-        <el-button type="primary" size="mini" @click="getPhotoUrl">完成</el-button>
+        <el-button type="primary" size="mini" @click="getPhotoUrl" >完成</el-button>
       </div>
 
     </div>
@@ -76,13 +78,28 @@
           "ID": "",
           "Answer": "上海市徐汇区天华信息科技园",
         },
+        //   用户传过来的参数
+        BotConfigId: null,
+        CreateDate: "2018-12-06",
+        CreateUserId: null,
+        CreateUserName: null,
+        ID: "",
+        Keyword: "",
+        Question: "",
+        Status: "",
+        TenantId: "",
+        UpdateDate: "",
+        UpdateUserId: "",
+        UpdateUserName: "",
+        checkedStatus: "",
+
+        Answer:"", // 找不到
       }
     },
     computed: {},
 
     created() {
-
-
+      this.getData()
     },
     mounted() {
 
@@ -92,7 +109,26 @@
 
     methods: {
 
+      getData() {
+        let query = this.$route.query;
+        this.Question = query.v.Question;
+        this.BotConfigId = query.v.BotConfigId;
+        this.CreateDate = query.v.CreateDate;
+        this.CreateUserId = query.v.CreateUserId;
+        this.CreateUserName = query.v.CreateUserName;
+        this.ID = query.v.ID;
+        this.Keyword = query.v.Keyword;
+        this.Status = query.v.Status;
+        this.TenantId = query.v.TenantId;
+        this.UpdateDate = query.v.UpdateDate;
+        this.UpdateUserId = query.v.UpdateUserId;
+        this.UpdateUserName = query.v.UpdateUserName;
+        this.checkedStatus = query.v.checkedStatus;
 
+        console.log(query)
+
+
+      },
       // 图片上传
       fileClick() {
 
@@ -159,6 +195,70 @@
 
             }
 
+
+          }
+        })
+
+
+      },
+      saveKeywords() {  // 	存储答案
+
+        console.log("存储答案userInerInfo", store.state.app.userInfo)
+        let that = this;
+        const token = getCookies(TOKEN);
+        this.token = token;
+        let recordId = JSON.parse(sessionStorage.getItem('recordId'));
+        let TenantId = store.state.app.userInfo.TenantId;
+        let Email = store.state.app.userInfo.Email;
+        let FullName = store.state.app.userInfo.FullName;
+        let data = {
+          "BotConfigId": recordId,
+          "TenantId": TenantId,
+          "Question": that.Question,
+          "Keyword": that.Keyword,
+          "Text": {
+            "ID": that.ID,
+            "Answer": that.Answer,
+          },
+          "Image": that.Image,
+          "Email": Email,
+          "FullName": FullName
+        };
+        $.ajax({
+          type: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            'Access-Token': token
+          },
+          url: base.requestHost + "/api/QuickQA/StoreQAData",
+          data: JSON.stringify(data),
+          success: function (msg) {
+            console.log("存储答案", msg)
+            if (msg.Status == "1") {
+
+              that.$message({
+                message: '编辑答案成功',
+                type: 'success'
+              });
+
+
+
+              // 跳转到列表页
+              const query = that.$route.query;
+
+
+
+
+              that.$router.push({
+                path: '/bot/config/QuicklyQA',
+                query:{
+                  ...query,
+                }
+
+
+              })
+
+            }
 
           }
         })
@@ -264,17 +364,27 @@
     padding-left: 10px;
 
   }
+
+  .questionTitl {
+    color: #555;
+    font-size: 24px;
+    margin-top: -85px;
+    margin-left: 10px;
+    margin-bottom: 30px;
+  }
+
   .subFinsh {
     position: absolute;
     right: 0;
     top: 30px;
   }
-  .imgLimit{
-    position: absolute;
-    left: 340px;
-    top: 33px;
+
+  .imgLimit {
+    display: inline-block;
     color: #c3c3c3;
+    margin-left: 20px;
   }
+
   .kwShow {
     padding-bottom: 40px;
     padding-top: 30px;
@@ -289,9 +399,10 @@
   }
 
   .edit_textarea .fontCount {
+    word-break: keep-all;
     position: absolute;
-    left: 980px;
-    bottom: 10px;
+    right: 7px;
+    bottom: 5px;
   }
 
   .upload_warp_img {
@@ -333,6 +444,7 @@
     -moz-box-shadow: 0 0 10px #c0c4cc;
     /*box-shadow: 0 0 10px #c0c4cc;*/
   }
+
   .upload_warp_img_div img {
     width: 100%;
     height: 100%;
@@ -342,17 +454,20 @@
     margin-top: 22px;
     margin-left: 40px;
     position: relative;
-    width: 1000px;
+    max-width: 1000px;
   }
+
   .upload_warp_img_div_text {
     text-align: right;
     padding-right: 2px;
     padding-top: 2px;
   }
-  .upload_warp_img_div  {
+
+  .upload_warp_img_div {
     position: relative;
     display: inline-block;
   }
+
   .imgLimit {
 
   }
@@ -360,7 +475,7 @@
 <style>
 
   .edit_textarea textarea {
-    width: 1000px;
+    max-width: 1000px;
     height: 300px !important;
     position: relative;
   }
