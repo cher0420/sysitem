@@ -46,7 +46,7 @@
           <div class="addQuestion">
             第三步: 设置答案
           </div>
-          <div class="CreateNewQAtextareaParent">
+          <div class="CreateNewQAtextareaParentAdd">
             <el-input
               type="textarea"
               placeholder="请输入自定义回答,最多500个字符"
@@ -499,6 +499,7 @@
     text-align: right;
     /*margin-top: 33px;*/
     margin-right: 11px;
+    width: 1000px;
   }
 
   .nextStepTop {
@@ -531,19 +532,21 @@
     position: relative;
     padding-top: 30px;
     padding-bottom: 20px;
+    /*width: 1000px;*/
+    /*height: 300px;*/
   }
 
   .fontCount {
     position: absolute;
-    right: 20px;
-    bottom: 30px;
+    left: 980px;
+    bottom: 10px;
     color: #999;
   }
 
-  .CreateNewQAtextarea textarea {
-    width: 1000px;
-    height: 300px !important;
-  }
+  /*.CreateNewQAtextareaParent textarea {*/
+    /*width: 1000px;*/
+    /*height: 300px !important;*/
+  /*}*/
 
 
 
@@ -623,3 +626,11 @@
   }
 </style>
 
+<style>
+  .CreateNewQAtextareaParentAdd textarea {
+    width: 1000px;
+    height: 300px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+</style>

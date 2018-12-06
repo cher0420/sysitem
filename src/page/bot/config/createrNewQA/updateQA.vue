@@ -479,7 +479,7 @@
 
   .fontCount {
     position: absolute;
-    right: -20px;
+    left: 390px;
     bottom: 40px;
     color: #999;
   }
