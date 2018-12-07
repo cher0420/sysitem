@@ -455,6 +455,11 @@
     margin-right: 22px;
     vert-align: middle;
   }
+  .upload_warp_leftt:hover{
+    border-color: #409eff;
+    color: #409eff;
+    cursor: pointer;
+  }
   .editQuestion {
     color: #555;
     font-size: 16px;

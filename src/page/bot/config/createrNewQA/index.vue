@@ -2,7 +2,7 @@
   <div class="yoy-main cc">
     <div v-if="newDataDis">
       <div class="addQuestion">
-        第一步:添加问题
+        第一步 ： 添加问题
       </div>
       <div v-if="questionDis">
         <div class="addContent">
@@ -20,7 +20,7 @@
       </div>
       <div v-if="!questionDis">
         <div class="addQuestion">
-          第二步: 确认关键词 ( 可选择2-4个 )
+          第二步 ： 确认关键词 ( 可选择2-4个 )
         </div>
         <div v-if="keywordsDis">
           <div class="keywords">
@@ -53,7 +53,11 @@
                 placeholder="请输入自定义回答,最多500个字符"
                 v-model="textarea" class="CreateNewQAtextarea">
               </el-input>
+
             </div>
+
+          </div>
+          <div class="max1000">
             <span class="fontCount">{{textarea.length}}/500字</span>
           </div>
           <div class="nextStep">
@@ -497,6 +501,10 @@
     color: #555;
     font-size: 16px;
     font-family: "Microsoft YaHei";
+    background: #F9FAFC;
+    height: 34px;
+    line-height: 34px;
+    padding-left: 10px;
   }
 
   .addContent {
@@ -507,10 +515,13 @@
     color: #999;
     font-size: 12px;
   }
+  .addContent input {
+    font-size: 12px;
+  }
 
   .addContentDis {
     padding-bottom: 40px;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .questionTit {
@@ -520,7 +531,8 @@
     font-size: 12px;
     font-family: "Microsoft YaHei";
     /*padding-right: 30px;*/
-    width: 996px;
+    max-width: 997px;
+    margin-left: 40px;
   }
 
   .nextStep {
@@ -528,6 +540,7 @@
     /*margin-top: 33px;*/
     margin-right: 11px;
     width: 1000px;
+    margin-top: 52px;
   }
 
   .nextStepTop {
@@ -535,6 +548,7 @@
     margin-top: 33px;
     margin-right: 11px;
     width: 996px;
+    margin-left: 40px;
   }
 
   .nextStep button {
@@ -576,6 +590,12 @@
     vertical-align: middle;
     display: inline-block;
     margin-right: 22px;
+    /*border: 1px dashed #fff;*/
+  }
+  .upload_warp_left:hover {
+    border-color: #409eff;
+    color: #409eff;
+    cursor: pointer;
   }
 
   .upload_warp_img_div {
@@ -637,13 +657,13 @@
   .CreateNewQAtextareaParentAdd {
     margin-top: 30px;
     margin-bottom: 30px;
-    position: relative;
+    /*position: relative;*/
   }
 
   .CreateNewQAtextareaParentAdd .fontCount {
-    position: absolute;
-    right: 33px;
-    bottom: 10px;
+    /*position: absolute;*/
+    /*right: 33px;*/
+    /*bottom: 10px;*/
     word-break: keep-all;
     display: inline-block;
     color: #999;
@@ -654,6 +674,17 @@
     color: #c3c3c3;
     margin-left: 20px;
   }
+  .max1000 {
+    max-width: 1000px;
+    text-align: right;
+    margin-top: -10px;
+    z-index: 3;
+    margin-top: -52px;
+    padding-right:10px ;
+  }
+  .max1000 span{
+    padding-right: 10px;
+  }
 </style>
 
 <style>
@@ -663,4 +694,9 @@
 
   }
 
+</style>
+<style>
+  .addContent input {
+    font-size: 12px ;
+  }
 </style>

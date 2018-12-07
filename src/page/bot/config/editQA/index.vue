@@ -434,6 +434,11 @@
     font-size: 30px;
     color: #c3c3c3;
   }
+  .upload_warp_left:hover{
+    border-color: #409eff;
+    color: #409eff;
+    cursor: pointer;
+  }
 
   .upload_warp_img_div {
     width: 80px;
