@@ -200,7 +200,7 @@
       pathToDetail(){
         const query = this.$route.query;
         this.$router.push({
-          path:'',
+          path:'/bot/config/detailQA',
           query:{
             ...query,
           }
