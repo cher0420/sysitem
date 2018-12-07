@@ -11,7 +11,7 @@ const token = getCookies(TOKEN)
 
 export async function getList(api,params,key, loading=true){
     const TenantId = getCookies(TENANTID)
-    store.dispatch(REPLACE, {loading: loading}).then(
+    store.dispatch(REPLACE, {loading: loading,tableData:[],total:0}).then(
       () => {
         const data = {
           PageIndex: 1,                                     //分页页数
