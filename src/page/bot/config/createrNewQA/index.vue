@@ -171,6 +171,8 @@
       imgList(curVal, oldVal){
         if( 2 < curVal.length){
           this.addIcon = false;
+        }else{
+          this.addIcon = true;
         }
       },
     },
