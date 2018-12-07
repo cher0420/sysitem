@@ -18,6 +18,9 @@
         placeholder="请输入自定义回答,最多500个字符"
         v-model="Answer" class="editTextarea">
       </el-input>
+
+    </div>
+    <div class="max1000">
       <span class="fontCount">{{Answer.length}}/500字</span>
     </div>
     <div class="photoUp">
@@ -355,6 +358,17 @@
 <style lang="scss" scoped>
   @import '../../../../style/index';
   /*@import "../../../../../static/base.css";*/
+.max1000 {
+  max-width: 1000px;
+  text-align: right;
+  margin-left: 40px;
+  margin-top: -21px;
+  z-index: 3;
+  word-break: keep-all;
+}
+  .max1000 span {
+    margin-right: 10px;
+  }
 
   .keywordTip {
     height: 36px;
@@ -395,14 +409,14 @@
   .edit_textarea {
     margin-top: 30px;
     padding-left: 40px;
-    position: relative;
+    /*position: relative;*/
   }
 
   .edit_textarea .fontCount {
     word-break: keep-all;
-    position: absolute;
-    right: 7px;
-    bottom: 5px;
+    /*position: absolute;*/
+    /*right: 7px;*/
+    /*bottom: 5px;*/
   }
 
   .upload_warp_img {
@@ -433,6 +447,11 @@
     line-height: 80px;
     font-size: 30px;
     color: #c3c3c3;
+  }
+  .upload_warp_left:hover{
+    border-color: #409eff;
+    color: #409eff;
+    cursor: pointer;
   }
 
   .upload_warp_img_div {
@@ -477,7 +496,7 @@
   .edit_textarea textarea {
     max-width: 1000px;
     height: 300px !important;
-    position: relative;
+    /*position: relative;*/
   }
 </style>
 
