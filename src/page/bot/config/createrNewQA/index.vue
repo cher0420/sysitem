@@ -188,8 +188,8 @@
 
 
 
-        that.keywordsLast();
-        that.questionLast();
+        this.keywordsLast();
+        this.questionLast();
 
 
       },
@@ -339,6 +339,11 @@
 
 
               })
+
+              // 初始化页面
+              that.keywordsLast();
+              that.questionLast();
+
 
             }
 
