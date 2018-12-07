@@ -266,6 +266,8 @@
         this.loading = false
       },
       handleCommand(command){
+        this.tableData = []
+        this.total = 0
         this.title = this.options[command]
         this.status= command?command-0:null
         const status = {Status:this.status}
