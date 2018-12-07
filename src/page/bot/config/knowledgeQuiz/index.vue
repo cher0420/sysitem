@@ -121,7 +121,6 @@
       get_Answer_List(){
         /*获取知识列表*/
         /*初始化请求参数*/
-        store.dispatch(REPLACE,{tableData:[],total:0})
         this.loading = true
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const recordId = id?id:this.$route.query.recordId

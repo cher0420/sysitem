@@ -340,7 +340,7 @@
         const that = this
         const description = this.keyWords
         const searchStatus = store.state.app.searchStatus
-        store.dispatch(REPLACE, {PageIndex: 1,description}).then(
+        store.dispatch(REPLACE, {PageIndex: 1, description}).then(
           () => {
             const options = {
               body: {
