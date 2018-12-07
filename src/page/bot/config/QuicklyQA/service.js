@@ -7,7 +7,6 @@ import route from '../../../../router/index'
 import store from '../../../../store/index'
 import {REPLACE} from "../../../../store/mutations";
 import moment from 'moment';
-import {askIsDoing, filterData} from "../../service/requestMethod";
 
 /*
 机器人id
@@ -18,7 +17,8 @@ export const getList  = (params) =>{
     /*
     无参数情况下请求数据初始化
      */
-  const BotConfigId = route.currentRoute.query.recordId
+  const id = JSON.parse(sessionStorage.getItem('recordId'))
+  const BotConfigId = id?id:route.currentRoute.query.recordId
   const token = getCookies(TOKEN)
 
   const body = {
@@ -114,7 +114,8 @@ export const del = (params) => {
 
 export const _ask = () => {
   const token = getCookies(TOKEN)
-  const BotConfigId = route.currentRoute.query.recordId
+  const id = JSON.parse(sessionStorage.getItem('recordId'))
+  const BotConfigId = id?id:route.currentRoute.query.recordId
   const params = {
     headers:{
       'Access-Token':token
@@ -150,7 +151,8 @@ export const _ask = () => {
   )
 }
 export const doSomething = (url,params) =>{
-  const BotConfigId = route.currentRoute.query.recordId
+  const id = JSON.parse(sessionStorage.getItem('recordId'))
+  const BotConfigId = id?id:route.currentRoute.query.recordId
   const token = getCookies(TOKEN)
   const body = {
     ...params,

@@ -157,6 +157,7 @@
     methods: {
       go(path, id, name) {
         sessionStorage.setItem('recordId', JSON.stringify(id));
+        sessionStorage.setItem('name',  JSON.stringify(name));
         const url = {
           path: path,
           query: {

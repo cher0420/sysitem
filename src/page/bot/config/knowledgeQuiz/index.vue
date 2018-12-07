@@ -122,7 +122,8 @@
         /*获取知识列表*/
         /*初始化请求参数*/
         this.loading = true
-        const recordId = this.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const recordId = id?id:this.$route.query.recordId
         const data = {
           Data:{
             PageIndex:this.PageIndex,

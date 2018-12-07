@@ -94,7 +94,7 @@
   import questionOptions from './constants'
   import {getList,del,_ask,doSomething} from './service'
   import URL from '../../../../host/baseUrl'
-  import {QUERYSTATUS,PUBLISHORTRAIN} from "../../../../constants/api";
+  import {PUBLISHORTRAIN} from "../../../../constants/api";
   import store from '../../../../store';
   import {REPLACE} from "../../../../store/mutations";
 
