@@ -1,8 +1,8 @@
 <template>
   <div class="yoy-main">
-    <div class="questionTitl">
-      {{ Question }}
-    </div>
+    <!--<div class="questionTitl">-->
+      <!--{{ Question }}-->
+    <!--</div>-->
     <div class="keywordTip">
       关键词
     </div>
@@ -253,12 +253,10 @@
 
 
               that.$router.push({
-                path: '/bot/config/QuicklyQA',
+                path: '/bot/config/quicklyQA',
                 query:{
                   ...query,
                 }
-
-
               })
 
             }

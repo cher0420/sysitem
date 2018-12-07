@@ -216,7 +216,7 @@ export const STR = {
   quicklyQA:'快速问答',
   createrNewQA:'创建新问答',
   updateQA:'创建新问答',
-  editQA:'',
+  editQA:'编辑',
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

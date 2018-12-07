@@ -69,7 +69,7 @@
               const navIndexArr = to.path.split('/')
               const activeKey =navIndexArr[1]
               //设置标题
-              if(to.name === 'detail'){
+              if(to.name === 'detail'||to.name === 'edit'){
                 const navIndex = to.query.title
                 store.dispatch(REPLACE,{navIndex})
               }else{
@@ -112,7 +112,7 @@
         if(arr.length>3){
           const obj1 = {url:{path:`/${arr[0]}`,query},name:STR[arr[0]]}
           const obj2 = {url:{path:`/${arr[0]}/${arr[1]}/${arr[2]}`,query},name:STR[arr[2]]}
-          const name = to.query.title
+          let name = to.query.title&&to.name !== 'edit'?to.query.title:STR[arr[3]]
           const obj3 = {url:{path:`/${arr[0]}/${arr[1]}/${arr[2]}/${arr[3]}`,query},name}
           newArr=[obj1,obj2,obj3]
         } else if(arr.length>2){
