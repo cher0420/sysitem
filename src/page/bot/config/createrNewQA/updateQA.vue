@@ -345,7 +345,7 @@
               that.$router.push({
                 path: '/bot/config/quicklyQA',
                 query: {
-                  // ...query,
+                  ...query,
                 }
               })
 

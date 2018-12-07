@@ -114,7 +114,7 @@
 
       getData() {
         let query = this.$route.query;
-        // this.Question = query.v.Question;
+        this.Question = query.v.Question;
         this.BotConfigId = query.v.BotConfigId;
         this.CreateDate = query.v.CreateDate;
         this.CreateUserId = query.v.CreateUserId;
@@ -257,8 +257,6 @@
                 query:{
                   ...query,
                 }
-
-
               })
 
             }

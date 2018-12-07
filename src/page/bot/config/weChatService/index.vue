@@ -143,7 +143,8 @@
     },
     created(){
       this.loading = true
-      const recordId = this.$route.query.recordId
+      const id = JSON.parse(sessionStorage.getItem('recordId'))
+      const recordId = this.$route.query.recordId?this.$route.query.recordId:id
       const data ={recordId}
       const option ={
         headers:{

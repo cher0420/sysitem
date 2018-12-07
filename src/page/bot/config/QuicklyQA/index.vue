@@ -176,11 +176,13 @@
         this.$router.push({
           path:'/bot/config/quicklyQA/createrNewQA',
           query:{
+            recordId:query.recordId,
             // ...query,
           }
         })
       },
       editSomething(v){
+        const query = this.$route.query;
         if(v.Status == 5){
           return;
         }else{
@@ -188,6 +190,7 @@
             path:'/bot/config/quicklyQA/editQA',
             query:{
               // ...query,
+              recordId:query.recordId,
               title:v.Question,
               v
             }

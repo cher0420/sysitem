@@ -140,7 +140,8 @@
     },
     beforeCreate(){
       store.dispatch(REPLACE, {mainLoading: true})
-      const BotConfigId = this.$route.query.recordId
+      const id = JSON.parse(sessionStorage.getItem('recordId'))
+      const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
       const body = {
         BotConfigId,
       }
@@ -195,7 +196,8 @@
       submitForm(v){
         const that = this
         that.loading = true
-        const BotConfigId = this.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const body = {
           ...v,
           BotConfigId,
