@@ -29,7 +29,7 @@
         label="问题"
         >
         <template slot-scope="scope">
-          <section class='link' style="height: 28px;line-height: 28px;" @click="pathToDetail">
+          <section class='link' style="height: 28px;line-height: 28px;" @click="pathToDetail(scope.row)">
             {{scope.row.Question}}
           </section>
         </template>
@@ -197,12 +197,14 @@
           })
         }
       },
-      pathToDetail(){
+      pathToDetail(v){
         const query = this.$route.query;
         this.$router.push({
           path:'/bot/config/quicklyQA/detailQA',
           query:{
-            ...query,
+            recordId:query.recordId,
+            title:v.Question,
+            v
           }
         })
       },
