@@ -349,6 +349,7 @@
         }
       },
       search() {
+        this.tableData = []
         this.loading = true
         const Keys = {Keys:this.keys}
         getList(Keys).then(
@@ -361,7 +362,7 @@
           }
         ).catch(
           () => {
-
+            this.loading = false
           }
         )
       },
@@ -374,7 +375,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.loading=true
+          store.dispatch(REPLACE,{mainLoading:true})
           const params = {
             QuickQuizId:v
           }
@@ -382,7 +383,7 @@
             (res) => {
               this.tableData.splice(index,1)
               this.total--;
-              this.loading=false
+              store.dispatch(REPLACE,{mainLoading:false})
               this.$message({
                 type: 'success',
                 message: '删除成功'
@@ -390,6 +391,7 @@
             }
           ).catch(
             () =>{
+              store.dispatch(REPLACE,{mainLoading:false})
               this.$message({
                 type: 'error',
                 message: '删除失败，请稍后重试'
