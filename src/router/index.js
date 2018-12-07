@@ -167,6 +167,12 @@ const arr = [
           require(["../page/bot/config/editQA/index"], resolve),
         name: 'config',
       },
+      {
+        path:'config/detailQA',  //  详情页面
+        component: resolve =>
+          require(["../page/bot/config/detailQA/index"], resolve),
+        name: 'config',
+      },
 
 
     ]
