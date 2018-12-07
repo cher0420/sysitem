@@ -1,7 +1,7 @@
 <template>
   <section>
-    <section class="p-relative">
-      <el-button type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-model='keys' class='searchInput' size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+    <section class="p-relative" style="height:32px;">
+      <el-button v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-if="!enableChecked" v-model='keys' class='searchInput' size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
         <el-button v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;color: #fff;background: #2a8ce7;border-color: #2a8ce7;">选择</el-button>
       <span v-else class="p-absolute right-0">
