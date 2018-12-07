@@ -94,11 +94,10 @@
   import questionOptions from './constants'
   import {getList,del,_ask,doSomething} from './service'
   import URL from '../../../../host/baseUrl'
-  import {PUBLISHORTRAIN} from "../../../../constants/api";
+  import {QUERYSTATUS,PUBLISHORTRAIN} from "../../../../constants/api";
   import store from '../../../../store';
   import {REPLACE} from "../../../../store/mutations";
 
-  import {mapGetters} from 'vuex';
   import {mapActions} from 'vuex';
 
   export default {

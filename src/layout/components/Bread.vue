@@ -3,7 +3,7 @@
     {{/* 以后待更新面包屑 */}}
     <el-breadcrumb separator-class="el-icon-arrow-right" class="single">
 
-      <el-breadcrumb-item class="primary-color  index" to="/bot">首页</el-breadcrumb-item>
+      <el-breadcrumb-item class="primary-color align-middle index" to="/bot">首页</el-breadcrumb-item>
 
       <!--<el-breadcrumb-item-->
         <!--:class="breadArr.length == 1?'notAllow':'first'"-->
@@ -40,9 +40,9 @@
       <!--</el-breadcrumb-item>-->
     <!--</el-breadcrumb>-->
     {{/* title部分 */}}
-    <section class="yoy-titlee box-sizing border-bottom text-title line-h vertical-m">
-      <span class=" dis-i-b line"></span>
-      <span class="">
+    <section class="yoy-title box-sizing border-bottom text-title">
+      <span class="align-middle dis-i-b line"></span>
+      <span class="align-middle">
         {{navIndex}}
       </span>
     </section>
@@ -56,7 +56,6 @@
   export default {
     data(){
       return{
-
       }
     },
     computed: {
@@ -99,12 +98,11 @@
     }
   }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
   @import '../../style/index';
   $bread-background: #2a8ce7;
   $bread-height: 48px;
   $title-height: 65px;
-
 
   .backHover{
     cursor: pointer;
@@ -113,7 +111,7 @@
     color:$primary-color;
   }
   .align-middle{
-    /*vertical-align: middle;*/
+    vertical-align: middle;
   }
   .line{
     width:2px;
@@ -154,10 +152,10 @@
       }
     }
   }
-  .yoy-titlee{
+  .yoy-title{
     height: $title-height;
     line-height: $title-height;
-    /*padding-top: 7px;*/
+    padding-top: 7px;
     margin-left: 40px;
     margin-right: 40px;
   }
@@ -174,24 +172,6 @@
       line-height: $title-height;
       padding-left: 0;
     }
-  }
-
-  .single {
-    height: 48px;
-    line-height: 48px;
-  }
-  .single *{
-    height: 48px;
-    line-height: 48px;
-    display: inline-block;
-  }
-  .line-h *{
-    line-height: 65px;
-    display: inline-block;
-  }
-  .vertical-m {
-    margin-bottom: -4px;
-
   }
 
 </style>
