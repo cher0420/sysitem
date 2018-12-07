@@ -218,7 +218,7 @@
       alterKeyWords() {
         const query = this.$route.query;
         this.$router.push({
-          path: '/bot/config/createrNewQA',
+          path: '/bot/config/quicklyQA/createrNewQA',
           query: {
             ...query,
           }
