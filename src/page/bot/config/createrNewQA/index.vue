@@ -12,7 +12,8 @@
           请用最简洁的方式描述你的问题
         </div>
         <div class="nextStepTop">
-          <el-button type="primary" size="mini" @click="getKeywords">下一步</el-button>
+          <el-button type="primary" size="mini" @click="getKeywords" v-if="!loading"   >下一步</el-button>
+          <el-button type="primary" size="mini"  v-if="loading" :disabled="loading" :loading="loading"  >下一步</el-button>
         </div>
       </div>
       <div class="addContent addContentDis" v-if="!questionDis">
@@ -112,6 +113,7 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
+        loading:false,
         // Question: "公积金如何办理", // 题目
         Question: "", // 题目
         keywordsOption: [], // 关键词
@@ -182,6 +184,8 @@
           });
           return false;
         }
+        // 加载中
+        this.loading = true;
 
 
         var that = this;
@@ -200,6 +204,7 @@
           url: base.requestHost + "/api/QuickQA/GetKeyWords",
           data: JSON.stringify(data),
           success: function (msg) {
+            that.loading = false;
             // console.log("msg",msg)
             if (msg.Status == "1") {
               that.keywordsOption = msg.Data;
