@@ -143,7 +143,7 @@
       const reloadId = store.state.app.reloadId
       clearInterval(reloadId)
 
-      store.dispatch(REPLACE, {PageIndex: 1, searchStatus: null, description: null}).then(
+      store.dispatch(REPLACE, {tableData:[],total:0,PageIndex: 1, searchStatus: null, description: null}).then(
         () => {
           //1、获取列表
           getList(URL.requestHost + BOT, {}, ITEMKEY, true)

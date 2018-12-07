@@ -98,10 +98,14 @@
       }
     },
     created(){
-      /*获取答案列表*/
-      this.get_Answer_List()
-      /*获取技能列表*/
-      this.get_Skill_List()
+      store.dispatch(REPLACE,{tableData:[],total:0}).then(
+        () =>{
+          /*获取答案列表*/
+          this.get_Answer_List()
+          /*获取技能列表*/
+          this.get_Skill_List()
+        }
+      )
     },
     destroyed(){
       store.dispatch(
