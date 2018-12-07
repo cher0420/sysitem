@@ -12,8 +12,8 @@
           请用最简洁的方式描述你的问题
         </div>
         <div class="nextStepTop">
-          <el-button type="primary" size="mini" @click="getKeywords" v-if="!loading"   >下一步</el-button>
-          <el-button type="primary" size="mini"  v-if="loading" :disabled="loading" :loading="loading"  >下一步</el-button>
+          <el-button type="primary" size="mini" @click="getKeywords" v-if="!loading">下一步</el-button>
+          <el-button type="primary" size="mini" v-if="loading" :disabled="loading" :loading="loading">下一步</el-button>
         </div>
       </div>
       <div class="addContent addContentDis" v-if="!questionDis">
@@ -69,8 +69,8 @@
                 <div class="upload_warp_img_div " v-for="(item,index) of imgList">
                   <div class="upload_warp_img_div_top">
                     <div class="upload_warp_img_div_text">
-                      <span></span>
-                      <i class="el-icon-close" @click="fileDel(index)"></i>
+                      <i class="el-icon-zoom-in" @click="fileDel(index)"></i>
+                      <i class="el-icon-delete" @click="fileDel(index)"></i>
                     </div>
 
                   </div>
@@ -78,7 +78,7 @@
                 </div>
               </div>
 
-              <div class="upload_warp_left" @click="fileClick">
+              <div class="upload_warp_left" @click="fileClick" v-if="addIcon">
                 <i class="el-icon-plus"></i>
               </div>
               <div class="imgLimit">
@@ -113,7 +113,8 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
-        loading:false,
+        addIcon:true,
+        loading: false,
         // Question: "公积金如何办理", // 题目
         Question: "", // 题目
         keywordsOption: [], // 关键词
@@ -166,6 +167,13 @@
         }
         this.checkboxDisabled = true;
 
+      },
+      imgList(curVal, oldVal){
+        if( 2 < curVal.length){
+          this.addIcon = false;
+        }else{
+          this.addIcon = true;
+        }
       },
     },
 
@@ -520,6 +528,7 @@
     color: #999;
     font-size: 12px;
   }
+
   .addContent input {
     font-size: 12px;
   }
@@ -597,6 +606,7 @@
     margin-right: 22px;
     /*border: 1px dashed #fff;*/
   }
+
   .upload_warp_left:hover {
     border-color: #409eff;
     color: #409eff;
@@ -625,8 +635,16 @@
     position: absolute;
     left: 0;
     top: 0;
-    background: rgba(226, 226, 226, 0.4);
+
     width: 100%;
+    height: 100%;
+  }
+
+  .upload_warp_img_div_top:hover {
+
+    background: rgba(0, 0, 0, 0.4);
+
+    cursor: pointer;
   }
 
   .upload_warp_img_div_top img {
@@ -638,18 +656,20 @@
     text-align: left;
   }
 
-  .upload_warp_img_div_text span {
+  .upload_warp_img_div_text {
+    text-align: center;
+    font-size: 20px;
+    color: transparent;
+  }
 
-    display: inline-block;
-    height: 16px;
-    line-height: 16px;
+  .upload_warp_img_div_text:hover {
+    color: #fff;
   }
 
   .upload_warp_img_div_text i {
     cursor: pointer;
-    position: absolute;
-    right: 5px;
-    top: 3px;
+    line-height: 80px;
+    text-align: center;
 
   }
 
@@ -679,15 +699,17 @@
     color: #c3c3c3;
     margin-left: 20px;
   }
+
   .max1000 {
     max-width: 1000px;
     text-align: right;
     margin-top: -10px;
     z-index: 3;
     margin-top: -52px;
-    padding-right:10px ;
+    padding-right: 10px;
   }
-  .max1000 span{
+
+  .max1000 span {
     padding-right: 10px;
   }
 </style>
@@ -702,6 +724,6 @@
 </style>
 <style>
   .addContent input {
-    font-size: 12px ;
+    font-size: 12px;
   }
 </style>

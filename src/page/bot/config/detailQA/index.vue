@@ -15,7 +15,6 @@
     <div class="edit_textarea">
       <el-input
         type="textarea"  :disabled="true"
-        placeholder="请输入自定义回答,最多500个字符"
         v-model="Answer" class="editTextarea">
       </el-input>
 
