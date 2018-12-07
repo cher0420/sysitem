@@ -311,7 +311,7 @@
 
 
               that.$router.push({
-                path: '/bot/config/QuicklyQA',
+                path: '/bot/config/quicklyQA',
                 query: {
                   ...query,
                 }

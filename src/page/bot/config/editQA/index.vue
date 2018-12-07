@@ -1,8 +1,8 @@
 <template>
   <div class="yoy-main">
-    <div class="questionTitl">
-      {{ Question }}
-    </div>
+    <!--<div class="questionTitl">-->
+      <!--{{ Question }}-->
+    <!--</div>-->
     <div class="keywordTip">
       关键词
     </div>
@@ -114,7 +114,7 @@
 
       getData() {
         let query = this.$route.query;
-        this.Question = query.v.Question;
+        // this.Question = query.v.Question;
         this.BotConfigId = query.v.BotConfigId;
         this.CreateDate = query.v.CreateDate;
         this.CreateUserId = query.v.CreateUserId;
@@ -253,7 +253,7 @@
 
 
               that.$router.push({
-                path: '/bot/config/QuicklyQA',
+                path: '/bot/config/quicklyQA',
                 query:{
                   ...query,
                 }

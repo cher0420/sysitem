@@ -343,9 +343,9 @@
               // 跳转到列表页
               const query = that.$route.query;
               that.$router.push({
-                path: '/bot/config/QuicklyQA',
+                path: '/bot/config/quicklyQA',
                 query: {
-                  ...query,
+                  // ...query,
                 }
               })
 

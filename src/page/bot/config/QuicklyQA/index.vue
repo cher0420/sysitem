@@ -174,9 +174,9 @@
         const query = this.$route.query;
         this.newDataDis(); // 进入创建问题 首页
         this.$router.push({
-          path:'/bot/config/createrNewQA',
+          path:'/bot/config/quicklyQA/createrNewQA',
           query:{
-            ...query,
+            // ...query,
           }
         })
       },
@@ -184,13 +184,11 @@
         if(v.Status == 5){
           return;
         }else{
-
-          console.log('调到编辑页面');
-          const query = this.$route.query;
           this.$router.push({
-            path:'/bot/config/editQA',
+            path:'/bot/config/quicklyQA/editQA',
             query:{
-              ...query,
+              // ...query,
+              title:v.Question,
               v
             }
           })

@@ -144,34 +144,34 @@ const arr = [
         name: 'config',
       },
       {
-        path:'config/QuicklyQA',
+        path:'config/quicklyQA',
         component: resolve =>
-          require(["../page/bot/config/QuicklyQA/index"], resolve),
+          require(["../page/bot/config/quicklyQA/index"], resolve),
         name: 'config',
       },
       {
-        path:'config/createrNewQA',  // 创建新问答
+        path:'config/quicklyQA/createrNewQA',  // 创建新问答
         component: resolve =>
           require(["../page/bot/config/createrNewQA/index"], resolve),
-        name: 'config',
+        name: 'create',
       },
       {
-        path:'config/updateQA',  // 创建新问答/更新问答
+        path:'config/quicklyQA/updateQA',  // 创建新问答/更新问答
         component: resolve =>
           require(["../page/bot/config/createrNewQA/updateQA"], resolve),
-        name: 'config',
+        name: 'edit',
       },
       {
-        path:'config/editQA',  //  编辑答案
+        path:'config/quicklyQA/editQA',  //  编辑答案
         component: resolve =>
           require(["../page/bot/config/editQA/index"], resolve),
-        name: 'config',
+        name: 'edit',
       },
       {
-        path:'config/detailQA',  //  详情页面
+        path:'config/quicklyQA/detailQA',  //  详情页面
         component: resolve =>
           require(["../page/bot/config/detailQA/index"], resolve),
-        name: 'config',
+        name: 'detail',
       },
 
 
