@@ -130,8 +130,15 @@
 
         console.log(query)
 
+        this.getPhoto();
+      },
+      getPhoto(){
+
+
+
 
       },
+
       // 图片上传
       fileClick() {
 

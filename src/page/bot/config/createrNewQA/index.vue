@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="addContent addContentDis" v-if="!questionDis">
-        {{Question}}
+       问题 ： {{Question}}
       </div>
       <div v-if="!questionDis">
         <div class="addQuestion">
@@ -153,6 +153,8 @@
 
       this.checkSize()
 
+    this.init();
+
 
     },
     mounted() {
@@ -182,6 +184,15 @@
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
 
+      init(){
+
+
+
+        that.keywordsLast();
+        that.questionLast();
+
+
+      },
       getKeywords() {  // 将一句话分成多个词汇
         if (this.Question == "") {
           this.$alert('请添加问题', '友情提示', {
@@ -308,6 +319,8 @@
                 message: '创建新问答成功',
                 type: 'success'
               });
+
+
               that.keywordsLast();
               that.questionLast();
 
@@ -476,7 +489,13 @@
       },
 
 
-      checkSize() { // 计算文本域字数
+      checkSize() {
+
+
+
+
+
+        // 计算文本域字数
         let that = this;
         this.timer = setInterval(function () {
           if (that.textarea.length > 500) {
@@ -554,7 +573,7 @@
     /*margin-top: 33px;*/
     margin-right: 11px;
     width: 1000px;
-    margin-top: 52px;
+    margin-top: 20px;
   }
 
   .nextStepTop {
