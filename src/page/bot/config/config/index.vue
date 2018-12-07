@@ -157,6 +157,8 @@
           const data = res['Data'][0]
           if(data){
             this.filterData(data)
+          }else{
+            this.getBot_Constellation()
           }
           store.dispatch(REPLACE, {mainLoading: false})
         }
@@ -286,7 +288,6 @@
           const bot_Constellation = "魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯".substr(m*2-(d<"102223444433".charAt(m-1)- -19)*2,2);
           data.Bot_Constellation = bot_Constellation+'座'
         }
-
         data.Bot_Height = data.Bot_Height?data.Bot_Height.replace('cm',''):'160'
         data.Bot_Weight = data.Bot_Weight?data.Bot_Weight.replace('KG',''):'50'
         // 判断获取到的城市
