@@ -7,7 +7,7 @@
         :label="item.SkillName"
         :value="item.SkillNo">
       </el-option>
-    </el-select><el-input class='searchInput' size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+    </el-select><el-input class='searchInput'  style="left: 210px;" size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
     <el-table
       v-loading="loading"
@@ -241,10 +241,7 @@
     transform: translateX(-50%);
   }
   .select{
-    margin-right: 20px;
-  }
-  .searchInput{
-    width: 360px;
+    position: absolute;
   }
   .table{
     margin-top: 20px;
@@ -264,24 +261,5 @@
       margin-right: 20px;
       cursor: pointer;
     }
-  }
-  .yoy-search-button{
-    width: 32px!important;
-    height:30px!important;
-    line-height: 30px!important;
-    margin-top:1px;
-    margin-right: 1px;
-    margin-bottom: 1px;
-    background-color: $light-blue;
-    cursor:pointer;
-  }
-  .search{
-    width: 360px;
-    height: 32px;
-  }
-  .el-icon-search:before {
-    font-weight: 900;
-    font-size: 14px;
-    color: $primary-color;
   }
 </style>

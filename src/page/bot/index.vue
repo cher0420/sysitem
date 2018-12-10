@@ -1,7 +1,7 @@
 <template>
   <section>
     <section class="search box-sizing">
-      <el-input class='' size='small' v-model="keyWords" placeholder="搜索机器人名称或描述" @keyup.enter.native="search"><i
+      <el-input class='searchInput' size='small' v-model="keyWords" placeholder="搜索机器人名称或描述" @keyup.enter.native="search"><i
         slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
     </section>
@@ -360,27 +360,11 @@
 <style lang="scss" scoped>
   @import '../../style/index';
 
-  .yoy-search-button {
-    width: 32px !important;
-    height: 30px !important;
-    line-height: 30px !important;
-    margin-top: 1px;
-    margin-right: 1px;
-    margin-bottom: 1px;
-    background-color: $light-blue;
-    cursor: pointer;
-  }
-
   .search {
     width: 360px;
     height: 32px;
   }
 
-  .el-icon-search:before {
-    font-weight: 900;
-    font-size: 14px;
-    color: $primary-color;
-  }
 
   /*
   size
