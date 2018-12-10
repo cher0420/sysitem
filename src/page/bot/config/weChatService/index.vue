@@ -58,7 +58,7 @@
         </section>
       </el-col>
     </el-form-item>
-    <section class="title f-s-16 c555 box-sizing margin-b-30px">
+    <section class="title f-s-16 c555 box-sizing margin-b-30px" style="display: none">
       功能开关
     </section>
     <el-form-item label="" style="display: none">
