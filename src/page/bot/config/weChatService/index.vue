@@ -61,7 +61,7 @@
     <section class="title f-s-16 c555 box-sizing margin-b-30px">
       功能开关
     </section>
-    <el-form-item label="">
+    <el-form-item label="" style="display: none">
       <el-checkbox disabled>知识分类功能 </el-checkbox>
       <a href="javascript:;" class="primary-color padding-l-20px disabled">什么是知识分类</a>
     </el-form-item>
