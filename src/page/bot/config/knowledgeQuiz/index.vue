@@ -25,7 +25,7 @@
       >
       </el-table-column>
       <el-table-column
-        prop="IntentName"
+        prop="FriendlyName"
         label="知识"
         min-width="200">
       </el-table-column>
