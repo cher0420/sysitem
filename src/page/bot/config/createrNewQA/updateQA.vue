@@ -25,7 +25,7 @@
       </div>
       <div class="updateTextareaa">
         <div class="answerDis">
-          {{receiveText.Answer}}
+          {{Text.Answer}}
         </div>
 
       </div>
@@ -53,17 +53,18 @@
         </div>
       </div>
       <div class="editAnswerQA">
-        <textarea v-model="Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
-        <span class="fontCount">{{Answer.length}}/500字</span>
+        <textarea v-model="Text.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
+        <span class="fontCount">{{Text.Answer.length}}/500字</span>
       </div>
       <!-- upload photo -->
       <div class="m20">
         <div class="">
           <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
 
-          <div class="upload_warp_img" v-show="Image.Answer.length!=0">
-            <div class="upload_warp_img_div cc222" v-for="(item,index) of Image.Answer">
-              <img :src="item.file.src">
+          <!-- 传过来的图片-->
+          <div class="upload_warp_img verli" v-show="Image.length!=0">
+            <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
+              <img :src="item.Answer">
             </div>
           </div>
 
@@ -121,36 +122,48 @@
     name: "Allen-updateQA",
     data() {
       return {
-
-
-        receiveText: {},  //  未修改达案
-        Answer: "",
-        ID: "",
-
-
-        imgListNew: [],
-        Image: [],
-        CreateDate: "",
-        KeyId: "", // 关键字对应的Id",
-        DeleteIds: [],
-
-
         // 图片上传
         imgList: [],
         size: 0,
 
-        // 根据关键字获取答案
-        Question: "",
-        Keyword: "",
-        // 根据关键字获取 答案  / 图片
-        "Text": {
-          "ID": "",
-          "Answer ": "",
-        },
-        "Image":[{
-          "ID": "",
-          "Answer ": "",
+        // // 根据关键字获取 答案  / 图片
+        // Question: "",
+        // Keyword: "",
+        //
+        // "Text": {
+        //   "ID": "",
+        //   "Answer ": "",
+        // },
+        // "Image":[{
+        //   "ID": "",
+        //   "Answer ": "",
+        // }],
+        // receiveText: {},  //  未修改达案
+        // Answer: "",
+        // ID: "",
+        // imgListNew: [],
+        // CreateDate: "",
+        // KeyId: "", // 关键字对应的Id",
+
+        // this.CreateDate = data.CreateDate;
+      // this.Image = data.Image;
+     // this.KeyId = data.KeyId;
+     //  this.Keyword = data.Keyword;
+      // this.Question = data.Question;
+      // this.Text = data.Text;
+        CreateDate:"",
+        Image:[{
+          ID: "",
+          Answer : "",
         }],
+        KeyId:'',
+        Keyword :'',
+        Question:"",
+        Text: {
+          ID: "", Answer : "",
+        },
+
+        DeleteIds: [], // 要删除的图片
 
 
       }
@@ -169,19 +182,17 @@
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataDis",]
       ),
       getData() {
+
         let data = JSON.parse(sessionStorage.getItem('Data'));
-        this.Question = data.Question;
-        this.Keyword = data.Keyword;
 
-        this.CreateDate = data.CreateDate;
+       this.CreateDate = data.CreateDate;
+         this.Image = data.Image;
         this.KeyId = data.KeyId;
+        this.Keyword = data.Keyword;
+        this.Question = data.Question;
+        this.Text = data.Text;
 
-        this.receiveText = data.Text;  //  未修改达案
-
-        this.Answer = data.Text.Answer;
-        this.ID = data.Text.ID;
-
-        console.log("属性传的值", data);
+        console.log("子组件数据", data);
       },
 
       alterKeyWords() {
@@ -285,7 +296,7 @@
           "TenantId": TenantId,
           "KeyId": that.KeyId,
           "Question": that.Question,
-          "Keyword": this.keywordsNew,
+          "Keyword": that.Keyword,
           "Text": that.Text,
           "Image": that.Image,
           "DeleteIds":that.DeleteIds,
@@ -608,6 +619,9 @@
 </style>
 
 <style>
+  .verli {
+    vertical-align: middle;
+  }
   .updateTextareaa textarea {
     width: 450px;
     height: 300px !important;

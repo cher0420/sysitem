@@ -1,7 +1,7 @@
 <template>
   <div class="yoy-main">
     <!--<div class="questionTitl">-->
-      <!--{{ Question }}-->
+    <!--{{ Question }}-->
     <!--</div>-->
     <div class="keywordTip">
       关键词
@@ -14,7 +14,7 @@
     </div>
     <div class="edit_textarea">
       <el-input
-        type="textarea"  :disabled="true"
+        type="textarea" :disabled="true"
         v-model="Text.Answer" class="editTextarea">
       </el-input>
 
@@ -25,33 +25,44 @@
     <div class="photoUp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
       <!-- show photo -->
-      <div class="upload_warp_img" v-show="Image.Answer.length!=0">
+      <div class="upload_warp_img" v-show="Image.length!=0">
 
-        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image.Answer">
+        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
           <!--<div class="upload_warp_img_div_top">-->
-            <!--<div class="upload_warp_img_div_text">-->
-              <!--<span></span>-->
-              <!--<i class="el-icon-close" @click="fileDel(index)"></i>-->
-            <!--</div>-->
+          <!--<div class="upload_warp_img_div_text">-->
+          <!--<span></span>-->
+          <!--<i class="el-icon-close" @click="fileDel(index)"></i>-->
+          <!--</div>-->
 
           <!--</div>-->
-          <img :src="item">
+          <img :src="item.Answer">
         </div>
       </div>
 
       <!--<div class="upload_warp_left" @click="fileClick">-->
-        <!--<i class="el-icon-plus"></i>-->
+      <!--<i class="el-icon-plus"></i>-->
       <!--</div>-->
 
       <div class="imgLimit">
         ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
       </div>
       <!--<div class="subFinsh">-->
-        <!--<el-button type="primary" size="mini" @click="getPhotoUrl" >完成</el-button>-->
+      <!--<el-button type="primary" size="mini" @click="getPhotoUrl" >完成</el-button>-->
       <!--</div>-->
 
     </div>
 
+    <!-- -->
+    <el-dialog
+      title="图片预览"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <div><img :src="PreviewImg" ></div>
+      <span slot="footer" class="dialog-footer">
+
+  </span>
+    </el-dialog>
 
   </div>
 </template>
@@ -71,6 +82,7 @@
     name: "Allen-EditQA",
     data() {
       return {
+        dialogVisible:false,
         // 图片上传
         // imgList: [],
         // size: 0,
@@ -82,32 +94,30 @@
         //   "Answer": "上海市徐汇区天华信息科技园",
         // },
         //   路由传过来的参数
-        BotConfigId: "",
-        CreateDate: "",
-        CreateUserId: "",
-        CreateUserName: "",
-        ID: "",
-        Status: "",
-        TenantId: "",
-        UpdateDate: "",
-        UpdateUserId: "",
-        UpdateUserName: "",
-        checkedStatus: "",
+        // BotConfigId: "",
+        // CreateDate: "",
+        // CreateUserId: "",
+        // CreateUserName: "",
+        // ID: "",
+        // Status: "",
+        // TenantId: "",
+        // UpdateDate: "",
+        // UpdateUserId: "",
+        // UpdateUserName: "",
+        // checkedStatus: "",
 
         // 根据关键字获取答案
         Question: "",
         Keyword: "",
         // 根据关键字获取 答案  / 图片
-        "Text": {
-          "ID": "",
-          "Answer ": "",
+        Text: {
+          ID: "",
+          Answer: "",
         },
-        "Image":[{
-          "ID": "",
-          "Answer ": "",
+        Image: [{
+          ID: "",
+          Answer: "",
         }],
-
-
 
 
       }
@@ -126,23 +136,32 @@
     methods: {
 
       getData() {
+        // let query = this.$route.query;
+        let detaildata = sessionStorage.getItem("detaildata"); // => 返回
+      let  query =JSON.parse(detaildata) ;
+      console.log("取值",query)
 
-        let query = this.$route.query;
-        this.Question = query.v.Question;
-        this.BotConfigId = query.v.BotConfigId;
-        this.CreateDate = query.v.CreateDate;
-        this.CreateUserId = query.v.CreateUserId;
-        this.CreateUserName = query.v.CreateUserName;
-        this.ID = query.v.ID;
-        this.Keyword = query.v.Keyword;
-        this.Status = query.v.Status;
-        this.TenantId = query.v.TenantId;
-        this.UpdateDate = query.v.UpdateDate;
-        this.UpdateUserId = query.v.UpdateUserId;
-        this.UpdateUserName = query.v.UpdateUserName;
-        this.checkedStatus = query.v.checkedStatus;
+        this.Question = query.Question;
+        this.Keyword = query.Keyword;
 
-        console.log(query)
+        this.getCheckKeywords();
+        return false;
+
+        // this.Question = query.v.Question;
+        // this.BotConfigId = query.v.BotConfigId;
+        // this.CreateDate = query.v.CreateDate;
+        // this.CreateUserId = query.v.CreateUserId;
+        // this.CreateUserName = query.v.CreateUserName;
+        // this.ID = query.v.ID;
+        // this.Keyword = query.v.Keyword;
+        // this.Status = query.v.Status;
+        // this.TenantId = query.v.TenantId;
+        // this.UpdateDate = query.v.UpdateDate;
+        // this.UpdateUserId = query.v.UpdateUserId;
+        // this.UpdateUserName = query.v.UpdateUserName;
+        // this.checkedStatus = query.v.checkedStatus;
+
+      //  console.log(query)
 
 
       },
@@ -150,10 +169,9 @@
         let that = this;
         const token = getCookies(TOKEN);
         let recordId = JSON.parse(sessionStorage.getItem('recordId'));
-        // console.log("recordId",recordId)
         let data = {
           "BotConfigId": recordId,
-          "Keys": this.Keyword
+          "Keys": that.Keyword
         }
         $.ajax({
           type: "POST",
@@ -164,18 +182,16 @@
           url: base.requestHost + "/api/QuickQA/QueryQAData",
           data: JSON.stringify(data),
           success: function (msg) {
+            console.log("根据关键词获取答案",msg);
 
-            // console.log("根据关键字获取答案", msg)
+
             if (msg.Status == "1") {
-              // 修改答案
               if (msg.Data != null) {
                 // code
                 that.Question = msg.Data.Question;
                 that.Keyword = msg.Data.Keyword;
                 that.Text = msg.Data.Text;
                 that.Image = msg.Data.Image;
-
-
 
 
               }
@@ -420,6 +436,7 @@
     z-index: 3;
     word-break: keep-all;
   }
+
   .max1000 span {
     margin-right: 10px;
   }
@@ -502,7 +519,8 @@
     font-size: 30px;
     color: #c3c3c3;
   }
-  .upload_warp_left:hover{
+
+  .upload_warp_left:hover {
     border-color: #409eff;
     color: #409eff;
     cursor: pointer;

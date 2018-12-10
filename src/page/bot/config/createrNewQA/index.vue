@@ -1,5 +1,5 @@
 <template>
-  <div class="yoy-main cc">
+  <div class="yoy-main cc creatNewQA">
     <div v-if="newDataDis">
       <div class="addQuestion">
         第一步 ： 添加问题
@@ -97,6 +97,18 @@
     <div v-if="!newDataDis">
       <updateQA></updateQA>
     </div>
+
+    <!-- -->
+    <el-dialog
+      title="图片预览"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <div><img :src="PreviewImg" ></div>
+      <span slot="footer" class="dialog-footer">
+
+  </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -115,6 +127,8 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
+        PreviewImg:"", // 预览图片
+        dialogVisible: false,
         addIcon: true,
         loading: false,
         // Question: "公积金如何办理", // 题目
@@ -256,7 +270,7 @@
           url: base.requestHost + "/api/QuickQA/QueryQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-          console.log("debugger",msg)
+            console.log("debugger", msg)
             // console.log("根据关键字获取答案", msg)
             if (msg.Status == "1") {
               // 修改答案
@@ -266,6 +280,7 @@
                 that.keywordsNext(that.keywords.length);
               }
               if (msg.Data != null) {
+
                 that.newDataHid();
                 console.log("+++++++++++++++")
                 that.questionLast();
@@ -484,7 +499,11 @@
         }
       },
       photoMagnify(index) {
-
+        // this.$alert("<div><img src=" + this.imgList[index].file.src + " ></div>", '图片预览', {
+        //   dangerouslyUseHTMLString: true
+        // });
+        this.dialogVisible = true;
+        this.PreviewImg = this.imgList[index].file.src;
         console.log("item", this.imgList[index].file.src)
 
 
@@ -532,7 +551,9 @@
 <style lang="scss" scoped>
   /*@import "../../../../../static/base.css";*/
   @import '../../../../style/index';
-
+  .el-message-box {
+    height: 330px !important;
+  }
   .mt30 {
     margin-top: 30px;
   }
@@ -753,4 +774,6 @@
   .addContent input {
     font-size: 12px;
   }
+
+
 </style>
