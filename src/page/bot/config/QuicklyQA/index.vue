@@ -155,6 +155,7 @@
         () =>{
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
             () =>{
+              that.loading = false
               that._reload_ask()
             }
           )
@@ -222,8 +223,8 @@
               /*
               不存在发布
               */
-              that.loading = true
               store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
+              that.loading = true
               const params = {
                 Keys:that.keys,
                 PageIndex:that.PageIndex,
@@ -237,11 +238,6 @@
                   that.loading = false
                   that.total = res.TotalCount
                   clearInterval(that.reloadId);
-                  that.$message({
-                    type: 'success',
-                    message: '操作成功',
-                    duration:2000,
-                  });
                   if(v){
                     that.go()
                   }
@@ -509,35 +505,84 @@
       },
       publish(){
         const that = this
-        this.$confirm('确定发布以上问题?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
-          const params = {
-            Ids: that.arr,
-            Action:'publish',
+        let equal = true;
+        that.arr.forEach(
+          (v,index) =>{
+            const value = that.hasPublishArr.indexOf(v);
+            if(value <= -1){
+              equal = false
+            }
           }
-          doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
-            (res) =>{
-              that._reload_ask(false)
+        )
+        if(equal){
+          that.$confirm('以上问题均已发布，是否重新发布','提示',{
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(
+            () =>{
+              store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
+              const params = {
+                    Ids: that.arr,
+                    Action:'publish',
+                  }
+              doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
+                (res) =>{
+                  that._reload_ask(false)
+                }
+              ).catch(
+                () =>{
+                  that.$message({
+                    type: 'error',
+                    message: '服务器错误',
+                    duration:2000,
+                  });
+                }
+              )
             }
           ).catch(
             () =>{
-              this.$message({
-                type: 'error',
-                message: '服务器错误',
+              that.$message({
+                type: 'info',
+                message: '已取消发布',
                 duration:2000,
               });
             }
           )
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消发布'
-          });
-        });
+        }else{
+          that.$confirm('确定发布以上问题？','提示',{
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(
+            () =>{
+              store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
+              const params = {
+                Ids: that.arr,
+                Action:'publish',
+              }
+              doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
+                (res) =>{
+                  that._reload_ask(false)
+                }
+              ).catch(
+                () =>{
+                  that.$message({
+                    type: 'error',
+                    message: '服务器错误',
+                    duration:2000,
+                  });
+                }
+              )
+            }
+          ).catch(() =>{
+            that.$message({
+              type: 'info',
+              message: '已取消发布',
+              duration:2000,
+            });
+          })
+        }
       }
     },
 
