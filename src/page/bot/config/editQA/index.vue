@@ -163,8 +163,11 @@
         // let query = this.$route.query;
 
         let data = JSON.parse(sessionStorage.getItem('edit'));
+        console.log("+++++++",data)
 
         this.Keyword = data.Keyword;
+        this.Question = data.Question;
+
 
         this.getCheckKeywords();
       },
@@ -192,6 +195,7 @@
             if (msg.Status == "1") {
               // 修改答案
               if (msg.Data != null) {
+                console.log("shuju",msg.Data)
                 // code
                 that.Question = msg.Data.Question;
                 that.Keyword = msg.Data.Keyword;
