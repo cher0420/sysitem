@@ -69,7 +69,7 @@
                 <div class="upload_warp_img_div " v-for="(item,index) of imgList">
                   <div class="upload_warp_img_div_top">
                     <div class="upload_warp_img_div_text">
-                      <i class="el-icon-zoom-in" @click="fileDel(index)"></i>
+                      <i class="el-icon-zoom-in" @click="fileShow(index)"></i>
                       <i class="el-icon-delete" @click="fileDel(index)"></i>
                     </div>
 
@@ -467,6 +467,22 @@
         this.size = this.size - this.imgList[index].file.size;//总大小
         this.imgList.splice(index, 1);
       },
+      fileShow(index){
+          console.log(this.imgList[index].file.src)
+        // this.$alert('这是一段内容', '标题名称', {
+        //   confirmButtonText: '确定',
+        //   callback: action => {
+        //
+        //
+        //
+        //   }
+        // });
+
+
+
+      },
+
+
       bytesToSize(bytes) {
         if (bytes === 0) return '0 B';
         let k = 1000, // or 1024
@@ -474,6 +490,7 @@
           i = Math.floor(Math.log(bytes) / Math.log(k));
         return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
       },
+
 
 
       checkSize() { // 计算文本域字数
