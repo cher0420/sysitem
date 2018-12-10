@@ -432,7 +432,7 @@
          let count2 =that.Image.length;
          let count = Number(count1) + Number(count2);
 
-          if (2 < count) {
+          if (2 < count) {  //  上传图片最多3张
             console.log("计数111",count)
             that.addIcon = false;
           }else {
