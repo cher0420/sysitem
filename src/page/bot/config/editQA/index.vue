@@ -28,17 +28,32 @@
 
 
       <div class="upload_warp_img" v-if="Image.length!=0">
-        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
+        <!--<div class="upload_warp_img_div  cc222" v-for="(item,index) of Image" v-if="item.Answer !=''" >-->
+        <!--<img :src="item.Answer">-->
+        <!--</div>-->
+
+        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image" v-if="item.Answer !=''">
+          <div class="upload_warp_img_div_top">
+            <div class="upload_warp_img_div_text">
+              <!-- 放大图片 -->
+              <i class="el-icon-zoom-in" @click="OldPhotoMagnify(index)"></i>
+              <i class="el-icon-delete" @click="OldFileDel(index)"></i>
+            </div>
+
+          </div>
           <img :src="item.Answer">
         </div>
+
+
       </div>
       <!-- show photo -->
       <div class="upload_warp_img" v-show="imgList.length!=0">
         <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text">
-              <span></span>
-              <i class="el-icon-close" @click="fileDel(index)"></i>
+              <!-- 放大图片 -->
+              <i class="el-icon-zoom-in" @click="photoMagnify(index)"></i>
+              <i class="el-icon-delete" @click="fileDel(index)"></i>
             </div>
 
           </div>
@@ -46,7 +61,7 @@
         </div>
       </div>
 
-      <div class="upload_warp_left" @click="fileClick">
+      <div class="upload_warp_left" @click="fileClick" v-if="addIcon">
         <i class="el-icon-plus"></i>
       </div>
 
@@ -58,6 +73,17 @@
       </div>
 
     </div>
+    <!-- 预览 -->
+    <el-dialog
+      title="图片预览"
+      :visible.sync="dialogVisible"
+      width="45%"
+      :before-close="handleClose">
+      <div class="photoYl"><img :src="PreviewImg"></div>
+      <span slot="footer" class="dialog-footer">
+
+  </span>
+    </el-dialog>
 
 
   </div>
@@ -78,24 +104,31 @@
     name: "Allen-EditQA",
     data() {
       return {
-        // 图片上传
-        imgList: [], // 本地图片格式
+        addIcon: true, // 图片添加功能 + 是否显示
+
+        dialogVisible: false,
+        PreviewImg: "",   // 预览图片src
+
+
+        imgList: [], // 本地图片格式 date64
         size: 0,
-        imgListNew: [],  // 上传图片到服务器的格式
+        imgListNew: [],  // 上传图片到服务器的格式 http
 
         // 根据关键字获取答案
         Question: "",
         Keyword: "",
-        KeyId:"",
+        KeyId: "",
 
         Text: {   // 答案
           ID: "",
-          Answer : "",
+          Answer: "",
         },
-        Image: [{
+        Image: [{ // 后台返回过来的
           ID: "",
-          Answer : "",
+          Answer: "",
         }],
+
+        DeleteIds: [], // 删除图片id
 
 
       }
@@ -103,17 +136,30 @@
     computed: {},
 
     created() {
-      this.getData()
+      this.getData();
+      this.checkSize();
     },
     mounted() {
 
 
     },
-    watch: {},
+    watch: {
+      // imgList(curVal, oldVal) {
+      //   if (2 < curVal.length + this.Image.length) {
+      //     console.log(this.Image.length);
+      //     this.addIcon = false;
+      //   } else {
+      //     this.addIcon = true;
+      //   }
+      // },
+
+    },
 
     methods: {
 
+
       getData() {
+
         // let query = this.$route.query;
 
         let data = JSON.parse(sessionStorage.getItem('edit'));
@@ -152,7 +198,6 @@
                 that.Text = msg.Data.Text;
                 that.Image = msg.Data.Image;
                 that.KeyId = msg.Data.KeyId;
-
 
 
               }
@@ -353,6 +398,24 @@
         this.size = this.size - this.imgList[index].file.size;//总大小
         this.imgList.splice(index, 1);
       },
+      OldFileDel(index) {
+       // console.log(this.Image[index]);
+        this.DeleteIds.push(this.Image[index].ID); // 删除图片的id
+         console.log( this.DeleteIds)
+        this.Image.splice(index, 1);
+
+
+
+      },
+      photoMagnify(index) {
+        this.dialogVisible = true;
+        this.PreviewImg = this.imgList[index].file.src;
+        console.log("item", this.imgList[index].file.src)
+      },
+      OldPhotoMagnify(index) {
+        this.dialogVisible = true;
+        this.PreviewImg = this.Image[index].Answer;
+      },
       bytesToSize(bytes) {
         if (bytes === 0) return '0 B';
         let k = 1000, // or 1024
@@ -365,9 +428,24 @@
       checkSize() { // 计算文本域字数
         let that = this;
         this.timer = setInterval(function () {
-          if (that.textarea.length > 500) {
-            that.textarea = that.textarea.toString().substr(0, 500);
+         let count1 = that.imgList.length;
+         let count2 =that.Image.length;
+         let count = Number(count1) + Number(count2);
+
+          if (2 < count) {
+            console.log("计数111",count)
+            that.addIcon = false;
+          }else {
+            that.addIcon = true;
           }
+
+          if (that.Text.Answer.length > 500) {  // 检查字数
+            that.textarea = that.Text.Answer.toString().substr(0, 500);
+          }
+
+
+
+
         }, 200)
       },
 
@@ -383,6 +461,17 @@
 <style lang="scss" scoped>
   @import '../../../../style/index';
   /*@import "../../../../../static/base.css";*/
+
+  .photoYl {
+
+    text-align: center;
+
+  }
+
+  .photoYl img {
+    width: 360px;
+  }
+
   .max1000 {
     max-width: 1000px;
     text-align: right;
@@ -456,8 +545,22 @@
     left: 0;
     top: 0;
     width: 80px;
-    height: 16px;
-    background: rgba(226, 226, 226, 0.4);
+    height: 100%;
+    /*text-align: center;*/
+    line-height: 80px;
+    color: transparent;
+    text-align: left;
+  }
+
+  .upload_warp_img_div_top i {
+    font-size: 20px;
+
+  }
+
+  .upload_warp_img_div_top:hover {
+    background: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    color: #fff;
   }
 
   .upload_warp_left {
@@ -504,9 +607,10 @@
   }
 
   .upload_warp_img_div_text {
-    text-align: right;
+    /*text-align: right;*/
     padding-right: 2px;
     padding-top: 2px;
+    padding-left: 18px;
   }
 
   .upload_warp_img_div {

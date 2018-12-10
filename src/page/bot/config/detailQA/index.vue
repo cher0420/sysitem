@@ -27,28 +27,20 @@
       <!-- show photo -->
       <div class="upload_warp_img" v-show="Image.length!=0">
 
-        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
-          <!--<div class="upload_warp_img_div_top">-->
-          <!--<div class="upload_warp_img_div_text">-->
-          <!--<span></span>-->
-          <!--<i class="el-icon-close" @click="fileDel(index)"></i>-->
-          <!--</div>-->
+        <div class="upload_warp_img_div cc222" @click="showIph(item)" v-for="(item,index) of Image" v-if="item.Answer != '' ">
+          <div class="upload_warp_img_div_top">
+            <div class="upload_warp_img_div_text">
+              <!-- 放大图片 -->
 
-          <!--</div>-->
+            </div>
+          </div>
           <img :src="item.Answer">
         </div>
       </div>
-
-      <!--<div class="upload_warp_left" @click="fileClick">-->
-      <!--<i class="el-icon-plus"></i>-->
+      <!--<div class="imgLimit">-->
+        <!--( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )-->
       <!--</div>-->
 
-      <div class="imgLimit">
-        ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
-      </div>
-      <!--<div class="subFinsh">-->
-      <!--<el-button type="primary" size="mini" @click="getPhotoUrl" >完成</el-button>-->
-      <!--</div>-->
 
     </div>
 
@@ -56,9 +48,9 @@
     <el-dialog
       title="图片预览"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="45%"
       :before-close="handleClose">
-      <div><img :src="PreviewImg" ></div>
+      <div class="PreviewImgg"><img :src="PreviewImg" ></div>
       <span slot="footer" class="dialog-footer">
 
   </span>
@@ -82,29 +74,9 @@
     name: "Allen-EditQA",
     data() {
       return {
-        dialogVisible:false,
-        // 图片上传
-        // imgList: [],
-        // size: 0,
-        // imgListNew: [],
-        // Image: [],
 
-        // "Text": {
-        //   "ID": "",
-        //   "Answer": "上海市徐汇区天华信息科技园",
-        // },
-        //   路由传过来的参数
-        // BotConfigId: "",
-        // CreateDate: "",
-        // CreateUserId: "",
-        // CreateUserName: "",
-        // ID: "",
-        // Status: "",
-        // TenantId: "",
-        // UpdateDate: "",
-        // UpdateUserId: "",
-        // UpdateUserName: "",
-        // checkedStatus: "",
+        PreviewImg:"", // 预览图片src
+        dialogVisible:false,
 
         // 根据关键字获取答案
         Question: "",
@@ -134,6 +106,11 @@
     watch: {},
 
     methods: {
+      showIph(item){
+        this.PreviewImg = item.Answer;
+        this.dialogVisible = true;
+            console.log(item)
+      },
 
       getData() {
         // let query = this.$route.query;
@@ -146,24 +123,6 @@
 
         this.getCheckKeywords();
         return false;
-
-        // this.Question = query.v.Question;
-        // this.BotConfigId = query.v.BotConfigId;
-        // this.CreateDate = query.v.CreateDate;
-        // this.CreateUserId = query.v.CreateUserId;
-        // this.CreateUserName = query.v.CreateUserName;
-        // this.ID = query.v.ID;
-        // this.Keyword = query.v.Keyword;
-        // this.Status = query.v.Status;
-        // this.TenantId = query.v.TenantId;
-        // this.UpdateDate = query.v.UpdateDate;
-        // this.UpdateUserId = query.v.UpdateUserId;
-        // this.UpdateUserName = query.v.UpdateUserName;
-        // this.checkedStatus = query.v.checkedStatus;
-
-      //  console.log(query)
-
-
       },
       getCheckKeywords() {  //  	根据关键字 获取详情
         let that = this;
@@ -428,6 +387,39 @@
 <style lang="scss" scoped>
   @import '../../../../style/index';
   /*@import "../../../../../static/base.css";*/
+
+  .PreviewImgg {
+    text-align: center;
+  }
+  .PreviewImgg img {
+    width: 360px;
+  }
+
+  .upload_warp_img_div_text {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 20px;
+    color: transparent;
+  }
+
+  .upload_warp_img_div_text:hover {
+    color: #fff;
+  }
+
+  .upload_warp_img_div_text i {
+    cursor: pointer;
+    line-height: 80px;
+    text-align: center;
+
+  }
+  .upload_warp_img_div_top:hover {
+
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+
+    cursor: pointer;
+  }
   .max1000 {
     max-width: 1000px;
     text-align: right;
@@ -502,7 +494,7 @@
     top: 0;
     width: 80px;
     height: 16px;
-    background: rgba(226, 226, 226, 0.4);
+    /*background: rgba(226, 226, 226, 0.4);*/
   }
 
   .upload_warp_left {
@@ -527,12 +519,14 @@
   }
 
   .upload_warp_img_div {
+
     width: 80px;
     height: 80px;
     /*border: 1px solid red;*/
     margin-right: 20px;
     -webkit-box-shadow: 0 0 10px #c0c4cc;
     -moz-box-shadow: 0 0 10px #c0c4cc;
+    cursor: pointer;
     /*box-shadow: 0 0 10px #c0c4cc;*/
   }
 
