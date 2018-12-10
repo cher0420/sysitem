@@ -1,7 +1,7 @@
 <template>
   <div class="yoy-main">
     <!--<div class="questionTitl">-->
-      <!--{{ Question }}-->
+    <!--{{ Question }}-->
     <!--</div>-->
     <div class="keywordTip">
       关键词
@@ -16,21 +16,20 @@
       <el-input
         type="textarea"
         placeholder="请输入自定义回答,最多500个字符"
-        v-model="Answer" class="editTextarea">
+        v-model="Text.Answer" class="editTextarea">
       </el-input>
 
     </div>
     <div class="max1000">
-      <span class="fontCount">{{Answer.length}}/500字</span>
+      <span class="fontCount">{{Text.Answer.length}}/500字</span>
     </div>
     <div class="photoUp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
 
 
-
-      <div class="upload_warp_img" v-show="Image.Answer.length!=0">
-        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image.Answer">
-          <img :src="item.file.src">
+      <div class="upload_warp_img" v-if="Image.length!=0">
+        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
+          <img :src="item.Answer">
         </div>
       </div>
       <!-- show photo -->
@@ -55,7 +54,7 @@
         ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
       </div>
       <div class="subFinsh">
-        <el-button type="primary" size="mini" @click="getPhotoUrl" >完成</el-button>
+        <el-button type="primary" size="mini" @click="getPhotoUrl">完成</el-button>
       </div>
 
     </div>
@@ -80,50 +79,23 @@
     data() {
       return {
         // 图片上传
-        imgList: [],
+        imgList: [], // 本地图片格式
         size: 0,
-        imgListNew: [],
-
-
-
-        //   路由传过来的参数
-        BotConfigId: "",
-        CreateDate: "",
-        CreateUserId: "",
-        CreateUserName: "",
-        ID: "",
-
-
-        Status: "",
-        TenantId: "",
-        UpdateDate: "",
-        UpdateUserId: "",
-        UpdateUserName: "",
-        checkedStatus: "",
-
+        imgListNew: [],  // 上传图片到服务器的格式
 
         // 根据关键字获取答案
         Question: "",
         Keyword: "",
-        // 根据关键字获取 答案  / 图片
-        "Text": {
-          "ID": "",
-          "Answer ": "",
+        KeyId:"",
+
+        Text: {   // 答案
+          ID: "",
+          Answer : "",
         },
-        "Image":[{
-          "ID": "",
-          "Answer ": "",
+        Image: [{
+          ID: "",
+          Answer : "",
         }],
-
-
-
-
-
-
-
-
-
-
 
 
       }
@@ -142,22 +114,11 @@
     methods: {
 
       getData() {
-        let query = this.$route.query;
-        this.Question = query.v.Question;
-        this.BotConfigId = query.v.BotConfigId;
-        // this.CreateDate = query.v.CreateDate;
-        // this.CreateUserId = query.v.CreateUserId;
-        // this.CreateUserName = query.v.CreateUserName;
-        // this.ID = query.v.ID;
-        this.Keyword = query.v.Keyword;
-        // this.Status = query.v.Status;
-        // this.TenantId = query.v.TenantId;
-        // this.UpdateDate = query.v.UpdateDate;
-        // this.UpdateUserId = query.v.UpdateUserId;
-        // this.UpdateUserName = query.v.UpdateUserName;
-        // this.checkedStatus = query.v.checkedStatus;
+        // let query = this.$route.query;
 
-        console.log(query)
+        let data = JSON.parse(sessionStorage.getItem('edit'));
+
+        this.Keyword = data.Keyword;
 
         this.getCheckKeywords();
       },
@@ -180,7 +141,8 @@
           data: JSON.stringify(data),
           success: function (msg) {
 
-            // console.log("根据关键字获取答案", msg)
+            console.log("根据关键字获取答案", msg)
+
             if (msg.Status == "1") {
               // 修改答案
               if (msg.Data != null) {
@@ -189,7 +151,7 @@
                 that.Keyword = msg.Data.Keyword;
                 that.Text = msg.Data.Text;
                 that.Image = msg.Data.Image;
-
+                that.KeyId = msg.Data.KeyId;
 
 
 
@@ -230,7 +192,7 @@
 
         data = {
           "Id": "",
-          "Command": "delete",
+          "Command": "upload",
           "Files": Files,
         }
 
@@ -262,7 +224,7 @@
                 //   obj.ID = "";
                 that.Image = [];
               }
-              that.saveKeywords();
+              that.updataAnswer();
 
               console.log("img", that.Image)
 
@@ -290,10 +252,10 @@
           "TenantId": TenantId,
           "KeyId": that.KeyId,
           "Question": that.Question,
-          "Keyword": this.keywordsNew,
+          "Keyword": that.Keyword,
           "Text": that.Text,
           "Image": that.Image,
-          "DeleteIds":that.DeleteIds,
+          "DeleteIds": that.DeleteIds,
           "Email": Email,
           "FullName": FullName
         };
@@ -317,9 +279,9 @@
                 that.$router.push({
                   path: '/bot/config/quicklyQA',
                 })
-              },1500)
+              }, 1500)
 
-            }else{
+            } else {
               that.$message({
                 message: '更新新问答失败',
                 type: 'success'
@@ -421,14 +383,15 @@
 <style lang="scss" scoped>
   @import '../../../../style/index';
   /*@import "../../../../../static/base.css";*/
-.max1000 {
-  max-width: 1000px;
-  text-align: right;
-  margin-left: 40px;
-  margin-top: -21px;
-  z-index: 3;
-  word-break: keep-all;
-}
+  .max1000 {
+    max-width: 1000px;
+    text-align: right;
+    margin-left: 40px;
+    margin-top: -21px;
+    z-index: 3;
+    word-break: keep-all;
+  }
+
   .max1000 span {
     margin-right: 10px;
   }
@@ -511,7 +474,8 @@
     font-size: 30px;
     color: #c3c3c3;
   }
-  .upload_warp_left:hover{
+
+  .upload_warp_left:hover {
     border-color: #409eff;
     color: #409eff;
     cursor: pointer;
@@ -523,7 +487,7 @@
     /*border: 1px solid red;*/
     margin-right: 20px;
     //-webkit-box-shadow: 0 0 10px #c0c4cc;
-  //  -moz-box-shadow: 0 0 10px #c0c4cc;
+    //  -moz-box-shadow: 0 0 10px #c0c4cc;
     /*box-shadow: 0 0 10px #c0c4cc;*/
   }
 

@@ -184,13 +184,17 @@
       getData() {
 
         let data = JSON.parse(sessionStorage.getItem('Data'));
+    console.log("data111",data)
 
        this.CreateDate = data.CreateDate;
          this.Image = data.Image;
         this.KeyId = data.KeyId;
         this.Keyword = data.Keyword;
         this.Question = data.Question;
-        this.Text = data.Text;
+        if(data.Text.Answer != null ){
+          this.Text = data.Text;
+        }
+
 
         console.log("子组件数据", data);
       },
@@ -230,12 +234,12 @@
             "Suffix": product.file.type.slice(6),
           };
         });
-        this.imgListNew = Files;
+        // this.imgListNew = Files;
         // console.log("change", this.imgListNew)
 
         data = {
           "Id": "",
-          "Command": "delete",
+          "Command": "upload",
           "Files": Files,
         }
 

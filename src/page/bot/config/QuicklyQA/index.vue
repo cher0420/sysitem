@@ -183,6 +183,7 @@
       },
       editSomething(v){
         const query = this.$route.query;
+        sessionStorage.setItem('edit',JSON.stringify(v) ); // 存入
         if(v.Status == 5){
           return;
         }else{
