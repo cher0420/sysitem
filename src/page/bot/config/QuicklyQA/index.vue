@@ -1,7 +1,7 @@
 <template>
   <section>
-    <section class="p-relative">
-      <el-button type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-model='keys' class='searchInput' size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+    <section class="p-relative" style="height:32px;">
+      <el-button v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-if="!enableChecked" v-model='keys' class='searchInput' size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
         <el-button v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;color: #fff;background: #2a8ce7;border-color: #2a8ce7;">选择</el-button>
       <span v-else class="p-absolute right-0">
@@ -29,7 +29,7 @@
         label="问题"
         >
         <template slot-scope="scope">
-          <section class='link' style="height: 28px;line-height: 28px;" @click="pathToDetail">
+          <section class='link' style="height: 28px;line-height: 28px;" @click="pathToDetail(scope.row)">
             {{scope.row.Question}}
           </section>
         </template>
@@ -197,12 +197,14 @@
           })
         }
       },
-      pathToDetail(){
+      pathToDetail(v){
         const query = this.$route.query;
         this.$router.push({
           path:'/bot/config/quicklyQA/detailQA',
           query:{
-            ...query,
+            recordId:query.recordId,
+            title:v.Question,
+            v
           }
         })
       },
@@ -264,6 +266,8 @@
         this.loading = false
       },
       handleCommand(command){
+        this.tableData = []
+        this.total = 0
         this.title = this.options[command]
         this.status= command?command-0:null
         const status = {Status:this.status}
@@ -349,6 +353,7 @@
         }
       },
       search() {
+        this.tableData = []
         this.loading = true
         const Keys = {Keys:this.keys}
         getList(Keys).then(
@@ -361,7 +366,7 @@
           }
         ).catch(
           () => {
-
+            this.loading = false
           }
         )
       },
@@ -374,7 +379,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.loading=true
+          store.dispatch(REPLACE,{mainLoading:true})
           const params = {
             QuickQuizId:v
           }
@@ -382,7 +387,7 @@
             (res) => {
               this.tableData.splice(index,1)
               this.total--;
-              this.loading=false
+              store.dispatch(REPLACE,{mainLoading:false})
               this.$message({
                 type: 'success',
                 message: '删除成功'
@@ -390,6 +395,7 @@
             }
           ).catch(
             () =>{
+              store.dispatch(REPLACE,{mainLoading:false})
               this.$message({
                 type: 'error',
                 message: '删除失败，请稍后重试'

@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="addContent addContentDis" v-if="!questionDis">
-        {{Question}}
+       问题 ： {{Question}}
       </div>
       <div v-if="!questionDis">
         <div class="addQuestion">
@@ -69,7 +69,7 @@
                 <div class="upload_warp_img_div " v-for="(item,index) of imgList">
                   <div class="upload_warp_img_div_top">
                     <div class="upload_warp_img_div_text">
-                      <i class="el-icon-zoom-in" @click="fileShow(index)"></i>
+                      <i class="el-icon-zoom-in" @click="fileDel(index)"></i>
                       <i class="el-icon-delete" @click="fileDel(index)"></i>
                     </div>
 
@@ -153,6 +153,8 @@
 
       this.checkSize()
 
+    this.init();
+
 
     },
     mounted() {
@@ -182,6 +184,15 @@
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
 
+      init(){
+
+
+
+        that.keywordsLast();
+        that.questionLast();
+
+
+      },
       getKeywords() {  // 将一句话分成多个词汇
         if (this.Question == "") {
           this.$alert('请添加问题', '友情提示', {
@@ -308,6 +319,8 @@
                 message: '创建新问答成功',
                 type: 'success'
               });
+
+
               that.keywordsLast();
               that.questionLast();
 
@@ -467,22 +480,6 @@
         this.size = this.size - this.imgList[index].file.size;//总大小
         this.imgList.splice(index, 1);
       },
-      fileShow(index){
-          console.log(this.imgList[index].file.src)
-        // this.$alert('这是一段内容', '标题名称', {
-        //   confirmButtonText: '确定',
-        //   callback: action => {
-        //
-        //
-        //
-        //   }
-        // });
-
-
-
-      },
-
-
       bytesToSize(bytes) {
         if (bytes === 0) return '0 B';
         let k = 1000, // or 1024
@@ -492,8 +489,13 @@
       },
 
 
+      checkSize() {
 
-      checkSize() { // 计算文本域字数
+
+
+
+
+        // 计算文本域字数
         let that = this;
         this.timer = setInterval(function () {
           if (that.textarea.length > 500) {
@@ -571,7 +573,7 @@
     /*margin-top: 33px;*/
     margin-right: 11px;
     width: 1000px;
-    margin-top: 52px;
+    margin-top: 20px;
   }
 
   .nextStepTop {
