@@ -213,7 +213,7 @@
         })
       },
       go(){
-        const id = this.$route.query.recordId
+        const id = this.$route.query.recordId?this.$route.query.recordId:JSON.parse(sessionStorage.getItem('recordId'))
         const host = 'https://'+window.location.host
         const url = `${host}/WebTalk/validaiml.html?id=${id}`
         window.open(url)
