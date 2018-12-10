@@ -324,8 +324,12 @@
                 type: 'success'
               });
               setTimeout(function () {
+                const recordId = that.$route.query.recordId
                 that.$router.push({
                   path: '/bot/config/quicklyQA',
+                  query:{
+                    recordId
+                  }
                 })
               },1500)
 
