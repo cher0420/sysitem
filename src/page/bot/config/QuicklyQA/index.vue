@@ -200,6 +200,8 @@
       },
       pathToDetail(v){
         const query = this.$route.query;
+        sessionStorage.setItem('detaildata',JSON.stringify(v) ); // 存入
+
         this.$router.push({
           path:'/bot/config/quicklyQA/detailQA',
           query:{
