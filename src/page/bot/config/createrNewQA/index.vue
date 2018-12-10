@@ -104,7 +104,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <div><img :src="PreviewImg" ></div>
+      <div><img :src="PreviewImg"></div>
       <span slot="footer" class="dialog-footer">
 
   </span>
@@ -127,7 +127,7 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
-        PreviewImg:"", // 预览图片
+        PreviewImg: "", // 预览图片
         dialogVisible: false,
         addIcon: true,
         loading: false,
@@ -239,11 +239,21 @@
           data: JSON.stringify(data),
           success: function (msg) {
             that.loading = false;
-            // console.log("msg",msg)
+            console.log("msg", msg)
+
+
             if (msg.Status == "1") {
+              if (msg.Data.length < 2) {
+                that.$message('分词失败，请重新输入');
+                that.keywordsLast();
+                that.questionLast();
+
+              }
+              console.log("msg", msg)
+
               that.keywordsOption = msg.Data;
               that.questionNext();
-              console.log("msg", msg)
+
 
             }
 
@@ -551,9 +561,11 @@
 <style lang="scss" scoped>
   /*@import "../../../../../static/base.css";*/
   @import '../../../../style/index';
+
   .el-message-box {
     height: 330px !important;
   }
+
   .mt30 {
     margin-top: 30px;
   }
