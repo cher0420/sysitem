@@ -7,10 +7,10 @@ const createrNewQA = {
 
   state: {
     questionDis: true, // 问题可修改
-    keywordsDis: true ,// 关键词可修改
-    Question:"",  // 问题
-    keywords:"" , // 关键词
-    newDataDis:true, // 创建 修改 页面展示
+    keywordsDis: true,// 关键词可修改
+    // Question:"",  // 问题
+    // keywords:"" , // 关键词
+    newDataDis: true, // 创建 修改 页面展示
 
 
   },
@@ -28,33 +28,37 @@ const createrNewQA = {
 
   },
   mutations: {
-    questionNext: (state,payload) => {
+    questionNext: (state, payload) => {
       state.questionDis = false; // 问题不可修改
+      state.keywordsDis = true; // 关键词可修改
     },
     questionLast: (state) => {
       state.questionDis = true; // 问题可修改
+      state.keywordsDis = true; // 关键词可修改
     },
     keywordsNext: (state, payload) => {
       if (payload > 1 && payload < 5) {
+        state.questionDis = false; // 问题不可修改
         state.keywordsDis = false; // 关键词不可修改
       }
     },
     keywordsLast: (state) => {
+
       state.keywordsDis = true; // 关键词可修改
     },
-    newDataDis:(state) => {
+    newDataDis: (state) => {   // 子组件不展示
       state.newDataDis = true; // 展示
     },
-    newDataHidd:(state) => {
+    newDataHidd: (state) => {  // 答案已存在组件展示
       state.newDataDis = false; // 隐藏
     },
   },
   actions: {
 
-    questionNext: (context,payload) => {
+    questionNext: (context, payload) => {
       context.commit("questionNext")  // 问题不可修改
     },
-    questionLast: (context,payload) => {
+    questionLast: (context, payload) => {
       context.commit("questionLast")  // 问题可修改
     },
     keywordsNext: (context, payload) => {
@@ -63,10 +67,10 @@ const createrNewQA = {
     keywordsLast: (context) => {
       context.commit("keywordsLast")  // 关键词可修改
     },
-    newDataDis:(context) => {
+    newDataDis: (context) => {
       context.commit("newDataDis") // 展示
     },
-    newDataHid:(context) => {
+    newDataHid: (context) => {
       context.commit("newDataHidd")// 隐藏
     },
 

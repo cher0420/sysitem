@@ -25,6 +25,14 @@
     </div>
     <div class="photoUp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
+
+
+
+      <div class="upload_warp_img" v-show="Image.Answer.length!=0">
+        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image.Answer">
+          <img :src="item.file.src">
+        </div>
+      </div>
       <!-- show photo -->
       <div class="upload_warp_img" v-show="imgList.length!=0">
         <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
@@ -75,20 +83,17 @@
         imgList: [],
         size: 0,
         imgListNew: [],
-        Image: [],
 
-        "Text": {
-          "ID": "",
-          "Answer": "上海市徐汇区天华信息科技园",
-        },
-        //   用户传过来的参数
-        BotConfigId: null,
-        CreateDate: "2018-12-06",
-        CreateUserId: null,
-        CreateUserName: null,
+
+
+        //   路由传过来的参数
+        BotConfigId: "",
+        CreateDate: "",
+        CreateUserId: "",
+        CreateUserName: "",
         ID: "",
-        Keyword: "",
-        Question: "",
+
+
         Status: "",
         TenantId: "",
         UpdateDate: "",
@@ -96,7 +101,31 @@
         UpdateUserName: "",
         checkedStatus: "",
 
-        Answer:"", // 找不到
+
+        // 根据关键字获取答案
+        Question: "",
+        Keyword: "",
+        // 根据关键字获取 答案  / 图片
+        "Text": {
+          "ID": "",
+          "Answer ": "",
+        },
+        "Image":[{
+          "ID": "",
+          "Answer ": "",
+        }],
+
+
+
+
+
+
+
+
+
+
+
+
       }
     },
     computed: {},
@@ -116,29 +145,63 @@
         let query = this.$route.query;
         this.Question = query.v.Question;
         this.BotConfigId = query.v.BotConfigId;
-        this.CreateDate = query.v.CreateDate;
-        this.CreateUserId = query.v.CreateUserId;
-        this.CreateUserName = query.v.CreateUserName;
-        this.ID = query.v.ID;
+        // this.CreateDate = query.v.CreateDate;
+        // this.CreateUserId = query.v.CreateUserId;
+        // this.CreateUserName = query.v.CreateUserName;
+        // this.ID = query.v.ID;
         this.Keyword = query.v.Keyword;
-        this.Status = query.v.Status;
-        this.TenantId = query.v.TenantId;
-        this.UpdateDate = query.v.UpdateDate;
-        this.UpdateUserId = query.v.UpdateUserId;
-        this.UpdateUserName = query.v.UpdateUserName;
-        this.checkedStatus = query.v.checkedStatus;
+        // this.Status = query.v.Status;
+        // this.TenantId = query.v.TenantId;
+        // this.UpdateDate = query.v.UpdateDate;
+        // this.UpdateUserId = query.v.UpdateUserId;
+        // this.UpdateUserName = query.v.UpdateUserName;
+        // this.checkedStatus = query.v.checkedStatus;
 
         console.log(query)
 
-        this.getPhoto();
+        this.getCheckKeywords();
       },
-      getPhoto(){
+      getCheckKeywords() {  //  	根据关键字 获取详情
+        let that = this;
+        const token = getCookies(TOKEN);
+        let recordId = JSON.parse(sessionStorage.getItem('recordId'));
+        // console.log("recordId",recordId)
+        let data = {
+          "BotConfigId": recordId,
+          "Keys": this.Keyword
+        }
+        $.ajax({
+          type: "POST",
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+            'Access-Token': token
+          },
+          url: base.requestHost + "/api/QuickQA/QueryQAData",
+          data: JSON.stringify(data),
+          success: function (msg) {
+
+            // console.log("根据关键字获取答案", msg)
+            if (msg.Status == "1") {
+              // 修改答案
+              if (msg.Data != null) {
+                // code
+                that.Question = msg.Data.Question;
+                that.Keyword = msg.Data.Keyword;
+                that.Text = msg.Data.Text;
+                that.Image = msg.Data.Image;
 
 
+
+
+              }
+
+            }
+
+          }
+        })
 
 
       },
-
       // 图片上传
       fileClick() {
 
@@ -211,9 +274,10 @@
 
 
       },
-      saveKeywords() {  // 	存储答案
+      updataAnswer() { // 更新问题
 
-        console.log("存储答案userInerInfo", store.state.app.userInfo)
+
+        // console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
         const token = getCookies(TOKEN);
         this.token = token;
@@ -224,13 +288,12 @@
         let data = {
           "BotConfigId": recordId,
           "TenantId": TenantId,
+          "KeyId": that.KeyId,
           "Question": that.Question,
-          "Keyword": that.Keyword,
-          "Text": {
-            "ID": that.ID,
-            "Answer": that.Answer,
-          },
+          "Keyword": this.keywordsNew,
+          "Text": that.Text,
           "Image": that.Image,
+          "DeleteIds":that.DeleteIds,
           "Email": Email,
           "FullName": FullName
         };
@@ -243,36 +306,31 @@
           url: base.requestHost + "/api/QuickQA/StoreQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-            console.log("存储答案", msg)
+            // console.log("存储答案", msg)
             if (msg.Status == "1") {
 
               that.$message({
-                message: '编辑答案成功',
+                message: '更新新问答成功',
                 type: 'success'
               });
+              setTimeout(function () {
+                that.$router.push({
+                  path: '/bot/config/quicklyQA',
+                })
+              },1500)
 
-
-
-              // 跳转到列表页
-              const query = that.$route.query;
-
-
-
-
-              that.$router.push({
-                path: '/bot/config/quicklyQA',
-                query:{
-                  ...query,
-                }
-              })
-
+            }else{
+              that.$message({
+                message: '更新新问答失败',
+                type: 'success'
+              });
             }
 
           }
         })
 
-
       },
+
       fileList(fileList) {
         let files = fileList.files;
         for (let i = 0; i < files.length; i++) {
@@ -464,8 +522,8 @@
     height: 80px;
     /*border: 1px solid red;*/
     margin-right: 20px;
-    -webkit-box-shadow: 0 0 10px #c0c4cc;
-    -moz-box-shadow: 0 0 10px #c0c4cc;
+    //-webkit-box-shadow: 0 0 10px #c0c4cc;
+  //  -moz-box-shadow: 0 0 10px #c0c4cc;
     /*box-shadow: 0 0 10px #c0c4cc;*/
   }
 
