@@ -1,7 +1,7 @@
 <template>
   <section>
-    <section class="p-relative" style="height:32px;">
-      <el-button type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-model='keys' class='searchInput' size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+    <section class="p-relative" style="">
+      <el-button type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-model='keys' class='searchInput' style="left: 120px;" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
         <el-button v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;color: #fff;background: #2a8ce7;border-color: #2a8ce7;">选择</el-button>
       <span v-else class="p-absolute right-0">
@@ -593,26 +593,9 @@
 </script>
 <style scoped lang="scss">
   @import '../../../../style/index';
-  .yoy-search-button{
-    width: 32px!important;
-    height:30px!important;
-    line-height: 30px!important;
-    margin-top:1px;
-    margin-right: 1px;
-    margin-bottom: 1px;
-    background-color: $light-blue;
-    cursor:pointer;
-  }
-  .el-icon-search:before {
-    font-weight: 900;
-    font-size: 14px;
-    color: $primary-color;
-  }
   .createAnswer{
+    position: absolute;
     width: 100px;padding-left:0;padding-right:0;margin-right: 20px;
-  }
-  .searchInput{
-    width: 360px;
   }
   .margin-top20{
     margin-top: 20px;
