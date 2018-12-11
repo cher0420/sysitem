@@ -3,7 +3,7 @@
     <section class="p-relative" style="">
       <el-button type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-model='keys' class='searchInput' style="left: 120px;" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
-        <el-button v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;color: #fff;background: #2a8ce7;border-color: #2a8ce7;">选择</el-button>
+        <el-button type="primary" v-if="!enableChecked" :disabled='originDisabled' class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;">选择</el-button>
       <span v-else class="p-absolute right-0">
         <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="buttonStatus" type="primary" style="margin-right: 10px;" @click="train">测试</el-button><el-button type="primary" :disabled="buttonStatus" @click="publish" >发布</el-button>
       </span>
@@ -94,7 +94,7 @@
   import questionOptions from './constants'
   import {getList,del,_ask,doSomething} from './service'
   import URL from '../../../../host/baseUrl'
-  import {QUERYSTATUS,PUBLISHORTRAIN} from "../../../../constants/api";
+  import {PUBLISHORTRAIN} from "../../../../constants/api";
   import store from '../../../../store';
   import {REPLACE} from "../../../../store/mutations";
 
@@ -120,7 +120,8 @@
         buttonStatus:true,
         reloadId:null,
         hasPublishArr:[],
-        originArr:[]
+        originArr:[],
+        originDisabled:true,
       }
     },
     /*
@@ -238,8 +239,9 @@
               getList(params).then(
                 (res) =>{
                   that.tableData = res['Data']
-                  that.loading = false
                   that.total = res.TotalCount
+                  that.originDisabled = that.tableData.length <= 0
+                  that.loading = false
                   clearInterval(that.reloadId);
                   if(v){
                     that.go()
@@ -260,6 +262,7 @@
       },
       complateGetList(res){
         this.tableData = res['Data']
+        this.originDisabled = this.tableData.length <= 0
         this.total = res.TotalCount
         this.PageIndex = res.PageIndex
         this.loading = false
@@ -293,7 +296,7 @@
         setTimeout(
           () =>{
             that.loading=false
-          },600
+          },800
         )
         /*
         当操作状态为取消选择时
@@ -323,6 +326,7 @@
               给table重新赋值
               */
               that.tableData = res['Data']
+              that.loading=false
             }
           )
 
