@@ -159,7 +159,7 @@
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
             () =>{
               that.loading = false
-              that._reload_ask()
+              that._reload_ask(false)
             }
           )
         }
