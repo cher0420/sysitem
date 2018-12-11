@@ -14,21 +14,22 @@
     </div>
     <div class="edit_textarea">
       <!--<el-input-->
-        <!--type="textarea" :disabled="true"-->
-        <!--v-model="Text.Answer" class="editTextarea">-->
+      <!--type="textarea" :disabled="true"-->
+      <!--v-model="Text.Answer" class="editTextarea">-->
       <!--</el-input>-->
       {{Text.Answer}}
 
     </div>
     <!--<div class="max1000">-->
-      <!--<span class="fontCount">{{Text.Answer.length}}/500字</span>-->
+    <!--<span class="fontCount">{{Text.Answer.length}}/500字</span>-->
     <!--</div>-->
-    <div class="photoUp">
+    <div class="photoUpp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
       <!-- show photo -->
-      <div class="upload_warp_img" v-show="Image.length!=0">
+      <div class="upload_warp_img" v-if="Image.length!=0">
 
-        <div class="upload_warp_img_div cc222" @click="showIph(item)" v-for="(item,index) of Image" v-if="item.Answer != '' ">
+        <div class="upload_warp_img_div cc222" @click="showIph(item)" v-for="(item,index) of Image"
+             v-if="item.Answer != '' ">
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text">
               <!-- 放大图片 -->
@@ -38,23 +39,25 @@
           <img :src="item.Answer">
         </div>
       </div>
+
       <!--<div class="imgLimit">-->
-        <!--( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )-->
+      <!--( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )-->
       <!--</div>-->
 
 
     </div>
-
+    <div class="buttonSubb">
+      <el-button type="primary" plain size="mini" >编辑</el-button>
+      <el-button type="primary" size="mini" >完成</el-button>
+    </div>
     <!-- -->
     <el-dialog
       title="图片预览"
       :visible.sync="dialogVisible"
       width="45%"
       :before-close="handleClose">
-      <div class="PreviewImgg"><img :src="PreviewImg" ></div>
-      <span slot="footer" class="dialog-footer">
-
-  </span>
+      <div class="PreviewImgg"><img :src="PreviewImg"></div>
+      <span slot="footer" class="dialog-footer"></span>
     </el-dialog>
 
   </div>
@@ -76,8 +79,8 @@
     data() {
       return {
 
-        PreviewImg:"", // 预览图片src
-        dialogVisible:false,
+        PreviewImg: "", // 预览图片src
+        dialogVisible: false,
 
         // 根据关键字获取答案
         Question: "",
@@ -107,17 +110,17 @@
     watch: {},
 
     methods: {
-      showIph(item){
+      showIph(item) {
         this.PreviewImg = item.Answer;
         this.dialogVisible = true;
-           // console.log(item)
+        // console.log(item)
       },
 
       getData() {
         // let query = this.$route.query;
         let detaildata = sessionStorage.getItem("detaildata"); // => 返回
-      let  query =JSON.parse(detaildata) ;
-     // console.log("取值",query)
+        let query = JSON.parse(detaildata);
+        // console.log("取值",query)
 
         this.Question = query.Question;
         this.Keyword = query.Keyword;
@@ -142,7 +145,7 @@
           url: base.requestHost + "/api/QuickQA/QueryQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-        //    console.log("根据关键词获取答案",msg);
+            //    console.log("根据关键词获取答案",msg);
 
 
             if (msg.Status == "1") {
@@ -389,9 +392,17 @@
   @import '../../../../style/index';
   /*@import "../../../../../static/base.css";*/
 
+  .buttonSubb {
+    text-align: right;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    max-width: 1040px;
+    box-sizing: border-box;
+  }
   .PreviewImgg {
     text-align: center;
   }
+
   .PreviewImgg img {
     width: 360px;
   }
@@ -414,6 +425,7 @@
     text-align: center;
 
   }
+
   .upload_warp_img_div_top:hover {
 
     height: 100%;
@@ -421,6 +433,7 @@
 
     cursor: pointer;
   }
+
   .max1000 {
     max-width: 1000px;
     text-align: right;
@@ -538,14 +551,15 @@
     height: 100%;
   }
 
-  .photoUp {
+  .photoUpp {
     background: #F9FAFC;
     /*margin-top: 22px;*/
     /*margin-left: 40px;*/
     position: relative;
-    max-width: 1000px;
-   padding: 20px 40px;
+    max-width: 1040px;
+    padding: 20px 40px;
     margin-top: 30px;
+    box-sizing: border-box;
   }
 
   .upload_warp_img_div_text {

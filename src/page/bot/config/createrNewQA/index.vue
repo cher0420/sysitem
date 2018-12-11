@@ -668,7 +668,7 @@
   .nextStepTop {
     text-align: right;
     margin-top: 33px;
-    margin-right: 11px;
+    /*margin-right: 11px;*/
     max-width: 996px;
     margin-left: 40px;
   }
