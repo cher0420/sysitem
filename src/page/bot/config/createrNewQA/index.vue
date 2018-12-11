@@ -33,10 +33,11 @@
             </el-checkbox-group>
             <!--{{keywords}}-->
           </div>
-          <div class="nextStep mt30">
+          <div class="nextStepp mt30">
             <el-button type="primary" plain size="mini" @click="questionLast">上一步</el-button>
             <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
               下一步
+
             </el-button>
           </div>
         </div>
@@ -104,7 +105,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <div><img :src="PreviewImg"></div>
+      <div class="photoPre"><img :src="PreviewImg"></div>
       <span slot="footer" class="dialog-footer">
   </span>
     </el-dialog>
@@ -241,7 +242,6 @@
             if (msg.Status == "1") {
               if (msg.Data.length < 2) {
                 setTimeout(function () {
-                  // console.log("++++++++++")
                   that.init();
                 }, 300)
 
@@ -252,7 +252,7 @@
 
               }
               // console.log("msg", msg)
-
+                that.keywords = [];
               that.keywordsOption = msg.Data;
               that.questionNext();
 
@@ -562,6 +562,9 @@
   /*@import "../../../../../static/base.css";*/
   @import '../../../../style/index';
 
+  .photoPre {
+    text-align: center;
+  }
   .el-message-box {
     height: 330px !important;
   }
@@ -616,12 +619,19 @@
     width: 1000px;
     margin-top: 20px;
   }
+  .nextStepp {
+    text-align: right;
+    /*margin-top: 33px;*/
+    margin-right: 11px;
+    max-width: 1000px;
+    margin-top: 20px;
+  }
 
   .nextStepTop {
     text-align: right;
     margin-top: 33px;
     margin-right: 11px;
-    width: 996px;
+    max-width: 996px;
     margin-left: 40px;
   }
 
@@ -632,10 +642,18 @@
     line-height: 32px;
     padding: 0;
   }
+  .nextStepp button {
+    width: 80px;
+    text-align: center;
+    height: 32px;
+    line-height: 32px;
+    padding: 0;
+  }
 
   .keywords {
+
     padding: 0 40px;
-    width: 1200px;
+    max-width: 925px;
   }
 
   .checkboxContent {
