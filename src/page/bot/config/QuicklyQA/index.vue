@@ -268,6 +268,7 @@
         this.loading = false
       },
       handleCommand(command){
+        this.originDisabled = true
         this.tableData = []
         this.total = 0
         this.title = this.options[command]
@@ -358,14 +359,12 @@
       search() {
         this.tableData = []
         this.loading = true
+        this.originDisabled = true
         const Keys = {Keys:this.keys}
         getList(Keys).then(
           (res) => {
-            this.tableData = res['Data']
-            this.PageIndex = res.PageIndex
-            this.total = res.TotalCount
+            this.complateGetList(res)
             this.title = '状态'
-            this.loading = false
           }
         ).catch(
           () => {
