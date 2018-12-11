@@ -14,10 +14,12 @@
     return fmt;
 }
 
-// var adminApiUrl = "https://hightalkadminapi-test.azurewebsites.net/api";
+var adminApiUrl = "https://hightalkadminapi-test.azurewebsites.net/api";
 // var adminApiUrl = "https://hightalkadminapi-staging.azurewebsites.net/api";
-var adminApiUrl = "https://hightalkadminapi-uat.azurewebsites.net/api";
-var fqavalidaimlApiUrl = "https://hightalkfqavalidaiml-uat.azurewebsites.net";
+// var adminApiUrl = "https://hightalkadminapi-uat.azurewebsites.net/api";
+
+// var fqavalidaimlApiUrl = "https://hightalkfqavalidaiml-uat.azurewebsites.net";
+var fqavalidaimlApiUrl = "https://hightalkfqavalidaiml-test.azurewebsites.net";
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};
@@ -143,7 +145,12 @@ $(function () {
                     if (result.Data != "" && result.Data != null && result.Data != undefined) {
                         var answer = result.Data.Message;
                         answer = filterMsgSpechars(answer);
-                        addMsg("Hightalk", sendMsgDispose(answer));
+                        var msg = sendMsgDispose(answer);
+                        if(msg == null || msg == "" || msg == undefined){
+                            msg = "抱歉，当前问题中不包含培训的关键字"
+                        }
+
+                        addMsg("Hightalk", msg);
                     } else {
                         sendErrorMsg();
                     }

@@ -462,6 +462,16 @@
         let files = fileList.files;
         for (let i = 0; i < files.length; i++) {
           //判断是否为文件夹
+          let typeImg = files[i].type.slice(0,5);
+          if( typeImg != "image"){
+            this.$message({
+              message: '请上传规定的图片文件',
+              type: 'warning'
+            });
+            return false;
+          }
+
+          console.log("类型",typeImg)
           if (files[i].type != '') {
             this.fileAdd(files[i]);
           } else {
@@ -494,6 +504,16 @@
         })
       },
       fileAdd(file) {
+        console.log("daxiao",file.size/1024 )
+        let currSize = file.size/1024 ;
+        if(currSize > 200 ){
+          this.$message({
+            message: '单张图片最大不超过200k',
+            type: 'warning'
+          });
+          return false;
+
+        }
         //总大小
         this.size = this.size + file.size;
         //判断是否为图片文件
@@ -530,7 +550,7 @@
       },
       bytesToSize(bytes) {
         if (bytes === 0) return '0 B';
-        let k = 1000, // or 1024
+        let k = 1024,
           sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'],
           i = Math.floor(Math.log(bytes) / Math.log(k));
         return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
@@ -567,9 +587,14 @@
 <style lang="scss" scoped>
   /*@import "../../../../../static/base.css";*/
   @import '../../../../style/index';
-
+.upload_warp_img_div img{
+  width: 80px;
+}
   .photoPre {
     text-align: center;
+  }
+  .photoPre img{
+    width: 360px;
   }
   .el-message-box {
     height: 330px !important;
@@ -590,12 +615,18 @@
   }
 
   .addContent {
-    padding-top: 30px;
-    padding-left: 40px;
+    /*padding-top: 30px;*/
+    /*padding-left: 40px;*/
+    margin-left: 40px;
+    margin-top: 30px;
+    box-sizing: content-box;
     /*padding-right: 40px;*/
     max-width: 997px;
     color: #999;
     font-size: 12px;
+  }
+  .addContent input {
+
   }
 
   .addContent input {
@@ -616,6 +647,7 @@
     /*padding-right: 30px;*/
     max-width: 997px;
     margin-left: 40px;
+    box-sizing: content-box;
   }
 
   .nextStep {
