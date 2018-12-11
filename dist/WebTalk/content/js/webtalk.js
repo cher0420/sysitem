@@ -122,7 +122,7 @@ $(function () {
     function getBotConfig(callback){
         $.post(adminApiUrl + "/Tenant/GetBotConfig", { BotConfigRecordId: botObject.BotConfigId }, function (result) {
             if (result != undefined && result != null) {
-                if (result.Status == 0) {
+                if (result.Status == 1) {
                     invokeAPIVersion = result.BotConfig.InvokeAPIVersion;
                 }
 
@@ -213,7 +213,7 @@ $(function () {
             callWebTalkServiceV2(question);
         }
     }
-    
+
     // 发送的信息处理
     function sendMsgDispose(detail) {
         detail = detail.replace(/\r\n/g, "<br />").replace(/\n/g, "<br />").replace(/' '/g, "&nbsp;");
