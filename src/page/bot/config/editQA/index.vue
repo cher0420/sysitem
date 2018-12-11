@@ -340,6 +340,18 @@
       fileList(fileList) {
         let files = fileList.files;
         for (let i = 0; i < files.length; i++) {
+          let typeImg = files[i].type.slice(0,5);
+          if( typeImg != "image"){
+            this.$message({
+              message: '请上传规定的图片文件',
+              type: 'warning'
+            });
+            return false;
+          }
+
+
+
+
           //判断是否为文件夹
           if (files[i].type != '') {
             this.fileAdd(files[i]);
@@ -373,6 +385,16 @@
         })
       },
       fileAdd(file) {
+        console.log("daxiao",file.size/1024 )
+        let currSize = file.size/1024 ;
+        if(currSize > 200 ){
+          this.$message({
+            message: '单张图片最大不超过200k',
+            type: 'warning'
+          });
+          return false;
+
+        }
         //总大小
         this.size = this.size + file.size;
         //判断是否为图片文件
@@ -584,7 +606,7 @@
   }
 
   .upload_warp_img_div img {
-    width: 100%;
+    width: 80px;
     height: 100%;
   }
 
