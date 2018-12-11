@@ -185,14 +185,22 @@
       EditReturn(){
         let obj = {};
         obj.Question = this.Question;
-        obj.Keyword =  this.Question;
+        obj.Keyword =  this.Keyword;
+
         sessionStorage.setItem('edit',JSON.stringify(obj) ); // 存入
+
+
+
         // 跳转到编辑页
         const query = this.$route.query;
+        sessionStorage.setItem('recordId',JSON.stringify(query.recordId) ); // 存入
+      //  console.log("query",query)
+
         this.$router.push({
           path: '/bot/config/quicklyQA/editQA',
           query: {
             ...query,
+            recordId:query.recordId,
           }
 
 
@@ -329,6 +337,7 @@
     /*position: absolute;*/
     /*right: 7px;*/
     /*bottom: 5px;*/
+    color: #999;
   }
 
   .upload_warp_img {

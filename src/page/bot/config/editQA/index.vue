@@ -166,7 +166,7 @@
         let that = this;
         const token = getCookies(TOKEN);
         let recordId = JSON.parse(sessionStorage.getItem('recordId'));
-        // console.log("recordId",recordId)
+       console.log("recordId++++",recordId)
         let data = {
           "BotConfigId": recordId,
           "Keys": this.Keyword
@@ -494,6 +494,7 @@
 
   .max1000 span {
     margin-right: 10px;
+    color: #999;
   }
 
   .keywordTip {
@@ -543,6 +544,7 @@
     /*position: absolute;*/
     /*right: 7px;*/
     /*bottom: 5px;*/
+    color: #999;
   }
 
   .upload_warp_img {

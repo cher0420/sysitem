@@ -103,7 +103,7 @@
     <el-dialog
       title="图片预览"
       :visible.sync="dialogVisible"
-      width="30%"
+      width="45%"
       :before-close="handleClose">
       <div class="photoPre"><img :src="PreviewImg"></div>
       <span slot="footer" class="dialog-footer">
@@ -504,7 +504,7 @@
         let currSize = file.size/1024 ;
         if(currSize > 200 ){
           this.$message({
-            message: '单张图片最大不超过200k',
+            message: '添加失败，单张图片最大不超过200k',
             type: 'warning'
           });
           return false;
@@ -822,6 +822,7 @@
     z-index: 3;
     margin-top: -52px;
     padding-right: 10px;
+    color: #999;
   }
 
   .max1000 span {

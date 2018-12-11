@@ -804,9 +804,10 @@
 
   .editAnswerQA .fontCount {
     position: absolute;
-    left: 400px;
+    left: 390px;
     bottom: 10px;
     word-break: keep-all;
+    color: #999;
   }
 </style>
 <style scoped>
