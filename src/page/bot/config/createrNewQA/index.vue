@@ -396,7 +396,7 @@
         let data = {};
         let that = this;
 
-        return false;
+
         let Files = this.imgList.map(product => {
           return {
             "Context": product.file.src.slice(22),
