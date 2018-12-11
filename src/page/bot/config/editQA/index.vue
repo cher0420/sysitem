@@ -18,7 +18,6 @@
         placeholder="请输入自定义回答,最多500个字符"
         v-model="Text.Answer" class="editTextarea">
       </el-input>
-
     </div>
     <div class="max1000">
       <span class="fontCount">{{Text.Answer.length}}/500字</span>
@@ -425,6 +424,7 @@
       checkSize() { // 计算文本域字数
         let that = this;
         this.timer = setInterval(function () {
+
           let count1 = that.imgList.length;
           let count2 = that.Image.length;
           let count = Number(count1) + Number(count2);

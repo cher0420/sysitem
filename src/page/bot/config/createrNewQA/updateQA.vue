@@ -29,6 +29,19 @@
         </div>
 
       </div>
+      <div class="upload_warp_imgg" v-show="Image.length!=0">
+
+        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
+          <div class="upload_warp_img_div_top">
+            <div class="upload_warp_img_div_text">
+              <i class="el-icon-zoom-in" @click="oldFD(index)"></i>
+
+            </div>
+
+          </div>
+          <img :src="item.Answer">
+        </div>
+      </div>
     </div>
     <div class="newQA">
       <div class="editQuestionBac">
@@ -61,20 +74,30 @@
         <div class="">
           <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
 
-          <!-- 传过来的图片-->
-          <div class="upload_warp_img verli" v-show="Image.length!=0">
+          <!-- 传过来的图片展示-->
+          <div class="upload_warp_imgg" v-show="Image.length!=0">
+
             <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
+              <div class="upload_warp_img_div_top">
+                <div class="upload_warp_img_div_text">
+                  <i class="el-icon-zoom-in" @click="oldFD(index)"></i>
+                  <i class="el-icon-delete" @click="OldFileDel(index)"></i>
+                </div>
+
+              </div>
               <img :src="item.Answer">
             </div>
           </div>
 
+
+          <!--图片展示-->
           <div class="upload_warp_imgg" v-show="imgList.length!=0">
 
             <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
               <div class="upload_warp_img_div_top">
                 <div class="upload_warp_img_div_text">
-                  <span></span>
-                  <i class="el-icon-close" @click="fileDel(index)"></i>
+                  <i class="el-icon-zoom-in" @click="photoMagnify(index)"></i>
+                  <i class="el-icon-delete " @click="fileDel(index)"></i>
                 </div>
 
               </div>
@@ -82,7 +105,8 @@
             </div>
           </div>
 
-          <div class="upload_warp_leftt" @click="fileClick">
+          <!-- 添加图片按钮 -->
+          <div class="upload_warp_leftt" @click="fileClick" v-if="addIcon">
             <i class="el-icon-plus"></i>
           </div>
 
@@ -106,6 +130,17 @@
 
     </div>
 
+    <!-- -->
+    <el-dialog
+      title="图片预览"
+      :visible.sync="dialogVisible"
+      width="45%"
+      :before-close="handleClose">
+      <div class="dialogg"><img :src="PreviewImg"></div>
+      <span slot="footer" class="dialog-footer">
+  </span>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -119,48 +154,27 @@
 
 
   export default {
-    name: "Allen-updateQA",
+    name: "Allen-editdateQA",
     data() {
       return {
+        addIcon: true, // 图片添加功能 + 是否显示
+
+        PreviewImg: "", // 预览图片
+        dialogVisible: false,
         // 图片上传
         imgList: [],
         size: 0,
 
-        // // 根据关键字获取 答案  / 图片
-        // Question: "",
-        // Keyword: "",
-        //
-        // "Text": {
-        //   "ID": "",
-        //   "Answer ": "",
-        // },
-        // "Image":[{
-        //   "ID": "",
-        //   "Answer ": "",
-        // }],
-        // receiveText: {},  //  未修改达案
-        // Answer: "",
-        // ID: "",
-        // imgListNew: [],
-        // CreateDate: "",
-        // KeyId: "", // 关键字对应的Id",
-
-        // this.CreateDate = data.CreateDate;
-      // this.Image = data.Image;
-     // this.KeyId = data.KeyId;
-     //  this.Keyword = data.Keyword;
-      // this.Question = data.Question;
-      // this.Text = data.Text;
-        CreateDate:"",
-        Image:[{
+        CreateDate: "",
+        Image: [{
           ID: "",
-          Answer : "",
+          Answer: "",
         }],
-        KeyId:'',
-        Keyword :'',
-        Question:"",
+        KeyId: '',
+        Keyword: '',
+        Question: "",
         Text: {
-          ID: "", Answer : "",
+          ID: "", Answer: "",
         },
 
         DeleteIds: [], // 要删除的图片
@@ -173,7 +187,7 @@
 
     created() {
       this.getData();
-
+      this.checkSize();
 
     },
 
@@ -184,19 +198,19 @@
       getData() {
 
         let data = JSON.parse(sessionStorage.getItem('Data'));
- //   console.log("data111",data)
+        //   console.log("data111",data)
 
-       this.CreateDate = data.CreateDate;
-         this.Image = data.Image;
+        this.CreateDate = data.CreateDate;
+        this.Image = data.Image;
         this.KeyId = data.KeyId;
         this.Keyword = data.Keyword;
         this.Question = data.Question;
-        if(data.Text.Answer != null ){
+        if (data.Text.Answer != null) {
           this.Text = data.Text;
         }
 
 
-     //   console.log("子组件数据", data);
+        //   console.log("子组件数据", data);
       },
 
       alterKeyWords() {
@@ -252,7 +266,7 @@
           url: base.requestHost + "/api/KnowledgeQA/UploadAndDeleteAsync",
           data: JSON.stringify(data),
           success: function (msg) {
-           // console.log("photo反馈", msg)
+            // console.log("photo反馈", msg)
             if (msg.Status == "1") {
               let obj = {};
               if (msg.Data.FilesName.length == 0) {
@@ -273,7 +287,7 @@
               }
               that.updataAnswer();
 
-          //    console.log("img", that.Image)
+              //    console.log("img", that.Image)
 
             }
 
@@ -303,7 +317,7 @@
           "Keyword": that.Keyword,
           "Text": that.Text,
           "Image": that.Image,
-          "DeleteIds":that.DeleteIds,
+          "DeleteIds": that.DeleteIds,
           "Email": Email,
           "FullName": FullName
         };
@@ -327,13 +341,13 @@
                 const recordId = that.$route.query.recordId
                 that.$router.push({
                   path: '/bot/config/quicklyQA',
-                  query:{
+                  query: {
                     recordId
                   }
                 })
-              },1500)
+              }, 1500)
 
-            }else{
+            } else {
               that.$message({
                 message: '更新新问答失败',
                 type: 'success'
@@ -344,9 +358,6 @@
         })
 
       },
-
-
-
 
 
       // saveKeywords() {  // 	更新答案
@@ -463,6 +474,23 @@
           }
         }
       },
+      oldFD(index){
+        this.dialogVisible = true;
+        this.PreviewImg = this.Image[index].Answer;
+      },
+      OldFileDel(index) {
+        // console.log(this.Image[index]);
+        this.DeleteIds.push(this.Image[index].ID); // 删除图片的id
+        //  console.log( this.DeleteIds)
+        this.Image.splice(index, 1);
+
+
+      },
+      photoMagnify(index) {
+        this.dialogVisible = true;
+        this.PreviewImg = this.imgList[index].file.src;
+        // console.log("item", this.imgList[index].file.src)
+      },
       fileDel(index) {
         this.size = this.size - this.imgList[index].file.size;//总大小
         this.imgList.splice(index, 1);
@@ -474,9 +502,34 @@
           i = Math.floor(Math.log(bytes) / Math.log(k));
         return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
       },
+      checkSize() { // 计算文本域字数
+        let that = this;
+        this.timer = setInterval(function () {
+
+          let count1 = that.imgList.length;
+          let count2 = that.Image.length;
+          let count = Number(count1) + Number(count2);
+
+          if (2 < count) {  //  上传图片最多3张
+            //  console.log("计数111",count)
+            that.addIcon = false;
+          } else {
+            that.addIcon = true;
+          }
+          if (that.Text.Answer.length > 500) {  // 检查字数
+            that.textarea = that.Text.Answer.toString().substr(0, 500);
+          }
+        }, 200)
+      },
+
+
+
 
 
     },
+    destroyed() {
+      clearInterval(this.timer);
+    }
 
 
   }
@@ -630,6 +683,7 @@
   .verli {
     vertical-align: middle;
   }
+
   .updateTextareaa textarea {
     width: 450px;
     height: 300px !important;
@@ -677,19 +731,6 @@
 
   }
 
-  .upload_warp_img_div_top {
-    position: absolute;
-    left: 0;
-    top: 0;
-    background: rgba(226, 226, 226, 0.4);
-    width: 100%;
-  }
-
-  .upload_warp_img_div_top img {
-    width: 10px;
-    height: 10px;
-  }
-
   .photoUp {
     text-align: left;
     position: relative;
@@ -697,16 +738,16 @@
 
   .upload_warp_img_div_text span {
 
-    display: inline-block;
-    height: 16px;
-    line-height: 16px;
+    /*display: inline-block;*/
+    /*height: 16px;*/
+    /*line-height: 16px;*/
   }
 
   .upload_warp_img_div_text i {
-    cursor: pointer;
-    position: absolute;
-    right: 5px;
-    top: 3px;
+    /*cursor: pointer;*/
+    /*position: absolute;*/
+    /*right: 5px;*/
+    /*top: 3px;*/
 
   }
 
@@ -736,5 +777,74 @@
     left: 400px;
     bottom: 10px;
     word-break: keep-all;
+  }
+</style>
+<style scoped>
+  /*  上传图片 */
+  .upload_warp_img_div {
+    box-sizing: border-box;
+    position: relative;
+  }
+
+  .upload_warp_img_div_top {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 80px;
+    width: 100%;
+    line-height: 80px;
+    color: transparent;
+  }
+
+  .upload_warp_img_div_top :hover {
+    background: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    color: #fff;
+    /*height: 80px;*/
+  }
+
+  .upload_warp_img_div_text {
+    box-sizing: border-box;
+    height:80px;
+    line-height: 80px;
+    text-align: center;
+   vertical-align:middle ;
+    /*padding-top: 30px;*/
+    /*display: inline-block;*/
+
+  }
+  .upload_warp_img_div_text *{
+    display: inline-block;
+    vertical-align: middle;
+
+  }
+
+  .upload_warp_img_div_text .el-icon-zoom-in {
+    /*height: 100%;*/
+    /*line-height: 100%;*/
+    /*vertical-align: middle;*/
+    /*display: inline-block;*/
+    /*text-align: center;*/
+  }
+  .upload_warp_img_div_text i {
+    /*vert-align: middle;*/
+    /*display: inline-block;*/
+    font-size: 20px;
+    /*height: 100%;*/
+  }
+
+  .upload_warp_img_div_text .el-icon-delete {
+    /*height: 100%;*/
+    /*!*line-height: 100%;*!*/
+    /*vertical-align: middle;*/
+    /*display: inline-block;*/
+  }
+
+  .dialogg{
+    /*width: 360px;*/
+  text-align: center;
+  }
+  .dialogg img {
+    width: 360px;
   }
 </style>
