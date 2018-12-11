@@ -1,7 +1,7 @@
 <template>
   <section>
-    <section class="p-relative" style="height:32px;">
-      <el-button v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-if="!enableChecked" v-model='keys' class='searchInput' size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+    <section class="p-relative" style="">
+      <el-button type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-model='keys' class='searchInput' style="left: 120px;" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
         <el-button v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;color: #fff;background: #2a8ce7;border-color: #2a8ce7;">选择</el-button>
       <span v-else class="p-absolute right-0">
@@ -155,6 +155,7 @@
         () =>{
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
             () =>{
+              that.loading = false
               that._reload_ask()
             }
           )
@@ -183,6 +184,7 @@
       },
       editSomething(v){
         const query = this.$route.query;
+        sessionStorage.setItem('edit',JSON.stringify(v) ); // 存入
         if(v.Status == 5){
           return;
         }else{
@@ -199,6 +201,8 @@
       },
       pathToDetail(v){
         const query = this.$route.query;
+        sessionStorage.setItem('detaildata',JSON.stringify(v) ); // 存入
+
         this.$router.push({
           path:'/bot/config/quicklyQA/detailQA',
           query:{
@@ -209,7 +213,7 @@
         })
       },
       go(){
-        const id = this.$route.query.recordId
+        const id = this.$route.query.recordId?this.$route.query.recordId:JSON.parse(sessionStorage.getItem('recordId'))
         const host = 'https://'+window.location.host
         const url = `${host}/WebTalk/validaiml.html?id=${id}`
         window.open(url)
@@ -222,8 +226,8 @@
               /*
               不存在发布
               */
-              that.loading = true
               store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
+              that.loading = true
               const params = {
                 Keys:that.keys,
                 PageIndex:that.PageIndex,
@@ -237,11 +241,6 @@
                   that.loading = false
                   that.total = res.TotalCount
                   clearInterval(that.reloadId);
-                  that.$message({
-                    type: 'success',
-                    message: '操作成功',
-                    duration:2000,
-                  });
                   if(v){
                     that.go()
                   }
@@ -509,35 +508,84 @@
       },
       publish(){
         const that = this
-        this.$confirm('确定发布以上问题?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
-          const params = {
-            Ids: that.arr,
-            Action:'publish',
+        let equal = true;
+        that.arr.forEach(
+          (v,index) =>{
+            const value = that.hasPublishArr.indexOf(v);
+            if(value <= -1){
+              equal = false
+            }
           }
-          doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
-            (res) =>{
-              that._reload_ask(false)
+        )
+        if(equal){
+          that.$confirm('以上问题均已发布，是否重新发布','提示',{
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(
+            () =>{
+              store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
+              const params = {
+                    Ids: that.arr,
+                    Action:'publish',
+                  }
+              doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
+                (res) =>{
+                  that._reload_ask(false)
+                }
+              ).catch(
+                () =>{
+                  that.$message({
+                    type: 'error',
+                    message: '服务器错误',
+                    duration:2000,
+                  });
+                }
+              )
             }
           ).catch(
             () =>{
-              this.$message({
-                type: 'error',
-                message: '服务器错误',
+              that.$message({
+                type: 'info',
+                message: '已取消发布',
                 duration:2000,
               });
             }
           )
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消发布'
-          });
-        });
+        }else{
+          that.$confirm('确定发布以上问题？','提示',{
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(
+            () =>{
+              store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
+              const params = {
+                Ids: that.arr,
+                Action:'publish',
+              }
+              doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
+                (res) =>{
+                  that._reload_ask(false)
+                }
+              ).catch(
+                () =>{
+                  that.$message({
+                    type: 'error',
+                    message: '服务器错误',
+                    duration:2000,
+                  });
+                }
+              )
+            }
+          ).catch(() =>{
+            that.$message({
+              type: 'info',
+              message: '已取消发布',
+              duration:2000,
+            });
+          })
+        }
       }
     },
 
@@ -545,26 +593,9 @@
 </script>
 <style scoped lang="scss">
   @import '../../../../style/index';
-  .yoy-search-button{
-    width: 32px!important;
-    height:30px!important;
-    line-height: 30px!important;
-    margin-top:1px;
-    margin-right: 1px;
-    margin-bottom: 1px;
-    background-color: $light-blue;
-    cursor:pointer;
-  }
-  .el-icon-search:before {
-    font-weight: 900;
-    font-size: 14px;
-    color: $primary-color;
-  }
   .createAnswer{
+    position: absolute;
     width: 100px;padding-left:0;padding-right:0;margin-right: 20px;
-  }
-  .searchInput{
-    width: 360px;
   }
   .margin-top20{
     margin-top: 20px;

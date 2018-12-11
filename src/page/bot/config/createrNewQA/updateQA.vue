@@ -25,7 +25,7 @@
       </div>
       <div class="updateTextareaa">
         <div class="answerDis">
-          {{receiveText.Answer}}
+          {{Text.Answer}}
         </div>
 
       </div>
@@ -53,14 +53,23 @@
         </div>
       </div>
       <div class="editAnswerQA">
-        <textarea v-model="Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
-        <span class="fontCount">{{Answer.length}}/500字</span>
+        <textarea v-model="Text.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
+        <span class="fontCount">{{Text.Answer.length}}/500字</span>
       </div>
       <!-- upload photo -->
       <div class="m20">
         <div class="">
           <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
+
+          <!-- 传过来的图片-->
+          <div class="upload_warp_img verli" v-show="Image.length!=0">
+            <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
+              <img :src="item.Answer">
+            </div>
+          </div>
+
           <div class="upload_warp_imgg" v-show="imgList.length!=0">
+
             <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
               <div class="upload_warp_img_div_top">
                 <div class="upload_warp_img_div_text">
@@ -87,6 +96,11 @@
       <div class="alterKey">
         <el-button type="primary" plain size="mini" @click="alterKeyWords()">修改关键词</el-button>
         <el-button type="primary" size="mini" @click="getPhotoUrl()">更新回答</el-button>
+        <!--
+        第一步拿到本地图片
+        第二部上传图片到服务器
+        第三步拿到图片地址并保存修改后的答案
+        -->
       </div>
 
 
@@ -108,25 +122,48 @@
     name: "Allen-updateQA",
     data() {
       return {
-        Question: "",
-        Keyword: "",
-
-
-        receiveText: {},  //  未修改达案
-        Answer: "",
-        ID: "",
-
-
-        imgListNew: [],
-        Image: [],
-        CreateDate: "",
-        KeyId: "",
-        DeleteIds: [],
-
-
         // 图片上传
         imgList: [],
         size: 0,
+
+        // // 根据关键字获取 答案  / 图片
+        // Question: "",
+        // Keyword: "",
+        //
+        // "Text": {
+        //   "ID": "",
+        //   "Answer ": "",
+        // },
+        // "Image":[{
+        //   "ID": "",
+        //   "Answer ": "",
+        // }],
+        // receiveText: {},  //  未修改达案
+        // Answer: "",
+        // ID: "",
+        // imgListNew: [],
+        // CreateDate: "",
+        // KeyId: "", // 关键字对应的Id",
+
+        // this.CreateDate = data.CreateDate;
+      // this.Image = data.Image;
+     // this.KeyId = data.KeyId;
+     //  this.Keyword = data.Keyword;
+      // this.Question = data.Question;
+      // this.Text = data.Text;
+        CreateDate:"",
+        Image:[{
+          ID: "",
+          Answer : "",
+        }],
+        KeyId:'',
+        Keyword :'',
+        Question:"",
+        Text: {
+          ID: "", Answer : "",
+        },
+
+        DeleteIds: [], // 要删除的图片
 
 
       }
@@ -145,75 +182,22 @@
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataDis",]
       ),
       getData() {
+
         let data = JSON.parse(sessionStorage.getItem('Data'));
-        this.Question = data.Question;
-        this.Keyword = data.Keyword;
+    console.log("data111",data)
 
-        this.CreateDate = data.CreateDate;
+       this.CreateDate = data.CreateDate;
+         this.Image = data.Image;
         this.KeyId = data.KeyId;
+        this.Keyword = data.Keyword;
+        this.Question = data.Question;
+        if(data.Text.Answer != null ){
+          this.Text = data.Text;
+        }
 
-        this.receiveText = data.Text;  //  未修改达案
 
-        this.Answer = data.Text.Answer;
-        this.ID = data.Text.ID;
-
-        console.log("属性传的值", data);
+        console.log("子组件数据", data);
       },
-      // updataAnswer() { // 更新问题
-      //
-      //
-      //   // console.log("存储答案userInerInfo", store.state.app.userInfo)
-      //   let that = this;
-      //   const token = getCookies(TOKEN);
-      //   this.token = token;
-      //   let recordId = JSON.parse(sessionStorage.getItem('recordId'));
-      //   let TenantId = store.state.app.userInfo.TenantId;
-      //   let Email = store.state.app.userInfo.Email;
-      //   let FullName = store.state.app.userInfo.FullName;
-      //   let data = {
-      //     "BotConfigId": recordId,
-      //     "TenantId": TenantId,
-      //     "KeyId": that.KeyId,
-      //     "Question": that.Question,
-      //     "Keyword": this.keywordsNew,
-      //     "Text": that.Text,
-      //     "Image": that.Image,
-      //     "Email": Email,
-      //     "FullName": FullName
-      //   };
-      //   $.ajax({
-      //     type: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json;charset=utf-8",
-      //       'Access-Token': token
-      //     },
-      //     url: base.requestHost + "/api/QuickQA/StoreQAData",
-      //     data: JSON.stringify(data),
-      //     success: function (msg) {
-      //       // console.log("存储答案", msg)
-      //       if (msg.Status == "1") {
-      //
-      //         that.$message({
-      //           message: '更新新问答成功',
-      //           type: 'success'
-      //         });
-      //         setTimeout(function () {
-      //           that.$router.push({
-      //               path: '/bot/config/quicklyQA',
-      //             })
-      //         },1500)
-      //
-      //       }else{
-      //         that.$message({
-      //           message: '更新新问答失败',
-      //           type: 'success'
-      //         });
-      //       }
-      //
-      //     }
-      //   })
-      //
-      // },
 
       alterKeyWords() {
         const query = this.$route.query;
@@ -223,7 +207,7 @@
             ...query,
           }
         })
-        this.newDataDis();
+        this.newDataDis(); // 展示新创建问题页面
 
       },
 
@@ -239,7 +223,7 @@
 
 
       },
-      getPhotoUrl() { // 上传图片到服务器并拿回地址
+      getPhotoUrl() { //  上传图片到服务器并拿回地址 ， 并回调保存答案
         const token = getCookies(TOKEN);
         let data = {};
         let that = this;
@@ -250,12 +234,12 @@
             "Suffix": product.file.type.slice(6),
           };
         });
-        this.imgListNew = Files;
+        // this.imgListNew = Files;
         // console.log("change", this.imgListNew)
 
         data = {
           "Id": "",
-          "Command": "delete",
+          "Command": "upload",
           "Files": Files,
         }
 
@@ -287,7 +271,7 @@
                   obj.ID = "";
                 that.Image.push(obj);
               }
-              that.saveKeywords();
+              that.updataAnswer();
 
               console.log("img", that.Image)
 
@@ -299,9 +283,11 @@
 
 
       },
-      saveKeywords() {  // 	更新答案
 
-        console.log("存储答案userInerInfo", store.state.app.userInfo)
+      updataAnswer() { // 更新问题
+
+
+        // console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
         const token = getCookies(TOKEN);
         this.token = token;
@@ -312,14 +298,12 @@
         let data = {
           "BotConfigId": recordId,
           "TenantId": TenantId,
+          "KeyId": that.KeyId,
           "Question": that.Question,
           "Keyword": that.Keyword,
-          "Text": {
-            "ID": that.ID,
-            "Answer": that.Answer,
-          },
+          "Text": that.Text,
           "Image": that.Image,
-          "DeleteIds": that.DeleteIds,
+          "DeleteIds":that.DeleteIds,
           "Email": Email,
           "FullName": FullName
         };
@@ -332,30 +316,96 @@
           url: base.requestHost + "/api/QuickQA/StoreQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-            console.log("存储答案1111", msg)
+            // console.log("存储答案", msg)
             if (msg.Status == "1") {
 
               that.$message({
-                message: '更改新问答成功',
+                message: '更新新问答成功',
                 type: 'success'
               });
+              setTimeout(function () {
+                const recordId = that.$route.query.recordId
+                that.$router.push({
+                  path: '/bot/config/quicklyQA',
+                  query:{
+                    recordId
+                  }
+                })
+              },1500)
 
-              // 跳转到列表页
-              const query = that.$route.query;
-              that.$router.push({
-                path: '/bot/config/quicklyQA',
-                query: {
-                  ...query,
-                }
-              })
-
+            }else{
+              that.$message({
+                message: '更新新问答失败',
+                type: 'success'
+              });
             }
 
           }
         })
 
-
       },
+
+
+
+
+
+      // saveKeywords() {  // 	更新答案
+      //
+      //   console.log("存储答案userInerInfo", store.state.app.userInfo)
+      //   let that = this;
+      //   const token = getCookies(TOKEN);
+      //   this.token = token;
+      //   let recordId = JSON.parse(sessionStorage.getItem('recordId'));
+      //   let TenantId = store.state.app.userInfo.TenantId;
+      //   let Email = store.state.app.userInfo.Email;
+      //   let FullName = store.state.app.userInfo.FullName;
+      //   let data = {
+      //     "BotConfigId": recordId,
+      //     "TenantId": TenantId,
+      //     "Question": that.Question,
+      //     "Keyword": that.Keyword,
+      //     "Text": {
+      //       "ID": that.ID,
+      //       "Answer": that.Answer,
+      //     },
+      //     "Image": that.Image,
+      //     "DeleteIds": that.DeleteIds,
+      //     "Email": Email,
+      //     "FullName": FullName
+      //   };
+      //   $.ajax({
+      //     type: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json;charset=utf-8",
+      //       'Access-Token': token
+      //     },
+      //     url: base.requestHost + "/api/QuickQA/StoreQAData",
+      //     data: JSON.stringify(data),
+      //     success: function (msg) {
+      //       console.log("存储答案1111", msg)
+      //       if (msg.Status == "1") {
+      //
+      //         that.$message({
+      //           message: '更改新问答成功',
+      //           type: 'success'
+      //         });
+      //
+      //         // 跳转到列表页
+      //         const query = that.$route.query;
+      //         that.$router.push({
+      //           path: '/bot/config/quicklyQA',
+      //           query: {
+      //             ...query,
+      //           }
+      //         })
+      //
+      //       }
+      //
+      //     }
+      //   })
+      //
+      //
+      // },
 
       fileList(fileList) {
         let files = fileList.files;
@@ -434,13 +484,15 @@
 <style lang="scss" scoped>
   /*@import '../../../../style/index';*/
   /*@import "../../../../../static/base.css";*/
-.m20{
-  margin-top: 20px;
-}
+  .m20 {
+    margin-top: 20px;
+  }
+
   .upload_warp_imgg {
     display: inline-block;
-   vertical-align: middle;
+    vertical-align: middle;
   }
+
   .upload_warp_leftt {
     display: inline-block;
     width: 80px;
@@ -455,11 +507,13 @@
     margin-right: 22px;
     vert-align: middle;
   }
-  .upload_warp_leftt:hover{
+
+  .upload_warp_leftt:hover {
     border-color: #409eff;
     color: #409eff;
     cursor: pointer;
   }
+
   .editQuestion {
     color: #555;
     font-size: 16px;
@@ -573,6 +627,9 @@
 </style>
 
 <style>
+  .verli {
+    vertical-align: middle;
+  }
   .updateTextareaa textarea {
     width: 450px;
     height: 300px !important;

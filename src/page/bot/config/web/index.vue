@@ -83,13 +83,13 @@
       </el-col>
     </el-form-item>
     <title-item title="功能开关"></title-item>
-    <el-form-item label="" style="margin-bottom: 10px;margin-top: 18px;">
+    <el-form-item label="" style="margin-bottom: 40px;margin-top: 18px;">
       <el-col :span="12" >
         <el-checkbox v-model="formData.LoginSwitch" style="width: 134px;">登录验证</el-checkbox>
         <span class="primary-color f-s-14 disabled">提示：开启后则需登录后才可进入网页版</span>
       </el-col>
     </el-form-item>
-    <el-form-item label="" style="margin-bottom: 10px;">
+    <el-form-item label="" style="margin-bottom: 10px;display: none">
       <el-col :span="24">
         <el-radio-group style="width: 100%;">
           <el-col :span="9" style="height: 32px;line-height: 32px">
@@ -104,7 +104,7 @@
         </el-radio-group>
       </el-col>
     </el-form-item>
-    <el-form-item label="" style="margin-bottom: 40px;">
+    <el-form-item label="" style="margin-bottom: 40px;display: none">
       <el-col :span="24">
         <el-radio-group style="width: 100%;">
           <el-col :span="9" style="height: 32px;line-height: 32px">

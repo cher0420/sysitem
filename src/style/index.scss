@@ -166,4 +166,28 @@ $border-color:#eaedf1;
   cursor: default !important;
 }
 
-
+/*
+search button
+ */
+.yoy-search-button{
+  width: 32px!important;
+  height:30px!important;
+  line-height: 30px!important;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 1px;
+  background-color: $light-blue;
+  cursor:pointer;
+  box-sizing: border-box;
+}
+.el-icon-search:before {
+  font-weight: 900;
+  font-size: 14px;
+  color: $primary-color;
+}
+.searchInput{
+  width: 360px;
+  overflow: hidden;
+  position: relative;
+}

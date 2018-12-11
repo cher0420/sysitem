@@ -1,5 +1,5 @@
 <template>
-  <div class="yoy-main cc">
+  <div class="yoy-main cc creatNewQA">
     <div v-if="newDataDis">
       <div class="addQuestion">
         第一步 ： 添加问题
@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="addContent addContentDis" v-if="!questionDis">
-       问题 ： {{Question}}
+        问题 ： {{Question}}
       </div>
       <div v-if="!questionDis">
         <div class="addQuestion">
@@ -40,7 +40,7 @@
             </el-button>
           </div>
         </div>
-        <div class="addContent addContentDis" v-else>
+        <div class="addContent addContentDis" v-if="!keywordsDis">
           关键词: {{keywordsNew}}
         </div>
         <div v-if="!keywordsDis">
@@ -68,8 +68,10 @@
                 <!-- li -->
                 <div class="upload_warp_img_div " v-for="(item,index) of imgList">
                   <div class="upload_warp_img_div_top">
+
                     <div class="upload_warp_img_div_text">
-                      <i class="el-icon-zoom-in" @click="fileDel(index)"></i>
+                      <!-- 放大图片 -->
+                      <i class="el-icon-zoom-in" @click="photoMagnify(index)"></i>
                       <i class="el-icon-delete" @click="fileDel(index)"></i>
                     </div>
 
@@ -95,6 +97,18 @@
     <div v-if="!newDataDis">
       <updateQA></updateQA>
     </div>
+
+    <!-- -->
+    <el-dialog
+      title="图片预览"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <div><img :src="PreviewImg"></div>
+      <span slot="footer" class="dialog-footer">
+
+  </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -113,7 +127,9 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
-        addIcon:true,
+        PreviewImg: "", // 预览图片
+        dialogVisible: false,
+        addIcon: true,
         loading: false,
         // Question: "公积金如何办理", // 题目
         Question: "", // 题目
@@ -153,7 +169,7 @@
 
       this.checkSize()
 
-    this.init();
+      this.init();  // 页面初始化
 
 
     },
@@ -170,10 +186,10 @@
         this.checkboxDisabled = true;
 
       },
-      imgList(curVal, oldVal){
-        if( 2 < curVal.length){
+      imgList(curVal, oldVal) {
+        if (2 < curVal.length) {
           this.addIcon = false;
-        }else{
+        } else {
           this.addIcon = true;
         }
       },
@@ -184,16 +200,15 @@
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
 
-      init(){
+      init() {
 
 
-
-        that.keywordsLast();
-        that.questionLast();
+        this.keywordsLast();
+        this.questionLast();
 
 
       },
-      getKeywords() {  // 将一句话分成多个词汇
+      getKeywords() {  //  第二步 将一句话分成多个词汇
         if (this.Question == "") {
           this.$alert('请添加问题', '友情提示', {
             confirmButtonText: '确定',
@@ -224,11 +239,21 @@
           data: JSON.stringify(data),
           success: function (msg) {
             that.loading = false;
-            // console.log("msg",msg)
+            console.log("msg", msg)
+
+
             if (msg.Status == "1") {
+              if (msg.Data.length < 2) {
+                that.$message('分词失败，请重新输入');
+                that.keywordsLast();
+                that.questionLast();
+
+              }
+              console.log("msg", msg)
+
               that.keywordsOption = msg.Data;
               that.questionNext();
-              console.log("msg", msg)
+
 
             }
 
@@ -237,7 +262,7 @@
 
 
       },
-      getCheckKeywords() {  // 	根据关键字获取答案
+      getCheckKeywords() {  // 第三步 	根据关键字确定 创建答案 或 更新答案
         let that = this;
         const token = getCookies(TOKEN);
         let recordId = JSON.parse(sessionStorage.getItem('recordId'));
@@ -255,15 +280,17 @@
           url: base.requestHost + "/api/QuickQA/QueryQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-
+            console.log("debugger", msg)
             // console.log("根据关键字获取答案", msg)
             if (msg.Status == "1") {
               // 修改答案
 
               if (msg.Data == null) {
+
                 that.keywordsNext(that.keywords.length);
               }
               if (msg.Data != null) {
+
                 that.newDataHid();
                 console.log("+++++++++++++++")
                 that.questionLast();
@@ -280,7 +307,7 @@
 
 
       },
-      saveKeywords() {  // 	存储答案
+      saveKeywords() {  // 	存储 新创建的答案
 
         console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
@@ -320,9 +347,10 @@
                 type: 'success'
               });
 
-
-              that.keywordsLast();
-              that.questionLast();
+              setTimeout(function () {
+                that.keywordsLast();
+                that.questionLast();
+              }, 1000)
 
 
               // 跳转到列表页
@@ -340,6 +368,11 @@
 
               })
 
+              // // 初始化页面
+              // that.keywordsLast();
+              // that.questionLast();
+
+
             }
 
           }
@@ -348,9 +381,8 @@
 
       },
 
-      // 图片上传
+      //  从本地拿到图片 ，转64码
       fileClick() {
-
         document.getElementById('upload_file').click()
       },
       fileChange(el) {
@@ -376,7 +408,7 @@
 
         data = {
           "Id": "",
-          "Command": "delete",
+          "Command": "upload",
           "Files": Files,
         }
 
@@ -420,7 +452,7 @@
 
 
       },
-      fileList(fileList) {
+      fileList(fileList) {  // 暂时无用
         let files = fileList.files;
         for (let i = 0; i < files.length; i++) {
           //判断是否为文件夹
@@ -433,7 +465,7 @@
         }
       },
       //文件夹处理
-      folders(files) {
+      folders(files) {   // 暂时无用
         let _this = this;
         //判断是否为原生file
         if (files.kind) {
@@ -464,7 +496,7 @@
           this.imgList.push({
             file
           });
-        } else {
+        } else {  // 图片文件进入
           let reader = new FileReader();
           reader.vue = this;
           reader.readAsDataURL(file);
@@ -476,8 +508,18 @@
           }
         }
       },
+      photoMagnify(index) {
+        // this.$alert("<div><img src=" + this.imgList[index].file.src + " ></div>", '图片预览', {
+        //   dangerouslyUseHTMLString: true
+        // });
+        this.dialogVisible = true;
+        this.PreviewImg = this.imgList[index].file.src;
+        console.log("item", this.imgList[index].file.src)
+
+
+      },
       fileDel(index) {
-        this.size = this.size - this.imgList[index].file.size;//总大小
+        this.size = this.size - this.imgList[index].file.size;
         this.imgList.splice(index, 1);
       },
       bytesToSize(bytes) {
@@ -490,11 +532,6 @@
 
 
       checkSize() {
-
-
-
-
-
         // 计算文本域字数
         let that = this;
         this.timer = setInterval(function () {
@@ -524,6 +561,10 @@
 <style lang="scss" scoped>
   /*@import "../../../../../static/base.css";*/
   @import '../../../../style/index';
+
+  .el-message-box {
+    height: 330px !important;
+  }
 
   .mt30 {
     margin-top: 30px;
@@ -745,4 +786,6 @@
   .addContent input {
     font-size: 12px;
   }
+
+
 </style>
