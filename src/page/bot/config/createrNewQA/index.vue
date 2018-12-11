@@ -295,7 +295,8 @@
 
                 that.newDataHid();
                 //  console.log("+++++++++++++++")
-                that.questionLast();
+             //   that.questionLast();
+
                 //   跳到 更新组件展示
                 sessionStorage.setItem('Data', JSON.stringify(msg.Data));  //  属性传参到子组件
 
@@ -394,7 +395,8 @@
         const token = getCookies(TOKEN);
         let data = {};
         let that = this;
-        // console.log("++++", this.imgList)
+
+        return false;
         let Files = this.imgList.map(product => {
           return {
             "Context": product.file.src.slice(22),

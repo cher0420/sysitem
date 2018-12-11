@@ -222,7 +222,7 @@
           }
         })
         this.newDataDis(); // 展示新创建问题页面
-
+       //this.questionNext();
       },
 
       // 图片上传
