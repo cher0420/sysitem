@@ -609,12 +609,18 @@
   }
 
   .addContent {
-    padding-top: 30px;
-    padding-left: 40px;
+    /*padding-top: 30px;*/
+    /*padding-left: 40px;*/
+    margin-left: 40px;
+    margin-top: 30px;
+    box-sizing: content-box;
     /*padding-right: 40px;*/
     max-width: 997px;
     color: #999;
     font-size: 12px;
+  }
+  .addContent input {
+
   }
 
   .addContent input {
@@ -635,6 +641,7 @@
     /*padding-right: 30px;*/
     max-width: 997px;
     margin-left: 40px;
+    box-sizing: content-box;
   }
 
   .nextStep {
