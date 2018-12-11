@@ -708,6 +708,9 @@
     position: relative;
     float: left;
   }
+  .upload_warp_img_div img {
+    width: 80px;
+  }
 
   .upload_warp_img {
     display: inline-block;

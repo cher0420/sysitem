@@ -454,6 +454,9 @@
         })
       },
       fileAdd(file) {
+
+
+
         //总大小
         this.size = this.size + file.size;
         //判断是否为图片文件
@@ -725,6 +728,10 @@
     position: relative;
     float: left;
   }
+
+    .upload_warp_img_div  img {
+      width: 80px;
+    }
 
   .upload_warp_img {
     display: inline-block;
