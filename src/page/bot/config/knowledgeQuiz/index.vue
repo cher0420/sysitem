@@ -33,7 +33,7 @@
         prop="status"
         label="友好回答">
         <template slot-scope="scope">
-            <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.IntentName,scope.row.ID)">
+            <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.FriendlyName,scope.row.ID)">
               <span class="p-absolute"
                     :style="{
                     background: 'url(' + require(`../../../../assets/bot/${key}.png`) + ')center center no-repeat'

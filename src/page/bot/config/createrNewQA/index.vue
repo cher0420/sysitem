@@ -104,7 +104,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      <div><img :src="PreviewImg" ></div>
+      <div><img :src="PreviewImg"></div>
       <span slot="footer" class="dialog-footer">
 
   </span>
@@ -127,7 +127,7 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
-        PreviewImg:"", // 预览图片
+        PreviewImg: "", // 预览图片
         dialogVisible: false,
         addIcon: true,
         loading: false,
@@ -239,16 +239,35 @@
           data: JSON.stringify(data),
           success: function (msg) {
             that.loading = false;
-            // console.log("msg",msg)
+            // console.log("里边")
+            // console.log("msg", msg)
+
+
             if (msg.Status == "1") {
+              if (msg.Data.length < 2) {
+                setTimeout(function () {
+                  // console.log("++++++++++")
+                  that.init();
+                },300)
+
+
+
+                that.$message('新问答关键词检索失败，请重新输入');
+                // that.keywordsLast();
+
+
+              }
+              // console.log("msg", msg)
+
               that.keywordsOption = msg.Data;
               that.questionNext();
-              console.log("msg", msg)
+
 
             }
 
           }
         })
+
 
 
       },
@@ -270,7 +289,7 @@
           url: base.requestHost + "/api/QuickQA/QueryQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-            console.log("debugger", msg)
+          //  console.log("debugger", msg)
             // console.log("根据关键字获取答案", msg)
             if (msg.Status == "1") {
               // 修改答案
@@ -282,7 +301,7 @@
               if (msg.Data != null) {
 
                 that.newDataHid();
-                console.log("+++++++++++++++")
+              //  console.log("+++++++++++++++")
                 that.questionLast();
                 //   跳到 更新组件展示
                 sessionStorage.setItem('Data', JSON.stringify(msg.Data));  //  属性传参到子组件
@@ -299,7 +318,7 @@
       },
       saveKeywords() {  // 	存储 新创建的答案
 
-        console.log("存储答案userInerInfo", store.state.app.userInfo)
+      //  console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
         const token = getCookies(TOKEN);
         this.token = token;
@@ -329,7 +348,7 @@
           url: base.requestHost + "/api/QuickQA/StoreQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-            console.log("存储答案", msg)
+          //  console.log("存储答案", msg)
             if (msg.Status == "1") {
 
               that.$message({
@@ -346,7 +365,7 @@
               // 跳转到列表页
               const query = that.$route.query;
 
-              console.log("que", query)
+         //     console.log("que", query)
 
 
               that.$router.push({
@@ -358,9 +377,7 @@
 
               })
 
-              // // 初始化页面
-              // that.keywordsLast();
-              // that.questionLast();
+
 
 
             }
@@ -394,7 +411,7 @@
           };
         });
         this.imgListNew = Files;
-        console.log("change", this.imgListNew)
+     //   console.log("change", this.imgListNew)
 
         data = {
           "Id": "",
@@ -411,7 +428,7 @@
           url: base.requestHost + "/api/KnowledgeQA/UploadAndDeleteAsync",
           data: JSON.stringify(data),
           success: function (msg) {
-            console.log("photo反馈", msg)
+   //         console.log("photo反馈", msg)
             if (msg.Status == "1") {
               let obj = {};
               if (msg.Data.FilesName.length == 0) {
@@ -432,7 +449,7 @@
               }
               that.saveKeywords();
 
-              console.log("img", that.Image)
+         //     console.log("img", that.Image)
 
             }
 
@@ -504,7 +521,7 @@
         // });
         this.dialogVisible = true;
         this.PreviewImg = this.imgList[index].file.src;
-        console.log("item", this.imgList[index].file.src)
+      //  console.log("item", this.imgList[index].file.src)
 
 
       },
@@ -551,9 +568,11 @@
 <style lang="scss" scoped>
   /*@import "../../../../../static/base.css";*/
   @import '../../../../style/index';
+
   .el-message-box {
     height: 330px !important;
   }
+
   .mt30 {
     margin-top: 30px;
   }

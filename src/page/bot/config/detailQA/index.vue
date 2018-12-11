@@ -109,14 +109,14 @@
       showIph(item){
         this.PreviewImg = item.Answer;
         this.dialogVisible = true;
-            console.log(item)
+           // console.log(item)
       },
 
       getData() {
         // let query = this.$route.query;
         let detaildata = sessionStorage.getItem("detaildata"); // => 返回
       let  query =JSON.parse(detaildata) ;
-      console.log("取值",query)
+     // console.log("取值",query)
 
         this.Question = query.Question;
         this.Keyword = query.Keyword;
@@ -141,7 +141,7 @@
           url: base.requestHost + "/api/QuickQA/QueryQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-            console.log("根据关键词获取答案",msg);
+        //    console.log("根据关键词获取答案",msg);
 
 
             if (msg.Status == "1") {

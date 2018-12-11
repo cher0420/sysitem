@@ -154,21 +154,13 @@
       // },
 
     },
-
     methods: {
-
-
       getData() {
-
         // let query = this.$route.query;
-
         let data = JSON.parse(sessionStorage.getItem('edit'));
-        console.log("+++++++",data)
-
+        //   console.log("+++++++",data)
         this.Keyword = data.Keyword;
         this.Question = data.Question;
-
-
         this.getCheckKeywords();
       },
       getCheckKeywords() {  //  	根据关键字 获取详情
@@ -190,12 +182,12 @@
           data: JSON.stringify(data),
           success: function (msg) {
 
-            console.log("根据关键字获取答案", msg)
+            //    console.log("根据关键字获取答案", msg)
 
             if (msg.Status == "1") {
               // 修改答案
               if (msg.Data != null) {
-                console.log("shuju",msg.Data)
+                //       console.log("shuju",msg.Data)
                 // code
                 that.Question = msg.Data.Question;
                 that.Keyword = msg.Data.Keyword;
@@ -237,7 +229,7 @@
           };
         });
         this.imgListNew = Files;
-        console.log("change", this.imgListNew)
+        //  console.log("change", this.imgListNew)
 
         data = {
           "Id": "",
@@ -254,7 +246,7 @@
           url: base.requestHost + "/api/KnowledgeQA/UploadAndDeleteAsync",
           data: JSON.stringify(data),
           success: function (msg) {
-            console.log("photo反馈", msg)
+            //     console.log("photo反馈", msg)
             if (msg.Status == "1") {
               let obj = {};
               if (msg.Data.FilesName.length == 0) {
@@ -275,7 +267,7 @@
               }
               that.updataAnswer();
 
-              console.log("img", that.Image)
+              //   console.log("img", that.Image)
 
             }
 
@@ -328,7 +320,7 @@
                 const recordId = that.$route.query.recordId
                 that.$router.push({
                   path: '/bot/config/quicklyQA',
-                  query:{
+                  query: {
                     recordId
                   }
                 })
@@ -407,18 +399,17 @@
         this.imgList.splice(index, 1);
       },
       OldFileDel(index) {
-       // console.log(this.Image[index]);
+        // console.log(this.Image[index]);
         this.DeleteIds.push(this.Image[index].ID); // 删除图片的id
-         console.log( this.DeleteIds)
+        //  console.log( this.DeleteIds)
         this.Image.splice(index, 1);
-
 
 
       },
       photoMagnify(index) {
         this.dialogVisible = true;
         this.PreviewImg = this.imgList[index].file.src;
-        console.log("item", this.imgList[index].file.src)
+        // console.log("item", this.imgList[index].file.src)
       },
       OldPhotoMagnify(index) {
         this.dialogVisible = true;
@@ -431,37 +422,27 @@
           i = Math.floor(Math.log(bytes) / Math.log(k));
         return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
       },
-
-
       checkSize() { // 计算文本域字数
         let that = this;
         this.timer = setInterval(function () {
-         let count1 = that.imgList.length;
-         let count2 =that.Image.length;
-         let count = Number(count1) + Number(count2);
+          let count1 = that.imgList.length;
+          let count2 = that.Image.length;
+          let count = Number(count1) + Number(count2);
 
           if (2 < count) {  //  上传图片最多3张
-            console.log("计数111",count)
+            //  console.log("计数111",count)
             that.addIcon = false;
-          }else {
+          } else {
             that.addIcon = true;
           }
-
           if (that.Text.Answer.length > 500) {  // 检查字数
             that.textarea = that.Text.Answer.toString().substr(0, 500);
           }
-
-
-
-
         }, 200)
       },
-
-
     },
     destroyed() {
       clearInterval(this.timer);
-
     }
 
   }
