@@ -184,7 +184,7 @@
       getData() {
 
         let data = JSON.parse(sessionStorage.getItem('Data'));
-    console.log("data111",data)
+ //   console.log("data111",data)
 
        this.CreateDate = data.CreateDate;
          this.Image = data.Image;
@@ -196,7 +196,7 @@
         }
 
 
-        console.log("子组件数据", data);
+     //   console.log("子组件数据", data);
       },
 
       alterKeyWords() {
@@ -252,7 +252,7 @@
           url: base.requestHost + "/api/KnowledgeQA/UploadAndDeleteAsync",
           data: JSON.stringify(data),
           success: function (msg) {
-            console.log("photo反馈", msg)
+           // console.log("photo反馈", msg)
             if (msg.Status == "1") {
               let obj = {};
               if (msg.Data.FilesName.length == 0) {
@@ -273,7 +273,7 @@
               }
               that.updataAnswer();
 
-              console.log("img", that.Image)
+          //    console.log("img", that.Image)
 
             }
 
