@@ -159,7 +159,8 @@
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
             () =>{
               that.loading = false
-              that._reload_ask()
+              const blankNew = JSON.parse(sessionStorage.getItem('blankNew'))
+              that._reload_ask(blankNew)
             }
           )
         }
@@ -434,7 +435,6 @@
           根据arr长度更改测试按钮状态
          */
         this.arr.length>0?this.buttonStatus = false:this.buttonStatus = true
-        console.log(this.arr)
       },
       train(){
         const that = this
@@ -466,6 +466,7 @@
           if(that.arr.length === 0 ||equal){
             store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
               () =>{
+                sessionStorage.setItem('blankNew',JSON.stringify(true))
                 const params = {
                   Keys:that.keys,
                   PageIndex:that.PageIndex,
@@ -530,6 +531,7 @@
           }).then(
             () =>{
               store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
+              sessionStorage.setItem('blankNew',JSON.stringify(false))
               const params = {
                     Ids: that.arr,
                     Action:'publish',
@@ -565,6 +567,7 @@
           }).then(
             () =>{
               store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
+              sessionStorage.setItem('blankNew',JSON.stringify(false))
               const params = {
                 Ids: that.arr,
                 Action:'publish',

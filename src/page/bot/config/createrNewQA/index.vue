@@ -240,10 +240,13 @@
 
 
             if (msg.Status == "1") {
+
+              that.keywords = [];
+
               if (msg.Data.length < 2) {
                 setTimeout(function () {
                   that.init();
-                }, 300)
+                }, 50)
 
 
                 that.$message('请输入一个有效的问题');
@@ -251,10 +254,13 @@
 
 
               }
+              if(msg.Data.length >1 ){
+
+                that.keywordsOption = msg.Data;
+                that.questionNext();
+              }
               // console.log("msg", msg)
-                that.keywords = [];
-              that.keywordsOption = msg.Data;
-              that.questionNext();
+
 
 
             }
@@ -395,8 +401,8 @@
         const token = getCookies(TOKEN);
         let data = {};
         let that = this;
-       //  console.log("++++",this.imgList)
-       // return ;
+
+
         let Files = this.imgList.map(product => {
           return {
             "Context": product.file.src.slice(22),

@@ -13,15 +13,16 @@
       答案详情
     </div>
     <div class="edit_textarea">
-      <el-input
-        type="textarea" :disabled="true"
-        v-model="Text.Answer" class="editTextarea">
-      </el-input>
+      <!--<el-input-->
+        <!--type="textarea" :disabled="true"-->
+        <!--v-model="Text.Answer" class="editTextarea">-->
+      <!--</el-input>-->
+      {{Text.Answer}}
 
     </div>
-    <div class="max1000">
-      <span class="fontCount">{{Text.Answer.length}}/500字</span>
-    </div>
+    <!--<div class="max1000">-->
+      <!--<span class="fontCount">{{Text.Answer.length}}/500字</span>-->
+    <!--</div>-->
     <div class="photoUp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
       <!-- show photo -->
@@ -472,6 +473,8 @@
   .edit_textarea {
     margin-top: 30px;
     padding-left: 40px;
+    font-size: 14px;
+    color: #555;
     /*position: relative;*/
   }
 
@@ -536,10 +539,13 @@
   }
 
   .photoUp {
-    margin-top: 22px;
-    margin-left: 40px;
+    background: #F9FAFC;
+    /*margin-top: 22px;*/
+    /*margin-left: 40px;*/
     position: relative;
     max-width: 1000px;
+   padding: 20px 40px;
+    margin-top: 30px;
   }
 
   .upload_warp_img_div_text {
