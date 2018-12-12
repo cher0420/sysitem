@@ -39,7 +39,7 @@
             </div>
 
           </div>
-          <img :src="item.Answer" >
+          <img :src="item.Answer">
         </div>
       </div>
     </div>
@@ -77,16 +77,16 @@
           <!-- 传过来的图片展示-->
           <!--<div class="upload_warp_imgg" v-show="Image.length!=0">-->
 
-            <!--<div class="upload_warp_img_div cc222" v-for="(item,index) of Image">-->
-              <!--<div class="upload_warp_img_div_top">-->
-                <!--<div class="upload_warp_img_div_text">-->
-                  <!--<i class="el-icon-zoom-in" @click="oldFD(index)"></i>-->
-                  <!--<i class="el-icon-delete" @click="OldFileDel(index)"></i>-->
-                <!--</div>-->
+          <!--<div class="upload_warp_img_div cc222" v-for="(item,index) of Image">-->
+          <!--<div class="upload_warp_img_div_top">-->
+          <!--<div class="upload_warp_img_div_text">-->
+          <!--<i class="el-icon-zoom-in" @click="oldFD(index)"></i>-->
+          <!--<i class="el-icon-delete" @click="OldFileDel(index)"></i>-->
+          <!--</div>-->
 
-              <!--</div>-->
-              <!--<img :src="item.Answer">-->
-            <!--</div>-->
+          <!--</div>-->
+          <!--<img :src="item.Answer">-->
+          <!--</div>-->
           <!--</div>-->
 
 
@@ -191,7 +191,7 @@
 
     created() {
       this.getData();
-      this.checkSize();
+      this.checkSize(); // 文本域计数
 
     },
 
@@ -210,15 +210,19 @@
         this.Keyword = data.Keyword;
         this.Question = data.Question;
         if (data.Text.Answer != null) {
-
           this.Text = data.Text;
-          const ID =  this.Text.ID;  // 更新 回答 的id
-          this.newText.ID  = ID ;
+          const ID = this.Text.ID;  // 更新 回答 的id
+          this.newText.ID = ID;
         }
+        let DeleteIdsRec = this.Image.map(function (item) {
+          return item.ID;
+        });
+
+        this.DeleteIds = DeleteIdsRec
+       // console.log("+++++++", DeleteIdsRec)
 
 
-
-        //   console.log("子组件数据", data);
+      //  debugger;
       },
 
       alterKeyWords() {
@@ -230,7 +234,7 @@
           }
         })
         this.newDataDis(); // 展示新创建问题页面
-       //this.questionNext();
+        //this.questionNext();
       },
 
       // 图片上传
@@ -276,23 +280,27 @@
           success: function (msg) {
             // console.log("photo反馈", msg)
             if (msg.Status == "1") {
-              let obj = {};
-              if (msg.Data.FilesName.length == 0) {
-                obj.Answer = msg.Data.FilesName;
-                obj.ID = "";
-                that.Image.push(obj);
-              }
-              for (var i = 0; i < msg.Data.FilesName.length; i++) {
-                that.Image[i] = {
-                  ID: "",
-                  Answer: msg.Data.FilesName[i]
+            //  let obj = {};
+              // if (msg.Data.FilesName.length == 0) {
+              //   obj.Answer = msg.Data.FilesName;
+              //   obj.ID = "";
+              //   that.Image.push(obj);
+              // }
+
+              if( msg.Data.FilesName.length != 0){
+                for (var i = 0; i < msg.Data.FilesName.length; i++) {
+                  that.Image[i] = {
+                    ID: "",
+                    Answer: msg.Data.FilesName[i]
+                  }
                 }
               }
-              if (msg.Data.FilesName.length == 0) {
-                obj.Answer = "",
-                  obj.ID = "";
-                that.Image.push(obj);
-              }
+
+              // if (msg.Data.FilesName.length == 0) {
+              //   obj.Answer = "",
+              //     obj.ID = "";
+              //   that.Image.push(obj);
+              // }
               that.updataAnswer();
 
               //    console.log("img", that.Image)
@@ -323,7 +331,7 @@
           "KeyId": that.KeyId,
           "Question": that.Question,
           "Keyword": that.Keyword,
-          "Text": that.Text,
+          "Text": that.newText,
           "Image": that.Image,
           "DeleteIds": that.DeleteIds,
           "Email": Email,
@@ -368,69 +376,11 @@
       },
 
 
-      // saveKeywords() {  // 	更新答案
-      //
-      //   console.log("存储答案userInerInfo", store.state.app.userInfo)
-      //   let that = this;
-      //   const token = getCookies(TOKEN);
-      //   this.token = token;
-      //   let recordId = JSON.parse(sessionStorage.getItem('recordId'));
-      //   let TenantId = store.state.app.userInfo.TenantId;
-      //   let Email = store.state.app.userInfo.Email;
-      //   let FullName = store.state.app.userInfo.FullName;
-      //   let data = {
-      //     "BotConfigId": recordId,
-      //     "TenantId": TenantId,
-      //     "Question": that.Question,
-      //     "Keyword": that.Keyword,
-      //     "Text": {
-      //       "ID": that.ID,
-      //       "Answer": that.Answer,
-      //     },
-      //     "Image": that.Image,
-      //     "DeleteIds": that.DeleteIds,
-      //     "Email": Email,
-      //     "FullName": FullName
-      //   };
-      //   $.ajax({
-      //     type: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json;charset=utf-8",
-      //       'Access-Token': token
-      //     },
-      //     url: base.requestHost + "/api/QuickQA/StoreQAData",
-      //     data: JSON.stringify(data),
-      //     success: function (msg) {
-      //       console.log("存储答案1111", msg)
-      //       if (msg.Status == "1") {
-      //
-      //         that.$message({
-      //           message: '更改新问答成功',
-      //           type: 'success'
-      //         });
-      //
-      //         // 跳转到列表页
-      //         const query = that.$route.query;
-      //         that.$router.push({
-      //           path: '/bot/config/quicklyQA',
-      //           query: {
-      //             ...query,
-      //           }
-      //         })
-      //
-      //       }
-      //
-      //     }
-      //   })
-      //
-      //
-      // },
-
       fileList(fileList) {
         let files = fileList.files;
         for (let i = 0; i < files.length; i++) {
-          let typeImg = files[i].type.slice(0,5);
-          if( typeImg != "image"){
+          let typeImg = files[i].type.slice(0, 5);
+          if (typeImg != "image") {
             this.$message({
               message: '请上传规定的图片文件',
               type: 'warning'
@@ -473,9 +423,9 @@
         })
       },
       fileAdd(file) {
-        console.log("daxiao",file.size/1024 )
-        let currSize = file.size/1024 ;
-        if(currSize > 200 ){
+        console.log("daxiao", file.size / 1024)
+        let currSize = file.size / 1024;
+        if (currSize > 200) {
           this.$message({
             message: '单张图片最大不超过200k',
             type: 'warning'
@@ -504,7 +454,7 @@
           }
         }
       },
-      oldFD(index){
+      oldFD(index) {
         this.dialogVisible = true;
         this.PreviewImg = this.Image[index].Answer;
       },
@@ -536,10 +486,10 @@
         let that = this;
         this.timer = setInterval(function () {
 
-          let count1 = that.imgList.length;
-          let count2 = that.Image.length;
-          let count = Number(count1) + Number(count2);
-
+        let count1 = that.imgList.length;
+          // let count2 = that.Image.length;
+          // let count = Number(count1) + Number(count2);
+          let count = Number(count1) ;
           if (2 < count) {  //  上传图片最多3张
             //  console.log("计数111",count)
             that.addIcon = false;
@@ -551,9 +501,6 @@
           }
         }, 200)
       },
-
-
-
 
 
     },
@@ -571,6 +518,7 @@
   .upload_warp_img_div img {
     width: 80px;
   }
+
   .m20 {
     margin-top: 20px;
   }
@@ -760,9 +708,9 @@
     float: left;
   }
 
-    .upload_warp_img_div  img {
-      width: 80px;
-    }
+  .upload_warp_img_div img {
+    width: 80px;
+  }
 
   .upload_warp_img {
     display: inline-block;
@@ -844,15 +792,16 @@
 
   .upload_warp_img_div_text {
     box-sizing: border-box;
-    height:80px;
+    height: 80px;
     line-height: 80px;
     text-align: center;
-   vertical-align:middle ;
+    vertical-align: middle;
     /*padding-top: 30px;*/
     /*display: inline-block;*/
 
   }
-  .upload_warp_img_div_text *{
+
+  .upload_warp_img_div_text * {
     display: inline-block;
     vertical-align: middle;
 
@@ -865,6 +814,7 @@
     /*display: inline-block;*/
     /*text-align: center;*/
   }
+
   .upload_warp_img_div_text i {
     /*vert-align: middle;*/
     /*display: inline-block;*/
@@ -879,10 +829,11 @@
     /*display: inline-block;*/
   }
 
-  .dialogg{
+  .dialogg {
     /*width: 360px;*/
-  text-align: center;
+    text-align: center;
   }
+
   .dialogg img {
     width: 360px;
   }

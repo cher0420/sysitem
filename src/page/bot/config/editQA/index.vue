@@ -126,6 +126,7 @@
           ID: "",
           Answer: "",
         }],
+        ImageNew:[],// 要上传的图片列表
 
         DeleteIds: [], // 删除图片id
 
@@ -247,23 +248,28 @@
           success: function (msg) {
             //     console.log("photo反馈", msg)
             if (msg.Status == "1") {
-              let obj = {};
-              if (msg.Data.FilesName.length == 0) {
-                obj.Answer = msg.Data.FilesName;
-                obj.ID = "";
-                that.Image.push(obj);
-              }
-              for (var i = 0; i < msg.Data.FilesName.length; i++) {
-                that.Image[i] = {
-                  ID: "",
-                  Answer: msg.Data.FilesName[i]
+          //    let obj = {};
+              // if (msg.Data.FilesName.length == 0) {
+              //   obj.Answer = msg.Data.FilesName;
+              //   obj.ID = "";
+              //   that.Image.push(obj);
+              // }
+
+              let ImageNeww = [];
+              if(msg.Data.FilesName.length >0){
+                for (var i = 0; i < msg.Data.FilesName.length; i++) {
+                  ImageNeww[i] = {
+                    ID: "",
+                    Answer: msg.Data.FilesName[i]
+                  }
                 }
               }
-              if (msg.Data.FilesName.length == 0) {
-                // obj.Answer = "",
-                //   obj.ID = "";
-                that.Image = [];
-              }
+              that.ImageNew =  ImageNeww.concat(that.Image)
+              // if (msg.Data.FilesName.length == 0) {
+              //   obj.Answer = "",
+              //     obj.ID = "";
+              //   that.Image = [];
+              // }
               that.updataAnswer();
 
               //   console.log("img", that.Image)
@@ -294,7 +300,7 @@
           "Question": that.Question,
           "Keyword": that.Keyword,
           "Text": that.Text,
-          "Image": that.Image,
+          "Image": that.ImageNew,
           "DeleteIds": that.DeleteIds,
           "Email": Email,
           "FullName": FullName
