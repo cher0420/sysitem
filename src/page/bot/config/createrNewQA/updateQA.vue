@@ -219,10 +219,10 @@
         });
 
         this.DeleteIds = DeleteIdsRec
-       // console.log("+++++++", DeleteIdsRec)
+        // console.log("+++++++", DeleteIdsRec)
 
 
-      //  debugger;
+        //  debugger;
       },
 
       alterKeyWords() {
@@ -254,7 +254,19 @@
         let data = {};
         let that = this;
         // console.log("++++", this.imgList)
+
+
+        console.log("+++++++",this.imgList)
+
+
         let Files = this.imgList.map(product => {
+
+          if (product.file.type.slice(6) == "svg+xml"){
+            return {
+              "Context": product.file.src.slice(26),
+              "Suffix": product.file.type.slice(6),
+            };
+          }
           return {
             "Context": product.file.src.slice(22),
             "Suffix": product.file.type.slice(6),
@@ -280,14 +292,15 @@
           success: function (msg) {
             // console.log("photo反馈", msg)
             if (msg.Status == "1") {
-            //  let obj = {};
+              //  let obj = {};
               // if (msg.Data.FilesName.length == 0) {
               //   obj.Answer = msg.Data.FilesName;
               //   obj.ID = "";
               //   that.Image.push(obj);
               // }
+                   console.log(msg);
 
-              if( msg.Data.FilesName.length != 0){
+              if (msg.Data.FilesName.length != 0) {
                 for (var i = 0; i < msg.Data.FilesName.length; i++) {
                   that.Image[i] = {
                     ID: "",
@@ -486,10 +499,10 @@
         let that = this;
         this.timer = setInterval(function () {
 
-        let count1 = that.imgList.length;
+          let count1 = that.imgList.length;
           // let count2 = that.Image.length;
           // let count = Number(count1) + Number(count2);
-          let count = Number(count1) ;
+          let count = Number(count1);
           if (2 < count) {  //  上传图片最多3张
             //  console.log("计数111",count)
             that.addIcon = false;

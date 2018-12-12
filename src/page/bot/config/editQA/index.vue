@@ -68,7 +68,8 @@
         ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
       </div>
       <div class="subFinsh">
-        <el-button type="primary" size="mini" @click="getPhotoUrl">完成</el-button>
+        <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="subInfo">完成</el-button>
+        <el-button type="primary" size="mini" :loading="true"  v-if="!subInfo">提交中...</el-button>
       </div>
 
     </div>
@@ -103,6 +104,8 @@
     name: "Allen-EditQA",
     data() {
       return {
+        subInfo:true,
+
         addIcon: true, // 图片添加功能 + 是否显示
 
         dialogVisible: false,
@@ -218,6 +221,7 @@
 
       },
       getPhotoUrl() { // 上传图片到服务器并拿回地址
+        this.subInfo = false;
         const token = getCookies(TOKEN);
         let data = {};
         let that = this;
@@ -316,6 +320,8 @@
           success: function (msg) {
             // console.log("存储答案", msg)
             if (msg.Status == "1") {
+
+              this.subInfo = true;
 
               that.$message({
                 message: '更新新问答成功',
