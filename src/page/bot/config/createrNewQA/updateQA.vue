@@ -33,13 +33,13 @@
 
         <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
           <div class="upload_warp_img_div_top">
-            <div class="upload_warp_img_div_text">
-              <i class="el-icon-zoom-in" @click="oldFD(index)"></i>
+            <div class="upload_warp_img_div_text" @click="oldFD(index)">
+              <!--<i class="el-icon-zoom-in" @click="oldFD(index)"></i>-->
 
             </div>
 
           </div>
-          <img :src="item.Answer">
+          <img :src="item.Answer" >
         </div>
       </div>
     </div>
@@ -66,8 +66,8 @@
         </div>
       </div>
       <div class="editAnswerQA">
-        <textarea v-model="Text.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
-        <span class="fontCount">{{Text.Answer.length}}/500字</span>
+        <textarea v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
+        <span class="fontCount">{{newText.Answer.length}}/500字</span>
       </div>
       <!-- upload photo -->
       <div class="m20">
@@ -75,19 +75,19 @@
           <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
 
           <!-- 传过来的图片展示-->
-          <div class="upload_warp_imgg" v-show="Image.length!=0">
+          <!--<div class="upload_warp_imgg" v-show="Image.length!=0">-->
 
-            <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
-              <div class="upload_warp_img_div_top">
-                <div class="upload_warp_img_div_text">
-                  <i class="el-icon-zoom-in" @click="oldFD(index)"></i>
-                  <i class="el-icon-delete" @click="OldFileDel(index)"></i>
-                </div>
+            <!--<div class="upload_warp_img_div cc222" v-for="(item,index) of Image">-->
+              <!--<div class="upload_warp_img_div_top">-->
+                <!--<div class="upload_warp_img_div_text">-->
+                  <!--<i class="el-icon-zoom-in" @click="oldFD(index)"></i>-->
+                  <!--<i class="el-icon-delete" @click="OldFileDel(index)"></i>-->
+                <!--</div>-->
 
-              </div>
-              <img :src="item.Answer">
-            </div>
-          </div>
+              <!--</div>-->
+              <!--<img :src="item.Answer">-->
+            <!--</div>-->
+          <!--</div>-->
 
 
           <!--图片展示-->
@@ -176,6 +176,10 @@
         Text: {
           ID: "", Answer: "",
         },
+        newText: { // 更新的新答案
+          ID: "",
+          Answer: "",
+        },
 
         DeleteIds: [], // 要删除的图片
 
@@ -206,8 +210,12 @@
         this.Keyword = data.Keyword;
         this.Question = data.Question;
         if (data.Text.Answer != null) {
+
           this.Text = data.Text;
+          const ID =  this.Text.ID;  // 更新 回答 的id
+          this.newText.ID  = ID ;
         }
+
 
 
         //   console.log("子组件数据", data);
