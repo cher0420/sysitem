@@ -68,7 +68,8 @@
         ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
       </div>
       <div class="subFinsh">
-        <el-button type="primary" size="mini" @click="getPhotoUrl">完成</el-button>
+        <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="subInfo">完成</el-button>
+        <el-button type="primary" size="mini" :loading="true"  v-if="!subInfo">提交中...</el-button>
       </div>
 
     </div>
@@ -103,6 +104,8 @@
     name: "Allen-EditQA",
     data() {
       return {
+        subInfo:true,
+
         addIcon: true, // 图片添加功能 + 是否显示
 
         dialogVisible: false,
@@ -126,6 +129,7 @@
           ID: "",
           Answer: "",
         }],
+        ImageNew:[],// 要上传的图片列表
 
         DeleteIds: [], // 删除图片id
 
@@ -217,6 +221,7 @@
 
       },
       getPhotoUrl() { // 上传图片到服务器并拿回地址
+        this.subInfo = false;
         const token = getCookies(TOKEN);
         let data = {};
         let that = this;
@@ -247,23 +252,28 @@
           success: function (msg) {
             //     console.log("photo反馈", msg)
             if (msg.Status == "1") {
-              let obj = {};
-              if (msg.Data.FilesName.length == 0) {
-                obj.Answer = msg.Data.FilesName;
-                obj.ID = "";
-                that.Image.push(obj);
-              }
-              for (var i = 0; i < msg.Data.FilesName.length; i++) {
-                that.Image[i] = {
-                  ID: "",
-                  Answer: msg.Data.FilesName[i]
+          //    let obj = {};
+              // if (msg.Data.FilesName.length == 0) {
+              //   obj.Answer = msg.Data.FilesName;
+              //   obj.ID = "";
+              //   that.Image.push(obj);
+              // }
+
+              let ImageNeww = [];
+              if(msg.Data.FilesName.length >0){
+                for (var i = 0; i < msg.Data.FilesName.length; i++) {
+                  ImageNeww[i] = {
+                    ID: "",
+                    Answer: msg.Data.FilesName[i]
+                  }
                 }
               }
-              if (msg.Data.FilesName.length == 0) {
-                // obj.Answer = "",
-                //   obj.ID = "";
-                that.Image = [];
-              }
+              that.ImageNew =  ImageNeww.concat(that.Image)
+              // if (msg.Data.FilesName.length == 0) {
+              //   obj.Answer = "",
+              //     obj.ID = "";
+              //   that.Image = [];
+              // }
               that.updataAnswer();
 
               //   console.log("img", that.Image)
@@ -294,7 +304,7 @@
           "Question": that.Question,
           "Keyword": that.Keyword,
           "Text": that.Text,
-          "Image": that.Image,
+          "Image": that.ImageNew,
           "DeleteIds": that.DeleteIds,
           "Email": Email,
           "FullName": FullName
@@ -310,6 +320,8 @@
           success: function (msg) {
             // console.log("存储答案", msg)
             if (msg.Status == "1") {
+
+              this.subInfo = true;
 
               that.$message({
                 message: '更新新问答成功',
