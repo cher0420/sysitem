@@ -33,9 +33,14 @@
             </el-checkbox-group>
             <!--{{keywords}}-->
           </div>
-          <div>
-
-
+          <div class="checkboxContent yourselfKeyword" v-if="yourselfStatus" @click="yourselfStatusAdd()" >
+            <i class="el-icon-circle-plus"></i> <span >自定义</span>
+          </div>
+          <div class="yourselfInput" v-if="!yourselfStatus">
+            <el-input
+              suffix-icon="el-icon-circle-plus"
+              >
+            </el-input>
           </div>
           <div class="nextStepp mt30">
             <el-button type="primary" plain size="mini" @click="questionLast">上一步</el-button>
@@ -131,6 +136,8 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
+       // yourselfStatus:true, // 自定义添加关键词
+
         PreviewImg: "", // 预览图片
         dialogVisible: false,
         addIcon: true,
@@ -158,6 +165,7 @@
         'questionDis',  // 问题可修改展示
         'keywordsDis',  // 关键词可修改展示
         "newDataDis",
+        "yourselfStatus",
       ]),
       keywordsNew() {
         return this.keywords.join(","); //  关键词拼接展示
@@ -201,7 +209,7 @@
 
     methods: {
       ...mapActions(
-        ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
+        ["yourselfStatusAdd","questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
 
       init() {
@@ -212,9 +220,10 @@
 
 
       },
+
       getKeywords() {  //  第二步 将一句话分成多个词汇
 
-        let  that = this;
+        let that = this;
         const token = getCookies(TOKEN);
 
         if (this.Question == "") {
@@ -223,10 +232,6 @@
         }
         // 加载中
         this.loading = true;
-
-
-
-
 
 
         let data = {
@@ -594,6 +599,26 @@
     width: 80px;
   }
 
+  .yourselfKeyword {
+    margin-left: 40px;
+    margin-bottom: 20px;
+    color: #2a8ce7;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .yourselfKeyword  span{
+    margin-left: 4px;
+    font-size: 12px;
+    line-height: 1;
+  }
+.yourselfInput {
+  width: 200px;
+  margin-top: 22px;
+  margin-left: 40px;
+  color: #2a8ce7;
+}
+
+
   .photoPre {
     text-align: center;
   }
@@ -858,6 +883,13 @@
 
 </style>
 <style>
+
+  .yourselfInput input {
+    border: 1px solid #2a8ce7;
+  }
+  .yourselfInput span {
+    color: #2a8ce7;
+  }
   .addContent input {
     font-size: 12px;
   }

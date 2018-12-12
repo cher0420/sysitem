@@ -12,17 +12,7 @@
     <div class="keywordTip">
       答案详情
     </div>
-    <div class="edit_textarea">
-      <!--<el-input-->
-      <!--type="textarea" :disabled="true"-->
-      <!--v-model="Text.Answer" class="editTextarea">-->
-      <!--</el-input>-->
-      {{Text.Answer}}
-
-    </div>
-    <!--<div class="max1000">-->
-    <!--<span class="fontCount">{{Text.Answer.length}}/500字</span>-->
-    <!--</div>-->
+    <div class="edit_textarea" v-html="Text.Answer"> </div>
     <div class="photoUpp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
       <!-- show photo -->
@@ -47,9 +37,9 @@
 
     </div>
     <div class="buttonSubb">
-      <el-button type="primary" plain size="mini"  @click="EditReturn()"  v-if="editor" >编辑</el-button>
-      <el-button type="primary" plain size="mini"  disabled  v-if="!editor" >编辑</el-button>
-      <el-button type="primary" size="mini"  @click="finishReturn()">完成</el-button>
+      <el-button type="primary" plain size="mini" @click="EditReturn()" v-if="editor">编辑</el-button>
+      <el-button type="primary" plain size="mini" disabled v-if="!editor">编辑</el-button>
+      <el-button type="primary" size="mini" @click="finishReturn()">完成</el-button>
     </div>
     <!-- -->
     <el-dialog
@@ -79,7 +69,7 @@
     name: "Allen-EditQA",
     data() {
       return {
-        editor:true,
+        editor: true,
 
         PreviewImg: "", // 预览图片src
         dialogVisible: false,
@@ -122,13 +112,13 @@
         // let query = this.$route.query;
         let detaildata = sessionStorage.getItem("detaildata"); // => 返回
         let query = JSON.parse(detaildata);
-if( query.Status == "4"  || query.Status == "5"   ){
-  this.editor = false;
-}else {
-  this.editor = true;
-}
+        if (query.Status == "4" || query.Status == "5") {
+          this.editor = false;
+        } else {
+          this.editor = true;
+        }
 
-        console.log("取值",query)
+        console.log("取值", query)
 
         this.Question = query.Question;
         this.Keyword = query.Keyword;
@@ -161,7 +151,10 @@ if( query.Status == "4"  || query.Status == "5"   ){
                 // code
                 that.Question = msg.Data.Question;
                 that.Keyword = msg.Data.Keyword;
-                that.Text = msg.Data.Text;
+                 that.Text = msg.Data.Text;
+                that.Text.Answer =  msg.Data.Text.Answer.replace(/\n+/g, "<br/>")
+
+
                 that.Image = msg.Data.Image;
 
 
@@ -174,7 +167,7 @@ if( query.Status == "4"  || query.Status == "5"   ){
 
 
       },
-      finishReturn(){
+      finishReturn() {
 
         // 跳转到列表页
         const query = this.$route.query;
@@ -188,32 +181,29 @@ if( query.Status == "4"  || query.Status == "5"   ){
         })
 
 
-
       },
-      EditReturn(){
+      EditReturn() {
         let obj = {};
         obj.Question = this.Question;
-        obj.Keyword =  this.Keyword;
+        obj.Keyword = this.Keyword;
 
-        sessionStorage.setItem('edit',JSON.stringify(obj) ); // 存入
-
+        sessionStorage.setItem('edit', JSON.stringify(obj)); // 存入
 
 
         // 跳转到编辑页
         const query = this.$route.query;
-        sessionStorage.setItem('recordId',JSON.stringify(query.recordId) ); // 存入
-      //  console.log("query",query)
+        sessionStorage.setItem('recordId', JSON.stringify(query.recordId)); // 存入
+        //  console.log("query",query)
 
         this.$router.push({
           path: '/bot/config/quicklyQA/editQA',
           query: {
             ...query,
-            recordId:query.recordId,
+            recordId: query.recordId,
           }
 
 
         })
-
 
 
       },
@@ -248,6 +238,7 @@ if( query.Status == "4"  || query.Status == "5"   ){
     max-width: 1040px;
     box-sizing: border-box;
   }
+
   .PreviewImgg {
     text-align: center;
   }

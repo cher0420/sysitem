@@ -94,9 +94,6 @@
   import {mapGetters} from 'vuex';
   import {mapActions} from 'vuex';
 
-  import 'bootstrap/dist/css/bootstrap.min.css'
-  import 'bootstrap/dist/js/bootstrap.min.js'
-
   import {TOKEN} from "../../../../../constants/constants";
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
