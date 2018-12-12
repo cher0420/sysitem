@@ -31,7 +31,7 @@
         label="问题"
         >
         <template slot-scope="scope">
-          <section class='link' style="height: 28px;line-height: 28px;" @click="pathToDetail(scope.row)">
+          <section class='link' @click="pathToDetail(scope.row)">
             {{scope.row.Question}}
           </section>
         </template>
