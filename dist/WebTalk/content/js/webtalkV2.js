@@ -14,9 +14,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
     return fmt;
 }
 
-// var adminApiUrl = "https://hightalkadminapi-test.azurewebsites.net/api";
-// var adminApiUrl = "https://hightalkadminapi-staging.azurewebsites.net/api";
-var adminApiUrl = "https://hightalkadminapi-uat.azurewebsites.net/api";
+var adminApiUrl = host().webTalkV2Api;
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};
