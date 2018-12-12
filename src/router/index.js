@@ -152,25 +152,25 @@ const arr = [
       {
         path:'config/quicklyQA/createrNewQA',  // 创建新问答
         component: resolve =>
-          require(["../page/bot/config/createrNewQA/index"], resolve),
+          require(["../page/bot/config/QuicklyQA/createrNewQA/index"], resolve),
         name: 'create',
       },
       {
         path:'config/quicklyQA/updateQA',  // 创建新问答/更新问答
         component: resolve =>
-          require(["../page/bot/config/createrNewQA/updateQA"], resolve),
+          require(["../page/bot/config/QuicklyQA/createrNewQA/updateQA"], resolve),
         name: 'edit',
       },
       {
         path:'config/quicklyQA/editQA',  //  编辑答案
         component: resolve =>
-          require(["../page/bot/config/editQA/index"], resolve),
+          require(["../page/bot/config/QuicklyQA/editQA/index"], resolve),
         name: 'edit',
       },
       {
         path:'config/quicklyQA/detailQA',  //  详情页面
         component: resolve =>
-          require(["../page/bot/config/detailQA/index"], resolve),
+          require(["../page/bot/config/QuicklyQA/detailQA/index"], resolve),
         name: 'detail',
       },
 

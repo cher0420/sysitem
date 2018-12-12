@@ -33,7 +33,7 @@
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text">
               <!-- 放大图片 -->
-
+              <i class="el-icon-zoom-in" @click="OldPhotoMagnify(index)"></i>
             </div>
           </div>
           <img :src="item.Answer">
@@ -47,7 +47,8 @@
 
     </div>
     <div class="buttonSubb">
-      <el-button type="primary" plain size="mini" @click="EditReturn()" >编辑</el-button>
+      <el-button type="primary" plain size="mini"  @click="EditReturn()"  v-if="editor" >编辑</el-button>
+      <el-button type="primary" plain size="mini"  disabled  v-if="!editor" >编辑</el-button>
       <el-button type="primary" size="mini"  @click="finishReturn()">完成</el-button>
     </div>
     <!-- -->
@@ -68,16 +69,17 @@
   import {mapGetters} from 'vuex';
   import {mapActions} from 'vuex';
 
-  import {TOKEN} from "../../../../constants/constants";
-  import {getCookies} from "../../../../utils/cookie";
-  import base from "../../../../host/baseUrl";
-  import store from "../../../../store/index"
+  import {TOKEN} from "../../../../../constants/constants";
+  import {getCookies} from "../../../../../utils/cookie";
+  import base from "../../../../../host/baseUrl";
+  import store from "../../../../../store/index"
 
 
   export default {
     name: "Allen-EditQA",
     data() {
       return {
+        editor:true,
 
         PreviewImg: "", // 预览图片src
         dialogVisible: false,
@@ -120,7 +122,13 @@
         // let query = this.$route.query;
         let detaildata = sessionStorage.getItem("detaildata"); // => 返回
         let query = JSON.parse(detaildata);
-        // console.log("取值",query)
+if( query.Status == "4"  || query.Status == "5"   ){
+  this.editor = false;
+}else {
+  this.editor = true;
+}
+
+        console.log("取值",query)
 
         this.Question = query.Question;
         this.Keyword = query.Keyword;
@@ -230,7 +238,7 @@
   }
 </script>
 <style lang="scss" scoped>
-  @import '../../../../style/index';
+  @import '../../../../../style/index';
   /*@import "../../../../../static/base.css";*/
 
   .buttonSubb {
@@ -249,8 +257,8 @@
   }
 
   .upload_warp_img_div_text {
-    width: 100%;
-    height: 100%;
+    width: 80px;
+    height: 80px;
     text-align: center;
     font-size: 20px;
     color: transparent;
@@ -405,7 +413,7 @@
   }
 
   .upload_warp_img_div_text {
-    text-align: right;
+    /*text-align: right;*/
     padding-right: 2px;
     padding-top: 2px;
   }

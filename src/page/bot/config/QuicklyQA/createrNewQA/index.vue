@@ -27,11 +27,15 @@
           <div class="keywords">
             <el-checkbox-group v-model="keywords" :min="0"
                                :max="4">
-              <div class="checkboxContent" v-for="item in keywordsOption" :key="item">
+              <div class="checkboxContent" v-for="item in keywordsOption" :key="item" :title="item">
                 <el-checkbox :label="item" name="keywords"></el-checkbox>
               </div>
             </el-checkbox-group>
             <!--{{keywords}}-->
+          </div>
+          <div>
+
+
           </div>
           <div class="nextStepp mt30">
             <el-button type="primary" plain size="mini" @click="questionLast">上一步</el-button>
@@ -117,10 +121,10 @@
   import {mapGetters} from 'vuex';
   import {mapActions} from 'vuex';
 
-  import {TOKEN} from "../../../../constants/constants";
-  import {getCookies} from "../../../../utils/cookie";
-  import base from "../../../../host/baseUrl";
-  import store from "../../../../store/index"
+  import {TOKEN} from "../../../../../constants/constants";
+  import {getCookies} from "../../../../../utils/cookie";
+  import base from "../../../../../host/baseUrl";
+  import store from "../../../../../store/index"
 
 
   export default {
@@ -210,6 +214,9 @@
       },
       getKeywords() {  //  第二步 将一句话分成多个词汇
 
+        let  that = this;
+        const token = getCookies(TOKEN);
+
         if (this.Question == "") {
           that.$message('请输入一个有效的问题');
           return false;
@@ -218,9 +225,9 @@
         this.loading = true;
 
 
-        var that = this;
 
-        const token = getCookies(TOKEN);
+
+
 
         let data = {
           "Question": this.Question
@@ -254,13 +261,12 @@
 
 
               }
-              if(msg.Data.length >1 ){
+              if (msg.Data.length > 1) {
 
                 that.keywordsOption = msg.Data;
                 that.questionNext();
               }
               // console.log("msg", msg)
-
 
 
             }
@@ -301,7 +307,7 @@
 
                 that.newDataHid();
                 //  console.log("+++++++++++++++")
-             //   that.questionLast();
+                //   that.questionLast();
 
                 //   跳到 更新组件展示
                 sessionStorage.setItem('Data', JSON.stringify(msg.Data));  //  属性传参到子组件
@@ -458,8 +464,8 @@
         let files = fileList.files;
         for (let i = 0; i < files.length; i++) {
           //判断是否为文件夹
-          let typeImg = files[i].type.slice(0,5);
-          if( typeImg != "image"){
+          let typeImg = files[i].type.slice(0, 5);
+          if (typeImg != "image") {
             this.$message({
               message: '请上传规定的图片文件',
               type: 'warning'
@@ -467,7 +473,7 @@
             return false;
           }
 
-          console.log("类型",typeImg)
+          console.log("类型", typeImg)
           if (files[i].type != '') {
             this.fileAdd(files[i]);
           } else {
@@ -500,9 +506,9 @@
         })
       },
       fileAdd(file) {
-        console.log("daxiao",file.size/1024 )
-        let currSize = file.size/1024 ;
-        if(currSize > 200 ){
+        console.log("daxiao", file.size / 1024)
+        let currSize = file.size / 1024;
+        if (currSize > 200) {
           this.$message({
             message: '添加失败，单张图片最大不超过200k',
             type: 'warning'
@@ -582,16 +588,20 @@
 </script>
 <style lang="scss" scoped>
   /*@import "../../../../../static/base.css";*/
-  @import '../../../../style/index';
-.upload_warp_img_div img{
-  width: 80px;
-}
+  @import '../../../../../style/index';
+
+  .upload_warp_img_div img {
+    width: 80px;
+  }
+
   .photoPre {
     text-align: center;
   }
-  .photoPre img{
+
+  .photoPre img {
     width: 360px;
   }
+
   .el-message-box {
     height: 330px !important;
   }
@@ -621,6 +631,7 @@
     color: #999;
     font-size: 12px;
   }
+
   .addContent input {
 
   }
@@ -653,6 +664,7 @@
     width: 1000px;
     margin-top: 20px;
   }
+
   .nextStepp {
     text-align: right;
     /*margin-top: 33px;*/
@@ -676,6 +688,7 @@
     line-height: 32px;
     padding: 0;
   }
+
   .nextStepp button {
     width: 80px;
     text-align: center;
@@ -695,6 +708,11 @@
     width: 185px;
     /*border: 1px solid red;*/
     padding-top: 30px;
+    /*overflow: hidden;*/
+    /*text-overflow:ellipsis;*/
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .CreateNewQAtextareaParent {
@@ -736,6 +754,7 @@
     position: relative;
     float: left;
   }
+
   .upload_warp_img_div img {
     width: 80px;
   }
@@ -843,5 +862,17 @@
     font-size: 12px;
   }
 
+  .checkboxContent .el-checkbox__label {
 
+    width: 145px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .checkboxContent label > span {
+    display: inline-block;
+    vertical-align: text-top;
+    line-height: 1;
+  }
 </style>
