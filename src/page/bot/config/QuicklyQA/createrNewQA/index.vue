@@ -42,6 +42,7 @@
               >
             </el-input>
           </div>
+          <div style="height: 30px;margin-top: -30px;border: 1px solid red;"></div>
           <div class="nextStepp mt30">
             <el-button type="primary" plain size="mini" @click="questionLast">上一步</el-button>
             <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
