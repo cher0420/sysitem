@@ -94,10 +94,10 @@
   import {mapGetters} from 'vuex';
   import {mapActions} from 'vuex';
 
-  import {TOKEN} from "../../../../constants/constants";
-  import {getCookies} from "../../../../utils/cookie";
-  import base from "../../../../host/baseUrl";
-  import store from "../../../../store/index"
+  import {TOKEN} from "../../../../../constants/constants";
+  import {getCookies} from "../../../../../utils/cookie";
+  import base from "../../../../../host/baseUrl";
+  import store from "../../../../../store/index"
 
 
   export default {
@@ -469,8 +469,9 @@
           } else {
             that.addIcon = true;
           }
+          console.log(111111111)
           if (that.Text.Answer.length > 500) {  // 检查字数
-            that.textarea = that.Text.Answer.toString().substr(0, 500);
+            that.Text.Answer = that.Text.Answer.toString().substr(0,500);
           }
         }, 200)
       },
@@ -482,7 +483,7 @@
   }
 </script>
 <style lang="scss" scoped>
-  @import '../../../../style/index';
+  @import '../../../../../style/index';
   /*@import "../../../../../static/base.css";*/
 
   .photoYl {

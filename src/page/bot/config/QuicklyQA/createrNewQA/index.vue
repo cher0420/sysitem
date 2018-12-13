@@ -27,17 +27,25 @@
           <div class="keywords">
             <el-checkbox-group v-model="keywords" :min="0"
                                :max="4">
-              <div class="checkboxContent" v-for="item in keywordsOption" :key="item">
+              <div class="checkboxContent" v-for="item in keywordsOption" :key="item" :title="item">
                 <el-checkbox :label="item" name="keywords"></el-checkbox>
               </div>
             </el-checkbox-group>
             <!--{{keywords}}-->
           </div>
+          <div class="checkboxContent yourselfKeyword" v-if="yourselfStatus" @click="yourselfStatusAdd()">
+            <i class="el-icon-circle-plus"></i> <span>自定义</span>
+          </div>
+          <div class="yourselfInput" v-if="!yourselfStatus" >
+            <el-input suffix-icon="el-icon-circle-plus"  v-model="addKey">
+            </el-input>
+            <div class="clickBtn" @click="addKeywords()"></div>
+          </div>
+
           <div class="nextStepp mt30">
             <el-button type="primary" plain size="mini" @click="questionLast">上一步</el-button>
             <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
               下一步
-
             </el-button>
           </div>
         </div>
@@ -117,28 +125,28 @@
   import {mapGetters} from 'vuex';
   import {mapActions} from 'vuex';
 
-  import {TOKEN} from "../../../../constants/constants";
-  import {getCookies} from "../../../../utils/cookie";
-  import base from "../../../../host/baseUrl";
-  import store from "../../../../store/index"
+  import {TOKEN} from "../../../../../constants/constants";
+  import {getCookies} from "../../../../../utils/cookie";
+  import base from "../../../../../host/baseUrl";
+  import store from "../../../../../store/index"
 
 
   export default {
     name: "Allen-CreateNewQA",
     data() {
       return {
+        addKey:"",
+        keywords: [], // 选中的关键字
+        keywordsOption: [], // 关键词
+
         PreviewImg: "", // 预览图片
         dialogVisible: false,
         addIcon: true,
         loading: false,
-        // Question: "公积金如何办理", // 题目
         Question: "", // 题目
-        keywordsOption: [], // 关键词
-        keywords: [], // 选中的关键字
         textarea: "",
         timer: "",
         checkboxDisabled: true,
-        // newDataDis: true, // 展示新建答案
         token: "",
 
         // 图片上传
@@ -154,6 +162,7 @@
         'questionDis',  // 问题可修改展示
         'keywordsDis',  // 关键词可修改展示
         "newDataDis",
+        "yourselfStatus",
       ]),
       keywordsNew() {
         return this.keywords.join(","); //  关键词拼接展示
@@ -197,7 +206,7 @@
 
     methods: {
       ...mapActions(
-        ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
+        ["yourselfStatusLast","yourselfStatusAdd", "questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
 
       init() {
@@ -208,7 +217,35 @@
 
 
       },
+      addKeywords() {
+        console.log("+++++++++++");
+        let that = this ;
+        if(that.keywords.length < 4){
+          that.keywordsOption.push(that.addKey);
+          that.keywords.push(that.addKey);
+          that.yourselfStatusLast();
+          that.addKey = "";
+        }else{
+          that.yourselfStatusLast();
+          that.$message({
+            message: '您选中的关键词不能超过4个，无法再添加',
+            type: 'warning'
+          });
+          that.addKey = "";
+
+        }
+
+
+
+        // addKey:"test",
+        //   keywords: [], // 选中的关键字
+        //   keywordsOption: [], // 关键词
+      },
+
       getKeywords() {  //  第二步 将一句话分成多个词汇
+
+        let that = this;
+        const token = getCookies(TOKEN);
 
         if (this.Question == "") {
           that.$message('请输入一个有效的问题');
@@ -217,10 +254,6 @@
         // 加载中
         this.loading = true;
 
-
-        var that = this;
-
-        const token = getCookies(TOKEN);
 
         let data = {
           "Question": this.Question
@@ -254,13 +287,12 @@
 
 
               }
-              if(msg.Data.length >1 ){
+              if (msg.Data.length > 1) {
 
                 that.keywordsOption = msg.Data;
                 that.questionNext();
               }
               // console.log("msg", msg)
-
 
 
             }
@@ -301,7 +333,7 @@
 
                 that.newDataHid();
                 //  console.log("+++++++++++++++")
-             //   that.questionLast();
+                //   that.questionLast();
 
                 //   跳到 更新组件展示
                 sessionStorage.setItem('Data', JSON.stringify(msg.Data));  //  属性传参到子组件
@@ -458,8 +490,8 @@
         let files = fileList.files;
         for (let i = 0; i < files.length; i++) {
           //判断是否为文件夹
-          let typeImg = files[i].type.slice(0,5);
-          if( typeImg != "image"){
+          let typeImg = files[i].type.slice(0, 5);
+          if (typeImg != "image") {
             this.$message({
               message: '请上传规定的图片文件',
               type: 'warning'
@@ -467,7 +499,7 @@
             return false;
           }
 
-          console.log("类型",typeImg)
+          console.log("类型", typeImg)
           if (files[i].type != '') {
             this.fileAdd(files[i]);
           } else {
@@ -500,9 +532,9 @@
         })
       },
       fileAdd(file) {
-        console.log("daxiao",file.size/1024 )
-        let currSize = file.size/1024 ;
-        if(currSize > 200 ){
+        console.log("daxiao", file.size / 1024)
+        let currSize = file.size / 1024;
+        if (currSize > 200) {
           this.$message({
             message: '添加失败，单张图片最大不超过200k',
             type: 'warning'
@@ -582,16 +614,55 @@
 </script>
 <style lang="scss" scoped>
   /*@import "../../../../../static/base.css";*/
-  @import '../../../../style/index';
-.upload_warp_img_div img{
-  width: 80px;
-}
+  @import '../../../../../style/index';
+
+  .upload_warp_img_div img {
+    width: 80px;
+  }
+
+  .clickBtn {
+    height: 30px;
+    border: 1px solid red;
+    width: 32px;
+    position: absolute;
+    left: 166px;
+    top: 0;
+    cursor: pointer;
+  }
+
+  .yourselfInput {
+    position: relative;
+  }
+
+  .yourselfKeyword {
+    margin-left: 40px;
+    margin-bottom: 20px;
+    color: #2a8ce7;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .yourselfKeyword span {
+    margin-left: 4px;
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .yourselfInput {
+    width: 200px;
+    margin-top: 22px;
+    margin-left: 40px;
+    color: #2a8ce7;
+  }
+
   .photoPre {
     text-align: center;
   }
-  .photoPre img{
+
+  .photoPre img {
     width: 360px;
   }
+
   .el-message-box {
     height: 330px !important;
   }
@@ -621,6 +692,7 @@
     color: #999;
     font-size: 12px;
   }
+
   .addContent input {
 
   }
@@ -653,6 +725,7 @@
     width: 1000px;
     margin-top: 20px;
   }
+
   .nextStepp {
     text-align: right;
     /*margin-top: 33px;*/
@@ -676,6 +749,7 @@
     line-height: 32px;
     padding: 0;
   }
+
   .nextStepp button {
     width: 80px;
     text-align: center;
@@ -695,6 +769,11 @@
     width: 185px;
     /*border: 1px solid red;*/
     padding-top: 30px;
+    /*overflow: hidden;*/
+    /*text-overflow:ellipsis;*/
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .CreateNewQAtextareaParent {
@@ -736,6 +815,7 @@
     position: relative;
     float: left;
   }
+
   .upload_warp_img_div img {
     width: 80px;
   }
@@ -839,9 +919,30 @@
 
 </style>
 <style>
+
+  .yourselfInput input {
+    border: 1px solid #2a8ce7;
+  }
+
+  .yourselfInput span {
+    color: #2a8ce7;
+  }
+
   .addContent input {
     font-size: 12px;
   }
 
+  .checkboxContent .el-checkbox__label {
 
+    width: 145px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .checkboxContent label > span {
+    display: inline-block;
+    vertical-align: text-top;
+    line-height: 1;
+  }
 </style>

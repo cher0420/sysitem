@@ -12,17 +12,7 @@
     <div class="keywordTip">
       答案详情
     </div>
-    <div class="edit_textarea">
-      <!--<el-input-->
-      <!--type="textarea" :disabled="true"-->
-      <!--v-model="Text.Answer" class="editTextarea">-->
-      <!--</el-input>-->
-      {{Text.Answer}}
-
-    </div>
-    <!--<div class="max1000">-->
-    <!--<span class="fontCount">{{Text.Answer.length}}/500字</span>-->
-    <!--</div>-->
+    <div class="edit_textarea" v-html="Text.Answer"> </div>
     <div class="photoUpp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
       <!-- show photo -->
@@ -33,7 +23,7 @@
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text">
               <!-- 放大图片 -->
-
+              <i class="el-icon-zoom-in" @click="OldPhotoMagnify(index)"></i>
             </div>
           </div>
           <img :src="item.Answer">
@@ -47,8 +37,9 @@
 
     </div>
     <div class="buttonSubb">
-      <el-button type="primary" plain size="mini" @click="EditReturn()" >编辑</el-button>
-      <el-button type="primary" size="mini"  @click="finishReturn()">完成</el-button>
+      <el-button type="primary" plain size="mini" @click="EditReturn()" v-if="editor">编辑</el-button>
+      <el-button type="primary" plain size="mini" disabled v-if="!editor">编辑</el-button>
+      <el-button type="primary" size="mini" @click="finishReturn()">完成</el-button>
     </div>
     <!-- -->
     <el-dialog
@@ -68,16 +59,17 @@
   import {mapGetters} from 'vuex';
   import {mapActions} from 'vuex';
 
-  import {TOKEN} from "../../../../constants/constants";
-  import {getCookies} from "../../../../utils/cookie";
-  import base from "../../../../host/baseUrl";
-  import store from "../../../../store/index"
+  import {TOKEN} from "../../../../../constants/constants";
+  import {getCookies} from "../../../../../utils/cookie";
+  import base from "../../../../../host/baseUrl";
+  import store from "../../../../../store/index"
 
 
   export default {
     name: "Allen-EditQA",
     data() {
       return {
+        editor: true,
 
         PreviewImg: "", // 预览图片src
         dialogVisible: false,
@@ -120,7 +112,13 @@
         // let query = this.$route.query;
         let detaildata = sessionStorage.getItem("detaildata"); // => 返回
         let query = JSON.parse(detaildata);
-        // console.log("取值",query)
+        if (query.Status == "4" || query.Status == "5") {
+          this.editor = false;
+        } else {
+          this.editor = true;
+        }
+
+        console.log("取值", query)
 
         this.Question = query.Question;
         this.Keyword = query.Keyword;
@@ -153,7 +151,10 @@
                 // code
                 that.Question = msg.Data.Question;
                 that.Keyword = msg.Data.Keyword;
-                that.Text = msg.Data.Text;
+                 that.Text = msg.Data.Text;
+                that.Text.Answer =  msg.Data.Text.Answer.replace(/\n+/g, "<br/>")
+
+
                 that.Image = msg.Data.Image;
 
 
@@ -166,7 +167,7 @@
 
 
       },
-      finishReturn(){
+      finishReturn() {
 
         // 跳转到列表页
         const query = this.$route.query;
@@ -180,32 +181,29 @@
         })
 
 
-
       },
-      EditReturn(){
+      EditReturn() {
         let obj = {};
         obj.Question = this.Question;
-        obj.Keyword =  this.Keyword;
+        obj.Keyword = this.Keyword;
 
-        sessionStorage.setItem('edit',JSON.stringify(obj) ); // 存入
-
+        sessionStorage.setItem('edit', JSON.stringify(obj)); // 存入
 
 
         // 跳转到编辑页
         const query = this.$route.query;
-        sessionStorage.setItem('recordId',JSON.stringify(query.recordId) ); // 存入
-      //  console.log("query",query)
+        sessionStorage.setItem('recordId', JSON.stringify(query.recordId)); // 存入
+        //  console.log("query",query)
 
         this.$router.push({
           path: '/bot/config/quicklyQA/editQA',
           query: {
             ...query,
-            recordId:query.recordId,
+            recordId: query.recordId,
           }
 
 
         })
-
 
 
       },
@@ -230,7 +228,7 @@
   }
 </script>
 <style lang="scss" scoped>
-  @import '../../../../style/index';
+  @import '../../../../../style/index';
   /*@import "../../../../../static/base.css";*/
 
   .buttonSubb {
@@ -240,6 +238,7 @@
     max-width: 1040px;
     box-sizing: border-box;
   }
+
   .PreviewImgg {
     text-align: center;
   }
@@ -249,8 +248,8 @@
   }
 
   .upload_warp_img_div_text {
-    width: 100%;
-    height: 100%;
+    width: 80px;
+    height: 80px;
     text-align: center;
     font-size: 20px;
     color: transparent;
@@ -405,7 +404,7 @@
   }
 
   .upload_warp_img_div_text {
-    text-align: right;
+    /*text-align: right;*/
     padding-right: 2px;
     padding-top: 2px;
   }

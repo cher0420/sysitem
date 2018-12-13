@@ -34,7 +34,7 @@
         <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text" @click="oldFD(index)">
-              <!--<i class="el-icon-zoom-in" @click="oldFD(index)"></i>-->
+              <i class="el-icon-zoom-in" ></i>
 
             </div>
 
@@ -147,10 +147,10 @@
 
   import {mapActions} from 'vuex';
 
-  import {TOKEN} from "../../../../constants/constants";
-  import {getCookies} from "../../../../utils/cookie";
-  import base from "../../../../host/baseUrl";
-  import store from "../../../../store/index";
+  import {TOKEN} from "../../../../../constants/constants";
+  import {getCookies} from "../../../../../utils/cookie";
+  import base from "../../../../../host/baseUrl";
+  import store from "../../../../../store/index";
 
 
   export default {

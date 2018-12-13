@@ -11,6 +11,7 @@ const createrNewQA = {
     // Question:"",  // 问题
     // keywords:"" , // 关键词
     newDataDis: true, // 创建 修改 页面展示
+    yourselfStatus :true, //
 
 
   },
@@ -24,6 +25,9 @@ const createrNewQA = {
     newDataDis: (state) => {
       return state.newDataDis; // // 展示
     },
+    yourselfStatus: (state) => {
+      return state.yourselfStatus; // // 展示
+    },
 
 
   },
@@ -33,8 +37,15 @@ const createrNewQA = {
       state.keywordsDis = true; // 关键词可修改
     },
     questionLast: (state) => {
+
+      state.yourselfStatus = true; // 自定义关键词
       state.questionDis = true; // 问题可修改
       state.keywordsDis = true; // 关键词可修改
+    },
+    yourselfStatus: (state) => {
+
+      state.yourselfStatus = false; // 自定义关键词
+
     },
     keywordsNext: (state, payload) => {
       if (payload > 1 && payload < 5) {
@@ -51,6 +62,9 @@ const createrNewQA = {
     },
     newDataHidd: (state) => {  // 答案已存在组件展示
       state.newDataDis = false; // 隐藏
+    },
+    yourselfStatusFalse: (state) => {  //
+      state.yourselfStatus = true; // 关键词可修改
     },
   },
   actions: {
@@ -72,6 +86,14 @@ const createrNewQA = {
     },
     newDataHid: (context) => {
       context.commit("newDataHidd")// 隐藏
+    },
+    yourselfStatusAdd: (context) => {
+      // console.log(1111111111)
+      context.commit("yourselfStatus")//  创建关键词
+    },
+    yourselfStatusLast: (context) => {
+      // console.log(1111111111)
+      context.commit("yourselfStatusFalse")//  重新添加
     },
 
 
