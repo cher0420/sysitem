@@ -152,6 +152,7 @@
               /*
               自定义列表内容,没有在发布中的内容
                */
+              // that.dataContainer = res['Data']
               that.complateGetList(res)
             }
           ).catch(
@@ -313,7 +314,6 @@
       },
       complateGetList(res){
         this.tableData= res['Data']
-        this.dataContainer = this.tableData
         this.originDisabled = this.tableData.length <= 0
         this.total = res.TotalCount
         this.PageIndex = res.PageIndex
@@ -608,7 +608,7 @@
             }
           )
         }else{
-          that.$confirm('确定发布以上问题？','提示',{
+          that.$confirm('本次发布内容将覆盖上一次发布，是否继续发布？','提示',{
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
