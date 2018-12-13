@@ -21,6 +21,14 @@
         width="90"
         align="center"
       >
+        <template slot="header" slot-scope="scope">
+          <span v-if="enableChecked">
+
+          </span>
+          <span v-else>
+            序号
+          </span>
+        </template>
         <template slot-scope="scope">
           <el-checkbox v-model="scope.row.checkedStatus" v-if="enableChecked" @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index,scope.row.Status)"></el-checkbox>
           <span v-else>{{scope.$index+1}}</span>
@@ -106,9 +114,8 @@
     data() {
       return {
         loading: false,
-        workStatus: false,
-        tableDataCopy:[],
         tableData: [],
+        dataContainer:[],
         enableChecked: false,
         options: questionOptions.status,
         title:'状态',
@@ -124,6 +131,7 @@
         hasPublishArr:[],
         originArr:[],
         originDisabled:true,
+        blankNew:false,
       }
     },
     /*
@@ -151,6 +159,7 @@
               /*
               抛出错误
                */
+              that.loading = false
             }
           )
         }
@@ -159,13 +168,11 @@
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
             () =>{
               that.loading = false
-              const blankNew = JSON.parse(sessionStorage.getItem('blankNew'))
-              that._reload_ask(blankNew)
+              that._reload_ask()
             }
           )
         }
       )
-
     },
     destroyed(){
       store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
@@ -218,11 +225,11 @@
       },
       go(){
         const id = this.$route.query.recordId?this.$route.query.recordId:JSON.parse(sessionStorage.getItem('recordId'))
-        const host = 'https://'+window.location.host
+        const host = URL.baseUrl
         const url = `${host}/WebTalk/validaiml.html?id=${id}`
         window.open(url)
       },
-      _reload_ask(v = true){
+      _reload_ask(v = true,callback = null){
         const that = this
         this.reloadId = setInterval(function () {
           _ask().then(
@@ -230,41 +237,83 @@
               /*
               不存在发布
               */
-              store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
-              that.loading = true
-              const params = {
-                Keys:that.keys,
-                PageIndex:that.PageIndex,
-                Status: that.status
-              }
-              that.showDel = false
-              that.enableChecked = false
-              getList(params).then(
-                (res) =>{
-                  that.tableData = res['Data']
-                  that.total = res.TotalCount
-                  that.originDisabled = that.tableData.length <= 0
-                  that.loading = false
-                  clearInterval(that.reloadId);
-                  if(v){
+              clearInterval(that.reloadId);
+              store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
+                () =>{
+                  if(that.blankNew){
                     that.go()
+                  }else{
+                    that.tableData.forEach(
+                      (v,index) =>{
+                        if(v.checkedStatus){
+                          v.Status = 5
+                        }else{
+                          v.Status = 1
+                        }
+                      }
+                    )
+                    that.$message({
+                      type:'success',
+                      message:'操作成功',
+                      duration:2000,
+                    })
                   }
                 }
               )
-              /*
-               获取列表
-              */
-
             }
           ).catch(
-            () =>{
-              // that.workingStatus = true
+            (res) =>{
+              if(res.Data === 3){
+                that.$message(
+                  {
+                    type:'error',
+                    message:'操作失败，请稍后重试',
+                    duration:2000,
+                  }
+                )
+                clearInterval(that.reloadId)
+                const params = {
+                  Keys:that.keys,
+                  PageIndex:that.PageIndex,
+                  Status: that.status
+                }
+                getList(params).then(
+                  (res) =>{
+                    that.complateGetList(res)
+                    store.dispatch(
+                      REPLACE,{mainLoading:false,loadingText:null}
+                    )
+                  }
+                ).catch(
+                  (err) =>{
+                    that.message(
+                      {
+                        type:'error',
+                        message:'服务器错误，请稍后重试',
+                        duration:2000,
+                        onClose: () =>{
+                          store.dispatch(
+                            REPLACE,{mainLoading:false}
+                          )
+                        }
+                      }
+                    )
+                  }
+                )
+              }else if(res.Data === 1){
+                // sessionStorage.setItem('blankNew',JSON.stringify(true))
+                that.blankNew = true
+              }else{
+                // sessionStorage.setItem('blankNew',JSON.stringify(false))
+                that.blankNew = false
+              }
             }
           )
         },5000)
       },
       complateGetList(res){
-        this.tableData = res['Data']
+        this.tableData= res['Data']
+        this.dataContainer = this.tableData
         this.originDisabled = this.tableData.length <= 0
         this.total = res.TotalCount
         this.PageIndex = res.PageIndex
@@ -343,9 +392,9 @@
           that.tableData.forEach(
             (v,index) =>{
               switch (v.Status) {
-                case 3:
-                  that.arr.push(v.ID)
-                      break;
+                // case 3:
+                  // that.arr.push(v.ID)
+                  //     break;
                 case 5:
                   that.arr.push(v.ID)
                   that.hasPublishArr.push(v.ID)
@@ -356,7 +405,6 @@
             }
           )
           that.buttonStatus=that.arr.length <= 0
-          that.originArr = that.arr.slice(0)
         }
       },
       search() {
@@ -444,54 +492,55 @@
           type: 'warning'
         }).then(() => {
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
-          if(that.hasPublishArr.length>0){
-            that.hasPublishArr.forEach(
-              (v,k) =>{
-                const index = that.arr.indexOf(v);
-                if(index>-1){
-                  that.arr.splice(index,1)
-                }
-              }
-            )
-          }
-          let equal = true;
-          that.arr.forEach(
-            (v,index) =>{
-              const value = that.originArr.indexOf(v);
-              if(value <= -1){
-                equal = false
-              }
-            }
-          )
-          if(that.arr.length === 0 ||equal){
-            store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
-              () =>{
-                sessionStorage.setItem('blankNew',JSON.stringify(true))
-                const params = {
-                  Keys:that.keys,
-                  PageIndex:that.PageIndex,
-                  Status: that.status
-                }
-                getList(params).then(
-                  (res) => {
-                    /*
-                    给table重新赋值
-                    */
-                    that.showDel = false
-                    that.enableChecked = false
-                    that.tableData = res['Data']
-                    that.go()
-                  }
-                )
-              }
-            )
-          }else{
+          // if(that.hasPublishArr.length>0){
+          //   that.hasPublishArr.forEach(
+          //     (v,k) =>{
+          //       const index = that.arr.indexOf(v);
+          //       if(index>-1){
+          //         that.arr.splice(index,1)
+          //       }
+          //     }
+          //   )
+          // }
+          // let equal = true;
+          // that.arr.forEach(
+          //   (v,index) =>{
+          //     const value = that.originArr.indexOf(v);
+          //     if(value <= -1){
+          //       equal = false
+          //     }
+          //   }
+          // )
+          // if(that.arr.length>0){
+          //   store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
+          //     () =>{
+          //       sessionStorage.setItem('blankNew',JSON.stringify(true))
+          //       const params = {
+          //         Keys:that.keys,
+          //         PageIndex:that.PageIndex,
+          //         Status: that.status
+          //       }
+          //       getList(params).then(
+          //         (res) => {
+          //           /*
+          //           给table重新赋值
+          //           */
+          //           that.showDel = false
+          //           that.enableChecked = false
+          //           that.tableData = res['Data']
+          //           that.go()
+          //         }
+          //       )
+          //     }
+          //   )
+          // }else{
             const params = {
               Ids: that.arr,
               Action:'train',
             }
             doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
               (res) =>{
+                that.blankNew = true
                 that._reload_ask()
               }
             ).catch(
@@ -503,8 +552,7 @@
                 })
               }
             )
-          }
-
+          // }
         }).catch(() => {
           that.$message({
             type: 'info',
@@ -531,14 +579,14 @@
           }).then(
             () =>{
               store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
-              sessionStorage.setItem('blankNew',JSON.stringify(false))
               const params = {
                     Ids: that.arr,
                     Action:'publish',
                   }
               doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
                 (res) =>{
-                  that._reload_ask(false)
+                  that.blankNew = false
+                  that._reload_ask()
                 }
               ).catch(
                 () =>{
@@ -567,14 +615,14 @@
           }).then(
             () =>{
               store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
-              sessionStorage.setItem('blankNew',JSON.stringify(false))
               const params = {
                 Ids: that.arr,
                 Action:'publish',
               }
               doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
                 (res) =>{
-                  that._reload_ask(false)
+                  that.blankNew = false
+                  that._reload_ask()
                 }
               ).catch(
                 () =>{
