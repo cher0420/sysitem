@@ -24,21 +24,9 @@
         </div>
       </div>
       <div class="updateTextareaa">
-        <!--<div class="answerDis">-->
-          <!--{{Text.Answer}}-->
-        <!--</div>-->
         <div class="editAnswerQA" >
-
           <textarea v-model="Text.Answer" disabled></textarea>
-          <!--<span class="fontCount">{{newText.Answer.length}}/500字</span>-->
-
         </div>
-
-
-
-
-
-
       </div>
       <div class="upload_warp_imgg" v-show="Image.length!=0">
 
@@ -78,7 +66,7 @@
       </div>
       <div class="editAnswerQA">
 
-          <textarea v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
+          <textarea maxlength="500" v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
           <span class="fontCount">{{newText.Answer.length}}/500字</span>
 
       </div>

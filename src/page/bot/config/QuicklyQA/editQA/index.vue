@@ -10,15 +10,14 @@
       设置答案
     </div>
     <div class="edit_textarea">
-      <el-input
-        type="textarea"
-        placeholder="请输入自定义回答,最多500个字符"
-        v-model="Text.Answer" class="editTextarea">
-      </el-input>
-    </div>
-    <div class="max1000">
+      <textarea maxlength="500"
+                placeholder="请输入自定义回答,最多500个字符"
+                v-model="Text.Answer" class="editTextarea">
+      </textarea>
       <span class="fontCount">{{Text.Answer.length}}/500字</span>
+
     </div>
+
     <div class="photoUp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
 
@@ -259,9 +258,6 @@
           })
 
 
-
-
-
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -451,9 +447,9 @@
             that.addIcon = true;
           }
           // console.log(111111111)
-          if (that.Text.Answer.length > 500) {  // 检查字数
-            that.Text.Answer = that.Text.Answer.toString().substr(0, 500);
-          }
+          // if (that.Text.Answer.length > 500) {  // 检查字数
+          //   that.Text.Answer = that.Text.Answer.toString().substr(0, 500);
+          // }
         }, 200)
       },
     },
@@ -481,7 +477,7 @@
     max-width: 1000px;
     text-align: right;
     margin-left: 40px;
-    margin-top: -21px;
+    margin-top: -30px;
     z-index: 3;
     word-break: keep-all;
   }
@@ -530,15 +526,16 @@
   .edit_textarea {
     margin-top: 30px;
     padding-left: 40px;
-    /*position: relative;*/
+    max-width: 1000px;
+    position: relative;
   }
 
   .edit_textarea .fontCount {
     word-break: keep-all;
-    /*position: absolute;*/
-    /*right: 7px;*/
-    /*bottom: 5px;*/
     color: #999;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
   }
 
   .upload_warp_img {
@@ -607,10 +604,11 @@
   }
 
   .photoUp {
-    margin-top: 22px;
+    margin-top: 20px;
     margin-left: 40px;
     position: relative;
     max-width: 1000px;
+    margin-bottom: 20px;
   }
 
   .upload_warp_img_div_text {
@@ -632,9 +630,17 @@
 <style>
 
   .edit_textarea textarea {
-    max-width: 1000px;
-    height: 300px !important;
+    border: 1px solid #999;
+    width: 100%;
+    height: 300px;
     resize: none;
+    outline: none;
+    padding: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+  .edit_textarea textarea:hover{
+    border: 1px solid #409eff;
   }
 </style>
 

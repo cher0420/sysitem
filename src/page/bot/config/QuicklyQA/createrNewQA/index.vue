@@ -31,13 +31,13 @@
                 <el-checkbox :label="item" name="keywords"></el-checkbox>
               </div>
             </el-checkbox-group>
-            <!--{{keywords}}-->
+
           </div>
           <div class="checkboxContent yourselfKeyword" v-if="yourselfStatus" @click="yourselfStatusAdd()">
             <i class="el-icon-circle-plus"></i> <span>自定义</span>
           </div>
-          <div class="yourselfInput" v-if="!yourselfStatus" >
-            <el-input suffix-icon="el-icon-circle-plus"  v-model="addKey">
+          <div class="yourselfInput" v-if="!yourselfStatus">
+            <el-input suffix-icon="el-icon-circle-plus" v-model="addKey">
             </el-input>
             <div class="clickBtn" @click="addKeywords()"></div>
           </div>
@@ -57,19 +57,16 @@
             第三步: 设置答案
           </div>
           <div class="CreateNewQAtextareaParentAdd">
-            <div>
-              <el-input
-                type="textarea"
-                placeholder="请输入自定义回答,最多500个字符"
-                v-model="textarea" class="CreateNewQAtextarea">
-              </el-input>
-
-            </div>
-
-          </div>
-          <div class="max1000">
+            <textarea v-model="textarea" placeholder="请输入自定义回答,最多500个字符" maxlength="500"></textarea>
             <span class="fontCount">{{textarea.length}}/500字</span>
+            <!--<el-input-->
+            <!--type="textarea" maxlength="500"-->
+            <!--placeholder="请输入自定义回答,最多500个字符"-->
+            <!--v-model="textarea" class="CreateNewQAtextarea">-->
+            <!--</el-input>-->
+
           </div>
+
           <div class="nextStep">
             <div class="photoUp">
               <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
@@ -98,8 +95,8 @@
             </div>
 
             <el-button type="primary" plain size="mini" @click="keywordsLast">上一步</el-button>
-            <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="loader"  >完成</el-button>
-            <el-button type="primary" size="mini" :loading="!loader" v-if="!loader" >提交中...</el-button>
+            <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="loader">完成</el-button>
+            <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">提交中...</el-button>
           </div>
         </div>
       </div>
@@ -136,9 +133,9 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
-        loader:true,  // 提交状态
+        loader: true,  // 提交状态
 
-        addKey:"",
+        addKey: "",
         keywords: [], // 选中的关键字
         keywordsOption: [], // 关键词
 
@@ -209,7 +206,7 @@
 
     methods: {
       ...mapActions(
-        ["yourselfStatusLast","yourselfStatusAdd", "questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
+        ["yourselfStatusLast", "yourselfStatusAdd", "questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
 
       init() {
@@ -221,17 +218,17 @@
 
       },
       addKeywords() {
-     //   console.log("+++++++++++");
-        let that = this ;
-        if(that.keywords.length < 4){
-          if(that.addKey == ""){
+        //   console.log("+++++++++++");
+        let that = this;
+        if (that.keywords.length < 4) {
+          if (that.addKey.trim() == "") {
             that.$message({
               message: '添加关键词不能为空',
               type: 'warning'
             });
             return false;
           }
-          if(that.keywordsOption.indexOf(that.addKey) != "-1"){
+          if (that.keywordsOption.indexOf(that.addKey) != "-1") {
             that.$message({
               message: '不可以重复添加关键词',
               type: 'warning'
@@ -243,7 +240,7 @@
           that.keywords.push(that.addKey);
           that.yourselfStatusLast();
           that.addKey = "";
-        }else{
+        } else {
           that.yourselfStatusLast();
           that.$message({
             message: '您选中的关键词不能超过4个，无法再添加',
@@ -255,7 +252,6 @@
 
 
         }
-
 
 
         // addKey:"test",
@@ -295,8 +291,7 @@
 
             if (msg.Status == "1") {
               that.keywords = [];
-              msg.Data =  that.uniq(msg.Data);  // 数组去重
-
+              msg.Data = that.uniq(msg.Data);  // 数组去重
 
 
               if (msg.Data.length < 2) {
@@ -317,9 +312,6 @@
                 that.keywordsOption = msg.Data;
 
 
-
-
-
                 that.questionNext();
               }
               // console.log("msg", msg)
@@ -332,10 +324,10 @@
 
 
       },
-      uniq(array){
+      uniq(array) {
         var temp = []; //一个新的临时数组
-        for(var i = 0; i < array.length; i++){
-          if(temp.indexOf(array[i]) == -1){
+        for (var i = 0; i < array.length; i++) {
+          if (temp.indexOf(array[i]) == -1) {
             temp.push(array[i]);
           }
         }
@@ -543,7 +535,7 @@
             return false;
           }
 
-      //    console.log("类型", typeImg)
+          //    console.log("类型", typeImg)
           if (files[i].type != '') {
             this.fileAdd(files[i]);
           } else {
@@ -576,7 +568,7 @@
         })
       },
       fileAdd(file) {
-      //  console.log("daxiao", file.size / 1024)
+        //  console.log("daxiao", file.size / 1024)
         let currSize = file.size / 1024;
         if (currSize > 200) {
           this.$message({
@@ -631,12 +623,12 @@
 
       checkSize() {
         // 计算文本域字数
-        let that = this;
-        this.timer = setInterval(function () {
-          if (that.textarea.length > 500) {
-            that.textarea = that.textarea.toString().substr(0, 500);
-          }
-        }, 200)
+        // let that = this;
+        // this.timer = setInterval(function () {
+        //   if (that.textarea.length > 500) {
+        //     that.textarea = that.textarea.toString().substr(0, 500);
+        //   }
+        // }, 200)
       },
       // updateQA() {
       //   this.$router.push({
@@ -650,7 +642,7 @@
 
     },
     destroyed() {
-      clearInterval(this.timer);
+      //clearInterval(this.timer);
 
     }
 
@@ -767,7 +759,9 @@
     /*margin-top: 33px;*/
     margin-right: 11px;
     width: 1000px;
-    margin-top: 20px;
+    padding-top: 20px;
+    box-sizing: content-box;
+    margin-bottom: 20px;
   }
 
   .nextStepp {
@@ -898,6 +892,7 @@
   .upload_warp_img_div_text {
     text-align: center;
     font-size: 20px;
+
     color: transparent;
   }
 
@@ -920,17 +915,19 @@
 
   .CreateNewQAtextareaParentAdd {
     margin-top: 30px;
-    margin-bottom: 30px;
-    /*position: relative;*/
+    /*margin-bottom: 30px;*/
+    position: relative;
+    max-width: 1000px;
+    height: 300px;
+
   }
 
   .CreateNewQAtextareaParentAdd .fontCount {
-    /*position: absolute;*/
-    /*right: 33px;*/
-    /*bottom: 10px;*/
     word-break: keep-all;
-    display: inline-block;
     color: #999;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
   }
 
   .imgLimit {
@@ -954,11 +951,18 @@
   }
 </style>
 
-<style>
+<style >
   .CreateNewQAtextareaParentAdd textarea {
-    max-width: 1000px;
-    height: 300px;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+    resize: none;
+    outline: none;
+    box-sizing: border-box;
 
+  }
+  .CreateNewQAtextareaParentAdd textarea:hover{
+    border:1px solid  #409eff;
   }
 
 </style>
