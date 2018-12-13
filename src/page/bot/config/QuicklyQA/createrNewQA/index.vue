@@ -221,7 +221,7 @@
 
       },
       addKeywords() {
-        console.log("+++++++++++");
+     //   console.log("+++++++++++");
         let that = this ;
         if(that.keywords.length < 4){
           if(that.addKey == ""){
@@ -543,7 +543,7 @@
             return false;
           }
 
-          console.log("类型", typeImg)
+      //    console.log("类型", typeImg)
           if (files[i].type != '') {
             this.fileAdd(files[i]);
           } else {
@@ -576,7 +576,7 @@
         })
       },
       fileAdd(file) {
-        console.log("daxiao", file.size / 1024)
+      //  console.log("daxiao", file.size / 1024)
         let currSize = file.size / 1024;
         if (currSize > 200) {
           this.$message({

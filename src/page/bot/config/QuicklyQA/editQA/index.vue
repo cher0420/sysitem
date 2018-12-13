@@ -1,8 +1,5 @@
 <template>
   <div class="yoy-main">
-    <!--<div class="questionTitl">-->
-    <!--{{ Question }}-->
-    <!--</div>-->
     <div class="keywordTip">
       关键词
     </div>
@@ -27,11 +24,8 @@
 
 
       <div class="upload_warp_img" v-if="Image.length!=0">
-        <!--<div class="upload_warp_img_div  cc222" v-for="(item,index) of Image" v-if="item.Answer !=''" >-->
-        <!--<img :src="item.Answer">-->
-        <!--</div>-->
 
-        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image" v-if="item.Answer !=''">
+        <div class="upload_warp_img_div " v-for="(item,index) of Image" v-if="item.Answer !=''">
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text">
               <!-- 放大图片 -->
@@ -47,7 +41,7 @@
       </div>
       <!-- show photo -->
       <div class="upload_warp_img" v-show="imgList.length!=0">
-        <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
+        <div class="upload_warp_img_div " v-for="(item,index) of imgList">
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text">
               <!-- 放大图片 -->
@@ -69,7 +63,7 @@
       </div>
       <div class="subFinsh">
         <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="subInfo">完成</el-button>
-        <el-button type="primary" size="mini" :loading="true"  v-if="!subInfo">提交中...</el-button>
+        <el-button type="primary" size="mini" :loading="true" v-if="!subInfo">提交中...</el-button>
       </div>
 
     </div>
@@ -104,7 +98,7 @@
     name: "Allen-EditQA",
     data() {
       return {
-        subInfo:true,
+        subInfo: true,
 
         addIcon: true, // 图片添加功能 + 是否显示
 
@@ -129,7 +123,7 @@
           ID: "",
           Answer: "",
         }],
-        ImageNew:[],// 要上传的图片列表
+        ImageNew: [],// 要上传的图片列表
 
         DeleteIds: [], // 删除图片id
 
@@ -146,22 +140,12 @@
 
 
     },
-    watch: {
-      // imgList(curVal, oldVal) {
-      //   if (2 < curVal.length + this.Image.length) {
-      //     console.log(this.Image.length);
-      //     this.addIcon = false;
-      //   } else {
-      //     this.addIcon = true;
-      //   }
-      // },
-
-    },
+    watch: {},
     methods: {
       getData() {
         // let query = this.$route.query;
         let data = JSON.parse(sessionStorage.getItem('edit'));
-         console.log("+++++++",data)
+        console.log("+++++++", data)
         this.Keyword = data.Keyword;
         this.Question = data.Question;
         this.getCheckKeywords();
@@ -170,7 +154,7 @@
         let that = this;
         const token = getCookies(TOKEN);
         let recordId = JSON.parse(sessionStorage.getItem('recordId'));
-       console.log("recordId++++",recordId)
+        console.log("recordId++++", recordId)
         let data = {
           "BotConfigId": recordId,
           "Keys": this.Keyword
@@ -221,75 +205,74 @@
 
       },
       getPhotoUrl() { // 上传图片到服务器并拿回地址
-        this.subInfo = false;
-        const token = getCookies(TOKEN);
-        let data = {};
-        let that = this;
-        // console.log("++++", this.imgList)
-        let Files = this.imgList.map(product => {
-          return {
-            "Context": product.file.src.slice(22),
-            "Suffix": product.file.type.slice(6),
-          };
-        });
-        this.imgListNew = Files;
-        //  console.log("change", this.imgListNew)
 
-        data = {
-          "Id": "",
-          "Command": "upload",
-          "Files": Files,
-        }
 
-        $.ajax({
-          type: "POST",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-            'Access-Token': token
-          },
-          url: base.requestHost + "/api/KnowledgeQA/UploadAndDeleteAsync",
-          data: JSON.stringify(data),
-          success: function (msg) {
-            //     console.log("photo反馈", msg)
-            if (msg.Status == "1") {
-          //    let obj = {};
-              // if (msg.Data.FilesName.length == 0) {
-              //   obj.Answer = msg.Data.FilesName;
-              //   obj.ID = "";
-              //   that.Image.push(obj);
-              // }
+        this.$confirm('是否确认修改此文件?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
 
-              let ImageNeww = [];
-              if(msg.Data.FilesName.length >0){
-                for (var i = 0; i < msg.Data.FilesName.length; i++) {
-                  ImageNeww[i] = {
-                    ID: "",
-                    Answer: msg.Data.FilesName[i]
+          this.subInfo = false;
+          const token = getCookies(TOKEN);
+          let data = {};
+          let that = this;
+          // console.log("++++", this.imgList)
+          let Files = this.imgList.map(product => {
+            return {
+              "Context": product.file.src.slice(22),
+              "Suffix": product.file.type.slice(6),
+            };
+          });
+          this.imgListNew = Files;
+          //  console.log("change", this.imgListNew)
+
+          data = {
+            "Id": "",
+            "Command": "upload",
+            "Files": Files,
+          }
+          $.ajax({
+            type: "POST",
+            headers: {
+              "Content-Type": "application/json;charset=utf-8",
+              'Access-Token': token
+            },
+            url: base.requestHost + "/api/KnowledgeQA/UploadAndDeleteAsync",
+            data: JSON.stringify(data),
+            success: function (msg) {
+              //     console.log("photo反馈", msg)
+              if (msg.Status == "1") {
+                let ImageNeww = [];
+                if (msg.Data.FilesName.length > 0) {
+                  for (var i = 0; i < msg.Data.FilesName.length; i++) {
+                    ImageNeww[i] = {
+                      ID: "",
+                      Answer: msg.Data.FilesName[i]
+                    }
                   }
                 }
+                that.ImageNew = ImageNeww.concat(that.Image)
+                that.updataAnswer();
               }
-              that.ImageNew =  ImageNeww.concat(that.Image)
-              // if (msg.Data.FilesName.length == 0) {
-              //   obj.Answer = "",
-              //     obj.ID = "";
-              //   that.Image = [];
-              // }
-              that.updataAnswer();
-
-              //   console.log("img", that.Image)
-
             }
+          })
 
 
-          }
-        })
 
+
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消修改'
+          });
+        });
 
       },
       updataAnswer() { // 更新问题
 
 
-        // console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
         const token = getCookies(TOKEN);
         this.token = token;
@@ -318,7 +301,7 @@
           url: base.requestHost + "/api/QuickQA/StoreQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-            // console.log("存储答案", msg)
+
             if (msg.Status == "1") {
 
               this.subInfo = true;
@@ -352,16 +335,14 @@
       fileList(fileList) {
         let files = fileList.files;
         for (let i = 0; i < files.length; i++) {
-          let typeImg = files[i].type.slice(0,5);
-          if( typeImg != "image"){
+          let typeImg = files[i].type.slice(0, 5);
+          if (typeImg != "image") {
             this.$message({
               message: '请上传规定的图片文件',
               type: 'warning'
             });
             return false;
           }
-
-
 
 
           //判断是否为文件夹
@@ -397,9 +378,9 @@
         })
       },
       fileAdd(file) {
-        console.log("daxiao",file.size/1024 )
-        let currSize = file.size/1024 ;
-        if(currSize > 200 ){
+        console.log("daxiao", file.size / 1024)
+        let currSize = file.size / 1024;
+        if (currSize > 200) {
           this.$message({
             message: '单张图片最大不超过200k',
             type: 'warning'
@@ -469,9 +450,9 @@
           } else {
             that.addIcon = true;
           }
-          console.log(111111111)
+          // console.log(111111111)
           if (that.Text.Answer.length > 500) {  // 检查字数
-            that.Text.Answer = that.Text.Answer.toString().substr(0,500);
+            that.Text.Answer = that.Text.Answer.toString().substr(0, 500);
           }
         }, 200)
       },
@@ -653,7 +634,7 @@
   .edit_textarea textarea {
     max-width: 1000px;
     height: 300px !important;
-    /*position: relative;*/
+    resize: none;
   }
 </style>
 
