@@ -59,9 +59,9 @@ export const getList  = (params) =>{
                   case 2:
                     store.dispatch(REPLACE,{mainLoading:true})
                     break;
-                  case 3:
-                    v.checkedStatus = true;
-                    break;
+                  // case 3:
+                  //   v.checkedStatus = true;
+                  //   break;
                   case 5:
                     v.checkedStatus = true;
                     break;
@@ -128,15 +128,14 @@ export const _ask = () => {
       request(URL.requestHost+QUERYSTATUS,params).then(
         (res) =>{
           if(res.Data){
-            /*
-            如果res.Data结果为true,存在培训中或者发布中的数据
-             */
+            //正在发布或测试
+            //0:正常 1:培训中 2:发布中 3:发布或者培训失败}
             reject(res)
+            // resolve (res)
           }else{
-            /*
-            false:不存在培训中或者发布中的数据
-             */
+            //不存在培训中或者发布中的数据
             resolve (res)
+            // reject(res)
           }
         }
       ).catch(
