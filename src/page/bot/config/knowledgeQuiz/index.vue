@@ -164,6 +164,13 @@
               }
             )
           }
+        ).catch(
+          (err) =>{
+            this.$message({
+              type:'error',
+              message:'服务器错误，请稍后重试！'
+            })
+          }
         )
       },
       get_Skill_List(){
@@ -186,6 +193,10 @@
           }
         ).catch(
           (err) =>{
+            that.$message({
+              type:'error',
+              message:'服务器错误，请稍后重试！'
+            })
             /*捕获到错误时*/
           }
         )

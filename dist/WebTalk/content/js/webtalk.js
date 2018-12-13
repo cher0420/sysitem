@@ -1,4 +1,4 @@
-﻿Date.prototype.Format = function (fmt) { //author: meizz
+﻿Date.prototype.Format = function (fmt) { //author: meizz（美滋滋）
     var o = {
         "M+": this.getMonth() + 1, //月份
         "d+": this.getDate(), //日
@@ -14,9 +14,7 @@
     return fmt;
 }
 
- var adminApiUrl = "https://hightalkadminapi-test.azurewebsites.net/api";
-// var adminApiUrl = "https://hightalkadminapi-staging.azurewebsites.net/api";
-//var adminApiUrl = "https://hightalkadminapi-uat.azurewebsites.net/api";
+var adminApiUrl = host().webTalkApi;
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};

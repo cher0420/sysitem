@@ -13,10 +13,7 @@
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
   return fmt;
 }
-
-// var adminApiUrl = "https://hightalkadminapi-test.azurewebsites.net/api";
-// var adminApiUrl = "https://hightalkadminapi-staging.azurewebsites.net/api";
-var adminApiUrl = "https://hightalkadminapi-uat.azurewebsites.net/api";
+var adminApiUrl = host().previewApi
 $(function () {
   var host = ""; //域名
   var cip = ""; //ip

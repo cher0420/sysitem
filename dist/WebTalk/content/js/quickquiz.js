@@ -14,12 +14,8 @@
     return fmt;
 }
 
-var adminApiUrl = "https://hightalkadminapi-test.azurewebsites.net/api";
-// var adminApiUrl = "https://hightalkadminapi-staging.azurewebsites.net/api";
-// var adminApiUrl = "https://hightalkadminapi-uat.azurewebsites.net/api";
-
-// var fqavalidaimlApiUrl = "https://hightalkfqavalidaiml-uat.azurewebsites.net";
-var fqavalidaimlApiUrl = "https://hightalkfqavalidaiml-test.azurewebsites.net";
+var adminApiUrl = host().quickQuizApi
+var fqavalidaimlApiUrl = host().fqavalidaimlApi
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};
