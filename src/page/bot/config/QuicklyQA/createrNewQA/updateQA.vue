@@ -24,9 +24,20 @@
         </div>
       </div>
       <div class="updateTextareaa">
-        <div class="answerDis">
-          {{Text.Answer}}
+        <!--<div class="answerDis">-->
+          <!--{{Text.Answer}}-->
+        <!--</div>-->
+        <div class="editAnswerQA" >
+
+          <textarea v-model="Text.Answer" disabled></textarea>
+          <!--<span class="fontCount">{{newText.Answer.length}}/500字</span>-->
+
         </div>
+
+
+
+
+
 
       </div>
       <div class="upload_warp_imgg" v-show="Image.length!=0">
@@ -34,7 +45,7 @@
         <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text" @click="oldFD(index)">
-              <i class="el-icon-zoom-in" ></i>
+              <i class="el-icon-zoom-in"></i>
 
             </div>
 
@@ -66,8 +77,10 @@
         </div>
       </div>
       <div class="editAnswerQA">
-        <textarea v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
-        <span class="fontCount">{{newText.Answer.length}}/500字</span>
+
+          <textarea v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
+          <span class="fontCount">{{newText.Answer.length}}/500字</span>
+
       </div>
       <!-- upload photo -->
       <div class="m20">
@@ -119,7 +132,8 @@
       </div>
       <div class="alterKey">
         <el-button type="primary" plain size="mini" @click="alterKeyWords()">修改关键词</el-button>
-        <el-button type="primary" size="mini" @click="getPhotoUrl()">更新回答</el-button>
+        <el-button type="primary" size="mini" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
+        <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">更新中...</el-button>
         <!--
         第一步拿到本地图片
         第二部上传图片到服务器
@@ -157,6 +171,8 @@
     name: "Allen-editdateQA",
     data() {
       return {
+        loader: true, // 更新提交
+
         addIcon: true, // 图片添加功能 + 是否显示
 
         PreviewImg: "", // 预览图片
@@ -250,18 +266,20 @@
 
       },
       getPhotoUrl() { //  上传图片到服务器并拿回地址 ， 并回调保存答案
+
+        this.loader = false;
         const token = getCookies(TOKEN);
         let data = {};
         let that = this;
         // console.log("++++", this.imgList)
 
 
-        console.log("+++++++",this.imgList)
+        console.log("+++++++", this.imgList)
 
 
         let Files = this.imgList.map(product => {
 
-          if (product.file.type.slice(6) == "svg+xml"){
+          if (product.file.type.slice(6) == "svg+xml") {
             return {
               "Context": product.file.src.slice(26),
               "Suffix": product.file.type.slice(6),
@@ -298,7 +316,7 @@
               //   obj.ID = "";
               //   that.Image.push(obj);
               // }
-                   console.log(msg);
+              console.log(msg);
 
               if (msg.Data.FilesName.length != 0) {
                 for (var i = 0; i < msg.Data.FilesName.length; i++) {
@@ -359,6 +377,8 @@
           url: base.requestHost + "/api/QuickQA/StoreQAData",
           data: JSON.stringify(data),
           success: function (msg) {
+
+            this.loader = true;
             // console.log("存储答案", msg)
             if (msg.Status == "1") {
 
@@ -509,8 +529,10 @@
           } else {
             that.addIcon = true;
           }
-          if (that.Text.Answer.length > 500) {  // 检查字数
-            that.textarea = that.Text.Answer.toString().substr(0, 500);
+
+
+          if (that.newText.Answer.length > 500) {  // 检查字数
+            that.newText.Answer = that.newText.Answer.toString().substr(0, 500);
           }
         }, 200)
       },
@@ -539,6 +561,7 @@
   .upload_warp_imgg {
     display: inline-block;
     vertical-align: middle;
+    margin-left: 40px;
   }
 
   .upload_warp_leftt {
@@ -680,13 +703,15 @@
   }
 
   .updateTextareaa textarea {
+
     width: 450px;
     height: 300px !important;
     color: #999;
   }
 
   .updateTextareaa {
-    padding-top: 30px;
+    padding-left: 40px;
+    /*padding-top: 30px;*/
     /*padding-left: 32px;*/
     position: relative;
     padding-bottom: 30px;
@@ -719,6 +744,7 @@
     /*vert-align: middle;*/
     position: relative;
     float: left;
+
   }
 
   .upload_warp_img_div img {
@@ -758,16 +784,20 @@
 <style>
   .editAnswerQA {
     position: relative;
-
   }
 
   .editAnswerQA textarea {
+    color: #999;
+    font-size: 14px;
+    margin-top: 30px;
     box-sizing: border-box;
     width: 450px !important;
     height: 300px !important;
-    margin-top: 30px;
     padding: 20px;
-    border: 1px solid #e1e1e1;
+    /*border: 1px solid #e1e1e1;*/
+    /*border: transparent;*/
+    outline: none;
+    resize: none;
 
   }
 

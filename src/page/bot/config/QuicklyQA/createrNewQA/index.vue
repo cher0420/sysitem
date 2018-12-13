@@ -98,7 +98,8 @@
             </div>
 
             <el-button type="primary" plain size="mini" @click="keywordsLast">上一步</el-button>
-            <el-button type="primary" size="mini" @click="getPhotoUrl">完成</el-button>
+            <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="loader"  >完成</el-button>
+            <el-button type="primary" size="mini" :loading="!loader" v-if="!loader" >提交中...</el-button>
           </div>
         </div>
       </div>
@@ -135,6 +136,8 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
+        loader:true,  // 提交状态
+
         addKey:"",
         keywords: [], // 选中的关键字
         keywordsOption: [], // 关键词
@@ -221,6 +224,21 @@
         console.log("+++++++++++");
         let that = this ;
         if(that.keywords.length < 4){
+          if(that.addKey == ""){
+            that.$message({
+              message: '添加关键词不能为空',
+              type: 'warning'
+            });
+            return false;
+          }
+          if(that.keywordsOption.indexOf(that.addKey) != "-1"){
+            that.$message({
+              message: '不可以重复添加关键词',
+              type: 'warning'
+            });
+            return false;
+          }
+
           that.keywordsOption.push(that.addKey);
           that.keywords.push(that.addKey);
           that.yourselfStatusLast();
@@ -231,7 +249,10 @@
             message: '您选中的关键词不能超过4个，无法再添加',
             type: 'warning'
           });
+
           that.addKey = "";
+          return false;
+
 
         }
 
@@ -273,8 +294,10 @@
 
 
             if (msg.Status == "1") {
-
               that.keywords = [];
+              msg.Data =  that.uniq(msg.Data);  // 数组去重
+
+
 
               if (msg.Data.length < 2) {
                 setTimeout(function () {
@@ -287,9 +310,16 @@
 
 
               }
+
+
               if (msg.Data.length > 1) {
 
                 that.keywordsOption = msg.Data;
+
+
+
+
+
                 that.questionNext();
               }
               // console.log("msg", msg)
@@ -301,6 +331,15 @@
         })
 
 
+      },
+      uniq(array){
+        var temp = []; //一个新的临时数组
+        for(var i = 0; i < array.length; i++){
+          if(temp.indexOf(array[i]) == -1){
+            temp.push(array[i]);
+          }
+        }
+        return temp;
       },
       getCheckKeywords() {  // 第三步 	根据关键字确定 创建答案 或 更新答案
         let that = this;
@@ -380,6 +419,9 @@
           url: base.requestHost + "/api/QuickQA/StoreQAData",
           data: JSON.stringify(data),
           success: function (msg) {
+
+            this.loader = true;
+
             //  console.log("存储答案", msg)
             if (msg.Status == "1") {
 
@@ -426,6 +468,8 @@
 
       },
       getPhotoUrl() { // 上传图片到服务器并拿回地址
+
+        this.loader = false;
         const token = getCookies(TOKEN);
         let data = {};
         let that = this;
@@ -622,7 +666,7 @@
 
   .clickBtn {
     height: 30px;
-    border: 1px solid red;
+    /*border: 1px solid red;*/
     width: 32px;
     position: absolute;
     left: 166px;
@@ -761,7 +805,7 @@
   .keywords {
 
     padding: 0 40px;
-    max-width: 925px;
+    max-width: 1020px;
   }
 
   .checkboxContent {
