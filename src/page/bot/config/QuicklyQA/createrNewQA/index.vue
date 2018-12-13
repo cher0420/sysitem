@@ -33,21 +33,19 @@
             </el-checkbox-group>
             <!--{{keywords}}-->
           </div>
-          <div class="checkboxContent yourselfKeyword" v-if="yourselfStatus" @click="yourselfStatusAdd()" >
-            <i class="el-icon-circle-plus"></i> <span >自定义</span>
+          <div class="checkboxContent yourselfKeyword" v-if="yourselfStatus" @click="yourselfStatusAdd()">
+            <i class="el-icon-circle-plus"></i> <span>自定义</span>
           </div>
-          <div class="yourselfInput" v-if="!yourselfStatus">
-            <el-input
-              suffix-icon="el-icon-circle-plus"
-              >
+          <div class="yourselfInput" v-if="!yourselfStatus" >
+            <el-input suffix-icon="el-icon-circle-plus"  v-model="addKey">
             </el-input>
+            <div class="clickBtn" @click="addKeywords()"></div>
           </div>
-          <div style="height: 30px;margin-top: -30px;border: 1px solid red;"></div>
+
           <div class="nextStepp mt30">
             <el-button type="primary" plain size="mini" @click="questionLast">上一步</el-button>
             <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
               下一步
-
             </el-button>
           </div>
         </div>
@@ -137,20 +135,18 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
-       // yourselfStatus:true, // 自定义添加关键词
+        addKey:"",
+        keywords: [], // 选中的关键字
+        keywordsOption: [], // 关键词
 
         PreviewImg: "", // 预览图片
         dialogVisible: false,
         addIcon: true,
         loading: false,
-        // Question: "公积金如何办理", // 题目
         Question: "", // 题目
-        keywordsOption: [], // 关键词
-        keywords: [], // 选中的关键字
         textarea: "",
         timer: "",
         checkboxDisabled: true,
-        // newDataDis: true, // 展示新建答案
         token: "",
 
         // 图片上传
@@ -210,7 +206,7 @@
 
     methods: {
       ...mapActions(
-        ["yourselfStatusAdd","questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
+        ["yourselfStatusLast","yourselfStatusAdd", "questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
 
       init() {
@@ -220,6 +216,30 @@
         this.questionLast();
 
 
+      },
+      addKeywords() {
+        console.log("+++++++++++");
+        let that = this ;
+        if(that.keywords.length < 4){
+          that.keywordsOption.push(that.addKey);
+          that.keywords.push(that.addKey);
+          that.yourselfStatusLast();
+          that.addKey = "";
+        }else{
+          that.yourselfStatusLast();
+          that.$message({
+            message: '您选中的关键词不能超过4个，无法再添加',
+            type: 'warning'
+          });
+          that.addKey = "";
+
+        }
+
+
+
+        // addKey:"test",
+        //   keywords: [], // 选中的关键字
+        //   keywordsOption: [], // 关键词
       },
 
       getKeywords() {  //  第二步 将一句话分成多个词汇
@@ -600,6 +620,20 @@
     width: 80px;
   }
 
+  .clickBtn {
+    height: 30px;
+    border: 1px solid red;
+    width: 32px;
+    position: absolute;
+    left: 166px;
+    top: 0;
+    cursor: pointer;
+  }
+
+  .yourselfInput {
+    position: relative;
+  }
+
   .yourselfKeyword {
     margin-left: 40px;
     margin-bottom: 20px;
@@ -607,18 +641,19 @@
     font-size: 16px;
     cursor: pointer;
   }
-  .yourselfKeyword  span{
+
+  .yourselfKeyword span {
     margin-left: 4px;
     font-size: 12px;
     line-height: 1;
   }
-.yourselfInput {
-  width: 200px;
-  margin-top: 22px;
-  margin-left: 40px;
-  color: #2a8ce7;
-}
 
+  .yourselfInput {
+    width: 200px;
+    margin-top: 22px;
+    margin-left: 40px;
+    color: #2a8ce7;
+  }
 
   .photoPre {
     text-align: center;
@@ -888,9 +923,11 @@
   .yourselfInput input {
     border: 1px solid #2a8ce7;
   }
+
   .yourselfInput span {
     color: #2a8ce7;
   }
+
   .addContent input {
     font-size: 12px;
   }

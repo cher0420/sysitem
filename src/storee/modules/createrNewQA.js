@@ -63,6 +63,9 @@ const createrNewQA = {
     newDataHidd: (state) => {  // 答案已存在组件展示
       state.newDataDis = false; // 隐藏
     },
+    yourselfStatusFalse: (state) => {  //
+      state.yourselfStatus = true; // 关键词可修改
+    },
   },
   actions: {
 
@@ -85,8 +88,12 @@ const createrNewQA = {
       context.commit("newDataHidd")// 隐藏
     },
     yourselfStatusAdd: (context) => {
-      console.log(1111111111)
+      // console.log(1111111111)
       context.commit("yourselfStatus")//  创建关键词
+    },
+    yourselfStatusLast: (context) => {
+      // console.log(1111111111)
+      context.commit("yourselfStatusFalse")//  重新添加
     },
 
 
