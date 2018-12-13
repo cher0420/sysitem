@@ -118,7 +118,7 @@
           this.editor = true;
         }
 
-        console.log("取值", query)
+     //   console.log("取值", query)
 
         this.Question = query.Question;
         this.Keyword = query.Keyword;

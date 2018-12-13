@@ -267,82 +267,69 @@
       },
       getPhotoUrl() { //  上传图片到服务器并拿回地址 ， 并回调保存答案
 
-        this.loader = false;
-        const token = getCookies(TOKEN);
-        let data = {};
-        let that = this;
-        // console.log("++++", this.imgList)
+        this.$confirm('是否要更改答案?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.loader = false;
+          const token = getCookies(TOKEN);
+          let data = {};
+          let that = this;
+          // console.log("++++", this.imgList)
 
 
-        console.log("+++++++", this.imgList)
+       //   console.log("+++++++", this.imgList)
 
 
-        let Files = this.imgList.map(product => {
+          let Files = this.imgList.map(product => {
 
-          if (product.file.type.slice(6) == "svg+xml") {
+            if (product.file.type.slice(6) == "svg+xml") {
+              return {
+                "Context": product.file.src.slice(26),
+                "Suffix": product.file.type.slice(6),
+              };
+            }
             return {
-              "Context": product.file.src.slice(26),
+              "Context": product.file.src.slice(22),
               "Suffix": product.file.type.slice(6),
             };
-          }
-          return {
-            "Context": product.file.src.slice(22),
-            "Suffix": product.file.type.slice(6),
+          });
+          data = {
+            "Id": "",
+            "Command": "upload",
+            "Files": Files,
           };
-        });
-        // this.imgListNew = Files;
-        // console.log("change", this.imgListNew)
 
-        data = {
-          "Id": "",
-          "Command": "upload",
-          "Files": Files,
-        }
-
-        $.ajax({
-          type: "POST",
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-            'Access-Token': token
-          },
-          url: base.requestHost + "/api/KnowledgeQA/UploadAndDeleteAsync",
-          data: JSON.stringify(data),
-          success: function (msg) {
-            // console.log("photo反馈", msg)
-            if (msg.Status == "1") {
-              //  let obj = {};
-              // if (msg.Data.FilesName.length == 0) {
-              //   obj.Answer = msg.Data.FilesName;
-              //   obj.ID = "";
-              //   that.Image.push(obj);
-              // }
-              console.log(msg);
-
-              if (msg.Data.FilesName.length != 0) {
-                for (var i = 0; i < msg.Data.FilesName.length; i++) {
-                  that.Image[i] = {
-                    ID: "",
-                    Answer: msg.Data.FilesName[i]
+          $.ajax({
+            type: "POST",
+            headers: {
+              "Content-Type": "application/json;charset=utf-8",
+              'Access-Token': token
+            },
+            url: base.requestHost + "/api/KnowledgeQA/UploadAndDeleteAsync",
+            data: JSON.stringify(data),
+            success: function (msg) {
+              // console.log("photo反馈", msg)
+              if (msg.Status == "1") {
+                if (msg.Data.FilesName.length != 0) {
+                  for (var i = 0; i < msg.Data.FilesName.length; i++) {
+                    that.Image[i] = {
+                      ID: "",
+                      Answer: msg.Data.FilesName[i]
+                    }
                   }
                 }
+                that.updataAnswer();
               }
-
-              // if (msg.Data.FilesName.length == 0) {
-              //   obj.Answer = "",
-              //     obj.ID = "";
-              //   that.Image.push(obj);
-              // }
-              that.updataAnswer();
-
-              //    console.log("img", that.Image)
-
             }
-
-
-          }
-        })
-
-
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消更改'
+          });
+        });
       },
 
       updataAnswer() { // 更新问题
