@@ -24,27 +24,15 @@
         </div>
       </div>
       <div class="updateTextareaa">
-        <!--<div class="answerDis">-->
-          <!--{{Text.Answer}}-->
-        <!--</div>-->
         <div class="editAnswerQA" >
-
-          <textarea v-model="Text.Answer" disabled></textarea>
-          <!--<span class="fontCount">{{newText.Answer.length}}/500字</span>-->
-
+          <div v-html="Text.Answer" class="leftView"></div>
         </div>
-
-
-
-
-
-
       </div>
-      <div class="upload_warp_imgg" v-show="Image.length!=0">
+      <div class="upload_warp_imgg viewShow" v-show="Image.length!=0">
 
-        <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
+        <div class="upload_warp_img_div  cc222" v-for="(item,index) of Image">
           <div class="upload_warp_img_div_top">
-            <div class="upload_warp_img_div_text" @click="oldFD(index)">
+            <div class="upload_warp_img_div_text " @click="oldFD(index)">
               <i class="el-icon-zoom-in"></i>
 
             </div>
@@ -78,7 +66,7 @@
       </div>
       <div class="editAnswerQA">
 
-          <textarea v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
+          <textarea maxlength="500" v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
           <span class="fontCount">{{newText.Answer.length}}/500字</span>
 
       </div>
@@ -86,23 +74,6 @@
       <div class="m20">
         <div class="">
           <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
-
-          <!-- 传过来的图片展示-->
-          <!--<div class="upload_warp_imgg" v-show="Image.length!=0">-->
-
-          <!--<div class="upload_warp_img_div cc222" v-for="(item,index) of Image">-->
-          <!--<div class="upload_warp_img_div_top">-->
-          <!--<div class="upload_warp_img_div_text">-->
-          <!--<i class="el-icon-zoom-in" @click="oldFD(index)"></i>-->
-          <!--<i class="el-icon-delete" @click="OldFileDel(index)"></i>-->
-          <!--</div>-->
-
-          <!--</div>-->
-          <!--<img :src="item.Answer">-->
-          <!--</div>-->
-          <!--</div>-->
-
-
           <!--图片展示-->
           <div class="upload_warp_imgg" v-show="imgList.length!=0">
 
@@ -226,7 +197,8 @@
         this.Keyword = data.Keyword;
         this.Question = data.Question;
         if (data.Text.Answer != null) {
-          this.Text = data.Text;
+          this.Text = data.Text ;
+          this.Text.Answer = this.Text.Answer.replace(/\n+/g, "<br/>")
           const ID = this.Text.ID;  // 更新 回答 的id
           this.newText.ID = ID;
         }
@@ -548,6 +520,9 @@
   .upload_warp_imgg {
     display: inline-block;
     vertical-align: middle;
+    /*margin-left: 40px;*/
+  }
+  .viewShow {
     margin-left: 40px;
   }
 
@@ -747,22 +722,6 @@
     text-align: left;
     position: relative;
   }
-
-  .upload_warp_img_div_text span {
-
-    /*display: inline-block;*/
-    /*height: 16px;*/
-    /*line-height: 16px;*/
-  }
-
-  .upload_warp_img_div_text i {
-    /*cursor: pointer;*/
-    /*position: absolute;*/
-    /*right: 5px;*/
-    /*top: 3px;*/
-
-  }
-
   .alterKey {
     text-align: right;
     max-width: 500px;
@@ -772,8 +731,16 @@
   .editAnswerQA {
     position: relative;
   }
+  .editAnswerQA .leftView {
+    border:1px solid #999;
+    overflow: scroll;
+    padding: 12px;
+  }
+  .editAnswerQA .leftView:hover{
+    border: 1px solid #2a8ce7;
+  }
 
-  .editAnswerQA textarea {
+  .editAnswerQA > div {
     color: #999;
     font-size: 14px;
     margin-top: 30px;
@@ -786,6 +753,23 @@
     outline: none;
     resize: none;
 
+  }
+
+  .editAnswerQA textarea {
+    color: #999;
+    font-size: 14px;
+    margin-top: 30px;
+    box-sizing: border-box;
+    width: 450px !important;
+    height: 300px !important;
+    padding: 20px;
+    outline: none;
+    resize: none;
+
+  }
+
+  .editAnswerQA textarea:hover{
+    border:1px solid #2a8ce7;
   }
 
   .editAnswerQA .fontCount {
@@ -813,8 +797,8 @@
     color: transparent;
   }
 
-  .upload_warp_img_div_top :hover {
-    background: rgba(0, 0, 0, 0.4);
+  .upload_warp_img_div_text:hover {
+    background: rgba(0, 0, 0, 0.3);
     cursor: pointer;
     color: #fff;
     /*height: 80px;*/
@@ -831,7 +815,7 @@
 
   }
 
-  .upload_warp_img_div_text * {
+  .upload_warp_img_div_text > * {
     display: inline-block;
     vertical-align: middle;
 

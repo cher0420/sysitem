@@ -1,8 +1,5 @@
 <template>
   <div class="yoy-main">
-    <!--<div class="questionTitl">-->
-    <!--{{ Question }}-->
-    <!--</div>-->
     <div class="keywordTip">
       关键词
     </div>
@@ -12,7 +9,8 @@
     <div class="keywordTip">
       答案详情
     </div>
-    <div class="edit_textarea" v-html="Text.Answer"> </div>
+    <div class="edit_textarea" v-html="Text.Answer">
+    </div>
     <div class="photoUpp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
       <!-- show photo -->
@@ -29,12 +27,6 @@
           <img :src="item.Answer">
         </div>
       </div>
-
-      <!--<div class="imgLimit">-->
-      <!--( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )-->
-      <!--</div>-->
-
-
     </div>
     <div class="buttonSubb">
       <el-button type="primary" plain size="mini" @click="EditReturn()" v-if="editor">编辑</el-button>
