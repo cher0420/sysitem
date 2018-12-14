@@ -37,9 +37,9 @@
             <i class="el-icon-circle-plus"></i> <span>自定义</span>
           </div>
           <div class="yourselfInput" v-if="!yourselfStatus">
-            <el-input suffix-icon="el-icon-circle-plus" v-model="addKey">
+            <el-input  v-model="addKey">
             </el-input>
-            <div class="clickBtn" @click="addKeywords()"></div>
+            <i class="clickBtn el-icon-circle-plus" @click="addKeywords()"></i>
           </div>
 
           <div class="nextStepp mt30">
@@ -664,6 +664,9 @@
     left: 166px;
     top: 0;
     cursor: pointer;
+    font-size: 17px;
+    text-align: center;
+    line-height: 30px;
   }
 
   .yourselfInput {
@@ -674,7 +677,7 @@
     margin-left: 40px;
     margin-bottom: 20px;
     color: #2a8ce7;
-    font-size: 16px;
+    font-size: 17px;
     cursor: pointer;
   }
 
