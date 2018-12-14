@@ -2,7 +2,7 @@
   <section>
     <section class="p-relative" style="">
       <el-button  v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button>
-      <el-input v-model='keys' clearable class='searchInput' :style="{transition:'left .5s',left: !enableChecked?'120px':'0'}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      <el-input v-model='keys' clearable class='searchInput' :style="{transition:'left .3s',left: !enableChecked?'120px':'0'}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
       <span v-if="!originDisabled">
         <el-button type="primary" v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;">选择</el-button>
@@ -77,7 +77,7 @@
           </section>
         </template>
         <template slot-scope="scope">
-          <section class="handle" style="height: 28px;line-height: 28px">
+          <section class="handle" style="height: 24px;line-height: 24px">
             <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px" @click="editSomething(scope.row)">
               <i class="el-icon-edit" style="margin-right: 5px;"></i>
               <span>编辑</span>
