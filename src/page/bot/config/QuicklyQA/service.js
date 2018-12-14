@@ -23,7 +23,7 @@ export const getList  = (params) =>{
 
   const body = {
     BotConfigId,
-    PageSize:2,
+    PageSize:50,
     PageIndex:1,
     Keys:null,
     Status:null,

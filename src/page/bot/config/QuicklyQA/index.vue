@@ -1,7 +1,8 @@
 <template>
   <section>
     <section class="p-relative" style="">
-      <el-button type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button><el-input v-model='keys' class='searchInput' style="left: 120px;" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      <el-button  v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button>
+      <el-input v-model='keys' clearable class='searchInput' :style="{transition:'left .5s',left: !enableChecked?'120px':'0'}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
       <span v-if="!originDisabled">
         <el-button type="primary" v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;">选择</el-button>
@@ -91,7 +92,7 @@
         @current-change="handleCurrentChange"
         class="pagination p-absolute"
         background
-        page-size="2"
+        page-size="50"
         layout="total, prev, pager, next"
         :total="total"
         :current-page.sync="PageIndex"
@@ -719,7 +720,11 @@
   @import '../../../../style/index';
   .createAnswer{
     position: absolute;
-    width: 100px;padding-left:0;padding-right:0;margin-right: 20px;
+    width: 100px;
+    padding-left:0;
+    padding-right:0;
+    margin-right: 20px;
+    transition: width 1s;
   }
   .margin-top20{
     margin-top: 20px;
