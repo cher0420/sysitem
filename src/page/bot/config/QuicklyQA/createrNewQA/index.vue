@@ -6,7 +6,7 @@
       </div>
       <div v-if="questionDis">
         <div class="addContent">
-          <el-input v-model="Question" placeholder="例如:2018年年会举办地点"></el-input>
+          <el-input ref="input" v-model="Question" placeholder="例如:2018年年会举办地点"></el-input>
         </div>
         <div class="questionTit">
           请用最简洁的方式描述你的问题
@@ -33,11 +33,11 @@
             </el-checkbox-group>
 
           </div>
-          <div class="checkboxContent yourselfKeyword" v-if="yourselfStatus" @click="yourselfStatusAdd()">
+          <div class="checkboxContent yourselfKeyword" v-if="yourselfStatus" @click="selfShow()">
             <i class="el-icon-circle-plus"></i> <span>自定义</span>
           </div>
-          <div class="yourselfInput" v-if="!yourselfStatus">
-            <el-input v-model="addKey">
+          <div class="yourselfInput" v-show="!yourselfStatus">
+            <el-input   v-model="addKey" id="focus"  ref="self" v-on:blur="yourmethod" >
             </el-input>
             <i class="clickBtn el-icon-circle-plus" @click="addKeywords()"></i>
           </div>
@@ -131,6 +131,8 @@
     name: "Allen-CreateNewQA",
     data() {
       return {
+        focusState:false, // 自动获取焦点
+
         loader: true,  // 提交状态
 
         addKey: "",
@@ -181,6 +183,7 @@
 
     },
     mounted() {
+      this.$refs['input'].focus();
 
 
     },
@@ -206,6 +209,11 @@
       ...mapActions(
         ["yourselfStatusLast", "yourselfStatusAdd", "questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
+      yourmethod(){  // 失去焦点
+       this.yourselfStatusLast();
+        this.yourselfStatusLast();
+      // console.log(2222222222)
+      },
 
       init() {
 
@@ -215,7 +223,18 @@
 
 
       },
+      selfShow(){
+        let that = this;
+        this.yourselfStatusAdd();  // 自定义输入框显示
+
+       setTimeout(function () {
+         that.$refs['self'].focus();
+        // $("#focus").val("eeeeeeee")
+       },200)
+      },
+
       addKeywords() {
+
         //   console.log("+++++++++++");
         let that = this;
         if (that.keywords.length < 4) {
@@ -620,7 +639,16 @@
 
 
     },
-
+    directives: {
+      focus: {
+        update: function (el, {value}) {
+          if (value) {
+            console.log("+++++++++++")
+            el.focus()
+          }
+        }
+      }
+    },
 
   }
 </script>

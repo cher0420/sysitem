@@ -11,9 +11,7 @@ import {TOKEN} from "../constants/constants";
 import {getCookies} from "../utils/cookie";
 
 
-
-
-const easyAjax = function (url,  data = {},type = 'GET') {
+const easyAjax = function (url, data = {}, type = 'GET') {
   type = type.toUpperCase();
   const token = getCookies(TOKEN);
   let thisDate;
@@ -42,7 +40,7 @@ const easyAjax = function (url,  data = {},type = 'GET') {
     },
     async: false,
     dataType: 'json',
-    data:JSON.stringify(data) ,
+    data: JSON.stringify(data),
   })
     .done(function (res) {
       thisDate = res;    //需要返回thisDate
