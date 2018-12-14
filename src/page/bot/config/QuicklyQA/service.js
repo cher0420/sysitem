@@ -53,12 +53,12 @@ export const getList  = (params) =>{
             data.forEach(
               (v,index) => {
                 switch (v.Status) {
-                  case 4:
-                    store.dispatch(REPLACE,{mainLoading:true})
-                    break;
-                  case 2:
-                    store.dispatch(REPLACE,{mainLoading:true})
-                    break;
+                  // case 4:
+                  //   store.dispatch(REPLACE,{mainLoading:true})
+                  //   break;
+                  // case 2:
+                  //   store.dispatch(REPLACE,{mainLoading:true})
+                  //   break;
                   // case 3:
                   //   v.checkedStatus = true;
                   //   break;

@@ -20,5 +20,5 @@ function host() {
     webTalkApi:'https://hightalkadminapi-staging.azurewebsites.net/api',
     webTalkV2Api:'https://hightalkadminapi-staging.azurewebsites.net/api'
   }
-  return TEST
+  return UAT
 }

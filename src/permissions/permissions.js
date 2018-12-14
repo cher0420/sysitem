@@ -185,7 +185,7 @@ export const hiddenTokenInUrl = () => {
 export const logOut = () => {
   Loading.service({fullscreen: true});
   const token = getCookies('token')
-  const redirectUrl = 'http://'+window.location.host
+  const redirectUrl = 'https://'+window.location.host
   removeCookies([USERNAME,TOKEN]).then(
     () => {
       window.location.href = URL.SSOWebUrl.zh+ LOGOUT + redirectUrl + '&token='+token

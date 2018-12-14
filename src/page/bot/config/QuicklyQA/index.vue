@@ -31,7 +31,7 @@
           </span>
         </template>
         <template slot-scope="scope">
-          <el-checkbox v-model="scope.row.checkedStatus" v-if="enableChecked" @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index,scope.row.Status)"></el-checkbox>
+          <el-checkbox style="height: 24px;line-height: 24px;margin-bottom: 0" v-model="scope.row.checkedStatus" v-if="enableChecked" @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index,scope.row.Status)"></el-checkbox>
           <span v-else>{{scope.$index+1}}</span>
         </template>
       </el-table-column>
