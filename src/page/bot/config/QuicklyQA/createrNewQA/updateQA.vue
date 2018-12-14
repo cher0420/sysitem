@@ -750,7 +750,7 @@
 
   .alterKey {
     text-align: right;
-    max-width: 500px;
+    max-width: 450px;
   }
 </style>
 <style>
@@ -788,6 +788,7 @@
     outline: none;
     resize: none;
     border:1px solid #999;
+    overflow: scroll;
 }
   .editAnswerQA  .leftView:hover {
     border:1px solid #2A8CE7;
