@@ -140,61 +140,63 @@
     生命周期函数
      */
     created(){
+      clearInterval(store.state.app.quickQuizRecordId)
       this.tableData = []
       this.total = 0
-      /*
-      获取初始列表
-       */
-      const that = this
-      this.loading = true
-      _ask().then(
-        (res) => {
           /*
-          获取全部已发布的数据
-          */
-          const params = {
-            PageSize:0,
-            Status:1
-          }
-          getList(params).then(
-            (res) =>{
-              if(res['Data'].length>0){
-                res['Data'].forEach(
-                  (v,index) =>{
-                    that.dataContainer.push(v.ID)
-                  }
-                )
-                that.tableDataCopy = that.dataContainer.slice(0)
-              }
-            }
-          )
-          getList().then(
+          获取初始列表
+           */
+          const that = this
+          this.loading = true
+          _ask().then(
             (res) => {
               /*
-              自定义列表内容,没有在发布中的内容
-               */
-              that.complateGetList(res)
+              获取全部已发布的数据
+              */
+              const params = {
+                PageSize:0,
+                Status:1
+              }
+              getList(params).then(
+                (res) =>{
+                  if(res['Data'].length>0){
+                    res['Data'].forEach(
+                      (v,index) =>{
+                        that.dataContainer.push(v.ID)
+                      }
+                    )
+                    that.tableDataCopy = that.dataContainer.slice(0)
+                  }
+                }
+              )
+              getList().then(
+                (res) => {
+                  /*
+                  自定义列表内容,没有在发布中的内容
+                   */
+                  that.complateGetList(res)
+                }
+              ).catch(
+                (err) =>{
+                  /*
+                  抛出错误
+                   */
+                  that.loading = false
+                }
+              )
             }
           ).catch(
-            (err) =>{
-              /*
-              抛出错误
-               */
-              that.loading = false
-            }
-          )
-        }
-      ).catch(
-        () =>{
-          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
             () =>{
-              that.loading = false
-              that._reload_ask(true)
-
+              store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
+                () =>{
+                  that.loading = false
+                  that._reload_ask(true)
+                }
+              )
             }
           )
-        }
-      )
+
+
     },
     destroyed(){
       store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
@@ -280,6 +282,7 @@
       _reload_ask(v = false){
         const that = this
         let id = setInterval(function () {
+          console.log(store.state.app.quickQuizRecordId)
           store.dispatch(REPLACE,{quickQuizRecordId: id}).then(
             () =>{
               _ask().then(
@@ -383,10 +386,8 @@
                       }
                     )
                   }else if(res.Data === 1){
-                    // sessionStorage.setItem('blankNew',JSON.stringify(true))
                     that.blankNew = true
                   }else{
-                    // sessionStorage.setItem('blankNew',JSON.stringify(false))
                     that.blankNew = false
                   }
                 }
@@ -394,7 +395,7 @@
             }
           )
 
-        },5000)
+        },1000)
       },
       complateGetList(res){
         this.tableData= res['Data']
@@ -592,8 +593,6 @@
           根据arr长度更改测试按钮状态
          */
         this.arr.length>0?this.buttonStatus = false:this.buttonStatus = true
-        console.log('---',this.arr)
-        console.log('=======',this.dataContainer)
       },
       train(){
         const that = this
@@ -607,10 +606,10 @@
               Ids: that.tableDataCopy,
               Action:'train',
             }
+            that._reload_ask(false)
+            that.blankNew = true
             doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
               (res) =>{
-                that.blankNew = true
-                that._reload_ask(false)
               }
             ).catch(
               () =>{
