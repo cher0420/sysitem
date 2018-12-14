@@ -24,19 +24,17 @@
         </div>
       </div>
       <div class="updateTextareaa">
-        <div class="editAnswerQA" >
-          <textarea v-model="Text.Answer" disabled></textarea>
+        <div class="editAnswerQA">
+          <div class="leftView" v-html="Text.Answer">
+          </div>
         </div>
       </div>
       <div class="upload_warp_imgg" v-show="Image.length!=0">
-
         <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text" @click="oldFD(index)">
               <i class="el-icon-zoom-in"></i>
-
             </div>
-
           </div>
           <img :src="item.Answer">
         </div>
@@ -65,10 +63,8 @@
         </div>
       </div>
       <div class="editAnswerQA">
-
           <textarea maxlength="500" v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
           <span class="fontCount">{{newText.Answer.length}}/500字</span>
-
       </div>
       <!-- upload photo -->
       <div class="m20">
@@ -92,7 +88,7 @@
 
 
           <!--图片展示-->
-          <div class="upload_warp_imgg" v-show="imgList.length!=0">
+          <div class="upload_warp_imgg photoView" v-show="imgList.length!=0">
 
             <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
               <div class="upload_warp_img_div_top">
@@ -215,6 +211,7 @@
         this.Question = data.Question;
         if (data.Text.Answer != null) {
           this.Text = data.Text;
+          this.Text.Answer =   this.Text.Answer.replace(/\n+/g, "<br/>")
           const ID = this.Text.ID;  // 更新 回答 的id
           this.newText.ID = ID;
         }
@@ -760,7 +757,9 @@
   .editAnswerQA {
     position: relative;
   }
-
+.photoView {
+  margin-left: 0 !important;
+}
   .editAnswerQA textarea {
     color: #999;
     font-size: 14px;
@@ -775,10 +774,27 @@
     resize: none;
 
   }
-
+  .editAnswerQA textarea:hover {
+    border:1px solid #2A8CE7;
+  }
+  .editAnswerQA  .leftView{
+    color: #999;
+    font-size: 14px;
+    margin-top: 30px;
+    box-sizing: border-box;
+    width: 450px !important;
+    height: 300px !important;
+    padding: 20px;
+    outline: none;
+    resize: none;
+    border:1px solid #999;
+}
+  .editAnswerQA  .leftView:hover {
+    border:1px solid #2A8CE7;
+  }
   .editAnswerQA .fontCount {
     position: absolute;
-    left: 390px;
+    left: 385px;
     bottom: 10px;
     word-break: keep-all;
     color: #999;
@@ -801,7 +817,7 @@
     color: transparent;
   }
 
-  .upload_warp_img_div_top :hover {
+  .upload_warp_img_div_text:hover {
     background: rgba(0, 0, 0, 0.4);
     cursor: pointer;
     color: #fff;
