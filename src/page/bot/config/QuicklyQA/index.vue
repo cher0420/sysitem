@@ -2,7 +2,7 @@
   <section>
     <section class="p-relative" style="">
       <el-button  v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button>
-      <el-input v-model='keys' clearable class='searchInput' :style="{transition:'left .3s',left: !enableChecked?'120px':'0'}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      <el-input v-model='keys' class='searchInput' :style="{transition:'left .3s',left: !enableChecked?'120px':'0'}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
       <span v-if="!originDisabled">
         <el-button type="primary" v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;">选择</el-button>
@@ -31,7 +31,7 @@
           </span>
         </template>
         <template slot-scope="scope">
-          <el-checkbox v-model="scope.row.checkedStatus" v-if="enableChecked" @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index,scope.row.Status)"></el-checkbox>
+          <el-checkbox style="height: 24px;line-height: 24px;margin-bottom: 0" v-model="scope.row.checkedStatus" v-if="enableChecked" @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index,scope.row.Status)"></el-checkbox>
           <span v-else>{{scope.$index+1}}</span>
         </template>
       </el-table-column>
@@ -140,67 +140,68 @@
     生命周期函数
      */
     created(){
+      clearInterval(store.state.app.quickQuizRecordId)
       this.tableData = []
       this.total = 0
-      /*
-      获取初始列表
-       */
-      const that = this
-      this.loading = true
-      _ask().then(
-        (res) => {
           /*
-          获取全部已发布的数据
-          */
-          const params = {
-            PageSize:0,
-            Status:1
-          }
-          getList(params).then(
-            (res) =>{
-              if(res['Data'].length>0){
-                res['Data'].forEach(
-                  (v,index) =>{
-                    that.dataContainer.push(v.ID)
-                  }
-                )
-                that.tableDataCopy = that.dataContainer.slice(0)
-              }
-            }
-          )
-          getList().then(
+          获取初始列表
+           */
+          const that = this
+          this.loading = true
+          _ask().then(
             (res) => {
               /*
-              自定义列表内容,没有在发布中的内容
-               */
-              // that.dataContainer = res['Data']
-              that.complateGetList(res)
+              获取全部已发布的数据
+              */
+              const params = {
+                PageSize:0,
+                Status:1
+              }
+              getList(params).then(
+                (res) =>{
+                  if(res['Data'].length>0){
+                    res['Data'].forEach(
+                      (v,index) =>{
+                        that.dataContainer.push(v.ID)
+                      }
+                    )
+                    that.tableDataCopy = that.dataContainer.slice(0)
+                  }
+                }
+              )
+              getList().then(
+                (res) => {
+                  /*
+                  自定义列表内容,没有在发布中的内容
+                   */
+                  that.complateGetList(res)
+                }
+              ).catch(
+                (err) =>{
+                  /*
+                  抛出错误
+                   */
+                  that.loading = false
+                }
+              )
             }
           ).catch(
-            (err) =>{
-              /*
-              抛出错误
-               */
-              that.loading = false
-            }
-          )
-        }
-      ).catch(
-        () =>{
-          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
             () =>{
-              that.loading = false
-              // if(this.reloadId){
-                that._reload_ask(true)
-              // }
+              store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
+                () =>{
+                  that.loading = false
+                  that._reload_ask(true)
+                }
+              )
             }
           )
-        }
-      )
+
+
     },
     destroyed(){
       store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
-      clearInterval(this.reloadId);
+      const id = store.state.app.quickQuizRecordId
+      clearInterval(id);
     },
     methods: {
       ...mapActions(
@@ -280,9 +281,8 @@
       },
       _reload_ask(v = false){
         const that = this
-        // let flag = true
-
         let id = setInterval(function () {
+          console.log(store.state.app.quickQuizRecordId)
           store.dispatch(REPLACE,{quickQuizRecordId: id}).then(
             () =>{
               _ask().then(
@@ -298,7 +298,6 @@
                         getList().then(
                           (res) =>{
                             that.complateGetList(res)
-                            // flag = false
                           }
                         )
                       }
@@ -387,10 +386,8 @@
                       }
                     )
                   }else if(res.Data === 1){
-                    // sessionStorage.setItem('blankNew',JSON.stringify(true))
                     that.blankNew = true
                   }else{
-                    // sessionStorage.setItem('blankNew',JSON.stringify(false))
                     that.blankNew = false
                   }
                 }
@@ -398,7 +395,7 @@
             }
           )
 
-        },5000)
+        },1000)
       },
       complateGetList(res){
         this.tableData= res['Data']
@@ -596,8 +593,6 @@
           根据arr长度更改测试按钮状态
          */
         this.arr.length>0?this.buttonStatus = false:this.buttonStatus = true
-        console.log('---',this.arr)
-        console.log('=======',this.dataContainer)
       },
       train(){
         const that = this
@@ -607,58 +602,14 @@
           type: 'warning'
         }).then(() => {
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
-          // if(that.hasPublishArr.length>0){
-          //   that.hasPublishArr.forEach(
-          //     (v,k) =>{
-          //       const index = that.arr.indexOf(v);
-          //       if(index>-1){
-          //         that.arr.splice(index,1)
-          //       }
-          //     }
-          //   )
-          // }
-          // let equal = true;
-          // that.arr.forEach(
-          //   (v,index) =>{
-          //     const value = that.originArr.indexOf(v);
-          //     if(value <= -1){
-          //       equal = false
-          //     }
-          //   }
-          // )
-          // if(that.arr.length>0){
-          //   store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
-          //     () =>{
-          //       sessionStorage.setItem('blankNew',JSON.stringify(true))
-          //       const params = {
-          //         Keys:that.keys,
-          //         PageIndex:that.PageIndex,
-          //         Status: that.status
-          //       }
-          //       getList(params).then(
-          //         (res) => {
-          //           /*
-          //           给table重新赋值
-          //           */
-          //           that.showDel = false
-          //           that.enableChecked = false
-          //           that.tableData = res['Data']
-          //           that.go()
-          //         }
-          //       )
-          //     }
-          //   )
-          // }else{
             const params = {
               Ids: that.tableDataCopy,
               Action:'train',
             }
+            that._reload_ask(false)
+            that.blankNew = true
             doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
               (res) =>{
-                that.blankNew = true
-                if(!store.state.app.quickQuizRecordId){
-                that._reload_ask(true)
-                }
               }
             ).catch(
               () =>{
@@ -764,6 +715,7 @@
     cursor: default;
   }
   .link{
+    display: inline-block;
     cursor: pointer;
   }
   .link:hover{
