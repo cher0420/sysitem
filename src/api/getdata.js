@@ -1,8 +1,18 @@
-import fetch from '@/config/fetch'
+import fetch from '../config/easyAjax';
+
+/**
+ *  api异步请求
+ */
 
 
 /**
- * api请求量
+ *  分词
  */
+export const participle  = params => fetch('/api/QuickQA/GetKeyWords' , params,"post");  //  将一句话分成多个词汇
 
-export const getCategory = restaurant_id => fetch('/shopping/getcategory/' + restaurant_id); // url parameter  methor
+
+
+
+
+
+

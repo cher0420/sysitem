@@ -37,7 +37,7 @@
             <i class="el-icon-circle-plus"></i> <span>自定义</span>
           </div>
           <div class="yourselfInput" v-if="!yourselfStatus">
-            <el-input  v-model="addKey">
+            <el-input v-model="addKey">
             </el-input>
             <i class="clickBtn el-icon-circle-plus" @click="addKeywords()"></i>
           </div>
@@ -59,11 +59,7 @@
           <div class="CreateNewQAtextareaParentAdd">
             <textarea v-model="textarea" placeholder="请输入自定义回答,最多500个字符" maxlength="500"></textarea>
             <span class="fontCount">{{textarea.length}}/500字</span>
-            <!--<el-input-->
-            <!--type="textarea" maxlength="500"-->
-            <!--placeholder="请输入自定义回答,最多500个字符"-->
-            <!--v-model="textarea" class="CreateNewQAtextarea">-->
-            <!--</el-input>-->
+
 
           </div>
 
@@ -120,13 +116,17 @@
 <script>
 
   import updateQA from "./updateQA";
-  import {mapGetters} from 'vuex';
-  import {mapActions} from 'vuex';
+  // import {mapGetters} from 'vuex';
+  // import {mapActions} from 'vuex';
+  import {mapState ,mapGetters, mapActions} from 'vuex';
+
 
   import {TOKEN} from "../../../../../constants/constants";
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
+
+  import {participle } from "../../../../../api/getdata";  //  请求数据
 
 
   export default {
@@ -176,7 +176,7 @@
 
     created() {
 
-      this.checkSize()
+
 
       this.init();  // 页面初始化
 
@@ -275,6 +275,15 @@
         let data = {
           "Question": this.Question
         }
+
+       // let test =  participle(data);
+       //  console.log("test",test);
+       //  console.log(111111111)
+       //
+       //  debugger;
+
+
+
         $.ajax({
           type: "POST",
           headers: {
@@ -342,6 +351,8 @@
           "BotConfigId": recordId,
           "Keys": this.keywordsNew
         }
+
+
         $.ajax({
           type: "POST",
           headers: {
@@ -621,30 +632,11 @@
       },
 
 
-      checkSize() {
-        // 计算文本域字数
-        // let that = this;
-        // this.timer = setInterval(function () {
-        //   if (that.textarea.length > 500) {
-        //     that.textarea = that.textarea.toString().substr(0, 500);
-        //   }
-        // }, 200)
-      },
-      // updateQA() {
-      //   this.$router.push({
-      //     path: '/bot/config/updateQA',
-      //     params: {
-      //       id: "uprateQA"
-      //     },
-      //   })
-      //
-      // },
+
+
 
     },
-    destroyed() {
-      //clearInterval(this.timer);
 
-    }
 
   }
 </script>
@@ -954,7 +946,7 @@
   }
 </style>
 
-<style >
+<style>
   .CreateNewQAtextareaParentAdd textarea {
     width: 100%;
     height: 100%;
@@ -964,8 +956,9 @@
     box-sizing: border-box;
 
   }
-  .CreateNewQAtextareaParentAdd textarea:hover{
-    border:1px solid  #409eff;
+
+  .CreateNewQAtextareaParentAdd textarea:hover {
+    border: 1px solid #409eff;
   }
 
 </style>

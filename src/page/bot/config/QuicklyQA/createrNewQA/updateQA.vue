@@ -63,30 +63,13 @@
         </div>
       </div>
       <div class="editAnswerQA">
-          <textarea maxlength="500" v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
-          <span class="fontCount">{{newText.Answer.length}}/500字</span>
+        <textarea maxlength="500" v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
+        <span class="fontCount">{{newText.Answer.length}}/500字</span>
       </div>
       <!-- upload photo -->
       <div class="m20">
         <div class="">
           <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
-
-          <!-- 传过来的图片展示-->
-          <!--<div class="upload_warp_imgg" v-show="Image.length!=0">-->
-
-          <!--<div class="upload_warp_img_div cc222" v-for="(item,index) of Image">-->
-          <!--<div class="upload_warp_img_div_top">-->
-          <!--<div class="upload_warp_img_div_text">-->
-          <!--<i class="el-icon-zoom-in" @click="oldFD(index)"></i>-->
-          <!--<i class="el-icon-delete" @click="OldFileDel(index)"></i>-->
-          <!--</div>-->
-
-          <!--</div>-->
-          <!--<img :src="item.Answer">-->
-          <!--</div>-->
-          <!--</div>-->
-
-
           <!--图片展示-->
           <div class="upload_warp_imgg photoView" v-show="imgList.length!=0">
 
@@ -211,7 +194,7 @@
         this.Question = data.Question;
         if (data.Text.Answer != null) {
           this.Text = data.Text;
-          this.Text.Answer =   this.Text.Answer.replace(/\n+/g, "<br/>")
+          this.Text.Answer = this.Text.Answer.replace(/\n+/g, "<br/>")
           const ID = this.Text.ID;  // 更新 回答 的id
           this.newText.ID = ID;
         }
@@ -220,10 +203,7 @@
         });
 
         this.DeleteIds = DeleteIdsRec
-        // console.log("+++++++", DeleteIdsRec)
 
-
-        //  debugger;
       },
 
       alterKeyWords() {
@@ -235,7 +215,7 @@
           }
         })
         this.newDataDis(); // 展示新创建问题页面
-        //this.questionNext();
+
       },
 
       // 图片上传
@@ -261,11 +241,6 @@
           const token = getCookies(TOKEN);
           let data = {};
           let that = this;
-          // console.log("++++", this.imgList)
-
-
-       //   console.log("+++++++", this.imgList)
-
 
           let Files = this.imgList.map(product => {
 
@@ -319,8 +294,6 @@
 
       updataAnswer() { // 更新问题
 
-
-        // console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
         const token = getCookies(TOKEN);
         this.token = token;
@@ -428,7 +401,7 @@
         })
       },
       fileAdd(file) {
-        console.log("daxiao", file.size / 1024)
+       // console.log("daxiao", file.size / 1024)
         let currSize = file.size / 1024;
         if (currSize > 200) {
           this.$message({
@@ -757,9 +730,11 @@
   .editAnswerQA {
     position: relative;
   }
-.photoView {
-  margin-left: 0 !important;
-}
+
+  .photoView {
+    margin-left: 0 !important;
+  }
+
   .editAnswerQA textarea {
     color: #999;
     font-size: 14px;
@@ -774,10 +749,12 @@
     resize: none;
 
   }
+
   .editAnswerQA textarea:hover {
-    border:1px solid #2A8CE7;
+    border: 1px solid #2A8CE7;
   }
-  .editAnswerQA  .leftView{
+
+  .editAnswerQA .leftView {
     color: #999;
     font-size: 14px;
     margin-top: 30px;
@@ -787,12 +764,14 @@
     padding: 20px;
     outline: none;
     resize: none;
-    border:1px solid #999;
+    border: 1px solid #999;
     overflow: scroll;
-}
-  .editAnswerQA  .leftView:hover {
-    border:1px solid #2A8CE7;
   }
+
+  .editAnswerQA .leftView:hover {
+    border: 1px solid #2A8CE7;
+  }
+
   .editAnswerQA .fontCount {
     position: absolute;
     left: 385px;
