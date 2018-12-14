@@ -116,8 +116,6 @@
 <script>
 
   import updateQA from "./updateQA";
-  // import {mapGetters} from 'vuex';
-  // import {mapActions} from 'vuex';
   import {mapState ,mapGetters, mapActions} from 'vuex';
 
 
@@ -126,7 +124,7 @@
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
 
-  import {participle } from "../../../../../api/getdata";  //  请求数据
+  import {participle } from "../../../../../api/getdata";  //  请求数据  测试接口
 
 
   export default {
@@ -253,10 +251,6 @@
 
         }
 
-
-        // addKey:"test",
-        //   keywords: [], // 选中的关键字
-        //   keywordsOption: [], // 关键词
       },
 
       getKeywords() {  //  第二步 将一句话分成多个词汇
@@ -276,11 +270,9 @@
           "Question": this.Question
         }
 
-       // let test =  participle(data);
-       //  console.log("test",test);
-       //  console.log(111111111)
-       //
-       //  debugger;
+       let test =  participle(data);
+        console.log("test",test);
+
 
 
 
@@ -294,8 +286,6 @@
           data: JSON.stringify(data),
           success: function (msg) {
             that.loading = false;
-            // console.log("里边")
-            // console.log("msg", msg)
 
 
             if (msg.Status == "1") {
@@ -610,14 +600,8 @@
         }
       },
       photoMagnify(index) {
-        // this.$alert("<div><img src=" + this.imgList[index].file.src + " ></div>", '图片预览', {
-        //   dangerouslyUseHTMLString: true
-        // });
         this.dialogVisible = true;
         this.PreviewImg = this.imgList[index].file.src;
-        //  console.log("item", this.imgList[index].file.src)
-
-
       },
       fileDel(index) {
         this.size = this.size - this.imgList[index].file.size;
