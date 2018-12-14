@@ -31,6 +31,7 @@ Vue.use(Vuex)
       description: '',
       Key:'',
       SkillNo:'',
+      quickQuizRecordId:null,
 
       mainLoading:false,
       loadingText:null,
