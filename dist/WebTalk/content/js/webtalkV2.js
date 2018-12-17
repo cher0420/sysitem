@@ -14,7 +14,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
     return fmt;
 }
 
-var adminApiUrl = host().webTalkV2Api;
+var adminApiUrl = host().api;
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};

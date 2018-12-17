@@ -14,7 +14,7 @@
     return fmt;
 }
 
-var adminApiUrl = host().quickQuizApi
+var adminApiUrl = host().api
 var fqavalidaimlApiUrl = host().fqavalidaimlApi
 var navigationList = {};
 var intentKeyList = [];
