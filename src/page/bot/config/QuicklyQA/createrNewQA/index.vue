@@ -202,8 +202,12 @@
         ["yourselfStatusLast", "yourselfStatusAdd", "questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
       yourmethod(){  // 失去焦点
-       this.yourselfStatusLast();
-        this.yourselfStatusLast();
+
+        setTimeout(function () {
+          this.yourselfStatusLast();
+          this.yourselfStatusLast();
+        },300)
+
       // console.log(2222222222)
       },
 
