@@ -140,8 +140,19 @@
     created(){
       this.tableData = []
       this.total = 0
-      console.log('**',store.state.app.quickQuizRecordId)
+
       clearInterval(store.state.app.quickQuizRecordId)
+
+      const reloadArr = store.state.app.quickQuizRecordIdArr
+      console.log('**create',store.state.app.quickQuizRecordId,reloadArr)
+      if(reloadArr.length>0){
+        reloadArr.forEach(
+          (v,index) =>{
+            clearInterval(v);
+          }
+        )
+      }
+
       /*
       获取全部已发布的数据
       */
@@ -158,8 +169,8 @@
         }
       )
       /*
-          获取初始列表
-           */
+       获取初始列表
+       */
       const that = this
       this.loading = true
       _ask().then(
@@ -272,8 +283,9 @@
       _reload_ask(v = false){
         const that = this
         let id = setInterval(function () {
-          console.log('**id  1',id)
-          store.dispatch(REPLACE,{quickQuizRecordId: id}).then(
+          const arr = store.state.app.quickQuizRecordIdArr
+          arr.push(id)
+          store.dispatch(REPLACE,{quickQuizRecordId: id,quickQuizRecordIdArr:arr}).then(
             () =>{
               _ask().then(
                 () =>{
@@ -281,9 +293,19 @@
                   不存在发布
                   */
                   that.arr = []
-                  console.log('**id  2',id)
-                  console.log('**',store.state.app.quickQuizRecordId)
+                  console.log('** 不存在发布 id',id)
+                  console.log('** 不存在发布 arr',store.state.app.quickQuizRecordIdArr)
                   clearInterval(store.state.app.quickQuizRecordId);
+
+                  const reloadArr = store.state.app.quickQuizRecordIdArr
+                  if(reloadArr.length>0){
+                    reloadArr.forEach(
+                      (v,index) =>{
+                        clearInterval(v);
+                      }
+                    )
+                  }
+
                   store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
                     () =>{
                       if(v){
