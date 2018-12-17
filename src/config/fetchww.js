@@ -1,10 +1,20 @@
+/*
+*
+* Allen.Song
+* 2018/12/14
+*
+* */
+
+import base from "../host/baseUrl";
+import {TOKEN} from "../constants/constants";
+import {getCookies} from "../utils/cookie";
 
 
-import { baseUrl } from './env'
-
-export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
+export default async (url="", data = {}, type = 'GET') => {
   type = type.toUpperCase();
-  url = baseUrl + url;
+  const token = getCookies(TOKEN);
+  let thisDate;
+
 
   if (type == 'GET') {
     let dataStr = ''; //数据拼接字符串
@@ -18,16 +28,20 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
     }
   }
 
-  if (window.fetch && method == 'fetch') {
+
+  url = base.requestHost + url;
+
+  if (window.fetch ) {
+
+    let body = data;
     let requestConfig = {
-      credentials: 'include',
-      method: type,
+      method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type':'application/json'
+        "Content-Type": "application/json; charset=utf-8",
+        'Access-Token': token
       },
-      mode: "cors",
-      cache: "force-cache"
+      body,
+
     }
 
     if (type == 'POST') {
@@ -44,6 +58,12 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
       throw new Error(error)
     }
   } else {
+
+    /*
+    * 原生ajax
+    *
+    * */
+
     return new Promise((resolve, reject) => {
       let requestObj;
       if (window.XMLHttpRequest) {
@@ -58,21 +78,58 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
       }
 
       requestObj.open(type, url, true);
-      requestObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      requestObj.setRequestHeader("Content-type", "application/json; charset=utf-8");
+      requestObj.setRequestHeader("Access-Token", token);
+
       requestObj.send(sendData);
 
       requestObj.onreadystatechange = () => {
         if (requestObj.readyState == 4) {
-          if (requestObj.status == 1) {
+          if (requestObj.status == 200) {
             let obj = requestObj.response
+            if (typeof obj !== 'object') {
               obj = JSON.parse(obj);
-
+            }
             resolve(obj)
           } else {
             reject(requestObj)
           }
         }
       }
-    })
+    });
+
+
+/*
+* jquery ajax
+* */
+    // $.ajax({
+    //   url: url,
+    //   type: type,
+    //   headers: {
+    //     "Content-Type": "application/json;charset=utf-8",
+    //     'Access-Token': token
+    //   },
+    //   async: false,
+    //   dataType: 'json',
+    //   data: JSON.stringify(data),
+    // })
+    //   .done(function (res) {
+    //     thisDate = res;    //需要返回thisDate
+    //   })
+    //   .fail(function (err) {
+    //     console.log(err);
+    //   })
+    //   .always(function () {
+    //
+    //   });
+   //  return thisDate;
+
+
+
+
+
   }
-}
+};
+
+
+
