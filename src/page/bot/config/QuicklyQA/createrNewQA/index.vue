@@ -117,28 +117,21 @@
 
   import updateQA from "./updateQA";
   import {mapState ,mapGetters, mapActions} from 'vuex';
-
-
   import {TOKEN} from "../../../../../constants/constants";
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
-
-  import {participle } from "../../../../../api/getdata";  //  请求数据  测试接口
-
+  import {participle } from "../../../../../api/getdata";  //  异步请求
 
   export default {
-    name: "Allen-CreateNewQA",
+    name: "Allen.Song-CreateNewQA",
     data() {
       return {
         focusState:false, // 自动获取焦点
-
         loader: true,  // 提交状态
-
         addKey: "",
         keywords: [], // 选中的关键字
         keywordsOption: [], // 关键词
-
         PreviewImg: "", // 预览图片
         dialogVisible: false,
         addIcon: true,
@@ -148,7 +141,6 @@
         timer: "",
         checkboxDisabled: true,
         token: "",
-
         // 图片上传
         imgList: [],
         size: 0,
@@ -272,7 +264,7 @@
 
       },
 
-      getKeywords() {  //  第二步 将一句话分成多个词汇
+    async  getKeywords() {  //  第二步 将一句话分成多个词汇
 
         let that = this;
         const token = getCookies(TOKEN);
@@ -289,11 +281,11 @@
           "Question": this.Question
         }
 
-       let test =  participle(data);
-        console.log("test",test);
+       let test = await participle(data);
+        console.log("participle+++",test);
 
 
-
+        //  debugger;
 
         $.ajax({
           type: "POST",
