@@ -37,7 +37,7 @@
             <i class="el-icon-circle-plus"></i> <span>自定义</span>
           </div>
           <div class="yourselfInput" v-show="!yourselfStatus">
-            <el-input   v-model="addKey" id="focus"  ref="self" v-on:blur="yourmethod" >
+            <el-input v-model="addKey" id="focus" ref="self" v-on:blur="yourmethod">
             </el-input>
             <i class="clickBtn el-icon-circle-plus" @click="addKeywords()"></i>
           </div>
@@ -116,29 +116,22 @@
 <script>
 
   import updateQA from "./updateQA";
-  import {mapState ,mapGetters, mapActions} from 'vuex';
-
-
+  import {mapState, mapGetters, mapActions} from 'vuex';
   import {TOKEN} from "../../../../../constants/constants";
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
-
-  import {participle } from "../../../../../api/getdata";  //  请求数据  测试接口
-
+  import {participle} from "../../../../../api/getdata";  //  异步请求
 
   export default {
-    name: "Allen-CreateNewQA",
+    name: "Allen.Song-CreateNewQA",
     data() {
       return {
-        focusState:false, // 自动获取焦点
-
+        focusState: false, // 自动获取焦点
         loader: true,  // 提交状态
-
         addKey: "",
         keywords: [], // 选中的关键字
         keywordsOption: [], // 关键词
-
         PreviewImg: "", // 预览图片
         dialogVisible: false,
         addIcon: true,
@@ -148,7 +141,6 @@
         timer: "",
         checkboxDisabled: true,
         token: "",
-
         // 图片上传
         imgList: [],
         size: 0,
@@ -175,7 +167,6 @@
     },
 
     created() {
-
 
 
       this.init();  // 页面初始化
@@ -209,10 +200,14 @@
       ...mapActions(
         ["yourselfStatusLast", "yourselfStatusAdd", "questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
-      yourmethod(){  // 失去焦点
-       this.yourselfStatusLast();
-        this.yourselfStatusLast();
-      // console.log(2222222222)
+      yourmethod() {  // 失去焦点
+        let that = this;
+        setTimeout(function () {
+          that.yourselfStatusLast();
+          that.yourselfStatusLast();
+        }, 300)
+
+        // console.log(2222222222)
       },
 
       init() {
@@ -223,14 +218,14 @@
 
 
       },
-      selfShow(){
+      selfShow() {
         let that = this;
         this.yourselfStatusAdd();  // 自定义输入框显示
 
-       setTimeout(function () {
-         that.$refs['self'].focus();
-        // $("#focus").val("eeeeeeee")
-       },200)
+        setTimeout(function () {
+          that.$refs['self'].focus();
+          // $("#focus").val("eeeeeeee")
+        }, 200)
       },
 
       addKeywords() {
@@ -272,7 +267,7 @@
 
       },
 
-      getKeywords() {  //  第二步 将一句话分成多个词汇
+      async getKeywords() {  //  第二步 将一句话分成多个词汇
 
         let that = this;
         const token = getCookies(TOKEN);
@@ -289,11 +284,11 @@
           "Question": this.Question
         }
 
-       let test =  participle(data);
-        console.log("test",test);
+        let test = await participle(data);
+        console.log("participle+++", test);
 
 
-
+        //  debugger;
 
         $.ajax({
           type: "POST",
@@ -633,9 +628,6 @@
           i = Math.floor(Math.log(bytes) / Math.log(k));
         return (bytes / Math.pow(k, i)).toPrecision(3) + ' ' + sizes[i];
       },
-
-
-
 
 
     },
