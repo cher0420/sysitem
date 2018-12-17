@@ -1,5 +1,5 @@
 // import fetch from '../config/easyAjax';
-import fetch from '../config/fetchww';
+import fetch from '../config/fetch';
 /**
  *  api异步请求
  */

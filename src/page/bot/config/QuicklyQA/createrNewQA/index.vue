@@ -121,7 +121,7 @@
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
-  import {participle } from "../../../../../api/getdata2";  //  异步请求
+  import {participle } from "../../../../../api/getdata";  //  异步请求
 
   export default {
     name: "Allen.Song-CreateNewQA",
