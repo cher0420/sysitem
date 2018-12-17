@@ -14,6 +14,7 @@
   return fmt;
 }
 var adminApiUrl = host().api
+console.log( host())
 $(function () {
   var host = ""; //域名
   var cip = ""; //ip
