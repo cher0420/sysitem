@@ -202,8 +202,7 @@ const root = [{
       require(["../page/v2/index"], resolve),
   },
   {
-    path: '*',
-    name: 'Error',
+    path: "*",
     redirect: "/"
   }
 ]

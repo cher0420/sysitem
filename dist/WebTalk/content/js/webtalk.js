@@ -14,7 +14,7 @@
     return fmt;
 }
 
-var adminApiUrl = host().webTalkApi;
+var adminApiUrl = host().api;
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};

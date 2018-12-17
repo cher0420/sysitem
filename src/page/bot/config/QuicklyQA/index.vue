@@ -7,7 +7,7 @@
       <span v-if="!originDisabled">
         <el-button type="primary" v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;">选择</el-button>
         <span v-else class="p-absolute right-0">
-          <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="buttonStatus" type="primary" style="margin-right: 10px;" @click="train">测试</el-button><el-button type="primary" :disabled="buttonStatus" @click="publish">发布</el-button>
+          <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="tableDataCopy.length>0?false:true" type="primary" style="margin-right: 10px;" @click="train">测试</el-button><el-button type="primary" :disabled="tableDataCopy.length>0?false:true" @click="publish">发布</el-button>
         </span>
       </span>
     </section>
@@ -92,7 +92,7 @@
         @current-change="handleCurrentChange"
         class="pagination p-absolute"
         background
-        page-size="50"
+        :page-size="PageSize"
         layout="total, prev, pager, next"
         :total="total"
         :current-page.sync="PageIndex"
@@ -126,12 +126,10 @@
         keys:'',
         total:0,
         PageIndex:1,
+        PageSize:10,
         arr:[],
         showDel:false,
-        buttonStatus:true,
         reloadId:null,
-        hasPublishArr:[],
-        originArr:[],
         originDisabled:true,
         blankNew:false,
       }
@@ -195,8 +193,6 @@
               )
             }
           )
-
-
     },
     destroyed(){
       store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
@@ -462,7 +458,6 @@
           初始化数组状态
           */
           that.arr = []
-          that.hasPublishArr = []
           const params = {
             Keys:that.keys,
             PageIndex:that.PageIndex,
@@ -484,13 +479,11 @@
           */
           that.arr = []
           that.tableDataCopy = that.dataContainer.slice(0)
-          that.hasPublishArr = []
           that.tableData.forEach(
             (v,index) =>{
               switch (v.Status) {
                 case 5:
                   that.arr.push(v.ID)
-                  that.hasPublishArr.push(v.ID)
                   v.checkedStatus = true
                   break;
                 default:
@@ -498,7 +491,6 @@
               }
             }
           )
-          that.buttonStatus=that.arr.length <= 0
         }
       },
       search() {
@@ -544,6 +536,8 @@
             (res) => {
               this.tableData.splice(index,1)
               this.total--;
+              debugger;
+              this.PageIndex = this.total%this.PageSize === 0?this.PageIndex--:this.PageIndex
               store.dispatch(REPLACE,{mainLoading:false})
               this.$message({
                 type: 'success',
@@ -571,12 +565,7 @@
           选中时，arr添加ID，
          */
         if(v){
-          if(status == 5){
-            this.hasPublishArr.push(id)
-          }
-          // if(!this.dataContainer.includes(id)){
           this.tableDataCopy.push(id)
-          // }
           this.arr.push(id)
         }else{
           /*
@@ -589,10 +578,6 @@
           const index = this.tableDataCopy.indexOf(id);
           this.tableDataCopy.splice(index,1)
         }
-        /*
-          根据arr长度更改测试按钮状态
-         */
-        this.arr.length>0?this.buttonStatus = false:this.buttonStatus = true
       },
       train(){
         const that = this
@@ -608,6 +593,7 @@
             }
             that._reload_ask(false)
             that.blankNew = true
+          debugger;
             doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
               (res) =>{
               }
@@ -617,10 +603,12 @@
                   type:'error',
                   message:'操作失败',
                   duration:2000,
+                  onClose: () =>{
+                    store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
+                  }
                 })
               }
             )
-          // }
         }).catch(() => {
           that.$message({
             type: 'info',
