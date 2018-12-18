@@ -11,22 +11,24 @@
     </div>
     <div class="edit_textarea" v-html="Text.Answer">
     </div>
-    <div class="edit_textarea" v-if="Text.Answer.length == 0" style="color: #ff0000">
-      暂无添加
-    </div>
-    <div class="photoUpp">
+    <!--<div class="edit_textarea" v-if="Text.Answer.length == 0" style="color: #ff0000">-->
+      <!--暂无添加-->
+    <!--</div>-->
+    <div class="photoUpp" v-if="Image.length>0">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
       <!-- show photo -->
       <div class="upload_warp_img" v-if="Image.length!=0">
 
         <div class="upload_warp_img_div cc222" @click="showIph(item)" v-for="(item,index) of Image"
-             v-if="item.Answer != '' ">
+             v-if="item.Answer != '' " >
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text">
               <!-- 放大图片 -->
               <i class="el-icon-zoom-in" @click="OldPhotoMagnify(index)"></i>
             </div>
           </div>
+          <!--<embed :src="item.Answer" >-->
+          <!--<iframe :src="item.Answer" frameborder="0"></iframe>-->
           <img :src="item.Answer">
         </div>
       </div>

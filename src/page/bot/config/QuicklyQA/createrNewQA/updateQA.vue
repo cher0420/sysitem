@@ -1,5 +1,5 @@
 <template>
-  <div class="mainStyle">
+  <div class="mainStyle"  v-loading="loadingEdit">
     <div class="oldQA">
       <div class="existingQues">
         <span>已有问题</span>
@@ -138,6 +138,7 @@
     name: "editdateQA",
     data() {
       return {
+        loadingEdit:false,
         loader: true, // 更新提交
 
         addIcon: true, // 图片添加功能 + 是否显示
@@ -239,6 +240,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.loadingEdit = true;
           this.loader = false;
           const token = getCookies(TOKEN);
           let data = {};
@@ -316,6 +318,19 @@
           "Email": Email,
           "FullName": FullName
         };
+
+        if(that.newText.Answer == "" && that.Image.length == 0){
+          console.log("答案不能为空")
+          that.$message({
+            message: '答案不能为空',
+            type: 'warning'
+          });
+          that.loadingEdit = false;
+
+          that.loader = true;
+          return false
+        }
+
         $.ajax({
           type: "POST",
           headers: {
@@ -335,6 +350,7 @@
                 message: '更新新问答成功',
                 type: 'success'
               });
+              that.loadingEdit = false;
               setTimeout(function () {
                 const recordId = that.$route.query.recordId
                 that.$router.push({
@@ -350,6 +366,7 @@
                 message: '更新新问答失败',
                 type: 'success'
               });
+              that.loadingEdit = false;
             }
 
           }
@@ -378,7 +395,7 @@
 
         let result = await UploadAndDeleteAsync(data)
         console.log("图片从数据库删除", result)
-        debugger;
+       // debugger;
 
       },
 

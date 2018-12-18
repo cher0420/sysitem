@@ -121,7 +121,7 @@ export const MENUS=[
         }
       ]
   },
-]
+];
 
 export const SECONDMENUS = [
   {
@@ -194,7 +194,7 @@ export const SECONDMENUS = [
       }
     ]
   }
-]
+];
 export const STR = {
   authority:'权限管理',
   custom:'定制服务',

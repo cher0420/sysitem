@@ -1,5 +1,7 @@
 <template>
-  <div class="yoy-main">
+  <div class="yoy-main"   v-loading="loadingEdit"
+
+      >
     <div class="keywordTip">
       关键词
     </div>
@@ -98,6 +100,7 @@
     name: "Allen.Song-EditQA",
     data() {
       return {
+        loadingEdit:false,
         subInfo: true,
 
         addIcon: true, // 图片添加功能 + 是否显示
@@ -205,14 +208,14 @@
 
       },
       getPhotoUrl() { // 上传图片到服务器并拿回地址
-
-
+           let thatt = this;
+       // this.loadingEdit = true;
         this.$confirm('是否确认修改此文件?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-
+          thatt.loadingEdit = true;
           this.subInfo = false;
           const token = getCookies(TOKEN);
           let data = {};
@@ -289,6 +292,18 @@
           "Email": Email,
           "FullName": FullName
         };
+        if(that.Text.Answer == "" && that.ImageNew.length == 0){
+          console.log("答案不能为空")
+          that.$message({
+            message: '答案不能为空',
+            type: 'warning'
+          });
+
+          that.subInfo = true;
+          that.loadingEdit = false;
+          return false
+        }
+        // this.loadingEdit = true;
         $.ajax({
           type: "POST",
           headers: {
@@ -300,12 +315,13 @@
           success: function (msg) {
             if (msg.Status == "1") {
               that.delPhoto();// 删除数据库中对应的图片
-              this.subInfo = true;
+              that.subInfo = true;
 
               that.$message({
                 message: '更新新问答成功',
                 type: 'success'
               });
+              that.loadingEdit = false;
               setTimeout(function () {
                 const recordId = that.$route.query.recordId
                 that.$router.push({
@@ -317,6 +333,7 @@
               }, 1500)
 
             } else {
+              that.loadingEdit = false;
               that.$message({
                 message: '更新新问答失败',
                 type: 'success'

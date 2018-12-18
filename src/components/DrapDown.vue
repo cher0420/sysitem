@@ -23,21 +23,21 @@
   import {getList} from "../page/bot/service/requestMethod";
 
   export default {
-    data(){
-      return{
-        title:'状态'
+    data() {
+      return {
+        title: '状态'
       }
     },
     props: {
-      tableData:{
+      tableData: {
         type: Array,
         default: [],
       },
-      total:{
+      total: {
         type: Number,
-        default:0,
+        default: 0,
       },
-      keyWords:{
+      keyWords: {
         type: String
       },
       filterStatus: {
@@ -48,8 +48,8 @@
         type: Array,
         default: []
       },
-      PageIndex:{
-        type:Number,
+      PageIndex: {
+        type: Number,
         async: true,
       }
     },
@@ -57,21 +57,21 @@
     methods: {
       handleCommand(command) {
         const that = this
-        store.dispatch(REPLACE,{searchStatus:command-0,PageIndex:1}).then(
-          () =>{
+        store.dispatch(REPLACE, {searchStatus: command - 0, PageIndex: 1}).then(
+          () => {
             const searchStatus = store.state.app.searchStatus
             const description = store.state.app.description
             that.title = BOTLIST.status[command]
-            const options={
-              body:{
+            const options = {
+              body: {
                 description,
                 searchStatus,
               }
             }
 
-            getList(URL.requestHost + BOT,options,ITEMKEY).then(
-              ()=>{
-                store.dispatch(REPLACE,{ PageIndex: 1 })
+            getList(URL.requestHost + BOT, options, ITEMKEY).then(
+              () => {
+                store.dispatch(REPLACE, {PageIndex: 1})
               }
             )
           }
@@ -83,9 +83,10 @@
 
 <style lang="scss" scoped>
   @import '../style/index';
-  .yoy-main .el-table .cell .yoy-dropDown{
+
+  .yoy-main .el-table .cell .yoy-dropDown {
     height: 28px;
     line-height: 28px;
-    color:#333;
+    color: #333;
   }
 </style>

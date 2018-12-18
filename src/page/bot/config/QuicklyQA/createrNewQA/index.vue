@@ -1,12 +1,12 @@
 <template>
-  <div class="yoy-main cc creatNewQA">
-    <div v-if="newDataDis">
+  <div class="yoy-main cc creatNewQA" >
+    <div v-if="newDataDis"  v-loading="loadingEdit">
       <div class="addQuestion">
         第一步 ： 添加问题
       </div>
       <div v-if="questionDis">
         <div class="addContent">
-          <el-input ref="input" v-model="Question" placeholder="例如:2018年年会举办地点"></el-input>
+          <el-input ref="input" v-model="Question" placeholder="例如:2018年年会举办地点"  @keyup.enter.native="getKeywords"></el-input>
         </div>
         <div class="questionTit">
           请用最简洁的方式描述你的问题
@@ -37,13 +37,13 @@
             <i class="el-icon-circle-plus"></i> <span>自定义</span>
           </div>
           <div class="yourselfInput" v-show="!yourselfStatus">
-            <el-input v-model="addKey" id="focus" ref="self" v-on:blur="yourmethod">
+            <el-input v-model="addKey" id="focus" ref="self" v-on:blur="yourmethod" @keyup.enter.native="addKeywords()">
             </el-input>
             <i class="clickBtn el-icon-circle-plus" @click="addKeywords()"></i>
           </div>
 
           <div class="nextStepp mt30">
-            <el-button type="primary" plain size="mini" @click="questionLast">上一步</el-button>
+            <el-button type="primary" plain size="mini" @click="stepOne()">上一步</el-button>
             <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
               下一步
             </el-button>
@@ -127,6 +127,7 @@
     name: "Allen.Song-CreateNewQA",
     data() {
       return {
+        loadingEdit:false,
         focusState: false, // 自动获取焦点
         loader: true,  // 提交状态
         addKey: "",
@@ -200,6 +201,10 @@
       ...mapActions(
         ["yourselfStatusLast", "yourselfStatusAdd", "questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
+      stepOne(){ // 上一步
+        this.addKey = "";
+        this.questionLast();
+      },
       yourmethod() {  // 失去焦点
         let that = this;
         setTimeout(function () {
@@ -229,9 +234,10 @@
       },
 
       addKeywords() {
-
-        //   console.log("+++++++++++");
         let that = this;
+        that.addKey =  that.addKey.trim();
+          //   console.log("+++++++++++");
+
         if (that.keywords.length < 4) {
           if (that.addKey.trim() == "") {
             that.$message({
@@ -353,6 +359,8 @@
         return temp;
       },
       getCheckKeywords() {  // 第三步 	根据关键字确定 创建答案 或 更新答案
+
+
         let that = this;
         const token = getCookies(TOKEN);
         let recordId = JSON.parse(sessionStorage.getItem('recordId'));
@@ -423,6 +431,19 @@
           "Email": Email,
           "FullName": FullName
         };
+
+        if(that.textarea == "" && that.Image.length == 0){
+          console.log("答案不能为空")
+          this.loadingEdit = false;
+          that.$message({
+            message: '答案不能为空',
+            type: 'warning'
+          });
+
+          that.loader = true;
+          return false
+        }
+
         $.ajax({
           type: "POST",
           headers: {
@@ -437,7 +458,7 @@
 
             //  console.log("存储答案", msg)
             if (msg.Status == "1") {
-
+             this.loadingEdit = false;
               that.$message({
                 message: '创建新问答成功',
                 type: 'success'
@@ -481,7 +502,7 @@
 
       },
       getPhotoUrl() { // 上传图片到服务器并拿回地址
-
+        this.loadingEdit = true;
         this.loader = false;
         const token = getCookies(TOKEN);
         let data = {};
@@ -489,11 +510,20 @@
 
 
         let Files = this.imgList.map(product => {
+          if(product.file.type.slice(6) ==    "svg+xml"){
+            return {
+              "Context": product.file.src.slice(26),
+              "Suffix":"svg",
+            };
+          }
           return {
             "Context": product.file.src.slice(22),
             "Suffix": product.file.type.slice(6),
           };
+
+
         });
+        // debugger;
         this.imgListNew = Files;
         //   console.log("change", this.imgListNew)
         let recordId = JSON.parse(sessionStorage.getItem('recordId'));
