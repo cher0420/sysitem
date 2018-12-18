@@ -33,6 +33,8 @@ Vue.use(Vuex)
       SkillNo:'',
       quickQuizRecordId:null,
       quickQuizRecordIdArr:[],
+      id:null,
+      doingStatus: false,
 
       mainLoading:false,
       loadingText:null,

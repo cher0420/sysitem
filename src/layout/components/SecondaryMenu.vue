@@ -88,10 +88,15 @@
               }else{
                 url = `${urlfir}/${urlSec}/${index}`
               }
+
               const pathObj={
-                query:this.$route.query,
+                query:{
+                  recordId:this.$route.query.recordId,
+                  name:this.$route.query.name
+                },
                 path:url
               }
+              console.log('====',pathObj)
               this.$router.push(
                 pathObj
               )
