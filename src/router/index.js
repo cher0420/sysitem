@@ -90,6 +90,12 @@ const arr = [
         name: 'config',
       },
       {
+        path:'config/config',
+        component: resolve =>
+          require(["../page/bot/config/config/index"], resolve),
+        name: 'config',
+      },
+      {
         path:'config/web',
         component: resolve =>
           require(["../page/bot/config/web/index"], resolve),
@@ -202,7 +208,8 @@ const root = [{
       require(["../page/v2/index"], resolve),
   },
   {
-    path: "*",
+    path: '*',
+    name: 'Error',
     redirect: "/"
   }
 ]

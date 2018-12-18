@@ -132,6 +132,7 @@
         reloadId:null,
         originDisabled:true,
         blankNew:false,
+        id:null,
       }
     },
     /*
@@ -140,18 +141,20 @@
     created(){
       this.tableData = []
       this.total = 0
-
-      clearInterval(store.state.app.quickQuizRecordId)
-
-      const reloadArr = store.state.app.quickQuizRecordIdArr
-      console.log('**create',store.state.app.quickQuizRecordId,reloadArr)
-      if(reloadArr.length>0){
-        reloadArr.forEach(
-          (v,index) =>{
-            clearInterval(v);
-          }
-        )
-      }
+      const status = JSON.parse(sessionStorage.getItem('doingStatus'))
+      // if(!status){
+        store.dispatch(REPLACE,{id:this.$route.query.recordId})
+      // }
+      console.log('created',status,store.state.app.id)
+      // clearInterval(store.state.app.quickQuizRecordId)
+      // const reloadArr = store.state.app.quickQuizRecordIdArr
+      // if(reloadArr.length>0){
+      //   reloadArr.forEach(
+      //     (v,index) =>{
+      //       clearInterval(v);
+      //     }
+      //   )
+      // }
 
       /*
       获取全部已发布的数据
@@ -175,6 +178,8 @@
       this.loading = true
       _ask().then(
         (res) => {
+          sessionStorage.setItem('doingStatus','false')
+          // store.dispatch(REPLACE,{id:that.$route.query.recordId})
           getList().then(
             (res) => {
               /*
@@ -193,13 +198,13 @@
             }
       ).catch(
         () =>{
-              store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
-                () =>{
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:null}).then(
+            () =>{
                   that.loading = false
                   that._reload_ask(true)
-                }
-              )
             }
+          )
+        }
       )
     },
     destroyed(){
@@ -251,10 +256,11 @@
         })
       },
       go(){
-        const id = this.$route.query.recordId?this.$route.query.recordId:JSON.parse(sessionStorage.getItem('recordId'))
+        const id = store.state.app.id
+        const BotConfigId = id?id:this.$route.query.recordId
         const host = URL.baseUrl
-        const url = `${host}/WebTalk/validaiml.html?id=${id}`
-        window.open(url)
+          const url = `${host}/WebTalk/validaiml.html?id=${BotConfigId}`
+          window.open(url)
       },
       handleCurrentChange(v) {
         this.PageIndex = v
@@ -293,8 +299,9 @@
                   不存在发布
                   */
                   that.arr = []
-                  console.log('** 不存在发布 id',id)
-                  console.log('** 不存在发布 arr',store.state.app.quickQuizRecordIdArr)
+
+                  sessionStorage.setItem('doingStatus','false')//设置没有进行测试或发布的线程了
+
                   clearInterval(store.state.app.quickQuizRecordId);
 
                   const reloadArr = store.state.app.quickQuizRecordIdArr
@@ -305,8 +312,7 @@
                       }
                     )
                   }
-
-                  store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
+                  store.dispatch(REPLACE,{mainLoading:false,loadingText:null,quickQuizRecordIdArr:[]}).then(
                     () =>{
                       if(v){
                         getList().then(
@@ -351,11 +357,11 @@
                             }
                           }
                         )
-                        that.$message({
-                          type:'success',
-                          message:'操作成功',
-                          duration:2000,
-                        })
+                        // that.$message({
+                        //   type:'success',
+                        //   message:'操作成功',
+                        //   duration:2000,
+                        // })
                       }
                     }
                   )
@@ -370,6 +376,7 @@
                         duration:2000,
                       }
                     )
+                    sessionStorage.setItem('doingStatus','false')
                     clearInterval(that.reloadId)
                     const params = {
                       Keys:that.keys,
@@ -401,14 +408,15 @@
                     )
                   }else if(res.Data === 1){
                     that.blankNew = true
+                    store.commit(REPLACE,{loadingText:'正在培训中，请稍后'})
                   }else{
                     that.blankNew = false
+                    store.commit(REPLACE,{loadingText:'正在发布中，请稍后'})
                   }
                 }
               )
             }
           )
-
         },800)
       },
       complateGetList(res){
@@ -497,7 +505,6 @@
           */
           that.arr = []
           that.tableDataCopy = that.dataContainer.slice(0)
-          console.log('9999',that.tableDataCopy)
           that.tableData.forEach(
             (v,index) =>{
               switch (v.Status) {
@@ -620,8 +627,15 @@
               Ids: that.tableDataCopy,
               Action:'train',
             }
-            that._reload_ask(false)
-            that.blankNew = true
+
+            that.blankNewObj = true
+            sessionStorage.setItem('doingStatus','true')
+            store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
+              () =>{
+                that._reload_ask(false)
+              }
+            )
+
             doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
               (res) =>{
               }
@@ -657,10 +671,18 @@
                 Ids: that.tableDataCopy,
                 Action:'publish',
               }
+
+              that.blankNew = false
+              sessionStorage.setItem('doingStatus','true')
+              store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
+                () =>{
+                  that._reload_ask()
+                }
+              )
+
               doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
                 (res) =>{
-                  that.blankNew = false
-                  that._reload_ask()
+
                 }
               ).catch(
                 () =>{

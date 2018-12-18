@@ -114,7 +114,7 @@ export const del = (params) => {
 
 export const _ask = () => {
   const token = getCookies(TOKEN)
-  const id = JSON.parse(sessionStorage.getItem('recordId'))
+  const id = store.state.app.id
   const BotConfigId = id?id:route.currentRoute.query.recordId
   const params = {
     headers:{
