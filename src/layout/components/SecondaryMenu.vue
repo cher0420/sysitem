@@ -63,7 +63,6 @@
       methods:{
         handleOpen(index,indexPath){
           this.$refs.test['aria-expanded'] = 'false'
-          console.log(this.$refs.test);
         },
         handleClose(index,indexPath){
 
@@ -93,7 +92,6 @@
                 query:this.$route.query,
                 path:url
               }
-             // console.log("路由",pathObj)
               this.$router.push(
                 pathObj
               )

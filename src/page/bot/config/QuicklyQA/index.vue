@@ -126,7 +126,7 @@
         keys:'',
         total:0,
         PageIndex:1,
-        PageSize:10,
+        PageSize:50,
         arr:[],
         showDel:false,
         reloadId:null,
@@ -138,53 +138,61 @@
     生命周期函数
      */
     created(){
-      clearInterval(store.state.app.quickQuizRecordId)
       this.tableData = []
       this.total = 0
-          /*
-          获取初始列表
-           */
-          const that = this
-          this.loading = true
-          _ask().then(
+
+      clearInterval(store.state.app.quickQuizRecordId)
+
+      const reloadArr = store.state.app.quickQuizRecordIdArr
+      console.log('**create',store.state.app.quickQuizRecordId,reloadArr)
+      if(reloadArr.length>0){
+        reloadArr.forEach(
+          (v,index) =>{
+            clearInterval(v);
+          }
+        )
+      }
+
+      /*
+      获取全部已发布的数据
+      */
+      const params = {PageSize:0, Status:1}
+      getList(params).then(
+        (res) =>{
+          if(res['Data'].length>0){
+            res['Data'].forEach(
+              (v,index) =>{
+                      that.dataContainer.push(v.ID)
+                    }
+            )
+            that.tableDataCopy = that.dataContainer.slice(0)}
+        }
+      )
+      /*
+       获取初始列表
+       */
+      const that = this
+      this.loading = true
+      _ask().then(
+        (res) => {
+          getList().then(
             (res) => {
               /*
-              获取全部已发布的数据
+               自定义列表内容,没有在发布中的内容
               */
-              const params = {
-                PageSize:0,
-                Status:1
-              }
-              getList(params).then(
-                (res) =>{
-                  if(res['Data'].length>0){
-                    res['Data'].forEach(
-                      (v,index) =>{
-                        that.dataContainer.push(v.ID)
-                      }
-                    )
-                    that.tableDataCopy = that.dataContainer.slice(0)
-                  }
-                }
-              )
-              getList().then(
-                (res) => {
-                  /*
-                  自定义列表内容,没有在发布中的内容
-                   */
-                  that.complateGetList(res)
-                }
-              ).catch(
-                (err) =>{
-                  /*
-                  抛出错误
-                   */
-                  that.loading = false
+            that.complateGetList(res)
+           }
+          ).catch(
+            (err) =>{
+              /*
+               抛出错误
+              */
+              that.loading = false
                 }
               )
             }
-          ).catch(
-            () =>{
+      ).catch(
+        () =>{
               store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训或发布中，请稍后'}).then(
                 () =>{
                   that.loading = false
@@ -192,12 +200,10 @@
                 }
               )
             }
-          )
+      )
     },
     destroyed(){
       store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
-      const id = store.state.app.quickQuizRecordId
-      clearInterval(id);
     },
     methods: {
       ...mapActions(
@@ -255,7 +261,6 @@
             const options = {
 
                 PageIndex: this.PageIndex,
-                description: this.keyWords,
                 Status: this.status,
                 Keys:this.keys
 
@@ -278,8 +283,9 @@
       _reload_ask(v = false){
         const that = this
         let id = setInterval(function () {
-          console.log(store.state.app.quickQuizRecordId)
-          store.dispatch(REPLACE,{quickQuizRecordId: id}).then(
+          const arr = store.state.app.quickQuizRecordIdArr
+          arr.push(id)
+          store.dispatch(REPLACE,{quickQuizRecordId: id,quickQuizRecordIdArr:arr}).then(
             () =>{
               _ask().then(
                 () =>{
@@ -287,7 +293,19 @@
                   不存在发布
                   */
                   that.arr = []
+                  console.log('** 不存在发布 id',id)
+                  console.log('** 不存在发布 arr',store.state.app.quickQuizRecordIdArr)
                   clearInterval(store.state.app.quickQuizRecordId);
+
+                  const reloadArr = store.state.app.quickQuizRecordIdArr
+                  if(reloadArr.length>0){
+                    reloadArr.forEach(
+                      (v,index) =>{
+                        clearInterval(v);
+                      }
+                    )
+                  }
+
                   store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
                     () =>{
                       if(v){
@@ -391,7 +409,7 @@
             }
           )
 
-        },1000)
+        },800)
       },
       complateGetList(res){
         this.tableData= res['Data']
@@ -479,6 +497,7 @@
           */
           that.arr = []
           that.tableDataCopy = that.dataContainer.slice(0)
+          console.log('9999',that.tableDataCopy)
           that.tableData.forEach(
             (v,index) =>{
               switch (v.Status) {
@@ -520,6 +539,7 @@
         )
       },
       handDel(v,index,status) {
+        const that = this
         if(status == 5){
           return;
         }
@@ -536,8 +556,17 @@
             (res) => {
               this.tableData.splice(index,1)
               this.total--;
-              debugger;
-              this.PageIndex = this.total%this.PageSize === 0?this.PageIndex--:this.PageIndex
+              if(this.total%this.PageSize === 0){
+                this.PageIndex--;
+                const params = {
+                  PageIndex: this.PageIndex,
+                  Status: this.status,
+                  Keys:this.keys
+                }
+                getList(params).then((res) =>{
+                  that.complateGetList(res)
+                })
+              }
               store.dispatch(REPLACE,{mainLoading:false})
               this.$message({
                 type: 'success',
@@ -593,7 +622,6 @@
             }
             that._reload_ask(false)
             that.blankNew = true
-          debugger;
             doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
               (res) =>{
               }

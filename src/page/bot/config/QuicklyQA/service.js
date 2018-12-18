@@ -23,7 +23,7 @@ export const getList  = (params) =>{
 
   const body = {
     BotConfigId,
-    PageSize:10,
+    PageSize:50,
     PageIndex:1,
     Keys:null,
     Status:null,
@@ -127,24 +127,17 @@ export const _ask = () => {
     (resolve,reject) => {
       request(URL.requestHost+QUERYSTATUS,params).then(
         (res) =>{
-          if(res.Data){
-            //正在发布或测试
-            //0:正常 1:培训中 2:发布中 3:发布或者培训失败}
-            reject(res)
-            // resolve (res)
-          }else{
+          if(res.Data === 0){
             //不存在培训中或者发布中的数据
+            //0:正常 1:培训中 2:发布中 3:发布或者培训失败}
             resolve (res)
-            // reject(res)
+          }else {
+            //正在发布或测试
+            reject(res)
           }
         }
       ).catch(
-        // () =>{
-        //     const id = BotConfigId
-        //     const host = 'https://'+window.location.host
-        //     const url = `${host}/WebTalk/Index.html?id=${id}`
-        //     window.open(url)
-        // }
+        err=>err
       )
     }
   )

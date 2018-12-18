@@ -120,7 +120,7 @@ $(function () {
     function getBotConfig(callback){
         $.post(adminApiUrl + "/Tenant/GetBotConfig", { BotConfigRecordId: botObject.BotConfigId }, function (result) {
             if (result != undefined && result != null) {
-                if (result.Status == 1) {
+                if (result.Status == 1 && result.BotConfig.InvokeAPIVersion) {
                     invokeAPIVersion = result.BotConfig.InvokeAPIVersion;
                 }
 
