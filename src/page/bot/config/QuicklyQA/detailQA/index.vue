@@ -11,6 +11,9 @@
     </div>
     <div class="edit_textarea" v-html="Text.Answer">
     </div>
+    <div class="edit_textarea" v-if="Text.Answer.length == 0">
+      暂无添加
+    </div>
     <div class="photoUpp">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
       <!-- show photo -->
@@ -393,6 +396,7 @@
     padding: 20px 40px;
     margin-top: 30px;
     box-sizing: border-box;
+    min-height: 124px;
   }
 
   .upload_warp_img_div_text {
