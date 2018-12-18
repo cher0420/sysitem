@@ -11,7 +11,7 @@
     </div>
     <div class="edit_textarea" v-html="Text.Answer">
     </div>
-    <div class="edit_textarea" v-if="Text.Answer.length == 0">
+    <div class="edit_textarea" v-if="Text.Answer.length == 0" style="color: #ff0000">
       暂无添加
     </div>
     <div class="photoUpp">
