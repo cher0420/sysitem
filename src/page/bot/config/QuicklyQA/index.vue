@@ -147,14 +147,14 @@
       // }
       console.log('created',status,store.state.app.id)
       clearInterval(store.state.app.quickQuizRecordId)
-      const reloadArr = store.state.app.quickQuizRecordIdArr
-      if(reloadArr.length>0){
-        reloadArr.forEach(
-          (v,index) =>{
-            clearInterval(v);
-          }
-        )
-      }
+      // const reloadArr = store.state.app.quickQuizRecordIdArr
+      // if(reloadArr.length>0){
+      //   reloadArr.forEach(
+      //     (v,index) =>{
+      //       clearInterval(v);
+      //     }
+      //   )
+      // }
 
       /*
       获取全部已发布的数据
