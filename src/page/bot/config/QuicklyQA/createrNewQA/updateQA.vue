@@ -132,10 +132,10 @@
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index";
-
+  import {UploadAndDeleteAsync} from "../../../../../api/getdata";  //  异步请求
 
   export default {
-    name: "Allen-editdateQA",
+    name: "editdateQA",
     data() {
       return {
         loader: true, // 更新提交
@@ -165,7 +165,7 @@
         },
 
         DeleteIds: [], // 要删除的图片
-
+        DeleteAnswers:[],
 
       }
     },
@@ -203,7 +203,9 @@
         });
 
         this.DeleteIds = DeleteIdsRec
-
+         this.DeleteAnswers = this.Image.map(function (item) {
+           return item.Answer;
+         });
       },
 
       alterKeyWords() {
@@ -255,8 +257,9 @@
               "Suffix": product.file.type.slice(6),
             };
           });
+          let recordId = JSON.parse(sessionStorage.getItem('recordId'));
           data = {
-            "Id": "",
+            "Id": recordId,
             "Command": "upload",
             "Files": Files,
           };
@@ -327,6 +330,7 @@
             // console.log("存储答案", msg)
             if (msg.Status == "1") {
 
+              that.delPhoto();// 删除已上传图片
               that.$message({
                 message: '更新新问答成功',
                 type: 'success'
@@ -350,6 +354,31 @@
 
           }
         })
+
+      },
+
+      async delPhoto() {
+
+        let files = this.DeleteAnswers.map(function (item) {
+          let index = item.lastIndexOf(".");
+          let Suffix = item.substring(index + 1)
+          return {
+            "Context": item,
+            "Suffix": Suffix
+
+          }
+        })
+        let recordId = JSON.parse(sessionStorage.getItem('recordId'));
+        let data = {
+          "Id": recordId,
+          "Command": "delete",
+          "Files": files,
+
+        };
+
+        let result = await UploadAndDeleteAsync(data)
+        console.log("图片从数据库删除", result)
+        debugger;
 
       },
 

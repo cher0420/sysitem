@@ -121,7 +121,7 @@
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
-  import {participle} from "../../../../../api/getdata";  //  异步请求
+  import {participle} from "../../../../../api/getdata";  // 测试用 异步请求
 
   export default {
     name: "Allen.Song-CreateNewQA",
@@ -240,7 +240,7 @@
             });
             return false;
           }
-          if (that.keywordsOption.indexOf(that.addKey) != "-1") {
+          if (that.keywordsOption.indexOf(that.addKey.trim()) != "-1") {
             that.$message({
               message: '不可以重复添加关键词',
               type: 'warning'
@@ -282,10 +282,16 @@
 
         let data = {
           "Question": this.Question
-        }
+        };
 
-        let test = await participle(data);
-        console.log("participle+++", test);
+
+        try {
+          let test = await participle(data); // 测试
+          console.log("participle+++", test);
+
+        } catch (err) {
+          console.log(err)
+        }
 
 
         //  debugger;
@@ -490,12 +496,15 @@
         });
         this.imgListNew = Files;
         //   console.log("change", this.imgListNew)
-
+        let recordId = JSON.parse(sessionStorage.getItem('recordId'));
         data = {
-          "Id": "",
+          "Id": recordId,
           "Command": "upload",
           "Files": Files,
         }
+
+
+       // debugger;
 
         $.ajax({
           type: "POST",

@@ -90,11 +90,12 @@
   import {TOKEN} from "../../../../../constants/constants";
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
-  import store from "../../../../../store/index"
+  import store from "../../../../../store/index";
+  import {UploadAndDeleteAsync} from "../../../../../api/getdata";  //  异步请求
 
 
   export default {
-    name: "Allen-EditQA",
+    name: "Allen.Song-EditQA",
     data() {
       return {
         subInfo: true,
@@ -125,7 +126,7 @@
         ImageNew: [],// 要上传的图片列表
 
         DeleteIds: [], // 删除图片id
-
+        DeleteAnswers: [],
 
       }
     },
@@ -168,7 +169,7 @@
           data: JSON.stringify(data),
           success: function (msg) {
 
-            //    console.log("根据关键字获取答案", msg)
+            console.log("根据关键字获取答案", msg)
 
             if (msg.Status == "1") {
               // 修改答案
@@ -225,9 +226,9 @@
           });
           this.imgListNew = Files;
           //  console.log("change", this.imgListNew)
-
+          let recordId = JSON.parse(sessionStorage.getItem('recordId'));
           data = {
-            "Id": "",
+            "Id": recordId,
             "Command": "upload",
             "Files": Files,
           }
@@ -297,9 +298,8 @@
           url: base.requestHost + "/api/QuickQA/StoreQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-
             if (msg.Status == "1") {
-
+              that.delPhoto();// 删除数据库中对应的图片
               this.subInfo = true;
 
               that.$message({
@@ -327,6 +327,29 @@
         })
 
       },
+      async delPhoto() {
+
+        let files = this.DeleteAnswers.map(function (item) {
+          let index = item.lastIndexOf(".");
+          let Suffix = item.substring(index + 1)
+          return {
+            "Context": item,
+            "Suffix": Suffix
+
+          }
+        })
+        let recordId = JSON.parse(sessionStorage.getItem('recordId'));
+        let data = {
+          "Id": recordId,
+          "Command": "delete",
+          "Files": files,
+
+        };
+        let result = await UploadAndDeleteAsync(data)
+        console.log("图片从数据库删除", result)
+
+      },
+
 
       fileList(fileList) {
         let files = fileList.files;
@@ -407,10 +430,12 @@
       fileDel(index) {
         this.size = this.size - this.imgList[index].file.size;//总大小
         this.imgList.splice(index, 1);
+
       },
       OldFileDel(index) {
         // console.log(this.Image[index]);
         this.DeleteIds.push(this.Image[index].ID); // 删除图片的id
+        this.DeleteAnswers.push(this.Image[index].Answer); // 删除图片的地址
         //  console.log( this.DeleteIds)
         this.Image.splice(index, 1);
 
@@ -639,7 +664,8 @@
     box-sizing: border-box;
     font-size: 14px;
   }
-  .edit_textarea textarea:hover{
+
+  .edit_textarea textarea:hover {
     border: 1px solid #409eff;
   }
 </style>
