@@ -29,20 +29,22 @@
 
     {{/* 当有二级面包屑时，采用二级面包屑*/}}
     <!--<el-breadcrumb separator-class="el-icon-arrow-right" class="yoy-title box-sizing border-bottom text-title" v-if="navIndexSecond">-->
-      <!--<el-breadcrumb-item class="align-middle">-->
-        <!--<span class="align-middle dis-i-b line"></span>-->
-        <!--<span @click="back" class="backHover">-->
-          <!--{{navIndex}}-->
-        <!--</span>-->
-      <!--</el-breadcrumb-item>-->
-      <!--<el-breadcrumb-item class="align-middle">-->
-        <!--{{navIndexSecond}}-->
-      <!--</el-breadcrumb-item>-->
+    <!--<el-breadcrumb-item class="align-middle">-->
+    <!--<span class="align-middle dis-i-b line"></span>-->
+    <!--<span @click="back" class="backHover">-->
+    <!--{{navIndex}}-->
+    <!--</span>-->
+    <!--</el-breadcrumb-item>-->
+    <!--<el-breadcrumb-item class="align-middle">-->
+    <!--{{navIndexSecond}}-->
+    <!--</el-breadcrumb-item>-->
     <!--</el-breadcrumb>-->
     {{/* title部分 */}}
     <section class="yoy-title box-sizing border-bottom text-title">
       <span class="align-middle dis-i-b line"></span>
-      <span class="align-middle">
+      <span class="align-middle dis-i-b" style="width: 98%;overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap">
         {{navIndex}}
       </span>
     </section>
@@ -172,6 +174,14 @@
       line-height: $title-height;
       padding-left: 0;
     }
+  }
+  .text-overflow-hidden{
+    display: inline-block;
+    width: 400px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    height: 100%;
   }
 
 </style>
