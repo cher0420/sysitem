@@ -539,9 +539,21 @@
       },
       search() {
         const that = this
-        this.tableData = []
+
         this.loading = true
         this.originDisabled = true
+        const arr = ['<',">","%",';',"/","?"]
+        const index = arr.indexOf(this.keys)
+        if(index>-1){
+          this.$message({
+            type:'error',
+            message:'请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?等',
+            duration:2000,
+          })
+          that.loading = false
+          return
+        }
+        this.tableData = []
         const Keys = {Keys:this.keys}
         getList(Keys).then(
           (res) => {
