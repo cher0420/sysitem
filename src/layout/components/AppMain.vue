@@ -58,22 +58,6 @@
     background-color: $primary-color;
     margin-right: 6px;
   }
-
-  .yoy-header-container{
-    /*padding-top: 48px;*/
-  }
-  .yoy-bread .el-breadcrumb{
-    height: $bread-height;
-    line-height: $bread-height;
-    padding-left: 40px;
-    padding-right: 40px;
-  }
-  .yoy-title{
-    height: $title-height;
-    line-height: $title-height;
-    padding-top: 10px;
-    padding-right: 40px;
-  }
   .yoy-main{
     padding:0 40px 0 40px;
   }

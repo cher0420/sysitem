@@ -56,6 +56,13 @@ form label
   background: #f8f8f8;
   border-color: #c3c3c3;
 }
+.el-button + .el-button{
+  margin-left: 20px;
+}
+.el-button--danger{
+  color: #fff;
+  border-color: $danger;
+}
 /*
 覆盖input
  */
