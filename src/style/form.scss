@@ -60,9 +60,21 @@ form label
   margin-left: 20px;
 }
 .el-button--danger{
-  color: #fff;
+  color: $danger;
   border-color: $danger;
+  background: #fff;
 }
+.el-button--danger:hover{
+  color: $fff;
+  border-color: $danger;
+  background: $danger;
+}
+.el-button--danger:focus{
+  color: $danger;
+  border-color: $danger;
+  background: #fff;
+}
+
 /*
 覆盖input
  */

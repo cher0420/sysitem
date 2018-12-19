@@ -96,7 +96,6 @@
                 },
                 path:url
               }
-              console.log('====',pathObj)
               this.$router.push(
                 pathObj
               )
