@@ -481,9 +481,13 @@
                 }
 
 
-              })
+              });
+              setTimeout(function () {
+                that.loadingEdit = false;
+              },1000);
 
-              that.loadingEdit = false;
+
+
 
             }
 
