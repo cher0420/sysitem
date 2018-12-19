@@ -62,11 +62,14 @@
       <div class="imgLimit">
         ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
       </div>
+
+
+    </div>
+    <div>
       <div class="subFinsh">
         <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="subInfo">完成</el-button>
         <el-button type="primary" size="mini" :loading="true" v-if="!subInfo">提交中...</el-button>
       </div>
-
     </div>
     <!-- 预览 -->
     <el-dialog
@@ -76,7 +79,6 @@
       :before-close="handleClose">
       <div class="photoYl"><img :src="PreviewImg"></div>
       <span slot="footer" class="dialog-footer">
-
   </span>
     </el-dialog>
 
@@ -97,7 +99,7 @@
 
 
   export default {
-    name: "Allen.Song-EditQA",
+    name: "Allen-EditQA",
     data() {
       return {
         loadingEdit:false,
@@ -547,9 +549,10 @@
   }
 
   .subFinsh {
-    position: absolute;
-    right: 0;
-    top: 30px;
+    /*position: absolute;*/
+    /*right: 0;*/
+    /*top: 30px;*/
+    padding-top: 20px;
   }
 
   .imgLimit {

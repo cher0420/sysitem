@@ -43,7 +43,7 @@
           </div>
 
           <div class="nextStepp mt30">
-            <el-button type="primary" plain size="mini" @click="stepOne()">上一步</el-button>
+            <el-button type="primary" plain size="mini" @click="stepOne()" style="margin-right: 10px;">上一步</el-button>
             <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
               下一步
             </el-button>
@@ -90,9 +90,11 @@
               </div>
             </div>
 
-            <el-button type="primary" plain size="mini" @click="keywordsLast">上一步</el-button>
-            <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="loader">完成</el-button>
-            <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">提交中...</el-button>
+           <div style="text-align: left;margin-top: 50px;">
+             <el-button type="primary" plain size="mini" @click="keywordsLast" style="margin-right: 10px;">上一步</el-button>
+             <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="loader">完成</el-button>
+             <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">提交中...</el-button>
+           </div>
           </div>
         </div>
       </div>
@@ -782,7 +784,7 @@
   }
 
   .questionTit {
-    text-align: right;
+    /*text-align: right;*/
     padding-top: 6px;
     color: #999;
     font-size: 12px;
@@ -804,19 +806,26 @@
   }
 
   .nextStepp {
-    text-align: right;
+    /*text-align: right;*/
     /*margin-top: 33px;*/
     margin-right: 11px;
     max-width: 1000px;
     margin-top: 20px;
   }
 
+  /*.nextStepTop {*/
+       /*text-align: right;*/
+       /*margin-top: 33px;*/
+       /*!*margin-right: 11px;*!*/
+       /*max-width: 996px;*/
+       /*margin-left: 40px;*/
+     /*}*/
   .nextStepTop {
-    text-align: right;
-    margin-top: 33px;
+    /*text-align: right;*/
+    margin-top: 40px;
     /*margin-right: 11px;*/
     max-width: 996px;
-    margin-left: 40px;
+    /*margin-left: 40px;*/
   }
 
   .nextStep button {

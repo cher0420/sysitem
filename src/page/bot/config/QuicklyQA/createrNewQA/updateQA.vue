@@ -39,6 +39,16 @@
           <img :src="item.Answer">
         </div>
       </div>
+      <div class="alterKey">
+        <el-button type="primary" plain size="mini" @click="alterKeyWords()" style="margin-right: 10px;">修改关键词</el-button>
+        <el-button type="primary" size="mini" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
+        <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">更新中...</el-button>
+        <!--
+        第一步拿到本地图片
+        第二部上传图片到服务器
+        第三步拿到图片地址并保存修改后的答案
+        -->
+      </div>
     </div>
     <div class="newQA">
       <div class="editQuestionBac">
@@ -97,16 +107,16 @@
       <div class="support_format">
         ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
       </div>
-      <div class="alterKey">
-        <el-button type="primary" plain size="mini" @click="alterKeyWords()">修改关键词</el-button>
-        <el-button type="primary" size="mini" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
-        <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">更新中...</el-button>
-        <!--
-        第一步拿到本地图片
-        第二部上传图片到服务器
-        第三步拿到图片地址并保存修改后的答案
-        -->
-      </div>
+      <!--<div class="alterKey">-->
+        <!--<el-button type="primary" plain size="mini" @click="alterKeyWords()">修改关键词</el-button>-->
+        <!--<el-button type="primary" size="mini" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>-->
+        <!--<el-button type="primary" size="mini" :loading="!loader" v-if="!loader">更新中...</el-button>-->
+        <!--&lt;!&ndash;-->
+        <!--第一步拿到本地图片-->
+        <!--第二部上传图片到服务器-->
+        <!--第三步拿到图片地址并保存修改后的答案-->
+        <!--&ndash;&gt;-->
+      <!--</div>-->
 
 
     </div>
@@ -771,8 +781,9 @@
   }
 
   .alterKey {
-    text-align: right;
+    /*text-align: right;*/
     max-width: 450px;
+    margin-top: 50px;
   }
 </style>
 <style>

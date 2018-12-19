@@ -34,9 +34,9 @@
       </div>
     </div>
     <div class="buttonSubb">
+      <el-button type="primary" size="mini" @click="finishReturn()" style="margin-left: 20px;">完成</el-button>
       <el-button type="primary" plain size="mini" @click="EditReturn()" v-if="editor">编辑</el-button>
       <el-button type="primary" plain size="mini" disabled v-if="!editor">编辑</el-button>
-      <el-button type="primary" size="mini" @click="finishReturn()">完成</el-button>
     </div>
     <!-- -->
     <el-dialog
@@ -233,7 +233,7 @@
   /*@import "../../../../../static/base.css";*/
 
   .buttonSubb {
-    text-align: right;
+    /*text-align: right;*/
     margin-top: 30px;
     margin-bottom: 30px;
     max-width: 1040px;
@@ -382,8 +382,8 @@
     height: 80px;
     /*border: 1px solid red;*/
     margin-right: 20px;
-    -webkit-box-shadow: 0 0 10px #c0c4cc;
-    -moz-box-shadow: 0 0 10px #c0c4cc;
+    /*-webkit-box-shadow: 0 0 10px #c0c4cc;*/
+    /*-moz-box-shadow: 0 0 10px #c0c4cc;*/
     cursor: pointer;
     /*box-shadow: 0 0 10px #c0c4cc;*/
   }
@@ -394,7 +394,7 @@
   }
 
   .photoUpp {
-    background: #F9FAFC;
+    /*background: #F9FAFC;*/
     /*margin-top: 22px;*/
     /*margin-left: 40px;*/
     position: relative;
