@@ -11,9 +11,6 @@
     </div>
     <div class="edit_textarea" v-html="Text.Answer">
     </div>
-    <!--<div class="edit_textarea" v-if="Text.Answer.length == 0" style="color: #ff0000">-->
-      <!--暂无添加-->
-    <!--</div>-->
     <div class="photoUpp" v-if="Image.length>0">
       <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
       <!-- show photo -->
@@ -23,7 +20,7 @@
              v-if="item.Answer != '' " >
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text">
-              <!-- 放大图片 -->
+              <!-- 放大图片+ -->
               <i class="el-icon-zoom-in" @click="OldPhotoMagnify(index)"></i>
             </div>
           </div>
@@ -34,7 +31,7 @@
       </div>
     </div>
     <div class="buttonSubb">
-      <el-button type="primary" size="mini" @click="finishReturn()" style="margin-left: 20px;">完成</el-button>
+      <el-button type="primary" size="mini" @click="finishReturn()" style="margin-right: 10px;">完成</el-button>
       <el-button type="primary" plain size="mini" @click="EditReturn()" v-if="editor">编辑</el-button>
       <el-button type="primary" plain size="mini" disabled v-if="!editor">编辑</el-button>
     </div>
@@ -140,9 +137,6 @@
           url: base.requestHost + "/api/QuickQA/QueryQAData",
           data: JSON.stringify(data),
           success: function (msg) {
-            //    console.log("根据关键词获取答案",msg);
-
-
             if (msg.Status == "1") {
               if (msg.Data != null) {
                 // code
