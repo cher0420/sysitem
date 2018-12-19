@@ -141,20 +141,20 @@
     created(){
       this.tableData = []
       this.total = 0
-      const status = JSON.parse(sessionStorage.getItem('doingStatus'))
-      if(!status){
+      const status = sessionStorage.getItem('doingStatus')
+      if(status === 'nothing'){
         store.dispatch(REPLACE,{id:this.$route.query.recordId})
       }
-      console.log('created',status,store.state.app.id,store.state.app.quickQuizRecordIdArr)
-      clearInterval(store.state.app.quickQuizRecordId)
-      const reloadArr = store.state.app.quickQuizRecordIdArr
-      if(reloadArr.length>0){
-        reloadArr.forEach(
-          (v,index) =>{
-            clearInterval(v);
-          }
-        )
-      }
+      console.log('created时会清楚的',status,store.state.app.quickQuizRecordId)
+      // clearInterval(store.state.app.quickQuizRecordId)
+      // const reloadArr = store.state.app.quickQuizRecordIdArr
+      // if(reloadArr.length>0){
+      //   reloadArr.forEach(
+      //     (v,index) =>{
+      //       clearInterval(v);
+      //     }
+      //   )
+      // }
 
       /*
       获取全部已发布的数据
@@ -178,7 +178,7 @@
       this.loading = true
       _ask().then(
         (res) => {
-          sessionStorage.setItem('doingStatus','false')
+          sessionStorage.setItem('doingStatus','nothing')
           // store.dispatch(REPLACE,{id:that.$route.query.recordId})
           getList().then(
             (res) => {
@@ -197,11 +197,21 @@
               )
             }
       ).catch(
-        () =>{
+        (err) =>{
           store.dispatch(REPLACE,{mainLoading:true,loadingText:null}).then(
             () =>{
-                  that.loading = false
-                  that._reload_ask(true)
+                that.loading = false
+                console.log('created===>quickQuizRecordId',store.state.app.quickQuizRecordId)
+                // if(store.state.app.quickQuizRecordId){
+                //   if(store.state.app.quickQuizRecordId >-1){
+                    clearInterval(store.state.app.quickQuizRecordId)
+                    that._reload_ask(true)
+                //   }else{
+                //     that._reload_ask(true)
+                //   }
+                // }else{
+                //   that._reload_ask(true)
+                // }
             }
           )
         }
@@ -286,138 +296,147 @@
               }
             )
       },
-      _reload_ask(v = false){
+      _reload_ask(isGetList){
         const that = this
-        let id = setInterval(function () {
-          const arr = store.state.app.quickQuizRecordIdArr
-          arr.push(id)
-          store.dispatch(REPLACE,{quickQuizRecordId: id,quickQuizRecordIdArr:arr}).then(
-            () =>{
-              _ask().then(
-                () =>{
-                  /*
-                  不存在发布
-                  */
-                  that.arr = []
+        // if(!JSON.parse(sessionStorage.getItem('doingStatus'))&&!store.state.app.quickQuizRecordId){
+          let id = setInterval(function () {
+            console.log('----轮询返回的id',id)
+            const arr = store.state.app.quickQuizRecordIdArr
+            arr.push(id)
+            store.dispatch(REPLACE,{quickQuizRecordIdArr:arr}).then(
+              () =>{
+                _ask().then(
+                  () =>{
+                    /*
+                    不存在发布
+                    */
+                    that.arr = []
 
-                  sessionStorage.setItem('doingStatus','false')//设置没有进行测试或发布的线程了
+                    sessionStorage.setItem('doingStatus','nothing')//设置没有进行测试或发布的线程了
 
-                  clearInterval(store.state.app.quickQuizRecordId);
+                    clearInterval(store.state.app.quickQuizRecordId);
+                    console.log('---轮询结束后需要清除的id',store.state.app.quickQuizRecordId)
 
-                  const reloadArr = store.state.app.quickQuizRecordIdArr
-                  if(reloadArr.length>0){
-                    reloadArr.forEach(
-                      (v,index) =>{
-                        clearInterval(v);
-                      }
-                    )
-                  }
-                  store.dispatch(REPLACE,{mainLoading:false,loadingText:null,quickQuizRecordIdArr:[]}).then(
-                    () =>{
-                      if(v){
-                        getList().then(
-                          (res) =>{
-                            that.complateGetList(res)
-                          }
-                        )
-                      }
-                      if(that.blankNew){
-                        that.tableData.forEach(
-                          (v,index) =>{
-                            if(v.checkedStatus){
-                              that.arr.push(v.ID)
+                    //
+                    // const reloadArr = store.state.app.quickQuizRecordIdArr
+                    // if(reloadArr.length>0){
+                    //   reloadArr.forEach(
+                    //     (v,index) =>{
+                    //       clearInterval(v);
+                    //     }
+                    //   )
+                    // }
+                    store.dispatch(REPLACE,{mainLoading:false,loadingText:null,quickQuizRecordIdArr:[]}).then(
+                      () =>{
+                        console.log('====',isGetList)
+                        if(isGetList){
+                          console.log('不存在发布，刷新列表')
+                          getList().then(
+                            (res) =>{
+                              that.complateGetList(res)
                             }
-                          }
-                        )
-                        that.go()
-                      }else{
-                        that.dataContainer = []
-                        const params = {
-                          PageSize: 0,
-                          Status:1,
+                          )
                         }
-                        getList(params).then(
-                          (res) =>{
-                            if(res['Data'].length>0){
-                              res['Data'].forEach(
-                                (v,index) =>{
-                                  that.dataContainer.push(v.ID)
-                                }
-                              )
+                        if(that.blankNew){
+                          that.tableData.forEach(
+                            (v,index) =>{
+                              if(v.checkedStatus){
+                                that.arr.push(v.ID)
+                              }
                             }
+                          )
+                          that.go()
+                        }else{
+                          that.dataContainer = []
+                          const params = {
+                            PageSize: 0,
+                            Status:1,
                           }
-                        )
-                        that.tableData.forEach(
-                          (v,index) =>{
-                            if(v.checkedStatus){
-                              v.Status = 5
-                              that.arr.push(v.ID)
-                            }else{
-                              v.Status = 1
+                          getList(params).then(
+                            (res) =>{
+                              if(res['Data'].length>0){
+                                res['Data'].forEach(
+                                  (v,index) =>{
+                                    that.dataContainer.push(v.ID)
+                                  }
+                                )
+                              }
                             }
-                          }
-                        )
-                        // that.$message({
-                        //   type:'success',
-                        //   message:'操作成功',
-                        //   duration:2000,
-                        // })
-                      }
-                    }
-                  )
-                }
-              ).catch(
-                (res) =>{
-                  if(res.Data === 3){
-                    that.$message(
-                      {
-                        type:'error',
-                        message:'操作失败，请稍后重试',
-                        duration:2000,
+                          )
+                          that.tableData.forEach(
+                            (v,index) =>{
+                              if(v.checkedStatus){
+                                v.Status = 5
+                                that.arr.push(v.ID)
+                              }else{
+                                v.Status = 1
+                              }
+                            }
+                          )
+                          // that.$message({
+                          //   type:'success',
+                          //   message:'操作成功',
+                          //   duration:2000,
+                          // })
+                        }
                       }
                     )
-                    sessionStorage.setItem('doingStatus','false')
-                    clearInterval(that.reloadId)
-                    const params = {
-                      Keys:that.keys,
-                      PageIndex:that.PageIndex,
-                      Status: that.status
-                    }
-                    getList(params).then(
-                      (res) =>{
-                        that.complateGetList(res)
-                        store.dispatch(
-                          REPLACE,{mainLoading:false,loadingText:null}
-                        )
-                      }
-                    ).catch(
-                      (err) =>{
-                        that.message(
-                          {
-                            type:'error',
-                            message:'服务器错误，请稍后重试',
-                            duration:2000,
-                            onClose: () =>{
-                              store.dispatch(
-                                REPLACE,{mainLoading:false}
-                              )
-                            }
-                          }
-                        )
-                      }
-                    )
-                  }else if(res.Data === 1){
-                    that.blankNew = true
-                    store.commit(REPLACE,{loadingText:'正在培训中，请稍后'})
-                  }else{
-                    that.blankNew = false
-                    store.commit(REPLACE,{loadingText:'正在发布中，请稍后'})
                   }
-                }
-              )
-            }
-          )
-        },10000)
+                ).catch(
+                  (res) =>{
+                    if(res.Data === 3){
+                      that.$message(
+                        {
+                          type:'error',
+                          message:'操作失败，请稍后重试',
+                          duration:2000,
+                        }
+                      )
+                      sessionStorage.setItem('doingStatus','nothing')
+                      clearInterval(that.reloadId)
+                      const params = {
+                        Keys:that.keys,
+                        PageIndex:that.PageIndex,
+                        Status: that.status
+                      }
+                      getList(params).then(
+                        (res) =>{
+                          that.complateGetList(res)
+                          store.dispatch(
+                            REPLACE,{mainLoading:false,loadingText:null}
+                          )
+                        }
+                      ).catch(
+                        (err) =>{
+                          that.message(
+                            {
+                              type:'error',
+                              message:'服务器错误，请稍后重试',
+                              duration:2000,
+                              onClose: () =>{
+                                store.dispatch(
+                                  REPLACE,{mainLoading:false}
+                                )
+                              }
+                            }
+                          )
+                        }
+                      )
+                    }else if(res.Data === 1){
+                      that.blankNew = true
+                      store.commit(REPLACE,{loadingText:'正在培训中，请稍后'})
+                    }else{
+                      that.blankNew = false
+                      store.commit(REPLACE,{loadingText:'正在发布中，请稍后'})
+                    }
+                  }
+                )
+              }
+            )
+          },5000)
+          store.dispatch(REPLACE,{quickQuizRecordId: id})
+        // }
+
       },
       complateGetList(res){
         this.tableData= res['Data']
@@ -630,13 +649,12 @@
 
             // that.blankNewObj = true
             that.blankNew = true
-            sessionStorage.setItem('doingStatus','true')
+            sessionStorage.setItem('doingStatus','train')
             store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
               () =>{
-                that._reload_ask(false)
+                that._reload_ask(false) //开启论询且不刷新列表
               }
             )
-
             doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
               (res) =>{
               }
@@ -674,7 +692,7 @@
               }
 
               that.blankNew = false
-              sessionStorage.setItem('doingStatus','true')
+              sessionStorage.setItem('doingStatus','publish')
               store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
                 () =>{
                   that._reload_ask()

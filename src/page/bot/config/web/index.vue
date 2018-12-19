@@ -83,7 +83,7 @@
       </el-col>
     </el-form-item>
     <title-item title="功能开关"></title-item>
-    <el-form-item label="" style="margin-bottom: 40px;margin-top: 18px;">
+    <el-form-item label="" style="margin-bottom: 37px;margin-top: 18px;">
       <el-col :span="12" >
         <el-checkbox v-model="formData.LoginSwitch" style="width: 134px;">登录验证</el-checkbox>
         <span class="primary-color f-s-14 disabled">提示：开启后则需登录后才可进入网页版</span>
@@ -120,7 +120,7 @@
       </el-col>
     </el-form-item>
     <title-item title="自定义问候语"></title-item>
-    <el-form-item class="margin-top30 none-label" prop="DialogTitle">
+    <el-form-item class="none-label" prop="DialogTitle" style='margin-top: 26px;margin-bottom: 16px;'>
       <span style="width:70px;" class="dis-i-b text-align-right" >
         对话框标题
       </span>
@@ -128,7 +128,7 @@
           <span slot="suffix">最多15个字符 &nbsp;</span>
         </el-input>
     </el-form-item>
-    <el-form-item label="" class="margin-top30 none-label" prop="DialogGreetings">
+    <el-form-item label="" class="none-label" prop="DialogGreetings" style="margin-bottom: 50px;">
       <span style="width:70px;line-height: 32px;" class="dis-i-b text-align-right align-top" >
         问候语
       </span>
@@ -139,8 +139,8 @@
       </section>
     </el-form-item>
     <title-item title="添加授信域名"></title-item>
-    <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:60px">
-      <section>仅支持已添加的授信余名或IP地址的URL访问 <span class="c999">(授信域名： www...  IP地址：192.888.8.8)</span></section>
+    <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:56px">
+      <section style="margin-top: 20px;line-height: 36px;">仅支持已添加的授信余名或IP地址的URL访问 <span class="c999">(授信域名： www...  IP地址：192.888.8.8)</span></section>
       <el-row>
         <el-col :span="18">
           <el-input type="textarea" :rows="5" placeholder="请输入授信域名" v-model="formData.AuthorizedAddress"></el-input>
