@@ -59,8 +59,6 @@
           <div class="CreateNewQAtextareaParentAdd">
             <textarea v-model="textarea" placeholder="请输入自定义回答,最多500个字符" maxlength="500"></textarea>
             <span class="fontCount">{{textarea.length}}/500字</span>
-
-
           </div>
 
           <div class="nextStep">

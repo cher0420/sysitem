@@ -50,21 +50,21 @@ Vue.use(Vuex)
     [UPDATE] (state, payload) {
       state.app.tableData[payload.index] = payload.value
     },
-    detailshow:(state) =>{
-      state.indexPage = false;
-     state.indexPageDetail = true;
-    }
+    // detailshow:(state) =>{
+    //   state.indexPage = false;
+    //  state.indexPageDetail = true;
+    // }
   },
   actions: {
-    [REPLACE] (context, payload) {
+    [REPLACE] (context, payload) {  // replace
       context.commit(REPLACE, payload)
     },
-    [UPDATE] (context, payload) {
+    [UPDATE] (context, payload) {  // update
       context.commit(UPDATE, payload)
     },
-    detailshow:(context)=>{
-      context.commit("detailshow")
-    }
+    // detailshow:(context)=>{
+    //   context.commit("detailshow")
+    // }
   }
 })
 
