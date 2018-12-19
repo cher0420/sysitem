@@ -66,6 +66,7 @@
         return store.state.app.breadArr
       },
       navIndex(){
+
         return store.state.app.navIndex
       },
       navIndexSecond(){

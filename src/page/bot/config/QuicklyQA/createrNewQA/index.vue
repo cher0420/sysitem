@@ -458,7 +458,7 @@
 
             //  console.log("存储答案", msg)
             if (msg.Status == "1") {
-             this.loadingEdit = false;
+
               that.$message({
                 message: '创建新问答成功',
                 type: 'success'
@@ -481,6 +481,7 @@
 
               })
 
+              that.loadingEdit = false;
 
             }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="mainStyle"  v-loading="loadingEdit">
+  <div class="mainStyle" v-loading="loadingEdit">
     <div class="oldQA">
       <div class="existingQues">
         <span>已有问题</span>
@@ -127,7 +127,6 @@
 <script>
 
   import {mapActions} from 'vuex';
-
   import {TOKEN} from "../../../../../constants/constants";
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
@@ -138,17 +137,14 @@
     name: "editdateQA",
     data() {
       return {
-        loadingEdit:false,
+        loadingEdit: false,
         loader: true, // 更新提交
-
         addIcon: true, // 图片添加功能 + 是否显示
-
         PreviewImg: "", // 预览图片
         dialogVisible: false,
         // 图片上传
         imgList: [],
         size: 0,
-
         CreateDate: "",
         Image: [{
           ID: "",
@@ -166,7 +162,7 @@
         },
 
         DeleteIds: [], // 要删除的图片
-        DeleteAnswers:[],
+        DeleteAnswers: [],
 
       }
     },
@@ -204,9 +200,9 @@
         });
 
         this.DeleteIds = DeleteIdsRec
-         this.DeleteAnswers = this.Image.map(function (item) {
-           return item.Answer;
-         });
+        this.DeleteAnswers = this.Image.map(function (item) {
+          return item.Answer;
+        });
       },
 
       alterKeyWords() {
@@ -234,13 +230,14 @@
 
       },
       getPhotoUrl() { //  上传图片到服务器并拿回地址 ， 并回调保存答案
-
+        let thatt = this;
         this.$confirm('是否要更改答案?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.loadingEdit = true;
+
+          thatt.loadingEdit = true;
           this.loader = false;
           const token = getCookies(TOKEN);
           let data = {};
@@ -319,7 +316,7 @@
           "FullName": FullName
         };
 
-        if(that.newText.Answer == "" && that.Image.length == 0){
+        if (that.newText.Answer == "" && that.Image.length == 0) {
           console.log("答案不能为空")
           that.$message({
             message: '答案不能为空',
@@ -350,8 +347,12 @@
                 message: '更新新问答成功',
                 type: 'success'
               });
-              that.loadingEdit = false;
+              // setTimeout(function () {
+              //   that.loadingEdit = false;
+              // },1000)
+
               setTimeout(function () {
+
                 const recordId = that.$route.query.recordId
                 that.$router.push({
                   path: '/bot/config/quicklyQA',
@@ -359,6 +360,8 @@
                     recordId
                   }
                 })
+                that.loadingEdit = false;
+
               }, 1500)
 
             } else {
@@ -395,7 +398,7 @@
 
         let result = await UploadAndDeleteAsync(data)
         console.log("图片从数据库删除", result)
-       // debugger;
+        // debugger;
 
       },
 
@@ -447,7 +450,7 @@
         })
       },
       fileAdd(file) {
-       // console.log("daxiao", file.size / 1024)
+        // console.log("daxiao", file.size / 1024)
         let currSize = file.size / 1024;
         if (currSize > 200) {
           this.$message({
