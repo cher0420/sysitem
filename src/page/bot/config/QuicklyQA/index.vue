@@ -542,7 +542,6 @@
         const that = this
 
         this.loading = true
-        this.originDisabled = true
         const arr = ['<',">","%",';',"/","?"]
         const index = arr.indexOf(this.keys)
         if(index>-1){
@@ -554,6 +553,7 @@
           that.loading = false
           return
         }
+        this.originDisabled = true
         this.tableData = []
         const Keys = {Keys:this.keys}
         getList(Keys).then(
