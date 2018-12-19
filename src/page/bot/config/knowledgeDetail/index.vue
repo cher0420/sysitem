@@ -50,8 +50,7 @@
             </section>
           </el-col>
         </el-row>
-        <section>
-          <section>
+          <section style="height: 80px;">
             <section v-show="uploadList.length<3" class="el-upload el-upload--picture-card p-relative" @click="uploadContainer" style="float: left;margin-right: 20px">
               <i class="el-icon-plus" style="position: absolute;
     left: 50%;
@@ -65,8 +64,8 @@
               （上传照片，支持jpg, jpeg, png, gif, svg格式，最大不超过200k, 最多3张）
             </section>
           </section>
-          <el-button type="primary" class="save" @click="save">保存</el-button>
-          <el-button type="danger" class="save" style="margin-right: 20px;" @click="deleteDetail">删除</el-button>
+        <section class="full-width buttonContainer">
+          <el-button type="primary" class="save" @click="save">保存</el-button><el-button type="danger" class="save" @click="deleteDetail">删除</el-button>
         </section>
         <el-dialog :visible.sync="dialogVisible" class="text-a-c">
           <img width="400" :src="dialogImageUrl" alt="">
@@ -85,8 +84,6 @@
             </section>
           </el-col>
         </el-row>
-        <section>
-        </section>
         <el-dialog :visible.sync="dialogVisible" class="text-a-c">
           <img width="400" :src="dialogImageUrl" alt="">
         </el-dialog>
@@ -553,10 +550,9 @@ export default {
     background: rgba(0,0,0,.5);
     transition:all .3s;
   }
-  .save{
-    float: right;
-    margin-top: 24px;
-  }
+    .buttonContainer{
+      margin-top: 50px;
+    }
   .tips{
     float: left;
     height: 80px;

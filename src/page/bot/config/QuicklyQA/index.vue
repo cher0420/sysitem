@@ -417,7 +417,7 @@
               )
             }
           )
-        },800)
+        },10000)
       },
       complateGetList(res){
         this.tableData= res['Data']

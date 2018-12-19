@@ -5,46 +5,23 @@
 
       <el-breadcrumb-item class="primary-color align-middle index" to="/bot">首页</el-breadcrumb-item>
 
-      <!--<el-breadcrumb-item-->
-        <!--:class="breadArr.length == 1?'notAllow':'first'"-->
-        <!--:to="breadArr[0].url" @change="handle(breadArr[0].name)">-->
-        <!--{{breadArr[0].name}}-->
-      <!--</el-breadcrumb-item>-->
-
-      <!--<el-breadcrumb-item v-if="breadArr.length===2" class="second" @change="handle(breadArr[1].name)">-->
-        <!--{{breadArr[1].name}}-->
-      <!--</el-breadcrumb-item>-->
-
       <el-breadcrumb-item
         v-for="(item,index) in breadArr"
         :class="index===breadArr.length-1?'notAllow':'first'"
         :to="index===breadArr.length-1?null:item.url"
+        style="height: 100%;"
       >
-        <span>
+        <span :class="index===breadArr.length-1?['text-overflow-hidden']:['']">
           {{item.name}}
         </span>
       </el-breadcrumb-item>
 
     </el-breadcrumb>
 
-    {{/* 当有二级面包屑时，采用二级面包屑*/}}
-    <!--<el-breadcrumb separator-class="el-icon-arrow-right" class="yoy-title box-sizing border-bottom text-title" v-if="navIndexSecond">-->
-    <!--<el-breadcrumb-item class="align-middle">-->
-    <!--<span class="align-middle dis-i-b line"></span>-->
-    <!--<span @click="back" class="backHover">-->
-    <!--{{navIndex}}-->
-    <!--</span>-->
-    <!--</el-breadcrumb-item>-->
-    <!--<el-breadcrumb-item class="align-middle">-->
-    <!--{{navIndexSecond}}-->
-    <!--</el-breadcrumb-item>-->
-    <!--</el-breadcrumb>-->
     {{/* title部分 */}}
     <section class="yoy-title box-sizing border-bottom text-title">
       <span class="align-middle dis-i-b line"></span>
-      <span class="align-middle dis-i-b" style="width: 98%;overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap">
+      <span class="align-middle dis-i-b" style="width: 98%;line-height: 1.5">
         {{navIndex}}
       </span>
     </section>
@@ -117,14 +94,14 @@
     vertical-align: middle;
   }
   .line{
+    display: inline-block;
     width:2px;
-    height:20px;
+    height:24px;
     background-color: $primary-color;
     margin-right: 6px;
   }
   .yoy-bread{
     margin-bottom: 30px;
-
   }
   .yoy-bread .el-breadcrumb.single{
     font-size: 14px;
@@ -132,6 +109,7 @@
     height: $bread-height;
     line-height: $bread-height;
     padding-right: 40px;
+    padding-left: 40px;
     background: #f8f8f8;
 
     span:hover{
@@ -156,18 +134,10 @@
     }
   }
   .yoy-title{
-    height: $title-height;
-    line-height: $title-height;
     padding-top: 7px;
     margin-left: 40px;
     margin-right: 40px;
-  }
-  .line{
-    width: 2px;
-    height: 24px;
-    line-height: 24px;
-    background: $primary-color;
-    margin-right: 2px;
+    height: 100%;
   }
   .yoy-bread {
     .el-breadcrumb.yoy-title{
@@ -177,12 +147,15 @@
     }
   }
   .text-overflow-hidden{
-    display: inline-block;
-    width: 400px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    height: 100%;
+    /*span{*/
+      display: inline-block;
+      width: 300px;
+      overflow: hidden;
+      height: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    /*}*/
+
   }
 
 </style>
