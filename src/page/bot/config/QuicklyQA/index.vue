@@ -142,19 +142,19 @@
       this.tableData = []
       this.total = 0
       const status = JSON.parse(sessionStorage.getItem('doingStatus'))
-      // if(!status){
+      if(!status){
         store.dispatch(REPLACE,{id:this.$route.query.recordId})
-      // }
-      console.log('created',status,store.state.app.id)
+      }
+      console.log('created',status,store.state.app.id,store.state.app.quickQuizRecordIdArr)
       clearInterval(store.state.app.quickQuizRecordId)
-      // const reloadArr = store.state.app.quickQuizRecordIdArr
-      // if(reloadArr.length>0){
-      //   reloadArr.forEach(
-      //     (v,index) =>{
-      //       clearInterval(v);
-      //     }
-      //   )
-      // }
+      const reloadArr = store.state.app.quickQuizRecordIdArr
+      if(reloadArr.length>0){
+        reloadArr.forEach(
+          (v,index) =>{
+            clearInterval(v);
+          }
+        )
+      }
 
       /*
       获取全部已发布的数据
@@ -628,7 +628,8 @@
               Action:'train',
             }
 
-            that.blankNewObj = true
+            // that.blankNewObj = true
+            that.blankNew = true
             sessionStorage.setItem('doingStatus','true')
             store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
               () =>{
