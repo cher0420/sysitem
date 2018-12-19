@@ -167,7 +167,8 @@
         }
         const arr = path.split('/')
         const index = STR[arr[arr.length - 1]]
-        const config = this.$route.name === 'config'
+        const config = this.$route.name === 'config';
+        console.log("name",config)
         store.dispatch(REPLACE, {navIndex: index, config}).then(
           () => {
             this.$router.push(url)

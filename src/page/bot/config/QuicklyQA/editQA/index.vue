@@ -88,8 +88,9 @@
 <script>
 
 
-  import {mapGetters} from 'vuex';
-  import {mapActions} from 'vuex';
+  // import {mapGetters} from 'vuex';
+  // import {mapActions} from 'vuex';
+  import {mapGetters,mapActions} from 'vuex';
 
   import {TOKEN} from "../../../../../constants/constants";
   import {getCookies} from "../../../../../utils/cookie";
