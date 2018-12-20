@@ -43,11 +43,7 @@
         <el-button type="primary" plain size="mini" @click="alterKeyWords()" style="margin-right: 10px;">修改关键词</el-button>
         <el-button type="primary" size="mini" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
         <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">更新中...</el-button>
-        <!--
-        第一步拿到本地图片
-        第二部上传图片到服务器
-        第三步拿到图片地址并保存修改后的答案
-        -->
+
       </div>
     </div>
     <div class="newQA">
@@ -57,7 +53,7 @@
         </div>
       </div>
       <div class="questionDetail">
-        问题 : {{Question}}
+        问题 : {{QuestionNew}}
       </div>
       <div class="editQuestionBac">
         <div class="editQuestion">
@@ -153,6 +149,7 @@
         KeyId: '',
         Keyword: '',
         Question: "",
+        QuestionNew:"",
         Text: {
           ID: "", Answer: "",
         },
@@ -182,11 +179,15 @@
       getData() {
 
         let data = JSON.parse(sessionStorage.getItem('Data'));
+        let QuestionNew = JSON.parse(sessionStorage.getItem('Question'));
+        // console.log("******",QuestionNew)
+        // debugger;
         this.CreateDate = data.CreateDate;
         this.Image = data.Image;
         this.KeyId = data.KeyId;
         this.Keyword = data.Keyword;
         this.Question = data.Question;
+        this.QuestionNew = QuestionNew;
         if (data.Text.Answer != null) {
           this.Text = data.Text;
           this.Text.Answer = this.Text.Answer.replace(/\n+/g, "<br/>")
@@ -305,7 +306,7 @@
           "BotConfigId": recordId,
           "TenantId": TenantId,
           "KeyId": that.KeyId,
-          "Question": that.Question,
+          "Question": that.QuestionNew,
           "Keyword": that.Keyword,
           "Text": that.newText,
           "Image": that.Image,
@@ -313,6 +314,7 @@
           "Email": Email,
           "FullName": FullName
         };
+        // debugger;
 
         if (that.newText.Answer.trim() == "" && that.Image.length == 0) {
           console.log("答案不能为空")

@@ -137,6 +137,7 @@
         dialogVisible: false,
         addIcon: true,
         loading: false,
+
         Question: "", // 题目
         textarea: "",
         timer: "",
@@ -396,6 +397,9 @@
                 //   that.questionLast();
 
                 //   跳到 更新组件展示
+
+
+                sessionStorage.setItem('Question', JSON.stringify(that.Question));  //  属性传参到子组件
                 sessionStorage.setItem('Data', JSON.stringify(msg.Data));  //  属性传参到子组件
 
 
