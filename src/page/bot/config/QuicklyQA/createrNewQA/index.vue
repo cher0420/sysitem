@@ -432,7 +432,7 @@
           "FullName": FullName
         };
 
-        if(that.textarea == "" && that.Image.length == 0){
+        if(that.textarea.trim() == "" && that.Image.length == 0){
           console.log("答案不能为空")
           this.loadingEdit = false;
           that.$message({

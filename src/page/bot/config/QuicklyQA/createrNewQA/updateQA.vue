@@ -107,16 +107,6 @@
       <div class="support_format">
         ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
       </div>
-      <!--<div class="alterKey">-->
-        <!--<el-button type="primary" plain size="mini" @click="alterKeyWords()">修改关键词</el-button>-->
-        <!--<el-button type="primary" size="mini" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>-->
-        <!--<el-button type="primary" size="mini" :loading="!loader" v-if="!loader">更新中...</el-button>-->
-        <!--&lt;!&ndash;-->
-        <!--第一步拿到本地图片-->
-        <!--第二部上传图片到服务器-->
-        <!--第三步拿到图片地址并保存修改后的答案-->
-        <!--&ndash;&gt;-->
-      <!--</div>-->
 
 
     </div>
@@ -192,8 +182,6 @@
       getData() {
 
         let data = JSON.parse(sessionStorage.getItem('Data'));
-        //   console.log("data111",data)
-
         this.CreateDate = data.CreateDate;
         this.Image = data.Image;
         this.KeyId = data.KeyId;
@@ -326,7 +314,7 @@
           "FullName": FullName
         };
 
-        if (that.newText.Answer == "" && that.Image.length == 0) {
+        if (that.newText.Answer.trim() == "" && that.Image.length == 0) {
           console.log("答案不能为空")
           that.$message({
             message: '答案不能为空',

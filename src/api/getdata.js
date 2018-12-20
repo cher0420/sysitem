@@ -1,5 +1,5 @@
 
-import fetch from '../config/fetch';
+import fetch from './fetch';
 /**
  *  api异步请求
  */

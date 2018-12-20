@@ -295,7 +295,7 @@
           "Email": Email,
           "FullName": FullName
         };
-        if(that.Text.Answer == "" && that.ImageNew.length == 0){
+        if(that.Text.Answer.trim() == "" && that.ImageNew.length == 0){
           console.log("答案不能为空")
           that.$message({
             message: '答案不能为空',
