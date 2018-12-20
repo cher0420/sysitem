@@ -306,7 +306,7 @@
           "BotConfigId": recordId,
           "TenantId": TenantId,
           "KeyId": that.KeyId,
-          "Question": that.QuestionNew,
+          "Question": that.Question,
           "Keyword": that.Keyword,
           "Text": that.newText,
           "Image": that.Image,
@@ -314,7 +314,7 @@
           "Email": Email,
           "FullName": FullName
         };
-        // debugger;
+         debugger;
 
         if (that.newText.Answer.trim() == "" && that.Image.length == 0) {
           console.log("答案不能为空")
