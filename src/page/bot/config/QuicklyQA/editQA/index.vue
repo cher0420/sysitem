@@ -307,10 +307,10 @@
           that.loadingEdit = false;
           return false
         }
-        if (this.Text.Answer.indexOf("^") != "-1" || this.Text.Answer.indexOf("&") != "-1" || this.Text.Answer.indexOf("$") != "-1" || this.Text.Answer.indexOf("%") != "-1") {
+        if (this.Text.Answer.indexOf("<") != "-1" ||this.Text.Answer.indexOf(">") != "-1" || this.Text.Answer.indexOf("&") != "-1" || this.Text.Answer.indexOf("$") != "-1" || this.Text.Answer.indexOf("%") != "-1") {
 
           this.$message({
-            message: '^ $ & % 为敏感字符，请勿添加在答案中',
+            message: '<> $ & % 为敏感字符，请勿添加在答案中',
             type: 'warning'
           });
           this.subInfo = true;

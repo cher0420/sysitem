@@ -425,10 +425,10 @@
         let Email = store.state.app.userInfo.Email;
         let FullName = store.state.app.userInfo.FullName;
 
-        if (this.textarea.indexOf("^") != "-1" || this.textarea.indexOf("&") != "-1" || this.textarea.indexOf("$") != "-1" || this.textarea.indexOf("%") != "-1") {
+        if (this.textarea.indexOf("<") != "-1" ||this.textarea.indexOf(">") != "-1" || this.textarea.indexOf("&") != "-1" || this.textarea.indexOf("$") != "-1" || this.textarea.indexOf("%") != "-1") {
 
           this.$message({
-            message: '^ $ & % 为敏感字符，请勿添加在答案中',
+            message: '<> $ & % 为敏感字符，请勿添加在答案中',
             type: 'warning'
           });
            this.loader = true;

@@ -318,10 +318,10 @@
           "FullName": FullName
         };
 
-        if (this.newText.Answer.indexOf("^") != "-1" || this.newText.Answer.indexOf("&") != "-1" || this.newText.Answer.indexOf("$") != "-1" || this.newText.Answer.indexOf("%") != "-1") {
+        if (this.newText.Answer.indexOf("<") != "-1" ||this.newText.Answer.indexOf(">") != "-1" ||  this.newText.Answer.indexOf("&") != "-1" || this.newText.Answer.indexOf("$") != "-1" || this.newText.Answer.indexOf("%") != "-1") {
 
           this.$message({
-            message: '^ $ & % 为敏感字符，请勿添加在答案中',
+            message: '<> $ & % 为敏感字符，请勿添加在答案中',
             type: 'warning'
           });
           this.loader = true;
