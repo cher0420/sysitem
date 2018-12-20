@@ -105,7 +105,7 @@
       </div>
 
       <div class="support_format">
-        ( 支持.jpg,.jpeg,.png,.gif,svg格式, 最大不超过200k , 最多3张 )
+        ( 支持.jpg,.jpeg,.png,.gif格式, 最大不超过200k , 最多3张 )
       </div>
 
 
