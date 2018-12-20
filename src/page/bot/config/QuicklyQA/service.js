@@ -112,10 +112,11 @@ export const del = (params) => {
   )
 }
 
-export const _ask = () => {
+export const _ask = (botId = null) => {
   const token = getCookies(TOKEN)
-  const id = store.state.app.id
-  const BotConfigId = id?id:route.currentRoute.query.recordId
+  // const id = store.state.app.id
+  const BotConfigId = botId?botId:route.currentRoute.query.recordId
+  // const BotConfigId = route.currentRoute.query.recordId
   const params = {
     headers:{
       'Access-Token':token
@@ -130,9 +131,11 @@ export const _ask = () => {
           if(res.Data === 0){
             //不存在培训中或者发布中的数据
             //0:正常 1:培训中 2:发布中 3:发布或者培训失败}
+            res.recordId = BotConfigId
             resolve (res)
           }else {
             //正在发布或测试
+            res.recordId = BotConfigId
             reject(res)
           }
         }

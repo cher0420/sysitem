@@ -142,18 +142,8 @@
       this.tableData = []
       this.total = 0
       const status = sessionStorage.getItem('doingStatus')
-      if(status === 'nothing'){
-        store.dispatch(REPLACE,{id:this.$route.query.recordId})
-      }
-      console.log('created时会清楚的',status,store.state.app.quickQuizRecordId)
-      // clearInterval(store.state.app.quickQuizRecordId)
-      // const reloadArr = store.state.app.quickQuizRecordIdArr
-      // if(reloadArr.length>0){
-      //   reloadArr.forEach(
-      //     (v,index) =>{
-      //       clearInterval(v);
-      //     }
-      //   )
+      // if(status === 'nothing'){
+      //   store.dispatch(REPLACE,{id:this.$route.query.recordId})
       // }
 
       /*
@@ -179,12 +169,13 @@
       _ask().then(
         (res) => {
           sessionStorage.setItem('doingStatus','nothing')
-          // store.dispatch(REPLACE,{id:that.$route.query.recordId})
-          getList().then(
-            (res) => {
-              /*
+          /*
                自定义列表内容,没有在发布中的内容
               */
+          // that.isReloadBlankNew()
+
+          getList().then(
+            (res) => {
             that.complateGetList(res)
            }
           ).catch(
@@ -200,18 +191,15 @@
         (err) =>{
           store.dispatch(REPLACE,{mainLoading:true,loadingText:null}).then(
             () =>{
-                that.loading = false
-                console.log('created===>quickQuizRecordId',store.state.app.quickQuizRecordId)
-                // if(store.state.app.quickQuizRecordId){
-                //   if(store.state.app.quickQuizRecordId >-1){
-                    clearInterval(store.state.app.quickQuizRecordId)
-                    that._reload_ask(true)
-                //   }else{
-                //     that._reload_ask(true)
-                //   }
-                // }else{
-                //   that._reload_ask(true)
-                // }
+              if(err.Data === 1){
+                that.initStatus('train')
+              }else if(err.Data === 2){
+                that.initStatus('publish')
+              }
+              that.loading = false
+
+              that.clearReloadId(err)
+              that._reload_ask(true,err.recordId)
             }
           )
         }
@@ -265,9 +253,8 @@
           }
         })
       },
-      go(){
-        const id = store.state.app.id
-        const BotConfigId = id?id:this.$route.query.recordId
+      go(recordId){
+        const BotConfigId = recordId?recordId:this.$route.query.recordId
         const host = URL.baseUrl
           const url = `${host}/WebTalk/validaiml.html?id=${BotConfigId}`
           window.open(url)
@@ -295,94 +282,76 @@
               }
             )
       },
-      _reload_ask(isGetList){
+      _reload_ask(isGetList,botId){
         const that = this
-        // if(!JSON.parse(sessionStorage.getItem('doingStatus'))&&!store.state.app.quickQuizRecordId){
           let id = setInterval(function () {
-            console.log('----轮询返回的id',id)
-            const arr = store.state.app.quickQuizRecordIdArr
-            arr.push(id)
-            store.dispatch(REPLACE,{quickQuizRecordIdArr:arr}).then(
-              () =>{
-                _ask().then(
-                  () =>{
+
+            _ask(botId).then(
+              (res) =>{
                     /*
                     不存在发布
                     */
-                    that.arr = []
+                    /*
+                    clearReloadId
+                    */
+                // that.arr = []
 
-                    sessionStorage.setItem('doingStatus','nothing')//设置没有进行测试或发布的线程了
+                sessionStorage.setItem('doingStatus','nothing')//设置没有进行测试或发布的线程了
 
-                    clearInterval(store.state.app.quickQuizRecordId);
-                    console.log('---轮询结束后需要清除的id',store.state.app.quickQuizRecordId)
+                that.clearReloadId(res)
 
-                    //
-                    // const reloadArr = store.state.app.quickQuizRecordIdArr
-                    // if(reloadArr.length>0){
-                    //   reloadArr.forEach(
-                    //     (v,index) =>{
-                    //       clearInterval(v);
-                    //     }
-                    //   )
-                    // }
-                    store.dispatch(REPLACE,{mainLoading:false,loadingText:null,quickQuizRecordIdArr:[]}).then(
-                      () =>{
-                        console.log('====',isGetList)
-                        if(isGetList){
-                          console.log('不存在发布，刷新列表')
-                          getList().then(
-                            (res) =>{
-                              that.complateGetList(res)
-                            }
-                          )
-                        }
-                        if(that.blankNew){
-                          that.tableData.forEach(
-                            (v,index) =>{
-                              if(v.checkedStatus){
-                                that.arr.push(v.ID)
+                store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
+                  () =>{
+                          if(isGetList){
+                            getList().then(
+                              (res) =>{
+                                that.complateGetList(res)
                               }
-                            }
-                          )
-                          that.go()
-                        }else{
-                          that.dataContainer = []
-                          const params = {
-                            PageSize: 0,
-                            Status:1,
+                            )
                           }
-                          getList(params).then(
-                            (res) =>{
-                              if(res['Data'].length>0){
-                                res['Data'].forEach(
-                                  (v,index) =>{
-                                    that.dataContainer.push(v.ID)
-                                  }
-                                )
-                              }
+
+                          if(that.isReloadBlankNew(res.recordId)){
+                            // that.tableData.forEach(
+                            //   (v,index) =>{
+                            //     if(v.checkedStatus){
+                            //       // that.arr.push(v.ID)
+                            //     }
+                            //   }
+                            // )
+                            that.go(res.recordId)
+                          }else{
+                            that.dataContainer = []
+                            const params = {
+                              PageSize: 0,
+                              Status:1,
                             }
-                          )
-                          that.tableData.forEach(
-                            (v,index) =>{
-                              if(v.checkedStatus){
-                                v.Status = 5
-                                that.arr.push(v.ID)
-                              }else{
-                                v.Status = 1
+                            getList(params).then(
+                              (res) =>{
+                                if(res['Data'].length>0){
+                                  res['Data'].forEach(
+                                    (v,index) =>{
+                                      that.dataContainer.push(v.ID)
+                                    }
+                                  )
+                                }
                               }
-                            }
-                          )
-                          // that.$message({
-                          //   type:'success',
-                          //   message:'操作成功',
-                          //   duration:2000,
-                          // })
+                            )
+                            that.tableData.forEach(
+                              (v,index) =>{
+                                if(v.checkedStatus){
+                                  v.Status = 5
+                                  // that.arr.push(v.ID)
+                                }else{
+                                  v.Status = 1
+                                }
+                              }
+                            )
+                          }
                         }
-                      }
-                    )
-                  }
-                ).catch(
-                  (res) =>{
+                )
+              }
+            ).catch(
+              (res) =>{
                     if(res.Data === 3){
                       that.$message(
                         {
@@ -392,7 +361,8 @@
                         }
                       )
                       sessionStorage.setItem('doingStatus','nothing')
-                      clearInterval(that.reloadId)
+                      that.clearReloadId()
+                      // clearInterval(that.reloadId)
                       const params = {
                         Keys:that.keys,
                         PageIndex:that.PageIndex,
@@ -423,19 +393,74 @@
                       )
                     }else if(res.Data === 1){
                       that.blankNew = true
-                      store.commit(REPLACE,{loadingText:'正在培训中，请稍后'})
-                    }else{
+                      const arr = store.state.app.quickQuizArr
+                      that.initStatus('train',res.recordId)
+                      botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'正在培训中，请稍后'}):null
+                      // arr.forEach(
+                      //   (v,index) =>{
+                      //     if(v.reloadId === that.$route.query.recordId){
+                      //       store.commit(REPLACE,{loadingText:'正在培训中，请稍后'})
+                      //     }
+                      //   }
+                      // )
+
+                    } else{
                       that.blankNew = false
-                      store.commit(REPLACE,{loadingText:'正在发布中，请稍后'})
+                      const arr = store.state.app.quickQuizArr
+                      that.initStatus('publish',res.recordId)
+                      botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'正在发布中，请稍后'}):null
+                      // arr.forEach(
+                      //   (v,index) =>{
+                      //     if(v.reloadId === that.$route.query.recordId){
+                      //       store.commit(REPLACE,{loadingText:'正在发布中，请稍后'})
+                      //     }
+                      //   }
+                      // )
                     }
                   }
-                )
-              }
             )
-          },5000)
-          store.dispatch(REPLACE,{quickQuizRecordId: id})
-        // }
 
+          },5000)
+          that.addReloadArr(id,botId)
+          // store.dispatch(REPLACE,{quickQuizRecordId: id})
+
+      },
+      clearReloadId(err){
+        const reloadArr = store.state.app.quickQuizArr
+        let newID = null;
+        reloadArr.forEach(
+          (v,index) =>{
+            if(v.recordId === err.recordId){
+              newID = v.id
+              return
+            }
+          }
+        )
+        clearInterval(newID);
+      },
+      addReloadArr(id,botId){
+        const arr = store.state.app.quickQuizArr
+        arr.forEach(
+          (v,index) =>{
+            if(v.recordId === botId){
+              v.id = id
+              return
+            }
+          }
+        )
+        store.dispatch(REPLACE,{quickQuizArr:arr})
+      },
+      isReloadBlankNew(botId){
+        const arr = store.state.app.quickQuizArr
+        let status = false
+        arr.forEach(
+          (v,index) =>{
+            if(botId ===v.recordId && v.doing === 'train'){
+              status = true //此id为之前测试过的id
+            }
+          }
+        )
+        return status
       },
       complateGetList(res){
         this.tableData= res['Data']
@@ -501,7 +526,7 @@
           /*
           初始化数组状态
           */
-          that.arr = []
+          // that.arr = []
           const params = {
             Keys:that.keys,
             PageIndex:that.PageIndex,
@@ -521,13 +546,13 @@
           /*
           当操作状态时选择时，初始化arr
           */
-          that.arr = []
+          // that.arr = []
           that.tableDataCopy = that.dataContainer.slice(0)
           that.tableData.forEach(
             (v,index) =>{
               switch (v.Status) {
                 case 5:
-                  that.arr.push(v.ID)
+                  // that.arr.push(v.ID)
                   v.checkedStatus = true
                   break;
                 default:
@@ -632,14 +657,14 @@
          */
         if(v){
           this.tableDataCopy.push(id)
-          this.arr.push(id)
+          // this.arr.push(id)
         }else{
           /*
           取消时，删除此id
          */
 
-          const arrIndex = this.arr.indexOf(id);
-          this.arr.splice(arrIndex,1)
+          // const arrIndex = this.arr.indexOf(id);
+          // this.arr.splice(arrIndex,1)
 
           const index = this.tableDataCopy.indexOf(id);
           this.tableDataCopy.splice(index,1)
@@ -657,13 +682,12 @@
               Ids: that.tableDataCopy,
               Action:'train',
             }
-
-            // that.blankNewObj = true
-            that.blankNew = true
+          that.initStatus('train',that.$route.query.recordId)
+          that.blankNew = true
             sessionStorage.setItem('doingStatus','train')
             store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
               () =>{
-                that._reload_ask(false) //开启论询且不刷新列表
+                that._reload_ask(false,that.$route.query.recordId) //开启论询且不刷新列表
               }
             )
             doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
@@ -688,6 +712,22 @@
           });
         });
       },
+      initStatus(key,id){
+        const recordId = id?id:this.$route.query.recordId
+        let arr = store.state.app.quickQuizArr
+        const item = {recordId,id:null,doing:key}
+        let status = true;
+        arr.forEach(
+          (v,index) =>{
+            if(v.recordId === recordId){
+              v.doing = key
+              status = false
+            }
+          }
+        )
+        status?arr.push(item):null
+        store.dispatch(REPLACE,{quickQuizArr:arr})
+      },
       publish(){
         const that = this
           that.$confirm('本次发布内容将覆盖上一次发布，是否继续发布？','提示',{
@@ -701,12 +741,12 @@
                 Ids: that.tableDataCopy,
                 Action:'publish',
               }
-
+              that.initStatus('publish',that.$route.query.recordId)
               that.blankNew = false
               sessionStorage.setItem('doingStatus','publish')
               store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
                 () =>{
-                  that._reload_ask()
+                  that._reload_ask(false,that.$route.query.recordId)
                 }
               )
 
