@@ -4,11 +4,11 @@
       <div class="existingQues">
         <span>已有问题</span>
         <div class="createTime">
-          创建时间 : {{CreateDate}}
+          创建时间 ： {{CreateDate}}
         </div>
       </div>
       <div class="questionDetail">
-        问题 : {{Question}}
+        问题 ： {{Question}}
       </div>
       <div class="existingQuestion">
         <div class="existingQues">
@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="questionDetail">
-        关键词 : {{Keyword}}
+        关键词 ： {{Keyword}}
       </div>
       <div class="existingQuestion">
         <div class="existingQues">
@@ -53,19 +53,19 @@
         </div>
       </div>
       <div class="questionDetail">
-        问题 : {{QuestionNew}}
+        问题 ： {{QuestionNew}}
       </div>
       <div class="editQuestionBac">
         <div class="editQuestion">
-          第二步 : 确认关键词 ( 可选择2-4个 )
+          第二步 ： 确认关键词 ( 可选择2-4个 )
         </div>
       </div>
       <div class="questionDetail">
-        关键词 : {{Keyword}}
+        关键词 ： {{Keyword}}
       </div>
       <div class="editQuestionBac">
         <div class="editQuestion">
-          第三步 : 设置答案
+          第三步 ： 设置答案
         </div>
       </div>
       <div class="editAnswerQA">
@@ -317,6 +317,17 @@
           "Email": Email,
           "FullName": FullName
         };
+
+        if (this.newText.Answer.indexOf("^") != "-1" || this.newText.Answer.indexOf("&") != "-1" || this.newText.Answer.indexOf("$") != "-1" || this.newText.Answer.indexOf("%") != "-1") {
+
+          this.$message({
+            message: '^ $ & % 为敏感字符，请勿添加在答案中',
+            type: 'warning'
+          });
+          this.loader = true;
+          this.loadingEdit = false;
+          return false;
+        }
 
 
 

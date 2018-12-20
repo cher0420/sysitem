@@ -295,6 +295,7 @@
           "Email": Email,
           "FullName": FullName
         };
+
         if(that.Text.Answer.trim() == "" && that.ImageNew.length == 0){
           console.log("答案不能为空")
           that.$message({
@@ -306,6 +307,20 @@
           that.loadingEdit = false;
           return false
         }
+        if (this.Text.Answer.indexOf("^") != "-1" || this.Text.Answer.indexOf("&") != "-1" || this.Text.Answer.indexOf("$") != "-1" || this.Text.Answer.indexOf("%") != "-1") {
+
+          this.$message({
+            message: '^ $ & % 为敏感字符，请勿添加在答案中',
+            type: 'warning'
+          });
+          this.subInfo = true;
+          this.loadingEdit = false;
+          return false;
+        }
+
+
+
+
         // this.loadingEdit = true;
         $.ajax({
           type: "POST",

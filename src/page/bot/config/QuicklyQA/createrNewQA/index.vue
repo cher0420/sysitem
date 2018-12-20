@@ -1,12 +1,13 @@
 <template>
-  <div class="yoy-main cc creatNewQA" >
-    <div v-if="newDataDis"  v-loading="loadingEdit">
+  <div class="yoy-main cc creatNewQA">
+    <div v-if="newDataDis" v-loading="loadingEdit">
       <div class="addQuestion">
         第一步 ： 添加问题
       </div>
       <div v-if="questionDis">
         <div class="addContent">
-          <el-input ref="input" v-model="Question" placeholder="例如:2018年年会举办地点"  @keyup.enter.native="getKeywords"></el-input>
+          <el-input ref="input" v-model="Question" placeholder="例如:2018年年会举办地点"
+                    @keyup.enter.native="getKeywords"></el-input>
         </div>
         <div class="questionTit">
           请用最简洁的方式描述你的问题
@@ -50,11 +51,11 @@
           </div>
         </div>
         <div class="addContent addContentDis" v-if="!keywordsDis">
-          关键词: {{keywordsNew}}
+          关键词 ： {{keywordsNew}}
         </div>
         <div v-if="!keywordsDis">
           <div class="addQuestion">
-            第三步: 设置答案
+            第三步： 设置答案
           </div>
           <div class="CreateNewQAtextareaParentAdd">
             <textarea v-model="textarea" placeholder="请输入自定义回答,最多500个字符" maxlength="500"></textarea>
@@ -88,11 +89,12 @@
               </div>
             </div>
 
-           <div style="text-align: left;margin-top: 50px;">
-             <el-button type="primary" plain size="mini" @click="keywordsLast" style="margin-right: 10px;">上一步</el-button>
-             <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="loader">完成</el-button>
-             <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">提交中...</el-button>
-           </div>
+            <div style="text-align: left;margin-top: 50px;">
+              <el-button type="primary" plain size="mini" @click="keywordsLast" style="margin-right: 10px;">上一步
+              </el-button>
+              <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="loader">完成</el-button>
+              <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">提交中...</el-button>
+            </div>
           </div>
         </div>
       </div>
@@ -127,7 +129,7 @@
     name: "Allen.Song-CreateNewQA",
     data() {
       return {
-        loadingEdit:false,
+        loadingEdit: false,
         focusState: false, // 自动获取焦点
         loader: true,  // 提交状态
         addKey: "",
@@ -202,7 +204,7 @@
       ...mapActions(
         ["yourselfStatusLast", "yourselfStatusAdd", "questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
-      stepOne(){ // 上一步
+      stepOne() { // 上一步
         this.addKey = "";
         this.questionLast();
       },
@@ -236,8 +238,8 @@
 
       addKeywords() {
         let that = this;
-        that.addKey =  that.addKey.trim();
-          //   console.log("+++++++++++");
+        that.addKey = that.addKey.trim();
+        //   console.log("+++++++++++");
 
         if (that.keywords.length < 4) {
           if (that.addKey.trim() == "") {
@@ -422,6 +424,19 @@
         let TenantId = store.state.app.userInfo.TenantId;
         let Email = store.state.app.userInfo.Email;
         let FullName = store.state.app.userInfo.FullName;
+
+        if (this.textarea.indexOf("^") != "-1" || this.textarea.indexOf("&") != "-1" || this.textarea.indexOf("$") != "-1" || this.textarea.indexOf("%") != "-1") {
+
+          this.$message({
+            message: '^ $ & % 为敏感字符，请勿添加在答案中',
+            type: 'warning'
+          });
+           this.loader = true;
+          this.loadingEdit = false;
+          return false;
+        }
+
+
         let data = {
           "BotConfigId": recordId,
           "TenantId": TenantId,
@@ -436,7 +451,7 @@
           "FullName": FullName
         };
 
-        if(that.textarea.trim() == "" && that.Image.length == 0){
+        if (that.textarea.trim() == "" && that.Image.length == 0) {
           console.log("答案不能为空")
           this.loadingEdit = false;
           that.$message({
@@ -447,6 +462,7 @@
           that.loader = true;
           return false
         }
+
 
         $.ajax({
           type: "POST",
@@ -486,9 +502,7 @@
               });
               setTimeout(function () {
                 that.loadingEdit = false;
-              },1000);
-
-
+              }, 1000);
 
 
             }
@@ -519,10 +533,10 @@
 
 
         let Files = this.imgList.map(product => {
-          if(product.file.type.slice(6) ==    "svg+xml"){
+          if (product.file.type.slice(6) == "svg+xml") {
             return {
               "Context": product.file.src.slice(26),
-              "Suffix":"svg",
+              "Suffix": "svg",
             };
           }
           return {
@@ -543,7 +557,7 @@
         }
 
 
-       // debugger;
+        // debugger;
 
         $.ajax({
           type: "POST",
@@ -820,12 +834,12 @@
   }
 
   /*.nextStepTop {*/
-       /*text-align: right;*/
-       /*margin-top: 33px;*/
-       /*!*margin-right: 11px;*!*/
-       /*max-width: 996px;*/
-       /*margin-left: 40px;*/
-     /*}*/
+  /*text-align: right;*/
+  /*margin-top: 33px;*/
+  /*!*margin-right: 11px;*!*/
+  /*max-width: 996px;*/
+  /*margin-left: 40px;*/
+  /*}*/
   .nextStepTop {
     /*text-align: right;*/
     margin-top: 40px;
