@@ -541,10 +541,9 @@
         const that = this
 
         this.loading = true
-        this.originDisabled = true
-        const arr = ['<',">","%",';',"/","?"]
-        const index = arr.indexOf(this.keys)
-        if(index>-1){
+        const str ='<>%;/?'
+        const index = this.keys&&str.indexOf(this.keys) > -1
+        if(index){
           this.$message({
             type:'error',
             message:'请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?等',
@@ -553,6 +552,7 @@
           that.loading = false
           return
         }
+        this.originDisabled = true
         this.tableData = []
         const Keys = {Keys:this.keys}
         getList(Keys).then(

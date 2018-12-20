@@ -61,7 +61,7 @@
               <input type="file" accept="image/*" class="el-upload__input" style="display: none" ref="yoy-image-upload" @change="uploadHandle"/>
             </section>
             <section class="tips">
-              （上传照片，支持jpg, jpeg, png, gif, svg格式，最大不超过200k, 最多3张）
+              （上传照片，支持jpg, jpeg, png, gif格式，最大不超过200k, 最多3张）
             </section>
           </section>
         <section class="full-width buttonContainer">
@@ -281,10 +281,10 @@ export default {
         const that = this
         const file = v.target.files[0];
         const type = file.type
-          if(!/image\/\w+/.test(type)){
+          if(!/image\/\w+/.test(type)||file.type.indexOf('svg')>-1){
             this.$message({
               type: 'error',
-              message: '只能上传图片类型的文件！'
+              message: '只能上传jpg, jpeg, png, gif格式类型的图片！'
             })
             return;
           }
@@ -382,6 +382,14 @@ export default {
         })
       },
       update_Detail(arr){
+        if(arr.length === 0&&this.friendlyAnswer=== ''){
+          this.$message({
+            type:'error',
+            message:'请添加友好答案！'
+          })
+          this.loading = false
+          return
+        }
         const CreateUserId = getCookies(TENANTID)
         const CreateUserName = getCookies(USERNAME)
         const BotConfigRecordId = this.$route.query.recordId
