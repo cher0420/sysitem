@@ -146,6 +146,7 @@
           ID: "",
           Answer: "",
         }],
+        ImageNew:[],
         KeyId: '',
         Keyword: '',
         Question: "",
@@ -275,13 +276,13 @@
               if (msg.Status == "1") {
                 if (msg.Data.FilesName.length != 0) {
                   for (var i = 0; i < msg.Data.FilesName.length; i++) {
-                    that.Image[i] = {
+                    that.ImageNew[i] = {
                       ID: "",
                       Answer: msg.Data.FilesName[i]
                     }
                   }
                 }
-                that.updataAnswer();
+                that.updataAnswerr();
               }
             }
           })
@@ -293,7 +294,9 @@
         });
       },
 
-      updataAnswer() { // 更新问题
+      updataAnswerr() {   // 更新问题
+
+
 
         let that = this;
         const token = getCookies(TOKEN);
@@ -309,14 +312,15 @@
           "Question": that.Question,
           "Keyword": that.Keyword,
           "Text": that.newText,
-          "Image": that.Image,
+          "Image": that.ImageNew,
           "DeleteIds": that.DeleteIds,
           "Email": Email,
           "FullName": FullName
         };
-         debugger;
 
-        if (that.newText.Answer.trim() == "" && that.Image.length == 0) {
+
+
+        if (that.newText.Answer.trim() == "" && that.ImageNew.length == 0) {
           console.log("答案不能为空")
           that.$message({
             message: '答案不能为空',
