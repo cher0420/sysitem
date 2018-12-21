@@ -300,9 +300,22 @@
 
                 that.clearReloadId(res)
 
-                store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
-                  () =>{
+                // store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
+                //   () =>{
+                          let loading = true;
+                          const arr = store.state.app.quickQuizArr
+
+                          arr.forEach(
+                            (v,index) =>{
+                              if(v.recordId === that.$route.query.recordId){
+                                loading = v.loading
+                              }
+                            }
+                          )
+                          store.dispatch(REPLACE,{mainLoading:loading,loadingText:null})
+
                           if(isGetList){
+                            that.loading = true
                             getList().then(
                               (res) =>{
                                 that.complateGetList(res)
@@ -347,8 +360,8 @@
                               }
                             )
                           }
-                        }
-                )
+                        // }
+                // )
               }
             ).catch(
               (res) =>{
@@ -409,20 +422,12 @@
                       const arr = store.state.app.quickQuizArr
                       that.initStatus('publish',res.recordId)
                       botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'正在发布中，请稍后'}):null
-                      // arr.forEach(
-                      //   (v,index) =>{
-                      //     if(v.reloadId === that.$route.query.recordId){
-                      //       store.commit(REPLACE,{loadingText:'正在发布中，请稍后'})
-                      //     }
-                      //   }
-                      // )
                     }
                   }
             )
 
           },5000)
           that.addReloadArr(id,botId)
-          // store.dispatch(REPLACE,{quickQuizRecordId: id})
 
       },
       clearReloadId(err){
@@ -431,6 +436,7 @@
         reloadArr.forEach(
           (v,index) =>{
             if(v.recordId === err.recordId){
+              v.loading = false
               newID = v.id
               return
             }
@@ -721,6 +727,7 @@
           (v,index) =>{
             if(v.recordId === recordId){
               v.doing = key
+              v.loading = true
               status = false
             }
           }
