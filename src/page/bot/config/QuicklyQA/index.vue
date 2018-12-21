@@ -189,19 +189,21 @@
             }
       ).catch(
         (err) =>{
-          store.dispatch(REPLACE,{mainLoading:true,loadingText:null}).then(
-            () =>{
-              if(err.Data === 1){
-                that.initStatus('train')
-              }else if(err.Data === 2){
-                that.initStatus('publish')
-              }
-              that.loading = false
+          if(that.$route.path === '/bot/config/quicklyQA'){
+            store.dispatch(REPLACE,{mainLoading:true,loadingText:null}).then(
+              () =>{
+                if(err.Data === 1){
+                  that.initStatus('train')
+                }else if(err.Data === 2){
+                  that.initStatus('publish')
+                }
+                that.loading = false
 
-              that.clearReloadId(err)
-              that._reload_ask(true,err.recordId)
-            }
-          )
+                that.clearReloadId(err)
+                that._reload_ask(true,err.recordId)
+              }
+            )
+          }
         }
       )
     },
@@ -312,7 +314,9 @@
                               }
                             }
                           )
-                          store.dispatch(REPLACE,{mainLoading:loading,loadingText:null})
+                          if(that.$route.path === '/bot/config/quicklyQA'){
+                            store.dispatch(REPLACE,{mainLoading:loading,loadingText:null})
+                          }
 
                           if(isGetList){
                             that.loading = true
@@ -384,9 +388,11 @@
                       getList(params).then(
                         (res) =>{
                           that.complateGetList(res)
-                          store.dispatch(
-                            REPLACE,{mainLoading:false,loadingText:null}
-                          )
+                          if(that.$route.path === '/bot/config/quicklyQA'){
+                            store.dispatch(
+                              REPLACE,{mainLoading:false,loadingText:null}
+                            )
+                          }
                         }
                       ).catch(
                         (err) =>{
