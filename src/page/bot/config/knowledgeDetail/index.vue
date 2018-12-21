@@ -42,6 +42,7 @@
         <el-row v-show='uploadList.length>0' class="el-upload-list el-upload-list--picture-card" style="float: left;">
           <el-col v-for="(item,index) in uploadList"  class="p-relative picItem text-a-c">
             <img :src="item.KnowledgeBase" alt="图片" class="align-middle-img"/>
+            <!--<img src="item.KnowledgeBase" alt="图片" class="align-middle-img"/>-->
             <section class="p-absolute opacity f-s-20">
               <span class="dis-i-b">
                 <i class="el-icon-zoom-in" @click="preview(item.KnowledgeBase)"></i>
@@ -61,7 +62,7 @@
               <input type="file" accept="image/*" class="el-upload__input" style="display: none" ref="yoy-image-upload" @change="uploadHandle"/>
             </section>
             <section class="tips">
-              （上传照片，支持jpg, jpeg, png, gif格式，最大不超过200k, 最多3张）
+              （至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）
             </section>
           </section>
         <section class="full-width buttonContainer">
@@ -281,11 +282,11 @@ export default {
         const that = this
         const file = v.target.files[0];
         const type = file.type
-          if(!/image\/\w+/.test(type)||file.type.indexOf('svg')>-1){
-            this.$message({
-              type: 'error',
-              message: '只能上传jpg, jpeg, png, gif格式类型的图片！'
-            })
+        if(!/image\/\w+/.test(type)||file.type.indexOf('svg')>-1){
+          this.$message({
+            type: 'error',
+            message: '只能上传jpg, jpeg, png, gif格式类型的图片'
+          })
             return;
           }
           if(!file||file.size>200*1024){
@@ -421,7 +422,9 @@ export default {
         }
         handleDetail(URL.requestHost+UPDATEKNOWDETAIL,params,null).then(
           (res) =>{
-            this.deleteRequest()
+            if(this.deleteImgArr.length>0){
+              this.deleteRequest()
+            }
             this.$message({
               type: 'success',
               message: '更新成功',
@@ -449,6 +452,7 @@ export default {
         this.editableStatus=v.name === 'first'
       },
       deleteRequest(){
+        const that = this
         const Id = this.$route.query.recordId
         const Files = []
         this.deleteImgArr.forEach(
@@ -468,7 +472,7 @@ export default {
           body: JSON.stringify(body)
         }
         upload_delete_img(params).then((res) => {
-
+          that.deleteImgArr = []
         })
       }
     }

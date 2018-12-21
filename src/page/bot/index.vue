@@ -184,7 +184,7 @@
         );
       },
       create(k, row) {
-        this.$confirm('确认创建机器人？', '警告！', {
+        this.$confirm('确认创建机器人？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

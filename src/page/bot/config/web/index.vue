@@ -38,7 +38,7 @@
             <img :src="defaultPicture" alt="默认头像" class="align-middle header">
           </el-col>
           <el-col :span="14" class="">
-            <el-radio label="custom" class="align-middle margin-right-30 custom">自定义 : </el-radio>
+            <el-radio label="custom" class="align-middle margin-right-30 custom" style="margin-bottom: 0;">自定义 : </el-radio>
             <section class="file-box f-s-11 c555 dis-i-b align-middle" :style="{borderColor:headerPicture === 'custom'?'#2a8ce7':'#c0c4cc'}">
               <section :class="[headerPicture === 'custom'?'normal':'notAllow']">
                 <input :disabled="fileDisabled" type='file' accept="image/*" name="avatar" placeholder="上传" id="img" class="file-btn" @change="upLoadImg"/>选择文件
@@ -83,7 +83,7 @@
       </el-col>
     </el-form-item>
     <title-item title="功能开关"></title-item>
-    <el-form-item label="" style="margin-bottom: 37px;margin-top: 18px;">
+    <el-form-item label="" style="margin-bottom: 32px;margin-top: 18px;">
       <el-col :span="12" >
         <el-checkbox v-model="formData.LoginSwitch" style="width: 134px;">登录验证</el-checkbox>
         <span class="primary-color f-s-14 disabled">提示：开启后则需登录后才可进入网页版</span>
@@ -181,9 +181,9 @@
           AuthorizedAddress:'127.0.0.1',
         },
         rules: {
-          AuthorizedAddress:[{required: true, message: '请填写授信域名!'}],
-          DialogTitle:[{required: true, message: '请填写对话框标题!'},{max:15,message:'最多15个字符！'}],
-          DialogGreetings:[{required: true, message: '请填写问候语!'},{max:50,message:'最多30个字符！'}],
+          AuthorizedAddress:[{required: true, message: '请填写授信域名'}],
+          DialogTitle:[{required: true, message: '请填写对话框标题'},{max:15,message:'最多15个字符'}],
+          DialogGreetings:[{required: true, message: '请填写问候语'},{max:50,message:'最多30个字符'}],
         },
         DialogColor:'#3B65B7',
         DialogTitleColor:'#FFFFFF',
