@@ -83,7 +83,7 @@
       </el-col>
     </el-form-item>
     <title-item title="功能开关"></title-item>
-    <el-form-item label="" style="margin-bottom: 37px;margin-top: 18px;">
+    <el-form-item label="" style="margin-bottom: 32px;margin-top: 18px;">
       <el-col :span="12" >
         <el-checkbox v-model="formData.LoginSwitch" style="width: 134px;">登录验证</el-checkbox>
         <span class="primary-color f-s-14 disabled">提示：开启后则需登录后才可进入网页版</span>
