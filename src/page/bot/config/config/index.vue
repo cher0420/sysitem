@@ -106,20 +106,20 @@
         button:'保存',
         editable:false,
         rules: {
-          Bot_Name:[{required: true, message: '请填写姓名!'},{min:3,message: '请输入3-15个字符'}],
-          Bot_Gender:[{required: true, message: '请选择性别!'}],
-          Bot_BloodType:[{required: true, message: '请选择血型!'}],
+          Bot_Name:[{required: true, message: '请填写姓名'},{min:3,message: '请输入3-15个字符'}],
+          Bot_Gender:[{required: true, message: '请选择性别'}],
+          Bot_BloodType:[{required: true, message: '请选择血型'}],
           Bot_Height: [
-            {required: false, message: '请填写身高!'},
+            {required: false, message: '请填写身高'},
           ],
           Bot_Weight:[
-            {required: false, message: '请填写体重!'},
+            {required: false, message: '请填写体重'},
           ],
           Bot_Birthplace:{
-            province:[{required: true, message: '请选择省份和城市!'}],
+            province:[{required: true, message: '请选择省份和城市'}],
           },
-          Bot_Company:[{required: false},{max:50,message:'最多50个字符！'}],
-          Bot_School:[{required: false},{max:50,message:'最多50个字符！'}],
+          Bot_Company:[{required: false},{max:50,message:'最多50个字符'}],
+          Bot_School:[{required: false},{max:50,message:'最多50个字符'}],
         },
         ruleForm: {
           Bot_Name: '',

@@ -62,7 +62,7 @@
               <input type="file" accept="image/*" class="el-upload__input" style="display: none" ref="yoy-image-upload" @change="uploadHandle"/>
             </section>
             <section class="tips">
-              （上传照片，支持jpg, jpeg, png, gif格式，最大不超过200k, 最多3张）
+              （至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）
             </section>
           </section>
         <section class="full-width buttonContainer">
@@ -285,7 +285,7 @@ export default {
         if(!/image\/\w+/.test(type)||file.type.indexOf('svg')>-1){
           this.$message({
             type: 'error',
-            message: '只能上传jpg, jpeg, png, gif格式类型的图片！'
+            message: '只能上传jpg, jpeg, png, gif格式类型的图片'
           })
             return;
           }

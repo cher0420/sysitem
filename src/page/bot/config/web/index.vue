@@ -181,9 +181,9 @@
           AuthorizedAddress:'127.0.0.1',
         },
         rules: {
-          AuthorizedAddress:[{required: true, message: '请填写授信域名!'}],
-          DialogTitle:[{required: true, message: '请填写对话框标题!'},{max:15,message:'最多15个字符！'}],
-          DialogGreetings:[{required: true, message: '请填写问候语!'},{max:50,message:'最多30个字符！'}],
+          AuthorizedAddress:[{required: true, message: '请填写授信域名'}],
+          DialogTitle:[{required: true, message: '请填写对话框标题'},{max:15,message:'最多15个字符'}],
+          DialogGreetings:[{required: true, message: '请填写问候语'},{max:50,message:'最多30个字符'}],
         },
         DialogColor:'#3B65B7',
         DialogTitleColor:'#FFFFFF',
