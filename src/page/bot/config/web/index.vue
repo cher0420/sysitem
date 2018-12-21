@@ -38,7 +38,7 @@
             <img :src="defaultPicture" alt="默认头像" class="align-middle header">
           </el-col>
           <el-col :span="14" class="">
-            <el-radio label="custom" class="align-middle margin-right-30 custom">自定义 : </el-radio>
+            <el-radio label="custom" class="align-middle margin-right-30 custom" style="margin-bottom: 0;">自定义 : </el-radio>
             <section class="file-box f-s-11 c555 dis-i-b align-middle" :style="{borderColor:headerPicture === 'custom'?'#2a8ce7':'#c0c4cc'}">
               <section :class="[headerPicture === 'custom'?'normal':'notAllow']">
                 <input :disabled="fileDisabled" type='file' accept="image/*" name="avatar" placeholder="上传" id="img" class="file-btn" @change="upLoadImg"/>选择文件
