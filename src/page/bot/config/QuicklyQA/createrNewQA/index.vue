@@ -13,8 +13,8 @@
           请用最简洁的方式描述你的问题
         </div>
         <div class="nextStepTop">
-          <el-button type="primary" size="mini" @click="getKeywords" v-if="!loading">下一步</el-button>
-          <el-button type="primary" size="mini" v-if="loading" :disabled="loading" :loading="loading">下一步</el-button>
+          <el-button type="primary" size="small" @click="getKeywords" v-if="!loading">下一步</el-button>
+          <el-button type="primary" size="small" v-if="loading" :disabled="loading" :loading="loading">下一步</el-button>
         </div>
       </div>
       <div class="addContent addContentDis" v-if="!questionDis">
@@ -44,7 +44,7 @@
           </div>
 
           <div class="nextStepp mt30">
-            <el-button type="primary" plain size="mini" @click="stepOne()" style="margin-right: 10px;">上一步</el-button>
+            <el-button  plain size="mini" @click="stepOne()" style="margin-right: 10px;">上一步</el-button>
             <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
               下一步
             </el-button>
@@ -90,10 +90,10 @@
             </div>
 
             <div style="text-align: left;margin-top: 50px;">
-              <el-button type="primary" plain size="mini" @click="keywordsLast" style="margin-right: 10px;">上一步
+              <el-button  plain size="small" @click="keywordsLast" style="margin-right: 10px;">上一步
               </el-button>
-              <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="loader">完成</el-button>
-              <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">提交中...</el-button>
+              <el-button type="primary" size="small" @click="getPhotoUrl" v-if="loader">完成</el-button>
+              <el-button type="primary" size="small" :loading="!loader" v-if="!loader">提交中...</el-button>
             </div>
           </div>
         </div>
@@ -161,7 +161,7 @@
         "yourselfStatus",
       ]),
       keywordsNew() {
-        return this.keywords.join(","); //  关键词拼接展示
+        return this.keywords.join("、"); //  关键词拼接展示
       },
 
 
@@ -715,16 +715,16 @@
   }
 
   .clickBtn {
-    height: 30px;
+    height: 32px;
     /*border: 1px solid red;*/
     width: 32px;
     position: absolute;
-    left: 166px;
+    right: 0;
     top: 0;
     cursor: pointer;
     font-size: 17px;
     text-align: center;
-    line-height: 30px;
+    line-height: 32px;
   }
 
   .yourselfInput {
@@ -1039,6 +1039,7 @@
 
   .yourselfInput input {
     border: 1px solid #2a8ce7;
+    border-radius: 5px;
   }
 
   .yourselfInput span {

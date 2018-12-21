@@ -40,9 +40,9 @@
         </div>
       </div>
       <div class="alterKey">
-        <el-button type="primary" plain size="mini" @click="alterKeyWords()" style="margin-right: 10px;">修改关键词</el-button>
-        <el-button type="primary" size="mini" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
-        <el-button type="primary" size="mini" :loading="!loader" v-if="!loader">更新中...</el-button>
+        <el-button  plain size="small" @click="alterKeyWords()" style="margin-right: 10px;">修改关键词</el-button>
+        <el-button type="primary" size="small" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
+        <el-button type="primary" size="small" :loading="!loader" v-if="!loader">更新中...</el-button>
 
       </div>
     </div>

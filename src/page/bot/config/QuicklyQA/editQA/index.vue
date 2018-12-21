@@ -67,8 +67,8 @@
     </div>
     <div>
       <div class="subFinsh">
-        <el-button type="primary" size="mini" @click="getPhotoUrl" v-if="subInfo">完成</el-button>
-        <el-button type="primary" size="mini" :loading="true" v-if="!subInfo">提交中...</el-button>
+        <el-button type="primary" size="small" @click="getPhotoUrl" v-if="subInfo">完成</el-button>
+        <el-button type="primary" size="small" :loading="true" v-if="!subInfo">提交中...</el-button>
       </div>
     </div>
     <!-- 预览 -->
@@ -550,9 +550,10 @@
   .keywordTip {
     height: 36px;
     line-height: 36px;
-    font-size: 18px;
+    font-size: 16px;
     background: #F9FAFC;
     padding-left: 10px;
+    color: #555;
 
   }
 
@@ -581,7 +582,8 @@
     padding-bottom: 40px;
     padding-top: 30px;
     padding-left: 40px;
-    font-size: 16px;
+    font-size: 14px;
+    color: #555;
   }
 
   .edit_textarea {

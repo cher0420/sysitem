@@ -32,8 +32,8 @@
     </div>
     <div class="buttonSubb">
       <el-button type="primary" size="mini" @click="finishReturn()" style="margin-right: 10px;">完成</el-button>
-      <el-button type="primary" plain size="mini" @click="EditReturn()" v-if="editor">编辑</el-button>
-      <el-button type="primary" plain size="mini" disabled v-if="!editor">编辑</el-button>
+      <el-button  plain size="mini" @click="EditReturn()" v-if="editor">编辑</el-button>
+      <el-button  plain size="mini" disabled v-if="!editor">编辑</el-button>
     </div>
     <!-- -->
     <el-dialog
@@ -287,9 +287,10 @@
   .keywordTip {
     height: 36px;
     line-height: 36px;
-    font-size: 18px;
+    font-size: 16px;
     background: #F9FAFC;
     padding-left: 10px;
+    color: #555;
 
   }
 
@@ -317,7 +318,8 @@
     padding-bottom: 40px;
     padding-top: 30px;
     padding-left: 40px;
-    font-size: 16px;
+    font-size: 14px;
+    color: #555;
   }
 
   .edit_textarea {
