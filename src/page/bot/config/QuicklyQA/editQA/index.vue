@@ -643,6 +643,8 @@
     line-height: 80px;
     font-size: 30px;
     color: #c3c3c3;
+    border-radius:5px;
+    background-color: #fbfdff;
   }
 
   .upload_warp_left:hover {

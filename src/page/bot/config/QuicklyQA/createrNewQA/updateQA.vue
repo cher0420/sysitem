@@ -40,9 +40,9 @@
         </div>
       </div>
       <div class="alterKey">
-        <el-button  plain size="small" @click="alterKeyWords()" style="margin-right: 10px;">修改关键词</el-button>
-        <el-button type="primary" size="small" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
-        <el-button type="primary" size="small" :loading="!loader" v-if="!loader">更新中...</el-button>
+        <el-button  plain size="small" @click="alterKeyWords()">修改关键词</el-button><el-button type="primary" size="small" @click="getPhotoUrl()" v-if="loader">更新回答</el-button><el-button type="primary" size="small" :loading="!loader" v-if="!loader">更新中...</el-button>
+
+
 
       </div>
     </div>
@@ -563,6 +563,7 @@
     width: 80px;
   }
 
+
   .m20 {
     margin-top: 20px;
   }
@@ -586,6 +587,8 @@
     display: inline-block;
     margin-right: 22px;
     vert-align: middle;
+    border-radius:5px;
+    background-color: #fbfdff;
   }
 
   .upload_warp_leftt:hover {
@@ -728,8 +731,8 @@
 
 </style>
 
-<style scoped>
-
+<style scoped  lang="scss" >
+  /*@import '../../../../../style/index';*/
   .upload_warp_left {
     width: 80px;
     height: 80px;
@@ -789,6 +792,24 @@
     /*text-align: right;*/
     max-width: 450px;
     margin-top: 50px;
+  }
+  .alterKey button {
+    width: 100px;
+    padding: 0px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+  }
+  .alterKey  button {
+    width: 100px;
+    padding: 0px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+  }
+  .alterKey  button:nth-child(1) {
+    border: 1px solid  #2a8ce7;
+    color: #2a8ce7;
   }
 </style>
 <style>

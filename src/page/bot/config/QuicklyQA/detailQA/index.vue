@@ -31,9 +31,8 @@
       </div>
     </div>
     <div class="buttonSubb">
-      <el-button type="primary" size="mini" @click="finishReturn()" style="margin-right: 10px;">完成</el-button>
-      <el-button  plain size="mini" @click="EditReturn()" v-if="editor">编辑</el-button>
-      <el-button  plain size="mini" disabled v-if="!editor">编辑</el-button>
+      <el-button type="primary" size="mini"  @click="finishReturn()" >完成</el-button><el-button  plain size="mini" class="buttonSubbButton" @click="EditReturn()" v-if="editor">编辑</el-button><el-button class="buttonSubbButton"  plain size="mini" disabled v-if="!editor">编辑</el-button>
+
     </div>
     <!-- -->
     <el-dialog
@@ -235,6 +234,15 @@
     max-width: 1040px;
     box-sizing: border-box;
   }
+  .buttonSubb .buttonSubbButton {
+    width: 80px;
+    text-align: center;
+    height: 32px;
+    line-height: 32px;
+    padding: 0;
+    border:1px solid #2a8ce7;
+    color: #2a8ce7;
+  }
 
   .PreviewImgg {
     text-align: center;
@@ -366,6 +374,8 @@
     line-height: 80px;
     font-size: 30px;
     color: #c3c3c3;
+    border-radius:5px;
+    background-color: #fbfdff;
   }
 
   .upload_warp_left:hover {

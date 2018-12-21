@@ -13,7 +13,7 @@
           请用最简洁的方式描述你的问题
         </div>
         <div class="nextStepTop">
-          <el-button type="primary" size="small" @click="getKeywords" v-if="!loading">下一步</el-button>
+          <el-button type="primary" size="small" @click="getKeywords" v-if="!loading" >下一步</el-button>
           <el-button type="primary" size="small" v-if="loading" :disabled="loading" :loading="loading">下一步</el-button>
         </div>
       </div>
@@ -44,10 +44,10 @@
           </div>
 
           <div class="nextStepp mt30">
-            <el-button  plain size="mini" @click="stepOne()" style="margin-right: 10px;">上一步</el-button>
-            <el-button type="primary" size="mini" @click="getCheckKeywords()" :disabled="checkboxDisabled">
-              下一步
-            </el-button>
+            <el-button  plain size="small" class="nextSteppButton" @click="stepOne()">上一步</el-button><el-button type="primary" size="small" @click="getCheckKeywords()" :disabled="checkboxDisabled">
+            下一步
+          </el-button>
+
           </div>
         </div>
         <div class="addContent addContentDis" v-if="!keywordsDis">
@@ -89,11 +89,11 @@
               </div>
             </div>
 
-            <div style="text-align: left;margin-top: 50px;">
-              <el-button  plain size="small" @click="keywordsLast" style="margin-right: 10px;">上一步
-              </el-button>
-              <el-button type="primary" size="small" @click="getPhotoUrl" v-if="loader">完成</el-button>
-              <el-button type="primary" size="small" :loading="!loader" v-if="!loader">提交中...</el-button>
+            <div style="text-align: left;margin-top: 50px;" class="nextStepp">
+              <el-button  plain size="small" class="nextSteppButton" @click="keywordsLast" >上一步
+              </el-button><el-button type="primary" size="small" @click="getPhotoUrl" v-if="loader">完成</el-button> <el-button type="primary" size="small" :loading="!loader" v-if="!loader">提交中...</el-button>
+
+
             </div>
           </div>
         </div>
@@ -847,6 +847,13 @@
     max-width: 996px;
     /*margin-left: 40px;*/
   }
+  .nextStepTop button{
+width: 80px;
+    padding: 0;
+    text-align: center;
+    line-height:32px;
+    height: 32px;
+  }
 
   .nextStep button {
     width: 80px;
@@ -862,6 +869,17 @@
     height: 32px;
     line-height: 32px;
     padding: 0;
+    border:1px solid #2a8ce7;
+
+  }
+  .nextStepp .nextSteppButton {
+    width: 80px;
+    text-align: center;
+    height: 32px;
+    line-height: 32px;
+    padding: 0;
+    border:1px solid #2a8ce7;
+    color: #2a8ce7;
   }
 
   .keywords {
@@ -902,6 +920,8 @@
     display: inline-block;
     margin-right: 22px;
     /*border: 1px dashed #fff;*/
+    border-radius:5px;
+    background-color: #fbfdff;
   }
 
   .upload_warp_left:hover {
