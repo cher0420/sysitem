@@ -162,10 +162,12 @@ export const doSomething = (url,params) =>{
     (resolve,reject) =>{
       request(url,options).then(
         (res) =>{
+          res.recordId = BotConfigId
           resolve(res)
         }
       ).catch(
         (err) =>{
+          err.recordId = BotConfigId
           reject(err)
         }
       )

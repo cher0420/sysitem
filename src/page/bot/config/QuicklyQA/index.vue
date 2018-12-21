@@ -374,7 +374,7 @@
                         }
                       )
                       sessionStorage.setItem('doingStatus','nothing')
-                      that.clearReloadId()
+                      that.clearReloadId(res)
                       // clearInterval(that.reloadId)
                       const params = {
                         Keys:that.keys,
@@ -700,15 +700,14 @@
               (res) =>{
               }
             ).catch(
-              () =>{
+              (err) =>{
                 that.$message({
                   type:'error',
-                  message:'操作失败',
+                  message:'服务器错误',
                   duration:2000,
-                  onClose: () =>{
-                    store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
-                  }
                 })
+                that.clearReloadId(err)
+                store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
               }
             )
         }).catch(() => {
@@ -762,12 +761,15 @@
 
                 }
               ).catch(
-                () =>{
+                (err) =>{
                   that.$message({
                     type: 'error',
-                    message: '服务器错误',
+                    message: '服务器错误,请稍后重试',
                     duration:2000,
                   });
+                  console.log(err)
+                  that.clearReloadId(err)
+                  store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
                 }
               )
             }
