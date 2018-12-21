@@ -60,7 +60,7 @@
       </div>
 
       <div class="imgLimit">
-        ( 支持.jpg,.jpeg,.png,.gif格式, 最大不超过200k , 最多3张 )
+        （至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）
       </div>
 
 

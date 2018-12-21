@@ -163,6 +163,7 @@
 
         // 跳转到列表页
         const query = this.$route.query;
+        // debugger;
         this.$router.push({
           path: '/bot/config/quicklyQA',
           query: {

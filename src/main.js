@@ -5,8 +5,8 @@
 import 'babel-polyfill'
 import 'element-ui/lib/theme-chalk/index.css';
 
-import $ from 'jquery';
-Vue.prototype.$= $;
+// import $ from 'jquery';
+// Vue.prototype.$= $;
 
 
 

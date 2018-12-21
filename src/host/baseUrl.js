@@ -26,3 +26,16 @@ const STAGING_URL = {
   requestHost: 'https://hightalkadminapi-staging.azurewebsites.net'
 }
 export default  TEST_URL
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -85,7 +85,7 @@
                 <i class="el-icon-plus"></i>
               </div>
               <div class="imgLimit">
-                ( 支持.jpg,.jpeg,.png,.gif格式, 最大不超过200k , 最多3张 )
+                （至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）
               </div>
             </div>
 
@@ -123,10 +123,10 @@
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
-  import {participle} from "../../../../../api/getdata";  // 测试用 异步请求
+  import {participle} from "../../../../../api/getdata";  // api
 
   export default {
-    name: "Allen.Song-CreateNewQA",
+    name: "Allen-CreateNewQA",
     data() {
       return {
         loadingEdit: false,
@@ -425,13 +425,13 @@
         let Email = store.state.app.userInfo.Email;
         let FullName = store.state.app.userInfo.FullName;
 
-        if (this.textarea.indexOf("<") != "-1" ||this.textarea.indexOf(">") != "-1" || this.textarea.indexOf("&") != "-1" || this.textarea.indexOf("$") != "-1" || this.textarea.indexOf("%") != "-1") {
+        if (this.textarea.indexOf("<") != "-1" || this.textarea.indexOf(">") != "-1" || this.textarea.indexOf("&") != "-1" || this.textarea.indexOf("$") != "-1" || this.textarea.indexOf("%") != "-1") {
 
           this.$message({
             message: '<> $ & % 为敏感字符，请勿添加在答案中',
             type: 'warning'
           });
-           this.loader = true;
+          this.loader = true;
           this.loadingEdit = false;
           return false;
         }
@@ -1063,3 +1063,11 @@
     line-height: 1;
   }
 </style>
+
+
+
+
+
+
+
+
