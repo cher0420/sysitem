@@ -55,7 +55,7 @@
         </div>
       </div>
 
-      <div class="upload_warp_left" @click="fileClick" v-if="addIcon">
+      <div class="upload_warp_left" @click="fileClick" v-show="imgList.length<3">
         <i class="el-icon-plus"></i>
       </div>
 
@@ -575,7 +575,6 @@
   .imgLimit {
     display: inline-block;
     color: #c3c3c3;
-    margin-left: 20px;
   }
 
   .kwShow {
@@ -649,7 +648,8 @@
     line-height: 80px;
     font-size: 30px;
     color: #c3c3c3;
-    border-radius:5px;
+    border-radius:6px;
+    margin-right: 20px;
     background-color: #fbfdff;
   }
 

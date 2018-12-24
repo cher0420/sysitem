@@ -115,7 +115,7 @@
      //   console.log("取值", query)
 
         this.Question = query.Question;
-        this.Keyword = query.Keyword.replace(/,/g,'、');
+        this.Keyword = query.Keyword.replace(/、/g,',');
 
         this.getCheckKeywords();
         return false;
@@ -319,7 +319,6 @@
   .imgLimit {
     display: inline-block;
     color: #c3c3c3;
-    margin-left: 20px;
   }
 
   .kwShow {
@@ -384,6 +383,7 @@
     font-size: 30px;
     color: #c3c3c3;
     border-radius:5px;
+    margin-right:20px;
     background-color: #fbfdff;
   }
 

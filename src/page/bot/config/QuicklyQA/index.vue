@@ -126,7 +126,7 @@
         keys:'',
         total:0,
         PageIndex:1,
-        PageSize:50,
+        PageSize:10,
         arr:[],
         showDel:false,
         reloadId:null,
@@ -312,9 +312,12 @@
                             (v,index) =>{
                               if(v.recordId === that.$route.query.recordId){
                                 loading = v.loading
+                                return
                               }
+                              loading = false
                             }
                           )
+
                           if(that.$route.path === '/bot/config/quicklyQA'){
                             store.dispatch(REPLACE,{mainLoading:loading})
                           }

@@ -583,7 +583,7 @@
     text-align: center;
     vertical-align: middle;
     display: inline-block;
-    margin-right: 22px;
+    margin-right: 20px;
     vert-align: middle;
     border-radius:6px;
     background-color: #fbfdff;
@@ -741,7 +741,7 @@
     text-align: center;
     float: left;
     /*vert-align: middle;*/
-    margin-right: 22px;
+    margin-right: 20px;
   }
 
   .upload_warp_img_div {

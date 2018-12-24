@@ -81,7 +81,7 @@
                 </div>
               </div>
 
-              <div class="upload_warp_left" @click="fileClick" v-if="addIcon">
+              <div v-show="imgList.length<3" class="upload_warp_left" @click="fileClick" >
                 <i class="el-icon-plus"></i>
               </div>
               <div class="imgLimit">
@@ -415,7 +415,7 @@
 
       },
       saveKeywords() {  // 	存储 新创建的答案
-    debugger;
+
         //  console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
         const token = getCookies(TOKEN);
@@ -679,8 +679,20 @@
         this.PreviewImg = this.imgList[index].file.src;
       },
       fileDel(index) {
-        this.size = this.size - this.imgList[index].file.size;
-        this.imgList.splice(index, 1);
+        this.$confirm('确认要删除此图片?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.size = this.size - this.imgList[index].file.size;
+          this.imgList.splice(index, 1);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+
       },
       bytesToSize(bytes) {
         if (bytes === 0) return '0 B';
@@ -917,7 +929,7 @@ width: 80px;
     text-align: center;
     vertical-align: middle;
     display: inline-block;
-    margin-right: 22px;
+    margin-right: 20px;
     /*border: 1px dashed #fff;*/
     border-radius:5px;
     background-color: #fbfdff;
@@ -1039,7 +1051,6 @@ width: 80px;
   .imgLimit {
     display: inline-block;
     color: #c3c3c3;
-    margin-left: 20px;
   }
 
   .max1000 {
