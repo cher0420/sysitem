@@ -93,7 +93,7 @@
           </div>
 
           <!-- 添加图片按钮 -->
-          <div class="upload_warp_leftt" @click="fileClick" v-if="addIcon">
+          <div class="upload_warp_leftt" @click="fileClick" v-show="imgList.length<3" >
             <i class="el-icon-plus"></i>
           </div>
 
