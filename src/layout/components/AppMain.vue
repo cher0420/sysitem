@@ -65,7 +65,6 @@
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    width: calc(100% - 80px);
   }
   .line{
     width: 2px;
