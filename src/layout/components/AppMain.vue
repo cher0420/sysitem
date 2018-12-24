@@ -1,7 +1,9 @@
 <template>
-  <section class="yoy-header-container robotWidth" ref="scrollTop" style="flex:1">
+  <section class="yoy-header-container robotWidth " ref="scrollTop" style="flex:1">
     <bread></bread>
-    <router-view class="yoy-main"></router-view>
+    <section class="yoy-main">
+      <router-view></router-view>
+    </section>
   </section>
 </template>
 <script>
@@ -60,6 +62,9 @@
   }
   .yoy-main{
     padding:0 40px 0 40px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
   }
   .line{
     width: 2px;

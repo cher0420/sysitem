@@ -189,8 +189,9 @@
             }
       ).catch(
         (err) =>{
+          store.dispatch(REPLACE,{loadingText:null})
           if(that.$route.path === '/bot/config/quicklyQA'){
-            store.dispatch(REPLACE,{mainLoading:true,loadingText:null}).then(
+            store.dispatch(REPLACE,{mainLoading:true}).then(
               () =>{
                 if(err.Data === 1){
                   that.initStatus('train')
@@ -315,9 +316,9 @@
                             }
                           )
                           if(that.$route.path === '/bot/config/quicklyQA'){
-                            store.dispatch(REPLACE,{mainLoading:loading,loadingText:null})
+                            store.dispatch(REPLACE,{mainLoading:loading})
                           }
-
+                          store.dispatch(REPLACE,{loadingText:null})
                           if(isGetList){
                             that.loading = true
                             getList().then(
@@ -364,8 +365,6 @@
                               }
                             )
                           }
-                        // }
-                // )
               }
             ).catch(
               (res) =>{
@@ -388,11 +387,9 @@
                       getList(params).then(
                         (res) =>{
                           that.complateGetList(res)
-                          if(that.$route.path === '/bot/config/quicklyQA'){
                             store.dispatch(
                               REPLACE,{mainLoading:false,loadingText:null}
                             )
-                          }
                         }
                       ).catch(
                         (err) =>{
@@ -412,22 +409,17 @@
                       )
                     }else if(res.Data === 1){
                       that.blankNew = true
-                      const arr = store.state.app.quickQuizArr
                       that.initStatus('train',res.recordId)
-                      botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'正在培训中，请稍后'}):null
-                      // arr.forEach(
-                      //   (v,index) =>{
-                      //     if(v.reloadId === that.$route.query.recordId){
-                      //       store.commit(REPLACE,{loadingText:'正在培训中，请稍后'})
-                      //     }
-                      //   }
-                      // )
+                      if(that.$route.path === '/bot/config/quicklyQA'){
+                        botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'正在培训中，请稍后'}):null
+                      }
 
                     } else{
                       that.blankNew = false
-                      const arr = store.state.app.quickQuizArr
                       that.initStatus('publish',res.recordId)
-                      botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'正在发布中，请稍后'}):null
+                      if(that.$route.path === '/bot/config/quicklyQA') {
+                        botId === that.$route.query.recordId ? store.commit(REPLACE, {loadingText: '正在发布中，请稍后'}) : null
+                      }
                     }
                   }
             )

@@ -203,7 +203,7 @@
       TitleItem,
     },
     created(){
-      store.dispatch(REPLACE, {mainLoading: true})
+      store.dispatch(REPLACE, {mainLoading: true,loadingText:null})
       const id = JSON.parse(sessionStorage.getItem('recordId'))
       const recordId = this.$route.query.recordId?this.$route.query.recordId:id
       const token =getCookies(TOKEN)
