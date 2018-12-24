@@ -1,5 +1,5 @@
 <template>
-  <div class="yoy-main cc creatNewQA">
+  <div class="cc creatNewQA">
     <div v-if="newDataDis" v-loading="loadingEdit">
       <div class="addQuestion">
         第一步 ： 添加问题
@@ -370,7 +370,7 @@
         // console.log("recordId",recordId)
         let data = {
           "BotConfigId": recordId,
-          "Keys": this.keywordsNew
+          "Keys": this.keywordsNew.replace(/、/g,',')
         }
 
 
@@ -436,12 +436,11 @@
           return false;
         }
 
-
         let data = {
           "BotConfigId": recordId,
           "TenantId": TenantId,
           "Question": that.Question,
-          "Keyword": this.keywordsNew,
+          "Keyword": this.keywordsNew.replace(/、/g,','),
           "Text": {
             "ID": "",
             "Answer": this.textarea,
@@ -710,9 +709,9 @@
   /*@import "../../../../../static/base.css";*/
   @import '../../../../../style/index';
 
-  .upload_warp_img_div img {
-    width: 80px;
-  }
+  /*.upload_warp_img_div img {*/
+    /*width: 80px;*/
+  /*}*/
 
   .clickBtn {
     height: 32px;
@@ -942,9 +941,9 @@ width: 80px;
     float: left;
   }
 
-  .upload_warp_img_div img {
-    width: 80px;
-  }
+  /*.upload_warp_img_div img {*/
+    /*width: 80px;*/
+  /*}*/
 
   .upload_warp_img {
     display: inline-block;
@@ -954,11 +953,20 @@ width: 80px;
 
   .upload_warp_img_div_top {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
 
-    width: 100%;
+    width: 80px;
     height: 100%;
+    /*text-align: center;*/
+    line-height: 80px;
+    color: transparent;
+    text-align: left;
+    border: 1px solid #c0ccda;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
   }
 
   .upload_warp_img_div_top:hover {
@@ -969,10 +977,20 @@ width: 80px;
   }
 
   .upload_warp_img_div_top img {
-    width: 10px;
-    height: 10px;
+    width: 80px;
+    height: 100%;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
   }
 
+  .upload_warp_img_div img {
+    width: 80px;
+    height: 100%;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+  }
   .photoUp {
     text-align: left;
   }

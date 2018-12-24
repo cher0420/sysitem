@@ -186,7 +186,7 @@
         this.CreateDate = data.CreateDate;
         this.Image = data.Image;
         this.KeyId = data.KeyId;
-        this.Keyword = data.Keyword;
+        this.Keyword = data.Keyword.replace(/,/g,'、');
         this.Question = data.Question;
         this.QuestionNew = QuestionNew;
         if (data.Text.Answer != null) {
@@ -310,7 +310,7 @@
           "TenantId": TenantId,
           "KeyId": that.KeyId,
           "Question": that.Question,
-          "Keyword": that.Keyword,
+          "Keyword": that.Keyword.replace(/、/g,','),
           "Text": that.newText,
           "Image": that.ImageNew,
           "DeleteIds": that.DeleteIds,
@@ -587,7 +587,7 @@
     display: inline-block;
     margin-right: 22px;
     vert-align: middle;
-    border-radius:5px;
+    border-radius:6px;
     background-color: #fbfdff;
   }
 
@@ -761,6 +761,10 @@
 
   .upload_warp_img_div img {
     width: 80px;
+    height: 100%;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
   }
 
   .upload_warp_img {
@@ -875,18 +879,27 @@
 
   .upload_warp_img_div_top {
     position: absolute;
-    left: 0;
-    top: 0;
-    height: 80px;
-    width: 100%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+
+    width: 80px;
+    height: 100%;
+    /*text-align: center;*/
     line-height: 80px;
     color: transparent;
+    text-align: left;
+    border: 1px solid #c0ccda;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
   }
 
   .upload_warp_img_div_text:hover {
     background: rgba(0, 0, 0, 0.4);
     cursor: pointer;
     color: #fff;
+    border-radius: 6px;
     /*height: 80px;*/
   }
 

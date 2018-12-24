@@ -1,5 +1,5 @@
 <template>
-  <div class="yoy-main">
+  <div>
     <div class="keywordTip">
       关键词
     </div>
@@ -115,7 +115,7 @@
      //   console.log("取值", query)
 
         this.Question = query.Question;
-        this.Keyword = query.Keyword;
+        this.Keyword = query.Keyword.replace(/,/g,'、');
 
         this.getCheckKeywords();
         return false;
@@ -354,11 +354,20 @@
 
   .upload_warp_img_div_top {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+
     width: 80px;
-    height: 16px;
-    /*background: rgba(226, 226, 226, 0.4);*/
+    height: 100%;
+    /*text-align: center;*/
+    line-height: 80px;
+    color: transparent;
+    text-align: left;
+    border: 1px solid #c0ccda;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
   }
 
   .upload_warp_left {
@@ -397,8 +406,11 @@
   }
 
   .upload_warp_img_div img {
-    width: 100%;
+    width: 80px;
     height: 100%;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
   }
 
   .photoUpp {
