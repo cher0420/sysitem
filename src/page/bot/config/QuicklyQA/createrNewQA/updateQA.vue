@@ -602,7 +602,7 @@
     font-size: 16px;
     height: 30px;
     line-height: 30px;
-
+max-width: 400px;
     /*width: 100%;*/
     padding-left: 10px;
   }
@@ -820,13 +820,16 @@
   .photoView {
     margin-left: 0 !important;
   }
+  .editAnswerQA{
+    max-width: 450px;
+  }
 
   .editAnswerQA textarea {
     color: #999;
     font-size: 14px;
     margin-top: 30px;
     box-sizing: border-box;
-    width: 450px !important;
+    width: 100% !important;
     height: 300px !important;
     padding: 20px;
     /*border: 1px solid #e1e1e1;*/
@@ -860,7 +863,8 @@
 
   .editAnswerQA .fontCount {
     position: absolute;
-    left: 385px;
+    /*left: 385px;*/
+    right: 10px;
     bottom: 10px;
     word-break: keep-all;
     color: #999;
