@@ -25,7 +25,7 @@ const STAGING_URL = {
   SSOServerApi:"https://hightalkssoapi-staging.azurewebsites.net",
   requestHost: 'https://hightalkadminapi-staging.azurewebsites.net'
 }
-export default  TEST_URL
+export default  UAT_URL
 
 
 
