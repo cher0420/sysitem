@@ -40,8 +40,9 @@
         </div>
       </div>
       <div class="alterKey">
-        <el-button  plain size="small" @click="alterKeyWords()">修改关键词</el-button><el-button type="primary" size="small" @click="getPhotoUrl()" v-if="loader">更新回答</el-button><el-button type="primary" size="small" :loading="!loader" v-if="!loader">更新中...</el-button>
-
+        <el-button plain size="small" @click="alterKeyWords()">修改关键词</el-button>
+        <el-button type="primary" size="small" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
+        <el-button type="primary" size="small" :loading="!loader" v-if="!loader">更新中...</el-button>
 
 
       </div>
@@ -146,11 +147,11 @@
           ID: "",
           Answer: "",
         }],
-        ImageNew:[],
+        ImageNew: [],
         KeyId: '',
         Keyword: '',
         Question: "",
-        QuestionNew:"",
+        QuestionNew: "",
         Text: {
           ID: "", Answer: "",
         },
@@ -297,7 +298,6 @@
       updataAnswerr() {   // 更新问题
 
 
-
         let that = this;
         const token = getCookies(TOKEN);
         this.token = token;
@@ -318,7 +318,7 @@
           "FullName": FullName
         };
 
-        if (this.newText.Answer.indexOf("<") != "-1" ||this.newText.Answer.indexOf(">") != "-1" ||  this.newText.Answer.indexOf("&") != "-1" || this.newText.Answer.indexOf("$") != "-1" || this.newText.Answer.indexOf("%") != "-1") {
+        if (this.newText.Answer.indexOf("<") != "-1" || this.newText.Answer.indexOf(">") != "-1" || this.newText.Answer.indexOf("&") != "-1" || this.newText.Answer.indexOf("$") != "-1" || this.newText.Answer.indexOf("%") != "-1") {
 
           this.$message({
             message: '<> $ & % 为敏感字符，请勿添加在答案中',
@@ -328,7 +328,6 @@
           this.loadingEdit = false;
           return false;
         }
-
 
 
         if (that.newText.Answer.trim() == "" && that.ImageNew.length == 0) {
@@ -563,7 +562,6 @@
     width: 80px;
   }
 
-
   .m20 {
     margin-top: 20px;
   }
@@ -587,7 +585,7 @@
     display: inline-block;
     margin-right: 22px;
     vert-align: middle;
-    border-radius:5px;
+    border-radius: 5px;
     background-color: #fbfdff;
   }
 
@@ -602,7 +600,7 @@
     font-size: 16px;
     height: 30px;
     line-height: 30px;
-max-width: 400px;
+    max-width: 400px;
     /*width: 100%;*/
     padding-left: 10px;
   }
@@ -731,7 +729,7 @@ max-width: 400px;
 
 </style>
 
-<style scoped  lang="scss" >
+<style scoped lang="scss">
   /*@import '../../../../../style/index';*/
   .upload_warp_left {
     width: 80px;
@@ -793,6 +791,7 @@ max-width: 400px;
     max-width: 450px;
     margin-top: 50px;
   }
+
   .alterKey button {
     width: 100px;
     padding: 0px;
@@ -800,15 +799,17 @@ max-width: 400px;
     line-height: 32px;
     text-align: center;
   }
-  .alterKey  button {
+
+  .alterKey button {
     width: 100px;
     padding: 0px;
     height: 32px;
     line-height: 32px;
     text-align: center;
   }
-  .alterKey  button:nth-child(1) {
-    border: 1px solid  #2a8ce7;
+
+  .alterKey button:nth-child(1) {
+    border: 1px solid #2a8ce7;
     color: #2a8ce7;
   }
 </style>
@@ -820,7 +821,8 @@ max-width: 400px;
   .photoView {
     margin-left: 0 !important;
   }
-  .editAnswerQA{
+
+  .editAnswerQA {
     max-width: 450px;
   }
 
