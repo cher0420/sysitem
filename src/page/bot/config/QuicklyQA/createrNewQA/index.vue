@@ -415,7 +415,7 @@
 
       },
       saveKeywords() {  // 	存储 新创建的答案
-    debugger;
+    // debugger;
         //  console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
         const token = getCookies(TOKEN);
