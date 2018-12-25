@@ -1,5 +1,5 @@
 <template>
-  <div class="yoy-main cc creatNewQA">
+  <div class="cc creatNewQA">
     <div v-if="newDataDis" v-loading="loadingEdit">
       <div class="addQuestion">
         第一步 ： 添加问题
@@ -81,7 +81,7 @@
                 </div>
               </div>
 
-              <div class="upload_warp_left" @click="fileClick" v-if="addIcon">
+              <div v-show="imgList.length<3" class="upload_warp_left" @click="fileClick" >
                 <i class="el-icon-plus"></i>
               </div>
               <div class="imgLimit">
@@ -370,7 +370,7 @@
         // console.log("recordId",recordId)
         let data = {
           "BotConfigId": recordId,
-          "Keys": this.keywordsNew
+          "Keys": this.keywordsNew.replace(/、/g,',')
         }
 
 
@@ -415,7 +415,7 @@
 
       },
       saveKeywords() {  // 	存储 新创建的答案
-    // debugger;
+
         //  console.log("存储答案userInerInfo", store.state.app.userInfo)
         let that = this;
         const token = getCookies(TOKEN);
@@ -436,12 +436,11 @@
           return false;
         }
 
-
         let data = {
           "BotConfigId": recordId,
           "TenantId": TenantId,
           "Question": that.Question,
-          "Keyword": this.keywordsNew,
+          "Keyword": this.keywordsNew.replace(/、/g,','),
           "Text": {
             "ID": "",
             "Answer": this.textarea,
@@ -680,8 +679,20 @@
         this.PreviewImg = this.imgList[index].file.src;
       },
       fileDel(index) {
-        this.size = this.size - this.imgList[index].file.size;
-        this.imgList.splice(index, 1);
+        this.$confirm('确认要删除此图片?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.size = this.size - this.imgList[index].file.size;
+          this.imgList.splice(index, 1);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+
       },
       bytesToSize(bytes) {
         if (bytes === 0) return '0 B';
@@ -710,9 +721,9 @@
   /*@import "../../../../../static/base.css";*/
   @import '../../../../../style/index';
 
-  .upload_warp_img_div img {
-    width: 80px;
-  }
+  /*.upload_warp_img_div img {*/
+    /*width: 80px;*/
+  /*}*/
 
   .clickBtn {
     height: 32px;
@@ -918,7 +929,7 @@ width: 80px;
     text-align: center;
     vertical-align: middle;
     display: inline-block;
-    margin-right: 22px;
+    margin-right: 20px;
     /*border: 1px dashed #fff;*/
     border-radius:5px;
     background-color: #fbfdff;
@@ -942,9 +953,9 @@ width: 80px;
     float: left;
   }
 
-  .upload_warp_img_div img {
-    width: 80px;
-  }
+  /*.upload_warp_img_div img {*/
+    /*width: 80px;*/
+  /*}*/
 
   .upload_warp_img {
     display: inline-block;
@@ -954,11 +965,20 @@ width: 80px;
 
   .upload_warp_img_div_top {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
 
-    width: 100%;
+    width: 80px;
     height: 100%;
+    /*text-align: center;*/
+    line-height: 80px;
+    color: transparent;
+    text-align: left;
+    border: 1px solid #c0ccda;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
   }
 
   .upload_warp_img_div_top:hover {
@@ -969,10 +989,20 @@ width: 80px;
   }
 
   .upload_warp_img_div_top img {
-    width: 10px;
-    height: 10px;
+    width: 80px;
+    height: 100%;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
   }
 
+  .upload_warp_img_div img {
+    width: 80px;
+    height: 100%;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+  }
   .photoUp {
     text-align: left;
   }
@@ -1021,7 +1051,6 @@ width: 80px;
   .imgLimit {
     display: inline-block;
     color: #c3c3c3;
-    margin-left: 20px;
   }
 
   .max1000 {

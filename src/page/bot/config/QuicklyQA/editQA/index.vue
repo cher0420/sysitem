@@ -1,5 +1,5 @@
 <template>
-  <div class="yoy-main"   v-loading="loadingEdit"
+  <div v-loading="loadingEdit"
 
       >
     <div class="keywordTip">
@@ -55,7 +55,7 @@
         </div>
       </div>
 
-      <div class="upload_warp_left" @click="fileClick" v-if="addIcon">
+      <div class="upload_warp_left" @click="fileClick" v-show="imgList.length<3">
         <i class="el-icon-plus"></i>
       </div>
 
@@ -152,7 +152,7 @@
         // let query = this.$route.query;
         let data = JSON.parse(sessionStorage.getItem('edit'));
         console.log("+++++++", data)
-        this.Keyword = data.Keyword;
+        this.Keyword = data.Keyword.replace(/,/g,'、');
         this.Question = data.Question;
         this.getCheckKeywords();
       },
@@ -163,7 +163,7 @@
         console.log("recordId++++", recordId)
         let data = {
           "BotConfigId": recordId,
-          "Keys": this.Keyword
+          "Keys": this.Keyword.replace(/、/g,',')
         }
         $.ajax({
           type: "POST",
@@ -183,7 +183,7 @@
                 //       console.log("shuju",msg.Data)
                 // code
                 that.Question = msg.Data.Question;
-                that.Keyword = msg.Data.Keyword;
+                that.Keyword = msg.Data.Keyword.replace(/,/g,'、');
                 that.Text = msg.Data.Text;
                 that.Image = msg.Data.Image;
                 that.KeyId = msg.Data.KeyId;
@@ -288,7 +288,7 @@
           "TenantId": TenantId,
           "KeyId": that.KeyId,
           "Question": that.Question,
-          "Keyword": that.Keyword,
+          "Keyword": that.Keyword.replace(/、/g,','),
           "Text": that.Text,
           "Image": that.ImageNew,
           "DeleteIds": that.DeleteIds,
@@ -575,7 +575,6 @@
   .imgLimit {
     display: inline-block;
     color: #c3c3c3;
-    margin-left: 20px;
   }
 
   .kwShow {
@@ -609,14 +608,20 @@
 
   .upload_warp_img_div_top {
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+
     width: 80px;
     height: 100%;
     /*text-align: center;*/
     line-height: 80px;
     color: transparent;
     text-align: left;
+    border: 1px solid #c0ccda;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
   }
 
   .upload_warp_img_div_top i {
@@ -643,7 +648,8 @@
     line-height: 80px;
     font-size: 30px;
     color: #c3c3c3;
-    border-radius:5px;
+    border-radius:6px;
+    margin-right: 20px;
     background-color: #fbfdff;
   }
 
@@ -666,6 +672,9 @@
   .upload_warp_img_div img {
     width: 80px;
     height: 100%;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
   }
 
   .photoUp {
