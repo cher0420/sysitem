@@ -61,7 +61,6 @@
             <textarea v-model="textarea" placeholder="请输入自定义回答,最多500个字符" maxlength="500"></textarea>
             <span class="fontCount">{{textarea.length}}/500字</span>
           </div>
-
           <div class="nextStep">
             <div class="photoUp">
               <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
@@ -69,19 +68,15 @@
                 <!-- li -->
                 <div class="upload_warp_img_div " v-for="(item,index) of imgList">
                   <div class="upload_warp_img_div_top">
-
                     <div class="upload_warp_img_div_text">
                       <!-- 放大图片 -->
                       <i class="el-icon-zoom-in" @click="photoMagnify(index)"></i>
                       <i class="el-icon-delete" @click="fileDel(index)"></i>
                     </div>
-
                   </div>
                   <img :src="item.file.src">
                 </div>
-              </div>
-
-              <div v-show="imgList.length<3" class="upload_warp_left" @click="fileClick" >
+              </div><div v-show="imgList.length<3" class="upload_warp_left" @click="fileClick" >
                 <i class="el-icon-plus"></i>
               </div>
               <div class="imgLimit">
@@ -947,7 +942,7 @@ width: 80px;
     height: 80px;
     /*border: 1px solid red;*/
     /*margin-left: 22px;*/
-    margin-right: 22px;
+    margin-right: 20px;
     /*vert-align: middle;*/
     position: relative;
     float: left;

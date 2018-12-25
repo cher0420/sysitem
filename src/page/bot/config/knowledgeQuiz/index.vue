@@ -202,6 +202,16 @@
         )
       },
       search(v){
+        const str ="<>%;/?'_"
+        const index = this.keyWords&&str.indexOf(this.keyWords) > -1
+        if(index){
+          this.$message({
+            type:'error',
+            message:"请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
+            duration:2000,
+          })
+          return
+        }
         store.dispatch(REPLACE,{Key:this.keyWords,PageIndex:1}).then(
           () =>{
             this.get_Answer_List()

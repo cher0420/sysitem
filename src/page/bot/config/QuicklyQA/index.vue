@@ -263,6 +263,7 @@
           window.open(url)
       },
       handleCurrentChange(v) {
+        this.loading = true
         this.PageIndex = v
             const options = {
                 PageIndex: this.PageIndex,
@@ -573,12 +574,12 @@
         const that = this
 
         this.loading = true
-        const str ='<>%;/?'
+        const str ="<>%;/?'_"
         const index = this.keys&&str.indexOf(this.keys) > -1
         if(index){
           this.$message({
             type:'error',
-            message:'请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?等',
+            message:"请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
             duration:2000,
           })
           that.loading = false
