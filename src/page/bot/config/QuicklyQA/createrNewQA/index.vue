@@ -6,7 +6,7 @@
       </div>
       <div v-if="questionDis">
         <div class="addContent">
-          <el-input ref="input" v-model="Question" placeholder="例如:2018年年会举办地点"
+          <el-input ref="input" v-model="Question" :maxlength='maxlength' placeholder="例如:2018年年会举办地点"
                     @keyup.enter.native="getKeywords"></el-input>
         </div>
         <div class="questionTit">
@@ -144,8 +144,8 @@
         imgList: [],
         size: 0,
         imgListNew: [],
-        Image: []
-
+        Image: [],
+        maxlength:100
       }
     },
     computed: {
@@ -272,7 +272,7 @@
       },
 
       async getKeywords() {  //  第二步 将一句话分成多个词汇
-
+        console.log(this.Question.length)
         let that = this;
         const token = getCookies(TOKEN);
 
@@ -794,6 +794,7 @@
     max-width: 997px;
     color: #999;
     font-size: 12px;
+    word-break: break-all;word-wrap: break-word;
   }
 
   .addContent input {

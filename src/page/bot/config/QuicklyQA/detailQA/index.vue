@@ -327,6 +327,8 @@
     padding-left: 40px;
     font-size: 14px;
     color: #555;
+    word-break: break-all;
+    word-wrap: break-word;
   }
 
   .edit_textarea {

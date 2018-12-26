@@ -9,15 +9,15 @@
               创建时间 ： {{CreateDate}}
             </div>
           </div>
-          <div class="questionDetail">
+          <div class="questionDetail box-sizing" :style="{height:questionHeight}" ref="quickQuizQuestionAlready">
             问题 ： {{Question}}
           </div>
           <div class="existingQuestion">
-            <div class="existingQues">
+            <div class="existingQues" >
               已有关键词
             </div>
           </div>
-          <div class="questionDetail">
+          <div class="questionDetail box-sizing" :style="{height:keyWordsHeight}" ref="quickQuizKeyWordsAlready">
             关键词 ： {{Keyword}}
           </div>
           <div class="existingQuestion">
@@ -54,7 +54,7 @@
               第一步： 添加问题
             </div>
           </div>
-          <div class="questionDetail">
+          <div class="questionDetail box-sizing" :style="{height:questionHeight}" ref="quickQuizQuestionNew">
             问题 ： {{QuestionNew}}
           </div>
           <div class="editQuestionBac">
@@ -62,7 +62,7 @@
               第二步 ： 确认关键词 ( 可选择2-4个 )
             </div>
           </div>
-          <div class="questionDetail">
+          <div class="questionDetail box-sizing" :style="{height:keyWordsHeight}" ref="quickQuizKeyWordsNew">
             关键词 ： {{Keyword}}
           </div>
           <div class="editQuestionBac">
@@ -73,9 +73,7 @@
           <div class="editAnswerQA">
             <textarea maxlength="500" v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
             <span class="fontCount">{{newText.Answer.length}}/500字</span>
-          </div><div class="m20"><div class=""><input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/><div class="upload_warp_imgg photoView" v-show="imgList.length!=0">
-
-                <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
+          </div><div class="m16"><div class=""><input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/><div class="upload_warp_imgg photoView" v-show="imgList.length!=0"><div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
                   <div class="upload_warp_img_div_top">
                     <div class="upload_warp_img_div_text">
                       <i class="el-icon-zoom-in" @click="photoMagnify(index)"></i>
@@ -159,7 +157,8 @@
 
         DeleteIds: [], // 要删除的图片
         DeleteAnswers: [],
-
+        questionHeight: 21,
+        keyWordsHeight: 21,
       }
     },
     computed: {},
@@ -170,11 +169,22 @@
       this.checkSize(); // 文本域计数
 
     },
+    mounted(){
+      this.resetHeight('quickQuizQuestionAlready','quickQuizQuestionNew','questionHeight')
+      this.resetHeight('quickQuizKeyWordsAlready','quickQuizKeyWordsNew','keyWordsHeight')
+    },
 
     methods: {
       ...mapActions(
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataDis",]
       ),
+      resetHeight(el1,el2,value){
+        const elAlready = this.$refs[el1]
+        const elNew = this.$refs[el2]
+        const elAlreadyHeight = window.getComputedStyle(elAlready).height.replace('px','')
+        const elNewHeight = window.getComputedStyle(elNew).height.replace('px','')
+        this[value] = Math.max(elAlreadyHeight,elNewHeight)+'px'
+      },
       getData() {
 
         let data = JSON.parse(sessionStorage.getItem('Data'));
@@ -201,6 +211,7 @@
         this.DeleteAnswers = this.Image.map(function (item) {
           return item.Answer;
         });
+
       },
 
       alterKeyWords() {
@@ -510,8 +521,19 @@
         // console.log("item", this.imgList[index].file.src)
       },
       fileDel(index) {
-        this.size = this.size - this.imgList[index].file.size;//总大小
-        this.imgList.splice(index, 1);
+        this.$confirm('确认要删除此图片?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.size = this.size - this.imgList[index].file.size;//总大小
+          this.imgList.splice(index, 1);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
       bytesToSize(bytes) {
         if (bytes === 0) return '0 B';
@@ -559,8 +581,8 @@
     width: 80px;
   }
 
-  .m20 {
-    margin-top: 20px;
+  .m16 {
+    margin-top: 16px;
   }
 
   .upload_warp_imgg {
@@ -676,7 +698,8 @@
     padding-left: 32px;
     padding-top: 30px;
     padding-bottom: 40px;
-
+    word-break: break-all;
+    word-wrap: break-word;
   }
 
   .updataQuestions {

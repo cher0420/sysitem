@@ -138,6 +138,7 @@
     margin-left: 40px;
     margin-right: 40px;
     height: 100%;
+    word-break: break-all;word-wrap: break-word;
   }
   .yoy-bread {
     .el-breadcrumb.yoy-title{

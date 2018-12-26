@@ -682,7 +682,7 @@
   }
 
   .photoUp {
-    margin-top: 20px;
+    margin-top: 16px;
     margin-left: 40px;
     position: relative;
     max-width: 1000px;

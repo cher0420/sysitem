@@ -144,7 +144,9 @@ $f-pri-c: #555;
 
 //config
 .box-sizing{
-  box-sizing:border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 //border
 $border-color:#eaedf1;

@@ -16,17 +16,20 @@
       <el-table-column
         prop="AliasName"
         label="机器人名称"
+        :resizable="resizable"
       >
       </el-table-column>
       <el-table-column
         prop="Description"
         label="描述"
         min-width="220"
+        :resizable="resizable"
       >
       </el-table-column>
       <el-table-column
         prop="StatusString"
         label="状态"
+        :resizable="resizable"
         :render-header="renderProductId"
         min-width="40"
       >
@@ -40,6 +43,7 @@
         prop="CreateDate"
         label="创建时间"
         min-width="50"
+        :resizable="resizable"
       >
         <template slot-scope="scope">
           <span v-if="scope.row.Status == 0||scope.row.Status == 1||scope.row.Status == 6">
@@ -53,6 +57,7 @@
       <el-table-column
         label="操作"
         width="230"
+        :resizable="resizable"
       >
         <template slot-scope="scope">
           <span class="yoy-list-todo c555">
@@ -119,6 +124,7 @@
     data() {
       return {
         status: BOTLIST.status,
+        resizable: false,
       }
     },
     computed: {

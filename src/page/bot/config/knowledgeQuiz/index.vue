@@ -22,15 +22,18 @@
         prop="index"
         label="序号"
         width='90'
+        :resizable="resizable"
       >
       </el-table-column>
       <el-table-column
         prop="FriendlyName"
+        :resizable="resizable"
         label="知识"
         min-width="200">
       </el-table-column>
       <el-table-column
         prop="status"
+        :resizable="resizable"
         label="友好回答">
         <template slot-scope="scope">
             <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.FriendlyName,scope.row.ID)">
@@ -74,7 +77,8 @@
         options: [],
         value4: '',
         loading:false,
-        keyWords:''
+        keyWords:'',
+        resizable:false
       }
     },
     computed:{
