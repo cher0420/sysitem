@@ -120,7 +120,7 @@
       </el-col>
     </el-form-item>
     <title-item title="自定义问候语"></title-item>
-    <el-form-item class="none-label" prop="DialogTitle" style='margin-top: 26px;margin-bottom: 16px;'>
+    <el-form-item class="none-label" prop="DialogTitle" style='margin-top: 26px;margin-bottom: 26px;'>
       <span style="width:70px;" class="dis-i-b text-align-right" >
         对话框标题
       </span>
@@ -132,7 +132,7 @@
       <span style="width:70px;line-height: 32px;" class="dis-i-b text-align-right align-top" >
         问候语
       </span>
-      <section class="dis-i-b full-width p-relative" style="width: 60%;">
+      <section class="dis-i-b full-width p-relative" style="width: 60%;padding-bottom: 5px;">
         <el-input v-model="formData.DialogGreetings" type="textarea" :rows="5" maxlength="50" style="margin-left: 20px;">
         </el-input>
         <span class="p-absolute " style="bottom: 0;color:#c0c4cc;right: -20px;">最多50个字符 &nbsp;</span>
@@ -142,7 +142,7 @@
     <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:56px">
       <section style="margin-top: 20px;line-height: 36px;">仅支持已添加的授信余名或IP地址的URL访问 <span class="c999">(授信域名： www...  IP地址：192.888.8.8)</span></section>
       <el-row>
-        <el-col :span="18">
+        <el-col :span="18" style="padding-bottom: 5px">
           <el-input type="textarea" :rows="5" placeholder="请输入授信域名" v-model="formData.AuthorizedAddress"></el-input>
         </el-col>
      </el-row>
@@ -176,12 +176,12 @@
           DialogColor: '#3B65B7',
           DialogTitleColor:'#FFFFFF',
           LoginSwitch:true, //true 为需要 ，false 为不需要
-          DialogTitle:'小华智能助理',
-          DialogGreetings:'您好，我是小华，有什么可以帮助您？',
-          AuthorizedAddress:'127.0.0.1',
+          DialogTitle:'嗨聊智能服务机器人',
+          DialogGreetings:'您好，我是小嗨，有什么可以帮助您？',
+          AuthorizedAddress:'',
         },
         rules: {
-          AuthorizedAddress:[{required: true, message: '请填写授信域名'}],
+          AuthorizedAddress:[{required: false, message: '请填写授信域名'}],
           DialogTitle:[{required: true, message: '请填写对话框标题'},{max:15,message:'最多15个字符'}],
           DialogGreetings:[{required: true, message: '请填写问候语'},{max:50,message:'最多30个字符'}],
         },
@@ -269,11 +269,11 @@
         this.DialogTitleColor = data.DialogTitleColor?data.DialogTitleColor:this.DialogTitleColor
         this.DialogColor = data.DialogColor?data.DialogColor:this.DialogColor
         //对话框标题 判断是否有初始值
-        data.DialogTitle = data.DialogTitle?data.DialogTitle:'小华智能助理'
+        data.DialogTitle = data.DialogTitle?data.DialogTitle:'嗨聊智能服务机器人'
         //问候语 判断是否有初始值
-        data.DialogGreetings = data.DialogGreetings?data.DialogGreetings:'您好，我是小华，有什么可以帮助您？'
+        data.DialogGreetings = data.DialogGreetings?data.DialogGreetings:'您好，我是小嗨，有什么可以帮助您？'
         //授信域名 判断是否有初始值
-        data.AuthorizedAddress = data.AuthorizedAddress?data.AuthorizedAddress:'127.0.0.1'
+        data.AuthorizedAddress = data.AuthorizedAddress?data.AuthorizedAddress:''
         //头像位置是否有初始值
         data.Position = data.Position?data.Position:'right-down'
         //判断对话标题的颜色
