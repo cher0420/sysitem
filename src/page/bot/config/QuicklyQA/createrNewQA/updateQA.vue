@@ -9,7 +9,7 @@
               创建时间 ： {{CreateDate}}
             </div>
           </div>
-          <div class="questionDetail box-sizing" :style="{height:questionHeight}" ref="quickQuizQuestionAlready">
+          <div class="questionDetail box-sizing" :style="{height:questionHeight}" ref="quickQuizQuestionAlready" id="quickQuizQuestionAlready">
             问题 ： {{Question}}
           </div>
           <div class="existingQuestion">
@@ -17,7 +17,7 @@
               已有关键词
             </div>
           </div>
-          <div class="questionDetail box-sizing" :style="{height:keyWordsHeight}" ref="quickQuizKeyWordsAlready">
+          <div class="questionDetail box-sizing" :style="{height:keyWordsHeight}" ref="quickQuizKeyWordsAlready" id="quickQuizKeyWordsAlready">
             关键词 ： {{Keyword}}
           </div>
           <div class="existingQuestion">
@@ -54,7 +54,7 @@
               第一步： 添加问题
             </div>
           </div>
-          <div class="questionDetail box-sizing" :style="{height:questionHeight}" ref="quickQuizQuestionNew">
+          <div class="questionDetail box-sizing" :style="{height:questionHeight}" ref="quickQuizQuestionNew" id="quickQuizQuestionNew">
             问题 ： {{QuestionNew}}
           </div>
           <div class="editQuestionBac">
@@ -62,7 +62,7 @@
               第二步 ： 确认关键词 ( 可选择2-4个 )
             </div>
           </div>
-          <div class="questionDetail box-sizing" :style="{height:keyWordsHeight}" ref="quickQuizKeyWordsNew">
+          <div class="questionDetail box-sizing" :style="{height:keyWordsHeight}" ref="quickQuizKeyWordsNew" id="quickQuizKeyWordsNew">
             关键词 ： {{Keyword}}
           </div>
           <div class="editQuestionBac">
@@ -178,12 +178,52 @@
       ...mapActions(
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataDis",]
       ),
+      IEVersion() {
+        var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+        var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1; //判断是否IE<11浏览器
+        var isEdge = userAgent.indexOf("Edge") > -1 && !isIE; //判断是否IE的Edge浏览器
+        var isIE11 = userAgent.indexOf('Trident') > -1 && userAgent.indexOf("rv:11.0") > -1;
+        if(isIE) {
+          var reIE = new RegExp("MSIE (\\d+\\.\\d+);");
+          reIE.test(userAgent);
+          var fIEVersion = parseFloat(RegExp["$1"]);
+          if(fIEVersion == 7) {
+            return 7;
+          } else if(fIEVersion == 8) {
+            return 8;
+          } else if(fIEVersion == 9) {
+            return 9;
+          } else if(fIEVersion == 10) {
+            return 10;
+          } else {
+            return 6;//IE版本<=7
+          }
+        } else if(isEdge) {
+          return 'edge';//edge
+        } else if(isIE11) {
+          return 11; //IE11
+        }else{
+          return -1;//不是ie浏览器
+        }
+      },
+
       resetHeight(el1,el2,value){
-        const elAlready = this.$refs[el1]
-        const elNew = this.$refs[el2]
-        const elAlreadyHeight = window.getComputedStyle(elAlready).height.replace('px','')
-        const elNewHeight = window.getComputedStyle(elNew).height.replace('px','')
-        this[value] = Math.max(elAlreadyHeight,elNewHeight)+'px'
+
+        if(this.IEVersion()>0){
+
+          const elAlreadyHeight =document.getElementById(el1).style.offsetHeight.replace('px','')
+
+          const elNewHeight = document.getElementById(el2).style.offsetHeight.replace('px','')
+          this[value] = Math.max(elAlreadyHeight,elNewHeight)+'px'
+        }else{
+          const elAlready = this.$refs[el1]
+          const elNew = this.$refs[el2]
+          const elAlreadyHeight = window.getComputedStyle(elAlready).height.replace('px','')
+          const elNewHeight = window.getComputedStyle(elNew).height.replace('px','')
+          this[value] = Math.max(elAlreadyHeight,elNewHeight)+'px'
+        }
+
+
       },
       getData() {
 

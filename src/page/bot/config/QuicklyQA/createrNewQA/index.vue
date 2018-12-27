@@ -891,7 +891,8 @@ width: 80px;
 
   .keywords {
 
-    padding: 0 40px;
+    /*padding: 0 40px;*/
+    padding-left: 40px;
     max-width: 1020px;
   }
 
