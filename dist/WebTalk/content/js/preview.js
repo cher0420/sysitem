@@ -14,22 +14,13 @@
   return fmt;
 }
 var adminApiUrl = host().api
-console.log( host())
 $(function () {
-  var host = ""; //域名
-  var cip = ""; //ip
-  var isAuthorize = false;
   var botObject = {};
   $.getUrlParam = function (name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
     var r = window.location.search.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
   }
-
-  // 获取当前域名
-  // if (window.opener != null) {
-  //     host = window.opener.location.host;
-  // }
 
   // 如果返回的答案里包含图片，当点击图片时新打开一个窗口显示。
   $(document).on("click", "#msgs .msg-ball img", function(){
@@ -51,13 +42,7 @@ $(function () {
           return;
         }
 
-        verifyAuthorization(host, returnCitySN.cip, function () {
-          if (isAuthorize) {
-            addMsg('Hightalk', botObject.DialogGreetings);
-          } else {
-            $(".panel-alert, #recon").show();
-          }
-        });
+        addMsg('Hightalk', botObject.DialogGreetings);
       }).error(function () {
         $(".webtalk").show();
         $(".panel-alert, #recon").show();
@@ -88,21 +73,6 @@ $(function () {
     }
 
     webtalk.show();
-  }
-
-  // 验证是否被授权
-  function verifyAuthorization(host, cip, callback) {
-    $.post(adminApiUrl + "/WebTalk/VerifyAuthorization", { id: botObject.BotConfigId, host: host, cip: cip }, function (result) {
-      if (result != undefined && result != null) {
-        if (result.status == 1) {
-          isAuthorize = result.isAuthorization;
-        }
-
-        if (callback != undefined && typeof (callback) == "function") {
-          callback();
-        }
-      }
-    })
   }
 
   // 增加信息

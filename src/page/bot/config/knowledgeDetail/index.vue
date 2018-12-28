@@ -77,7 +77,7 @@
         </section>
         <el-row v-show='detail.Basic.Image.length>0' class="el-upload-list el-upload-list--picture-card" style="float: left;">
           <el-col v-for="(item,index) in detail.Basic.Image"  class="p-relative picItem text-a-c">
-            <img :src="item.KnowledgeBase" alt="图片" class="align-middle-img"/>
+              <img :src="item.KnowledgeBase" alt="图片" class="align-middle-img"/>
             <section class="p-absolute opacity f-s-20">
               <span class="dis-i-b">
                 <i class="el-icon-zoom-in" @click="preview(item.KnowledgeBase)"></i>
@@ -532,6 +532,7 @@ export default {
     -moz-border-radius: 6px;
     border-radius: 6px;
     border: 1px solid #c0ccda;
+    overflow: hidden;
   }
   .opacity{
     width: 100%;

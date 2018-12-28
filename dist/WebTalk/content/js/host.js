@@ -9,11 +9,7 @@ function host() {
   }
   var STAGING = {
     api:'https://hightalkadminapi-staging.azurewebsites.net/api',
-    previewApi:'https://hightalkadminapi-staging.azurewebsites.net/api',
-    quickQuizApi:'https://hightalkadminapi-staging.azurewebsites.net/api',
     fqavalidaimlApi:'https://hightalkfqavalidaiml-staging.azurewebsites.net',
-    webTalkApi:'https://hightalkadminapi-staging.azurewebsites.net/api',
-    webTalkV2Api:'https://hightalkadminapi-staging.azurewebsites.net/api'
   }
   return UAT
 }

@@ -22,15 +22,18 @@
         prop="index"
         label="序号"
         width='90'
+        :resizable="resizable"
       >
       </el-table-column>
       <el-table-column
         prop="FriendlyName"
+        :resizable="resizable"
         label="知识"
         min-width="200">
       </el-table-column>
       <el-table-column
         prop="status"
+        :resizable="resizable"
         label="友好回答">
         <template slot-scope="scope">
             <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.FriendlyName,scope.row.ID)">
@@ -74,7 +77,8 @@
         options: [],
         value4: '',
         loading:false,
-        keyWords:''
+        keyWords:'',
+        resizable:false
       }
     },
     computed:{
@@ -202,6 +206,16 @@
         )
       },
       search(v){
+        const str ="<>%;/?'_"
+        const index = this.keyWords&&str.indexOf(this.keyWords) > -1
+        if(index){
+          this.$message({
+            type:'error',
+            message:"请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
+            duration:2000,
+          })
+          return
+        }
         store.dispatch(REPLACE,{Key:this.keyWords,PageIndex:1}).then(
           () =>{
             this.get_Answer_List()

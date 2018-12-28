@@ -16,17 +16,20 @@
       <el-table-column
         prop="AliasName"
         label="机器人名称"
+        :resizable="resizable"
       >
       </el-table-column>
       <el-table-column
         prop="Description"
         label="描述"
         min-width="220"
+        :resizable="resizable"
       >
       </el-table-column>
       <el-table-column
         prop="StatusString"
         label="状态"
+        :resizable="resizable"
         :render-header="renderProductId"
         min-width="40"
       >
@@ -40,6 +43,7 @@
         prop="CreateDate"
         label="创建时间"
         min-width="50"
+        :resizable="resizable"
       >
         <template slot-scope="scope">
           <span v-if="scope.row.Status == 0||scope.row.Status == 1||scope.row.Status == 6">
@@ -53,6 +57,7 @@
       <el-table-column
         label="操作"
         width="230"
+        :resizable="resizable"
       >
         <template slot-scope="scope">
           <span class="yoy-list-todo c555">
@@ -119,6 +124,7 @@
     data() {
       return {
         status: BOTLIST.status,
+        resizable: false,
       }
     },
     computed: {
@@ -338,7 +344,16 @@
         )
       },
       search() {
-        const that = this
+        const str ="<>%;/?'_"
+        const index = this.keyWords&&str.indexOf(this.keyWords) > -1
+        if(index){
+          this.$message({
+            type:'error',
+            message:"请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
+            duration:2000,
+          })
+          return
+        }
         const description = this.keyWords
         const searchStatus = store.state.app.searchStatus
         store.dispatch(REPLACE, {PageIndex: 1, description}).then(

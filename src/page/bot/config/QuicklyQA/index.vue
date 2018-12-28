@@ -21,6 +21,7 @@
         label="序号"
         width="90"
         align="center"
+        :resizable="resizable"
       >
         <template slot="header" slot-scope="scope">
           <span v-if="enableChecked">
@@ -38,6 +39,7 @@
       <el-table-column
         prop="Question"
         label="问题"
+        :resizable="resizable"
         >
         <template slot-scope="scope">
           <section class='link' @click="pathToDetail(scope.row)">
@@ -46,8 +48,18 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="Keyword"
+        label="关键词"
+        :resizable="resizable"
+      >
+        <template slot-scope="scope">
+          {{scope.row.Keyword.replace(/,/g,'、')}}
+        </template>
+      </el-table-column>
+      <el-table-column
         prop="Status"
         width="160"
+        :resizable="resizable"
       >
         <template slot="header" slot-scope="scope">
           <el-dropdown @command="handleCommand" trigger='click' placement="bottom-start" class="p-absolute left-0 yoy-dropDown">
@@ -64,11 +76,13 @@
       <el-table-column
         prop="CreateDate"
         label="创建时间"
+        :resizable="resizable"
         :width="showDel?'320':'160'"
       >
       </el-table-column>
       <el-table-column
         width="160"
+        :resizable="resizable"
         v-if="!showDel"
       >
         <template slot='header' slot-scope="scope">
@@ -114,6 +128,8 @@
   export default {
     data() {
       return {
+        resizable:false,
+        border:true,
         loading: false,
         tableData: [],
         dataContainer:[],
@@ -263,6 +279,7 @@
           window.open(url)
       },
       handleCurrentChange(v) {
+        this.loading = true
         this.PageIndex = v
             const options = {
                 PageIndex: this.PageIndex,
@@ -573,12 +590,12 @@
         const that = this
 
         this.loading = true
-        const str ='<>%;/?'
+        const str ="<>%;/?'_"
         const index = this.keys&&str.indexOf(this.keys) > -1
         if(index){
           this.$message({
             type:'error',
-            message:'请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?等',
+            message:"请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
             duration:2000,
           })
           that.loading = false

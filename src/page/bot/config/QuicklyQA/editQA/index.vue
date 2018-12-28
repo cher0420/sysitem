@@ -21,10 +21,7 @@
     </div>
 
     <div class="photoUp">
-      <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/>
-
-
-      <div class="upload_warp_img" v-if="Image.length!=0">
+      <input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/><div class="upload_warp_img" v-if="Image.length!=0">
 
         <div class="upload_warp_img_div " v-for="(item,index) of Image" v-if="item.Answer !=''">
           <div class="upload_warp_img_div_top">
@@ -36,31 +33,15 @@
 
           </div>
           <img :src="item.Answer">
-        </div>
-
-
-      </div>
-      <!-- show photo -->
-      <div class="upload_warp_img" v-show="imgList.length!=0">
-        <div class="upload_warp_img_div " v-for="(item,index) of imgList">
+        </div></div><div class="upload_warp_img" v-show="imgList.length!=0"><div class="upload_warp_img_div " v-for="(item,index) of imgList">
           <div class="upload_warp_img_div_top">
             <div class="upload_warp_img_div_text">
               <!-- 放大图片 -->
               <i class="el-icon-zoom-in" @click="photoMagnify(index)"></i>
               <i class="el-icon-delete" @click="fileDel(index)"></i>
             </div>
-
-          </div>
-          <img :src="item.file.src">
-        </div>
-      </div>
-
-      <div class="upload_warp_left" @click="fileClick" v-show="imgList.length<3">
-        <i class="el-icon-plus"></i>
-      </div>
-
-      <div class="imgLimit">
-        （至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）
+          </div><img :src="item.file.src"/></div></div><div class="upload_warp_left" @click="fileClick" v-show="imgList.length+Image.length<3">
+      <i class="el-icon-plus"></i></div><div class="imgLimit">（至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）
       </div>
 
 
@@ -139,6 +120,10 @@
     computed: {},
 
     created() {
+      this.imgList = []
+      this.Image = []
+      this.ImageNew = []
+
       this.getData();
       this.checkSize();
     },
@@ -479,18 +464,37 @@
         }
       },
       fileDel(index) {
-        this.size = this.size - this.imgList[index].file.size;//总大小
-        this.imgList.splice(index, 1);
-
+        this.$confirm('确认要删除此图片?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.size = this.size - this.imgList[index].file.size;//总大小
+          this.imgList.splice(index, 1);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
       OldFileDel(index) {
-        // console.log(this.Image[index]);
-        this.DeleteIds.push(this.Image[index].ID); // 删除图片的id
-        this.DeleteAnswers.push(this.Image[index].Answer); // 删除图片的地址
-        //  console.log( this.DeleteIds)
-        this.Image.splice(index, 1);
-
-
+        this.$confirm('确认要删除此图片?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          // console.log(this.Image[index]);
+          this.DeleteIds.push(this.Image[index].ID); // 删除图片的id
+          this.DeleteAnswers.push(this.Image[index].Answer); // 删除图片的地址
+          //  console.log( this.DeleteIds)
+          this.Image.splice(index, 1);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
       photoMagnify(index) {
         this.dialogVisible = true;
@@ -694,7 +698,7 @@
   }
 
   .photoUp {
-    margin-top: 20px;
+    margin-top: 16px;
     margin-left: 40px;
     position: relative;
     max-width: 1000px;

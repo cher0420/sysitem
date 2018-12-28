@@ -39,7 +39,8 @@
     <el-form-item label="App Secret :">
       <el-col :span="20">
         <el-input placeholder="请输入App Secret" v-model="formData.AppSecret"></el-input>
-        <section class="c999 f-s-11">请填写您在微信公众号平台申请的key和Secret</section>
+        <section class="c999 f-s-11" style="line-height: 11px;
+    margin-top: 8px;">请填写您在微信公众号平台申请的key和Secret</section>
       </el-col>
     </el-form-item>
     <el-form-item label="" class="margin-b-40">
