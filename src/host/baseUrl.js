@@ -28,7 +28,7 @@ const STAGING_URL = {
 const PRODUCT = {
   baseUrl:'https://portal.hightalk.online',
   SSOWebUrl:{
-    zh:"https://login-staging.hightalk.ai/zh-cn",
+    zh:"",
     en:'/'
   },
   SSOServerApi:"https://hightalkssoapi-staging.azurewebsites.net",
