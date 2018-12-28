@@ -646,6 +646,18 @@
       fileAdd(file) {
         //  console.log("daxiao", file.size / 1024)
         let currSize = file.size / 1024;
+
+        if(  file.type == "image/svg+xml"){
+
+          this.$message({
+            message: '添加失败，上传图片类型不合法',
+            type: 'warning'
+          });
+
+            return false;
+        }
+
+
         if (currSize > 200) {
           this.$message({
             message: '添加失败，单张图片最大不超过200k',
