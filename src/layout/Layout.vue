@@ -6,7 +6,7 @@
       </el-header>
       <div class="full-height el-container">
         <!-- menu -->
-        <el-aside  v-if='isCollapse' class="el-aside full-height" width='60px'
+        <el-aside id='menu' v-if='isCollapse' class="el-aside full-height" width='60px'
                   :style="{float:'left',minWidth:'60px',maxWidth: '240px'}">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
@@ -15,7 +15,7 @@
         </el-aside>
         <!-- display area -->
            <!-- second -->
-        <el-container class="full-height robotDisplayArea" style="position:static;width: 80vw;">
+        <el-container class="full-height robotDisplayArea" :style="{width:`calc(100% - ${menuWidth})`}">
           <section v-if="config">
             <secondary-menu class="yoy-second-menu full-height">
             </secondary-menu>
@@ -49,7 +49,9 @@
   export default {
     name: 'layout',
     data() {
-      return {}
+      return {
+        menuWidth:'180px'
+      }
     },
     computed: {
       mainLoading() {
@@ -67,6 +69,9 @@
       loadingText(){
         return store.state.app.loadingText
       }
+    },
+    mounted(){
+     this.menuWidth =  document.getElementById('menu').offsetWidth+'px'
     },
     beforeCreate() {
       const config = this.$route.name === 'config' //判断路由是否为配置二级菜单，是则为true，不是则false并隐藏二级菜单
