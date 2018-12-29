@@ -44,7 +44,10 @@
                 <input :disabled="fileDisabled" type='file' accept="image/*" name="avatar" placeholder="上传" id="img" class="file-btn" @change="upLoadImg"/>选择文件
               </section>
             </section>
-            <img v-show="headerPicture === 'custom'&&formData.BotHeadPortrait" :src="formData.BotHeadPortrait" alt="自定义头像" class="align-middle header">
+            <img v-show="headerPicture === 'custom'&&formData.BotHeadPortrait" :src="formData.BotHeadPortrait" alt="自定义头像" class="align-middle header"/>
+            <span class="tips" v-if="headerPicture === 'custom'">
+               （图片大小不超过200KB，支持jpg、jpeg、png、gif格式）
+            </span>
           </el-col>
       </el-radio-group>
     </el-form-item>
@@ -148,8 +151,7 @@
      </el-row>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit('formData')">保存</el-button>
-      <el-button @click="preview">预览</el-button>
+      <el-button type="primary" @click="submit('formData')">保存</el-button><el-button @click="preview">样式预览</el-button><el-tooltip class="item" effect="dark" content="保存后可预览最新样式" placement="top-start"><span class="previewIcon"><i class="el-icon-question f-s-16 c999" style="margin:10px"></i></span></el-tooltip>
     </el-form-item>
   </el-form>
 </template>
@@ -225,7 +227,7 @@
     },
     methods: {
       upload(response, file, fileList){
-        console.log(response, file, fileList)
+
       },
       preview(){
         const id = this.$route.query.recordId
@@ -314,7 +316,7 @@
       changeHeaderImage(v){
         //如果上传头像为自定义，则清空头像数据
         if(v === 'custom'){
-          this.formData.BotHeadPortrait = ''
+          // this.formData.BotHeadPortrait = ''
           this.fileDisabled = false
         }else{
           this.fileDisabled = true
@@ -420,7 +422,6 @@
       changeColor(key,v){
         this[key] = v.toUpperCase()
         this.formData[key] = v.toUpperCase()
-        console.log(v)
       },
       copy(str){
         var save = function (e){
@@ -437,7 +438,6 @@
         const status = this[arr].includes(this.formData[key])
         if(status){
           this[key] = this.formData[key]
-          console.log(key,this[key])
         }
       }
     }
@@ -549,5 +549,13 @@
   }
   .align-top{
     vertical-align: top;
+  }
+  .tips{
+    color:#c3c3c3;
+    font-size: 12px;
+    vertical-align: middle;
+  }
+  .previewIcon:hover{
+    cursor: pointer;
   }
 </style>
