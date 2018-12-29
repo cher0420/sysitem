@@ -283,8 +283,9 @@
           // const link = this.$refs['blankNew']
           // link.click()
           // 监听change事件:
-            const newScreen = window.open()
-            newScreen.location = url
+          //   const newScreen = window.open()
+          //   newScreen.location = url
+        window.open(url, '_blank');
       },
       handleCurrentChange(v) {
         this.loading = true
