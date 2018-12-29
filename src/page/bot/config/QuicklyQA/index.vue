@@ -1,13 +1,21 @@
 <template>
   <section>
     <section class="p-relative" style="">
-      <el-button  v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button>
-      <el-input v-model='keys' class='searchInput' :style="{transition:'left .3s',left: !enableChecked?'120px':'0'}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      <el-button v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button>
+      <el-input v-model='keys' class='searchInput' :style="{transition:'left .3s',left: !enableChecked?'120px':'0'}"
+                size='small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix"
+                                                                                   class="el-input__icon el-icon-search yoy-search-button"
+                                                                                   @click="search"></i>
       </el-input>
       <span v-if="!originDisabled">
-        <el-button type="primary" v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;">选择</el-button>
+        <el-button type="primary" v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus"
+                   style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;">选择</el-button>
         <span v-else class="p-absolute right-0">
-          <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="tableDataCopy.length>0?false:true" type="primary" style="margin-right: 10px;" @click="train">测试</el-button><el-button type="primary" :disabled="tableDataCopy.length>0?false:true" @click="publish">发布</el-button>
+          <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;"
+                     @click="typeCheckedStatus">取消选择</el-button><el-button :disabled="tableDataCopy.length>0?false:true"
+                                                                           type="primary" style="margin-right: 10px;"
+                                                                           @click="train">测试</el-button><el-button
+          type="primary" :disabled="tableDataCopy.length>0?false:true" @click="publish">发布</el-button>
         </span>
       </span>
     </section>
@@ -32,7 +40,9 @@
           </span>
         </template>
         <template slot-scope="scope">
-          <el-checkbox style="height: 24px;line-height: 24px;margin-bottom: 0" v-model="scope.row.checkedStatus" v-if="enableChecked" @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index,scope.row.Status)"></el-checkbox>
+          <el-checkbox style="height: 24px;line-height: 24px;margin-bottom: 0" v-model="scope.row.checkedStatus"
+                       v-if="enableChecked"
+                       @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index,scope.row.Status)"></el-checkbox>
           <span v-else>{{scope.$index+1}}</span>
         </template>
       </el-table-column>
@@ -40,7 +50,7 @@
         prop="Question"
         label="问题"
         :resizable="resizable"
-        >
+      >
         <template slot-scope="scope">
           <section class='link' @click="pathToDetail(scope.row)">
             {{scope.row.Question}}
@@ -62,7 +72,8 @@
         :resizable="resizable"
       >
         <template slot="header" slot-scope="scope">
-          <el-dropdown @command="handleCommand" trigger='click' placement="bottom-start" class="p-absolute left-0 yoy-dropDown">
+          <el-dropdown @command="handleCommand" trigger='click' placement="bottom-start"
+                       class="p-absolute left-0 yoy-dropDown">
   <span class="el-dropdown-link c333">
     {{title}}<i class="el-icon-arrow-down el-icon--right"></i>
   </span>
@@ -92,11 +103,14 @@
         </template>
         <template slot-scope="scope">
           <section class="handle" style="height: 24px;line-height: 24px">
-            <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px" @click="editSomething(scope.row)">
+            <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px"
+                  @click="editSomething(scope.row)">
               <i class="el-icon-edit" style="margin-right: 5px;"></i>
               <span>编辑</span>
             </span>
-            <span :class="[scope.row.Status == '5'?'un-handle':'delete']" @click="handDel(scope.row.ID,scope.$index,scope.row.Status)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
+            <span :class="[scope.row.Status == '5'?'un-handle':'delete']"
+                  @click="handDel(scope.row.ID,scope.$index,scope.row.Status)"><i class="el-icon-close"
+                                                                                  style="margin-right: 5px;"></i><span>删除</span></span>
           </section>
         </template>
       </el-table-column>
@@ -117,7 +131,7 @@
 </template>
 <script>
   import questionOptions from './constants'
-  import {getList,del,_ask,doSomething} from './service'
+  import {getList, del, _ask, doSomething} from './service'
   import URL from '../../../../host/baseUrl'
   import {PUBLISHORTRAIN} from "../../../../constants/api";
   import store from '../../../../store';
@@ -128,33 +142,33 @@
   export default {
     data() {
       return {
-        resizable:false,
-        border:true,
+        resizable: false,
+        border: true,
         loading: false,
         tableData: [],
-        dataContainer:[],
-        tableDataCopy:[],
+        dataContainer: [],
+        tableDataCopy: [],
         enableChecked: false,
         options: questionOptions.status,
-        title:'状态',
-        status:'',
-        statusString:{0:'不可用',1:'未发布',2:'未发布',3:'未发布',4:'未发布',5:'已发布'},
-        keys:'',
-        total:0,
-        PageIndex:1,
-        PageSize:10,
-        arr:[],
-        showDel:false,
-        reloadId:null,
-        originDisabled:true,
-        blankNew:false,
-        id:null,
+        title: '状态',
+        status: '',
+        statusString: {0: '不可用', 1: '未发布', 2: '未发布', 3: '未发布', 4: '未发布', 5: '已发布'},
+        keys: '',
+        total: 0,
+        PageIndex: 1,
+        PageSize: 10,
+        arr: [],
+        showDel: false,
+        reloadId: null,
+        originDisabled: true,
+        blankNew: false,
+        id: null,
       }
     },
     /*
     生命周期函数
      */
-    created(){
+    created() {
       this.tableData = []
       this.total = 0
       const status = sessionStorage.getItem('doingStatus')
@@ -165,16 +179,17 @@
       /*
       获取全部已发布的数据
       */
-      const params = {PageSize:0, Status:1}
+      const params = {PageSize: 0, Status: 1}
       getList(params).then(
-        (res) =>{
-          if(res['Data'].length>0){
+        (res) => {
+          if (res['Data'].length > 0) {
             res['Data'].forEach(
-              (v,index) =>{
-                      that.dataContainer.push(v.ID)
-                    }
+              (v, index) => {
+                that.dataContainer.push(v.ID)
+              }
             )
-            that.tableDataCopy = that.dataContainer.slice(0)}
+            that.tableDataCopy = that.dataContainer.slice(0)
+          }
         }
       )
       /*
@@ -184,7 +199,7 @@
       this.loading = true
       _ask().then(
         (res) => {
-          sessionStorage.setItem('doingStatus','nothing')
+          sessionStorage.setItem('doingStatus', 'nothing')
           /*
                自定义列表内容,没有在发布中的内容
               */
@@ -192,40 +207,40 @@
 
           getList().then(
             (res) => {
-            that.complateGetList(res)
-           }
+              that.complateGetList(res)
+            }
           ).catch(
-            (err) =>{
+            (err) => {
               /*
                抛出错误
               */
               that.loading = false
-                }
-              )
             }
+          )
+        }
       ).catch(
-        (err) =>{
-          store.dispatch(REPLACE,{loadingText:null})
-          if(that.$route.path === '/bot/config/quicklyQA'){
-            store.dispatch(REPLACE,{mainLoading:true}).then(
-              () =>{
-                if(err.Data === 1){
+        (err) => {
+          store.dispatch(REPLACE, {loadingText: null})
+          if (that.$route.path === '/bot/config/quicklyQA') {
+            store.dispatch(REPLACE, {mainLoading: true}).then(
+              () => {
+                if (err.Data === 1) {
                   that.initStatus('train')
-                }else if(err.Data === 2){
+                } else if (err.Data === 2) {
                   that.initStatus('publish')
                 }
                 that.loading = false
 
                 that.clearReloadId(err)
-                that._reload_ask(true,err.recordId)
+                that._reload_ask(true, err.recordId)
               }
             )
           }
         }
       )
     },
-    destroyed(){
-      store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
+    destroyed() {
+      store.dispatch(REPLACE, {mainLoading: false, loadingText: null})
     },
     methods: {
       ...mapActions(
@@ -235,281 +250,65 @@
         const query = this.$route.query;
         this.newDataDis(); // 进入创建问题 首页
         this.$router.push({
-          path:'/bot/config/quicklyQA/createrNewQA',
-          query:{
-            recordId:query.recordId,
+          path: '/bot/config/quicklyQA/createrNewQA',
+          query: {
+            recordId: query.recordId,
             // ...query,
           }
         })
       },
-      editSomething(v){
+      editSomething(v) {
         const query = this.$route.query;
-        sessionStorage.setItem('edit',JSON.stringify(v) ); // 存入
-        if(v.Status == 5){
+        sessionStorage.setItem('edit', JSON.stringify(v)); // 存入
+        if (v.Status == 5) {
           return;
-        }else{
+        } else {
           this.$router.push({
-            path:'/bot/config/quicklyQA/editQA',
-            query:{
+            path: '/bot/config/quicklyQA/editQA',
+            query: {
               // ...query,
-              recordId:query.recordId,
-              title:v.Question,
+              recordId: query.recordId,
+              title: v.Question,
               v
             }
           })
         }
       },
-      pathToDetail(v){
+      pathToDetail(v) {
         const query = this.$route.query;
-        sessionStorage.setItem('detaildata',JSON.stringify(v) ); // 存入
+        sessionStorage.setItem('detaildata', JSON.stringify(v)); // 存入
 
         this.$router.push({
-          path:'/bot/config/quicklyQA/detailQA',
-          query:{
-            recordId:query.recordId,
-            title:v.Question,
+          path: '/bot/config/quicklyQA/detailQA',
+          query: {
+            recordId: query.recordId,
+            title: v.Question,
             v
           }
         })
       },
-      go(recordId){
-        const BotConfigId = recordId?recordId:this.$route.query.recordId
+      go(recordId) {
+        const BotConfigId = recordId ? recordId : this.$route.query.recordId
         const host = URL.baseUrl
-          const url = `${host}/WebTalk/validaiml.html?id=${BotConfigId}`
-          window.open(url)
+        const url = `${host}/WebTalk/validaiml.html?id=${BotConfigId}`
+        window.open(url)
       },
       handleCurrentChange(v) {
         this.loading = true
         this.PageIndex = v
-            const options = {
-                PageIndex: this.PageIndex,
-                Status: this.status,
-                Keys:this.keys
+        const options = {
+          PageIndex: this.PageIndex,
+          Status: this.status,
+          Keys: this.keys
 
-            }
-            getList(options).then(
-              (res) =>{
-                res['Data'].forEach(
-                  (v,index) =>{
-                    if(this.tableDataCopy.includes(v.ID)){
-                      v.checkedStatus = true
-                    }else{
-                      v.checkedStatus = false
-                    }
-                  }
-                )
-                this.complateGetList(res)
-              }
-            )
-      },
-      _reload_ask(isGetList,botId){
-        const that = this
-          let id = setInterval(function () {
-
-            _ask(botId).then(
-              (res) =>{
-                    /*
-                    不存在发布
-                    */
-                    /*
-                    clearReloadId
-                    */
-                // that.arr = []
-
-                sessionStorage.setItem('doingStatus','nothing')//设置没有进行测试或发布的线程了
-
-                that.clearReloadId(res)
-
-                // store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
-                //   () =>{
-                          let loading = true;
-                          const arr = store.state.app.quickQuizArr
-
-                          arr.forEach(
-                            (v,index) =>{
-                              if(v.recordId === that.$route.query.recordId){
-                                loading = v.loading
-                                return
-                              }
-                              loading = false
-                            }
-                          )
-
-                          if(that.$route.path === '/bot/config/quicklyQA'){
-                            store.dispatch(REPLACE,{mainLoading:loading})
-                          }
-                          store.dispatch(REPLACE,{loadingText:null})
-                          if(isGetList){
-                            that.loading = true
-                            getList().then(
-                              (res) =>{
-                                that.complateGetList(res)
-                              }
-                            )
-                          }
-
-                          if(that.isReloadBlankNew(res.recordId)){
-                            // that.tableData.forEach(
-                            //   (v,index) =>{
-                            //     if(v.checkedStatus){
-                            //       // that.arr.push(v.ID)
-                            //     }
-                            //   }
-                            // )
-                            that.go(res.recordId)
-                          }else{
-                            that.dataContainer = []
-                            const params = {
-                              PageSize: 0,
-                              Status:1,
-                            }
-                            getList(params).then(
-                              (res) =>{
-                                if(res['Data'].length>0){
-                                  res['Data'].forEach(
-                                    (v,index) =>{
-                                      that.dataContainer.push(v.ID)
-                                    }
-                                  )
-                                }
-                              }
-                            )
-                            that.tableData.forEach(
-                              (v,index) =>{
-                                if(v.checkedStatus){
-                                  v.Status = 5
-                                  // that.arr.push(v.ID)
-                                }else{
-                                  v.Status = 1
-                                }
-                              }
-                            )
-                          }
-              }
-            ).catch(
-              (res) =>{
-                    if(res.Data === 3){
-                      that.$message(
-                        {
-                          type:'error',
-                          message:'操作失败，请稍后重试',
-                          duration:2000,
-                        }
-                      )
-                      sessionStorage.setItem('doingStatus','nothing')
-                      that.clearReloadId(res)
-                      // clearInterval(that.reloadId)
-                      const params = {
-                        Keys:that.keys,
-                        PageIndex:that.PageIndex,
-                        Status: that.status
-                      }
-                      getList(params).then(
-                        (res) =>{
-                          that.complateGetList(res)
-                            store.dispatch(
-                              REPLACE,{mainLoading:false,loadingText:null}
-                            )
-                        }
-                      ).catch(
-                        (err) =>{
-                          that.message(
-                            {
-                              type:'error',
-                              message:'服务器错误，请稍后重试',
-                              duration:2000,
-                              onClose: () =>{
-                                store.dispatch(
-                                  REPLACE,{mainLoading:false}
-                                )
-                              }
-                            }
-                          )
-                        }
-                      )
-                    }else if(res.Data === 1){
-                      that.blankNew = true
-                      that.initStatus('train',res.recordId)
-                      if(that.$route.path === '/bot/config/quicklyQA'){
-                        botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'正在培训中，请稍后'}):null
-                      }
-
-                    } else{
-                      that.blankNew = false
-                      that.initStatus('publish',res.recordId)
-                      if(that.$route.path === '/bot/config/quicklyQA') {
-                        botId === that.$route.query.recordId ? store.commit(REPLACE, {loadingText: '正在发布中，请稍后'}) : null
-                      }
-                    }
-                  }
-            )
-
-          },5000)
-          that.addReloadArr(id,botId)
-
-      },
-      clearReloadId(err){
-        const reloadArr = store.state.app.quickQuizArr
-        let newID = null;
-        reloadArr.forEach(
-          (v,index) =>{
-            if(v.recordId === err.recordId){
-              v.loading = false
-              newID = v.id
-              return
-            }
-          }
-        )
-        clearInterval(newID);
-      },
-      addReloadArr(id,botId){
-        const arr = store.state.app.quickQuizArr
-        arr.forEach(
-          (v,index) =>{
-            if(v.recordId === botId){
-              v.id = id
-              return
-            }
-          }
-        )
-        store.dispatch(REPLACE,{quickQuizArr:arr})
-      },
-      isReloadBlankNew(botId){
-        const arr = store.state.app.quickQuizArr
-        let status = false
-        arr.forEach(
-          (v,index) =>{
-            if(botId ===v.recordId && v.doing === 'train'){
-              status = true //此id为之前测试过的id
-            }
-          }
-        )
-        return status
-      },
-      complateGetList(res){
-        this.tableData= res['Data']
-        this.originDisabled = this.tableData.length <= 0
-        this.total = res.TotalCount
-        this.PageIndex = res.PageIndex
-        this.loading = false
-      },
-      handleCommand(command){
-        const that = this
-        this.originDisabled = true
-        this.tableData = []
-        this.total = 0
-        this.title = this.options[command]
-        this.status= command?command-0:null
-        const status = {Status:this.status}
-        this.keys = ''
-        this.loading = true
-        getList(status).then(
+        }
+        getList(options).then(
           (res) => {
             res['Data'].forEach(
-              (v,index) =>{
-                if(that.tableDataCopy.includes(v.ID)){
+              (v, index) => {
+                if (this.tableDataCopy.includes(v.ID)) {
                   v.checkedStatus = true
-                }else{
+                } else {
                   v.checkedStatus = false
                 }
               }
@@ -518,32 +317,248 @@
           }
         )
       },
-      typeCheckedStatus(v){
+      _reload_ask(isGetList, botId) {
+        const that = this
+        let id = setInterval(function () {
+
+          _ask(botId).then(
+            (res) => {
+              /*
+              不存在发布
+              */
+              /*
+              clearReloadId
+              */
+              // that.arr = []
+
+              sessionStorage.setItem('doingStatus', 'nothing')//设置没有进行测试或发布的线程了
+
+              that.clearReloadId(res)
+
+              // store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
+              //   () =>{
+              let loading = true;
+              const arr = store.state.app.quickQuizArr
+
+              arr.forEach(
+                (v, index) => {
+                  if (v.recordId === that.$route.query.recordId) {
+                    loading = v.loading
+                    return
+                  }
+                  loading = false
+                }
+              )
+
+              if (that.$route.path === '/bot/config/quicklyQA') {
+                store.dispatch(REPLACE, {mainLoading: loading})
+              }
+              store.dispatch(REPLACE, {loadingText: null})
+              if (isGetList) {
+                that.loading = true
+                getList().then(
+                  (res) => {
+                    that.complateGetList(res)
+                  }
+                )
+              }
+
+              if (that.isReloadBlankNew(res.recordId)) {
+                // that.tableData.forEach(
+                //   (v,index) =>{
+                //     if(v.checkedStatus){
+                //       // that.arr.push(v.ID)
+                //     }
+                //   }
+                // )
+                that.go(res.recordId)
+              } else {
+                that.dataContainer = []
+                const params = {
+                  PageSize: 0,
+                  Status: 1,
+                }
+                getList(params).then(
+                  (res) => {
+                    if (res['Data'].length > 0) {
+                      res['Data'].forEach(
+                        (v, index) => {
+                          that.dataContainer.push(v.ID)
+                        }
+                      )
+                    }
+                  }
+                )
+                that.tableData.forEach(
+                  (v, index) => {
+                    if (v.checkedStatus) {
+                      v.Status = 5
+                      // that.arr.push(v.ID)
+                    } else {
+                      v.Status = 1
+                    }
+                  }
+                )
+              }
+            }
+          ).catch(
+            (res) => {
+              if (res.Data === 3) {
+                that.$message(
+                  {
+                    type: 'error',
+                    message: '操作失败，请稍后重试',
+                    duration: 2000,
+                  }
+                )
+                sessionStorage.setItem('doingStatus', 'nothing')
+                that.clearReloadId(res)
+                // clearInterval(that.reloadId)
+                const params = {
+                  Keys: that.keys,
+                  PageIndex: that.PageIndex,
+                  Status: that.status
+                }
+                getList(params).then(
+                  (res) => {
+                    that.complateGetList(res)
+                    store.dispatch(
+                      REPLACE, {mainLoading: false, loadingText: null}
+                    )
+                  }
+                ).catch(
+                  (err) => {
+                    that.message(
+                      {
+                        type: 'error',
+                        message: '服务器错误，请稍后重试',
+                        duration: 2000,
+                        onClose: () => {
+                          store.dispatch(
+                            REPLACE, {mainLoading: false}
+                          )
+                        }
+                      }
+                    )
+                  }
+                )
+              } else if (res.Data === 1) {
+                that.blankNew = true
+                that.initStatus('train', res.recordId)
+                if (that.$route.path === '/bot/config/quicklyQA') {
+                  botId === that.$route.query.recordId ? store.commit(REPLACE, {loadingText: '正在培训中，请稍后'}) : null
+                }
+
+              } else {
+                that.blankNew = false
+                that.initStatus('publish', res.recordId)
+                if (that.$route.path === '/bot/config/quicklyQA') {
+                  botId === that.$route.query.recordId ? store.commit(REPLACE, {loadingText: '正在发布中，请稍后'}) : null
+                }
+              }
+            }
+          )
+
+        }, 5000)
+        that.addReloadArr(id, botId)
+
+      },
+      clearReloadId(err) {
+        const reloadArr = store.state.app.quickQuizArr
+        let newID = null;
+        reloadArr.forEach(
+          (v, index) => {
+            if (v.recordId === err.recordId) {
+              v.loading = false
+              newID = v.id
+              return
+            }
+          }
+        )
+        clearInterval(newID);
+      },
+      addReloadArr(id, botId) {
+        const arr = store.state.app.quickQuizArr
+        arr.forEach(
+          (v, index) => {
+            if (v.recordId === botId) {
+              v.id = id
+              return
+            }
+          }
+        )
+        store.dispatch(REPLACE, {quickQuizArr: arr})
+      },
+      isReloadBlankNew(botId) {
+        const arr = store.state.app.quickQuizArr
+        let status = false
+        arr.forEach(
+          (v, index) => {
+            if (botId === v.recordId && v.doing === 'train') {
+              status = true //此id为之前测试过的id
+            }
+          }
+        )
+        return status
+      },
+      complateGetList(res) {
+        this.tableData = res['Data']
+        this.originDisabled = this.tableData.length <= 0
+        this.total = res.TotalCount
+        this.PageIndex = res.PageIndex
+        this.loading = false
+      },
+      handleCommand(command) {
+        const that = this
+        this.originDisabled = true
+        this.tableData = []
+        this.total = 0
+        this.title = this.options[command]
+        this.status = command ? command - 0 : null
+        const status = {Status: this.status}
+        this.keys = ''
+        this.loading = true
+        getList(status).then(
+          (res) => {
+            res['Data'].forEach(
+              (v, index) => {
+                if (that.tableDataCopy.includes(v.ID)) {
+                  v.checkedStatus = true
+                } else {
+                  v.checkedStatus = false
+                }
+              }
+            )
+            this.complateGetList(res)
+          }
+        )
+      },
+      typeCheckedStatus(v) {
         const that = this
         this.enableChecked = !this.enableChecked
         /*
         优化页面闪烁视觉不适
          */
-        this.loading=true
+        this.loading = true
         setTimeout(
           () => {
             that.showDel = !that.showDel
-          },300
+          }, 300
         )
         setTimeout(
-          () =>{
-            that.loading=false
-          },800
+          () => {
+            that.loading = false
+          }, 800
         )
         /*
         当操作状态为取消选择时
         */
-        if(!that.enableChecked){
+        if (!that.enableChecked) {
           /*
             初始化列表复选框状态
           */
           that.tableData.forEach(
-            (v) =>{
+            (v) => {
               v.checkedStatus = false
             }
           )
@@ -552,8 +567,8 @@
           */
           // that.arr = []
           const params = {
-            Keys:that.keys,
-            PageIndex:that.PageIndex,
+            Keys: that.keys,
+            PageIndex: that.PageIndex,
             Status: that.status
           }
           getList(params).then(
@@ -562,18 +577,18 @@
               给table重新赋值
               */
               that.tableData = res['Data']
-              that.loading=false
+              that.loading = false
             }
           )
 
-        }else{
+        } else {
           /*
           当操作状态时选择时，初始化arr
           */
           // that.arr = []
           that.tableDataCopy = that.dataContainer.slice(0)
           that.tableData.forEach(
-            (v,index) =>{
+            (v, index) => {
               switch (v.Status) {
                 case 5:
                   // that.arr.push(v.ID)
@@ -590,27 +605,27 @@
         const that = this
 
         this.loading = true
-        const str ="<>%;/?'_"
-        const index = this.keys&&str.indexOf(this.keys) > -1
-        if(index){
+        const str = "<>%;/?'_"
+        const index = this.keys && str.indexOf(this.keys) > -1
+        if (index) {
           this.$message({
-            type:'error',
-            message:"请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
-            duration:2000,
+            type: 'error',
+            message: "请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
+            duration: 2000,
           })
           that.loading = false
           return
         }
         this.originDisabled = true
         this.tableData = []
-        const Keys = {Keys:this.keys}
+        const Keys = {Keys: this.keys}
         getList(Keys).then(
           (res) => {
             res['Data'].forEach(
-              (v,index) =>{
-                if(that.tableDataCopy.includes(v.ID)){
+              (v, index) => {
+                if (that.tableDataCopy.includes(v.ID)) {
                   v.checkedStatus = true
-                }else{
+                } else {
                   v.checkedStatus = false
                 }
               }
@@ -624,9 +639,9 @@
           }
         )
       },
-      handDel(v,index,status) {
+      handDel(v, index, status) {
         const that = this
-        if(status == 5){
+        if (status == 5) {
           return;
         }
         this.$confirm('是否删除此条问题?', '提示', {
@@ -634,34 +649,34 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          store.dispatch(REPLACE,{mainLoading:true})
+          store.dispatch(REPLACE, {mainLoading: true})
           const params = {
-            QuickQuizId:v
+            QuickQuizId: v
           }
           del(params).then(
             (res) => {
-              this.tableData.splice(index,1)
+              this.tableData.splice(index, 1)
               this.total--;
-              if(this.total%this.PageSize === 0){
+              if (this.total % this.PageSize === 0) {
                 this.PageIndex--;
                 const params = {
                   PageIndex: this.PageIndex,
                   Status: this.status,
-                  Keys:this.keys
+                  Keys: this.keys
                 }
-                getList(params).then((res) =>{
+                getList(params).then((res) => {
                   that.complateGetList(res)
                 })
               }
-              store.dispatch(REPLACE,{mainLoading:false})
+              store.dispatch(REPLACE, {mainLoading: false})
               this.$message({
                 type: 'success',
                 message: '删除成功'
               });
             }
           ).catch(
-            () =>{
-              store.dispatch(REPLACE,{mainLoading:false})
+            () => {
+              store.dispatch(REPLACE, {mainLoading: false})
               this.$message({
                 type: 'error',
                 message: '删除失败，请稍后重试'
@@ -675,14 +690,14 @@
           });
         });
       },
-      checked(v,id,index,status){
+      checked(v, id, index, status) {
         /*
           选中时，arr添加ID，
          */
-        if(v){
+        if (v) {
           this.tableDataCopy.push(id)
           // this.arr.push(id)
-        }else{
+        } else {
           /*
           取消时，删除此id
          */
@@ -691,43 +706,43 @@
           // this.arr.splice(arrIndex,1)
 
           const index = this.tableDataCopy.indexOf(id);
-          this.tableDataCopy.splice(index,1)
+          this.tableDataCopy.splice(index, 1)
         }
       },
-      train(){
+      train() {
         const that = this
         this.$confirm('确定测试以上问题?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在培训中，请稍后'})
-            const params = {
-              Ids: that.tableDataCopy,
-              Action:'train',
-            }
-          that.initStatus('train',that.$route.query.recordId)
+          store.dispatch(REPLACE, {mainLoading: true, loadingText: '正在培训中，请稍后'})
+          const params = {
+            Ids: that.tableDataCopy,
+            Action: 'train',
+          }
+          that.initStatus('train', that.$route.query.recordId)
           that.blankNew = true
-            sessionStorage.setItem('doingStatus','train')
-            store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
-              () =>{
-                that._reload_ask(false,that.$route.query.recordId) //开启论询且不刷新列表
-              }
-            )
-            doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
-              (res) =>{
-              }
-            ).catch(
-              (err) =>{
-                that.$message({
-                  type:'error',
-                  message:'服务器错误',
-                  duration:2000,
-                })
-                that.clearReloadId(err)
-                store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
-              }
-            )
+          sessionStorage.setItem('doingStatus', 'train')
+          store.dispatch(REPLACE, {id: that.$route.query.recordId}).then(
+            () => {
+              that._reload_ask(false, that.$route.query.recordId) //开启论询且不刷新列表    //  去调用go方法
+            }
+          )
+          doSomething(URL.requestHost + PUBLISHORTRAIN, params).then(
+            (res) => {
+            }
+          ).catch(
+            (err) => {
+              that.$message({
+                type: 'error',
+                message: '服务器错误',
+                duration: 2000,
+              })
+              that.clearReloadId(err)
+              store.dispatch(REPLACE, {mainLoading: false, loadingText: null})
+            }
+          )
         }).catch(() => {
           that.$message({
             type: 'info',
@@ -735,125 +750,133 @@
           });
         });
       },
-      initStatus(key,id){
-        const recordId = id?id:this.$route.query.recordId
+      initStatus(key, id) {
+        const recordId = id ? id : this.$route.query.recordId
         let arr = store.state.app.quickQuizArr
-        const item = {recordId,id:null,doing:key}
+        const item = {recordId, id: null, doing: key}
         let status = true;
         arr.forEach(
-          (v,index) =>{
-            if(v.recordId === recordId){
+          (v, index) => {
+            if (v.recordId === recordId) {
               v.doing = key
               v.loading = true
               status = false
             }
           }
         )
-        status?arr.push(item):null
-        store.dispatch(REPLACE,{quickQuizArr:arr})
+        status ? arr.push(item) : null
+        store.dispatch(REPLACE, {quickQuizArr: arr})
       },
-      publish(){
+      publish() {
         const that = this
-          that.$confirm('本次发布内容将覆盖上一次发布，是否继续发布？','提示',{
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(
-            () =>{
-              store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
-              const params = {
-                Ids: that.tableDataCopy,
-                Action:'publish',
-              }
-              that.initStatus('publish',that.$route.query.recordId)
-              that.blankNew = false
-              sessionStorage.setItem('doingStatus','publish')
-              store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
-                () =>{
-                  that._reload_ask(false,that.$route.query.recordId)
-                }
-              )
-
-              doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
-                (res) =>{
-
-                }
-              ).catch(
-                (err) =>{
-                  that.$message({
-                    type: 'error',
-                    message: '服务器错误,请稍后重试',
-                    duration:2000,
-                  });
-                  console.log(err)
-                  that.clearReloadId(err)
-                  store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
-                }
-              )
+        that.$confirm('本次发布内容将覆盖上一次发布，是否继续发布？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(
+          () => {
+            store.dispatch(REPLACE, {mainLoading: true, loadingText: '正在发布中，请稍后'})
+            const params = {
+              Ids: that.tableDataCopy,
+              Action: 'publish',
             }
-          ).catch(() =>{
-            that.$message({
-              type: 'info',
-              message: '已取消发布',
-              duration:2000,
-            });
-          })
-        }
+            that.initStatus('publish', that.$route.query.recordId)
+            that.blankNew = false
+            sessionStorage.setItem('doingStatus', 'publish')
+            store.dispatch(REPLACE, {id: that.$route.query.recordId}).then(
+              () => {
+                that._reload_ask(false, that.$route.query.recordId)
+              }
+            )
+
+            doSomething(URL.requestHost + PUBLISHORTRAIN, params).then(
+              (res) => {
+
+              }
+            ).catch(
+              (err) => {
+                that.$message({
+                  type: 'error',
+                  message: '服务器错误,请稍后重试',
+                  duration: 2000,
+                });
+                console.log(err)
+                that.clearReloadId(err)
+                store.dispatch(REPLACE, {mainLoading: false, loadingText: null})
+              }
+            )
+          }
+        ).catch(() => {
+          that.$message({
+            type: 'info',
+            message: '已取消发布',
+            duration: 2000,
+          });
+        })
       }
+    }
   }
 </script>
 <style scoped lang="scss">
   @import '../../../../style/index';
-  .createAnswer{
+
+  .createAnswer {
     position: absolute;
     width: 100px;
-    padding-left:0;
-    padding-right:0;
+    padding-left: 0;
+    padding-right: 0;
     margin-right: 20px;
     transition: width 1s;
   }
-  .margin-top20{
+
+  .margin-top20 {
     margin-top: 20px;
   }
-  .handle{
-    .edit:hover{
-      color:$primary-color;
+
+  .handle {
+    .edit:hover {
+      color: $primary-color;
       cursor: pointer;
-      span:hover{
+      span:hover {
         text-decoration: underline;
       }
     }
-    .delete:hover{
+    .delete:hover {
       cursor: pointer;
-      color:$danger;
-      span:hover{
+      color: $danger;
+      span:hover {
         text-decoration: underline;
       }
     }
-    .un-handle{
-      span{
+    .un-handle {
+      span {
         cursor: default;
-        color:$disabled;
+        color: $disabled;
       }
     }
   }
-  .yoy-main .el-table .cell .yoy-dropDown{
+
+  .yoy-main .el-table .cell .yoy-dropDown {
     height: 28px;
     line-height: 28px;
-    color:#333;
+    color: #333;
   }
-  .yoy-dropDown:hover{
+
+  .yoy-dropDown:hover {
     cursor: pointer;
   }
-  .un-handle{
-    color:$disabled;
+
+  .un-handle {
+    color: $disabled;
     cursor: default;
   }
-  .link{
+
+  .link {
     display: inline-block;
     cursor: pointer;
   }
-  .link:hover{
+
+  .link:hover {
     text-decoration: underline;
   }
 </style>
