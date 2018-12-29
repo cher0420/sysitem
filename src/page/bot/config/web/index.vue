@@ -46,7 +46,7 @@
             </section>
             <img v-show="headerPicture === 'custom'&&formData.BotHeadPortrait" :src="formData.BotHeadPortrait" alt="自定义头像" class="align-middle header"/>
             <span class="tips" v-if="headerPicture === 'custom'">
-               （图片大小不超过200KB，支持jpg、jpeg、png、gif格式）
+               （图片大小不超过200KB）
             </span>
           </el-col>
       </el-radio-group>
