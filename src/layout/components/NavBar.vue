@@ -67,10 +67,19 @@
   }
   .yoy-intro .el-dropdown{
     color:$fff;
-    height:$rightEH;
     line-height: $rightEH;
     cursor: pointer;
-    padding: 0 15px;
+    /*padding: 0 15px;*/
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    span{
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
   }
   .yoy-intro .el-dropdown:hover{
     background: #2d4460;

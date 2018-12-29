@@ -44,7 +44,10 @@
                 <input :disabled="fileDisabled" type='file' accept="image/*" name="avatar" placeholder="上传" id="img" class="file-btn" @change="upLoadImg"/>选择文件
               </section>
             </section>
-            <img v-show="headerPicture === 'custom'&&formData.BotHeadPortrait" :src="formData.BotHeadPortrait" alt="自定义头像" class="align-middle header">
+            <img v-show="headerPicture === 'custom'&&formData.BotHeadPortrait" :src="formData.BotHeadPortrait" alt="自定义头像" class="align-middle header"/>
+            <span class="tips" v-if="headerPicture === 'custom'">
+               （图片大小不超过200KB）
+            </span>
           </el-col>
       </el-radio-group>
     </el-form-item>
@@ -133,14 +136,14 @@
         问候语
       </span>
       <section class="dis-i-b full-width p-relative" style="width: 60%;padding-bottom: 5px;">
-        <el-input v-model="formData.DialogGreetings" type="textarea" :rows="5" maxlength="50" style="margin-left: 20px;">
+        <el-input class='sayHello' v-model="formData.DialogGreetings" type="textarea" :rows="5" maxlength="50" style="margin-left: 20px;">
         </el-input>
         <span class="p-absolute " style="bottom: 0;color:#c0c4cc;right: -20px;">最多50个字符 &nbsp;</span>
       </section>
     </el-form-item>
     <title-item title="添加授信域名"></title-item>
     <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:56px">
-      <section style="margin-top: 20px;line-height: 36px;">仅支持已添加的授信余名或IP地址的URL访问 <span class="c999">(授信域名： www...  IP地址：192.888.8.8)</span></section>
+      <section style="margin-top: 20px;line-height: 36px;">仅支持已添加的授信域名或IP地址的URL访问 <span class="c999">(授信域名： www...  IP地址：192.888.8.8)</span></section>
       <el-row>
         <el-col :span="18" style="padding-bottom: 5px">
           <el-input type="textarea" :rows="5" placeholder="请输入授信域名" v-model="formData.AuthorizedAddress"></el-input>
@@ -148,8 +151,7 @@
      </el-row>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit('formData')">保存</el-button>
-      <el-button @click="preview">预览</el-button>
+      <el-button type="primary" @click="submit('formData')">保存</el-button><el-button @click="preview">样式预览</el-button><el-tooltip class="item" effect="dark" content="保存后可预览最新样式" placement="top-start"><span class="previewIcon"><i class="el-icon-question f-s-16 c999" style="margin:10px"></i></span></el-tooltip>
     </el-form-item>
   </el-form>
 </template>
@@ -225,7 +227,7 @@
     },
     methods: {
       upload(response, file, fileList){
-        console.log(response, file, fileList)
+
       },
       preview(){
         const id = this.$route.query.recordId
@@ -286,11 +288,19 @@
           let files = e.target.files || e.dataTransfer.files;
           if (!files.length) return;
           if (files[0].type.indexOf("image") < 0) {
-            alert("上传了非图片");
+            this.$message({
+              type:'error',
+              message:'上传了非图片',
+              duration:2000
+            })
             return;
           }
-          if (files[0].size > 5 * 1000000) {
-            alert("上传文件过大");
+          if (files[0].size > 200*1024) {
+            this.$message({
+              type:'error',
+              message:"请上传200KB以内的图片",
+              duration:2000
+            })
             return;
           }
           // 图片压缩成base64
@@ -306,7 +316,7 @@
       changeHeaderImage(v){
         //如果上传头像为自定义，则清空头像数据
         if(v === 'custom'){
-          this.formData.BotHeadPortrait = ''
+          // this.formData.BotHeadPortrait = ''
           this.fileDisabled = false
         }else{
           this.fileDisabled = true
@@ -412,7 +422,6 @@
       changeColor(key,v){
         this[key] = v.toUpperCase()
         this.formData[key] = v.toUpperCase()
-        console.log(v)
       },
       copy(str){
         var save = function (e){
@@ -429,7 +438,6 @@
         const status = this[arr].includes(this.formData[key])
         if(status){
           this[key] = this.formData[key]
-          console.log(key,this[key])
         }
       }
     }
@@ -542,5 +550,12 @@
   .align-top{
     vertical-align: top;
   }
-
+  .tips{
+    color:#c3c3c3;
+    font-size: 12px;
+    vertical-align: middle;
+  }
+  .previewIcon:hover{
+    cursor: pointer;
+  }
 </style>

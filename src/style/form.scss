@@ -126,3 +126,8 @@ form label
         font-size: 13px !important;
       }
 }
+.sayHello{
+  .el-textarea__inner {
+    padding-left: 10px !important;
+  }
+}
