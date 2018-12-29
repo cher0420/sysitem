@@ -1,5 +1,6 @@
 <template>
   <section>
+    <!--<a :href="blankUrl" style="display: none" target="_blank" id="blankNew" ref="blankNew"></a>-->
     <section class="p-relative" style="">
       <el-button  v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button>
       <el-input v-model='keys' class='searchInput' :style="{transition:'left .3s',left: !enableChecked?'120px':'0'}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
@@ -149,6 +150,7 @@
         originDisabled:true,
         blankNew:false,
         id:null,
+        blankUrl:'',
       }
     },
     /*
@@ -276,7 +278,13 @@
         const BotConfigId = recordId?recordId:this.$route.query.recordId
         const host = URL.baseUrl
           const url = `${host}/WebTalk/validaiml.html?id=${BotConfigId}`
-          window.open(url)
+          // this.blankUrl = url
+
+          // const link = this.$refs['blankNew']
+          // link.click()
+          // 监听change事件:
+            const newScreen = window.open()
+            newScreen.location = url
       },
       handleCurrentChange(v) {
         this.loading = true
@@ -443,10 +451,8 @@
                     }
                   }
             )
-
-          },5000)
+          },20000)
           that.addReloadArr(id,botId)
-
       },
       clearReloadId(err){
         const reloadArr = store.state.app.quickQuizArr

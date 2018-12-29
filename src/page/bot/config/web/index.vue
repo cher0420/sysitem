@@ -133,14 +133,14 @@
         问候语
       </span>
       <section class="dis-i-b full-width p-relative" style="width: 60%;padding-bottom: 5px;">
-        <el-input v-model="formData.DialogGreetings" type="textarea" :rows="5" maxlength="50" style="margin-left: 20px;">
+        <el-input class='sayHello' v-model="formData.DialogGreetings" type="textarea" :rows="5" maxlength="50" style="margin-left: 20px;">
         </el-input>
         <span class="p-absolute " style="bottom: 0;color:#c0c4cc;right: -20px;">最多50个字符 &nbsp;</span>
       </section>
     </el-form-item>
     <title-item title="添加授信域名"></title-item>
     <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:56px">
-      <section style="margin-top: 20px;line-height: 36px;">仅支持已添加的授信余名或IP地址的URL访问 <span class="c999">(授信域名： www...  IP地址：192.888.8.8)</span></section>
+      <section style="margin-top: 20px;line-height: 36px;">仅支持已添加的授信域名或IP地址的URL访问 <span class="c999">(授信域名： www...  IP地址：192.888.8.8)</span></section>
       <el-row>
         <el-col :span="18" style="padding-bottom: 5px">
           <el-input type="textarea" :rows="5" placeholder="请输入授信域名" v-model="formData.AuthorizedAddress"></el-input>
@@ -286,11 +286,19 @@
           let files = e.target.files || e.dataTransfer.files;
           if (!files.length) return;
           if (files[0].type.indexOf("image") < 0) {
-            alert("上传了非图片");
+            this.$message({
+              type:'error',
+              message:'上传了非图片',
+              duration:2000
+            })
             return;
           }
-          if (files[0].size > 5 * 1000000) {
-            alert("上传文件过大");
+          if (files[0].size > 200*1024) {
+            this.$message({
+              type:'error',
+              message:"请上传200KB以内的图片",
+              duration:2000
+            })
             return;
           }
           // 图片压缩成base64
@@ -542,5 +550,4 @@
   .align-top{
     vertical-align: top;
   }
-
 </style>

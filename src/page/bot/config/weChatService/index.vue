@@ -24,7 +24,7 @@
           <i class="el-icon-question f-s-16 align-middle"></i>
           <span class="align-middle">如何开启公众账号开发模式？</span>
         </section>
-        <section class="padding-l-20px">登录到微信国内公众平台账号，进入菜单栏 <span class="primary-color">"开发者中心" </span> > <span class="primary-color"> "成为开发者" </span>,根据提示讲URL和Token复制到相应输入框中，点击 <span class="primary-color">"提交"</span>后，点击 <span class="primary-color">"启动"</span>启动开发者模式
+        <section class="padding-l-20px">登录到微信国内公众平台账号，进入菜单栏 <span class="primary-color">"开发者中心" </span> > <span class="primary-color"> "成为开发者" </span>,根据提示将URL和Token复制到相应输入框中，点击 <span class="primary-color">"提交"</span>后，点击 <span class="primary-color">"启动"</span>启动开发者模式
         </section>
       </el-col>
     </el-form-item>
@@ -49,7 +49,7 @@
           <i class="el-icon-question f-s-16 align-middle"></i>
           <span class="align-middle">如何获得AppID和Secret？</span>
         </section>
-        <section class="padding-l-20px">1.登陆到微信公众平台账号<span class="margin-l-40">2.进入菜单栏开发者中心
+        <section class="padding-l-20px">1.登录到微信公众平台账号<span class="margin-l-40">2.进入菜单栏开发者中心
 </span><span class="margin-l-40">3.勾选协议，点击"成为开发者"，找到AppID和AppSercet填入即可</span>
         </section>
         <section class="padding-l-20px">注：目前只有服务号和认证订阅号才有AppID和AppSercet</section>

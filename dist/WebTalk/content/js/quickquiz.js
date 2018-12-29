@@ -1,29 +1,17 @@
-﻿Date.prototype.Format = function (fmt) { //author: meizz
-    var o = {
-        "M+": this.getMonth() + 1, //月份
-        "d+": this.getDate(), //日
-        "H+": this.getHours(), //小时
-        "m+": this.getMinutes(), //分
-        "s+": this.getSeconds(), //秒
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
-        "S": this.getMilliseconds() //毫秒
-    };
-    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o)
-        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    return fmt;
-}
-
-var adminApiUrl = host().api
+﻿var adminApiUrl = host().api
 var fqavalidaimlApiUrl = host().fqavalidaimlApi
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};
 var FAQAnswerList = {};
 $(function () {
-    var host = ""; //域名
-    var cip = ""; //ip
-    var isAuthorize = false;
+    var token = getCookie('token');
+    if(token == "" || token == null || token == undefined){
+      var adminportalUrl = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port: '')
+      location.href = adminportalUrl;
+      return;
+    }
+
     var botObject = {};
     $.getUrlParam = function (name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
@@ -31,16 +19,7 @@ $(function () {
         if (r != null) return unescape(r[2]); return null;
     }
 
-    // 获取当前域名
-    // if (window.opener != null) {
-    //     host = window.opener.location.host;
-    // }
-
     $("#submit").on("click", function () {
-        if (!isAuthorize) {
-            return;
-        }
-
         var val = $("#text").val();
         if (val == "" || val == null || $.trim(val.replace(/\n/g, "")) == "") {
             return;
@@ -52,10 +31,6 @@ $(function () {
     });
 
     $("#text").keydown(function (event) {
-        if (!isAuthorize) {
-            return;
-        }
-
         var val = $(this).val();
         if (event.keyCode == 13 && event.shiftKey) {
             return;
@@ -92,13 +67,7 @@ $(function () {
                     return;
                 }
 
-                verifyAuthorization(host, returnCitySN.cip, function () {
-                    if (isAuthorize) {
-                        addMsg('Hightalk', botObject.DialogGreetings);
-                    } else {
-                        $(".panel-alert, #recon").show();
-                    }
-                });
+                addMsg('Hightalk', botObject.DialogGreetings);
             }).error(function () {
                 $(".webtalk").show();
                 $(".panel-alert, #recon").show();
@@ -117,21 +86,6 @@ $(function () {
         webtalk.find(".panel-alert").css("background-color", botObject.DialogColor);
         webtalk.find(".panel-right").remove();
         webtalk.show();
-    }
-
-    // 验证是否被授权
-    function verifyAuthorization(host, cip, callback) {
-        $.post(adminApiUrl + "/WebTalk/VerifyAuthorization", { id: botObject.BotConfigId, host: host, cip: cip }, function (result) {
-            if (result != undefined && result != null) {
-                if (result.status == 1) {
-                    isAuthorize = result.isAuthorization;
-                }
-
-                if (callback != undefined && typeof (callback) == "function") {
-                    callback();
-                }
-            }
-        })
     }
 
     function callWebTalkService(question) {
@@ -206,25 +160,6 @@ $(function () {
             str += "<div class=\"msg robot\"><div class=\"msg-left\" worker=\"" + user + "\"><div class=\"msg-host photo\" style=\"background-image: url(" + rbg.replace("normal", "").replace("custom","") + ")\"></div><div class=\"msg-ball\" title=\"" + time + "\">" + content + "</div></div></div>";
         }
         return str;
-    }
-
-    // 时间统一函数
-    function getTimeText(argument) {
-        var timeS = argument;
-        var todayT = ''; //
-        var yestodayT = '';
-        var timeCha = getTimeS(timeS);
-        timeS = timeS.slice(-8);
-        todayT = new Date().getHours() * 60 * 60 * 1000 + new Date().getMinutes() * 60 * 1000 + new Date().getSeconds() * 1000;
-        yestodayT = todayT + 24 * 60 * 60 * 1000;
-        return argument.slice(0, 11) + " " + timeS;
-    }
-
-    // 时间戳获取
-    function getTimeS(argument) {
-        var timeS = argument;
-        timeS = timeS.replace(/[年月]/g, '/').replace(/[日]/, '');
-        return new Date().getTime() - new Date(timeS).getTime() - 1000; //有一秒的误差
     }
 
     function sendErrorMsg() {
