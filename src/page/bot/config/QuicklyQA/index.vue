@@ -277,15 +277,47 @@
       go(recordId){
         const BotConfigId = recordId?recordId:this.$route.query.recordId
         const host = URL.baseUrl
-          const url = `${host}/WebTalk/validaiml.html?id=${BotConfigId}`
-          // this.blankUrl = url
+        const url = `${host}/WebTalk/validaiml.html?id=${BotConfigId}`
+        // this.blankUrl = url
 
-          // const link = this.$refs['blankNew']
-          // link.click()
-          // 监听change事件:
-          //   const newScreen = window.open()
-          //   newScreen.location = url
-        // window.open(url, '_blank');
+        // const link = this.$refs['blankNew']
+        // link.click()
+        // 监听change事件:
+        //   const newScreen = window.open()
+        //   newScreen.location = url
+        //window.open(url, '_blank');
+        this.createSomeThing(url)
+        //this.callbackfunction(url)
+      },
+      createSomeThing(url){
+
+        var o = document.body;
+        var a = document.createElement("a");
+        a.setAttribute("id", "blankNew");
+        a.setAttribute("target", "_blank");
+
+        a.href = url;
+        a.innerHTML = '特殊';
+        a.style.color = "red";
+        o.appendChild(a);
+        this.callbackfunction(url)
+
+      },
+      callbackfunction(url){
+
+        var comment = document.getElementById('blankNew');
+
+        if (document.all) {
+          // For IE
+          comment.click();
+        } else if (document.createEvent) {
+          //FOR DOM2
+          var ev = document.createEvent('MouseEvents');
+          ev.initEvent('click', true, true);
+
+          comment.dispatchEvent(ev);
+        }
+
       },
       handleCurrentChange(v) {
         this.loading = true
