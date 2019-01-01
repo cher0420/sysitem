@@ -1,6 +1,6 @@
 <template>
   <section>
-    <!--<a :href="blankUrl" style="display: none" target="_blank" id="blankNew" ref="blankNew"></a>-->
+    <a :href="blankUrl" style="display: none" target="_blank" id="blankNew" ref="blankNew"></a>
     <section class="p-relative" style="">
       <el-button  v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button>
       <el-input v-model='keys' class='searchInput' :style="{transition:'left .3s',left: !enableChecked?'120px':'0'}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
@@ -159,7 +159,7 @@
     created(){
       this.tableData = []
       this.total = 0
-      const status = sessionStorage.getItem('doingStatus')
+      // const status = sessionStorage.getItem('doingStatus')
       // if(status === 'nothing'){
       //   store.dispatch(REPLACE,{id:this.$route.query.recordId})
       // }
@@ -186,7 +186,7 @@
       this.loading = true
       _ask().then(
         (res) => {
-          sessionStorage.setItem('doingStatus','nothing')
+          // sessionStorage.setItem('doingStatus','nothing')
           /*
                自定义列表内容,没有在发布中的内容
               */
@@ -285,7 +285,7 @@
           // 监听change事件:
           //   const newScreen = window.open()
           //   newScreen.location = url
-        window.open(url, '_blank');
+        // window.open(url, '_blank');
       },
       handleCurrentChange(v) {
         this.loading = true
@@ -314,7 +314,6 @@
       _reload_ask(isGetList,botId){
         const that = this
           let id = setInterval(function () {
-
             _ask(botId).then(
               (res) =>{
                     /*
@@ -323,16 +322,10 @@
                     /*
                     clearReloadId
                     */
-                // that.arr = []
-
-                sessionStorage.setItem('doingStatus','nothing')//设置没有进行测试或发布的线程了
 
                 that.clearReloadId(res)
-
-                // store.dispatch(REPLACE,{mainLoading:false,loadingText:null}).then(
-                //   () =>{
-                          let loading = true;
-                          const arr = store.state.app.quickQuizArr
+                let loading = true;
+                const arr = store.state.app.quickQuizArr
 
                           arr.forEach(
                             (v,index) =>{
@@ -405,7 +398,7 @@
                           duration:2000,
                         }
                       )
-                      sessionStorage.setItem('doingStatus','nothing')
+                      // sessionStorage.setItem('doingStatus','nothing')
                       that.clearReloadId(res)
                       // clearInterval(that.reloadId)
                       const params = {
@@ -715,7 +708,7 @@
             }
           that.initStatus('train',that.$route.query.recordId)
           that.blankNew = true
-            sessionStorage.setItem('doingStatus','train')
+            // sessionStorage.setItem('doingStatus','train')
             store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
               () =>{
                 that._reload_ask(false,that.$route.query.recordId) //开启论询且不刷新列表
@@ -774,7 +767,7 @@
               }
               that.initStatus('publish',that.$route.query.recordId)
               that.blankNew = false
-              sessionStorage.setItem('doingStatus','publish')
+              // sessionStorage.setItem('doingStatus','publish')
               store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
                 () =>{
                   that._reload_ask(false,that.$route.query.recordId)

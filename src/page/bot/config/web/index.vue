@@ -316,7 +316,7 @@
       changeHeaderImage(v){
         //如果上传头像为自定义，则清空头像数据
         if(v === 'custom'){
-          // this.formData.BotHeadPortrait = ''
+          this.formData.BotHeadPortrait = ''
           this.fileDisabled = false
         }else{
           this.fileDisabled = true
