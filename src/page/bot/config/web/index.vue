@@ -171,6 +171,7 @@
     data(){
       return{
         formData:{
+          flag:false,
           Code:'',
           Position:'right-down',
           BotHeadPortrait: IMAGE,
@@ -221,11 +222,14 @@
       }
       request(URL.requestHost+WEBINFO,option).then(
         (res) =>{
+          this.initData(res);
          // console.log("标记",res.WebChatSettingModel.Code)
           if(res.WebChatSettingModel.Code == null || res.WebChatSettingModel.Code == ""){
+            // this.initData(res);
             this.validate("formData");
+            this.flag = true;
           }else{
-            this.initData(res);
+            // this.initData(res);
           }
         }
       )
@@ -402,6 +406,11 @@
         }
         request(URL.requestHost+UPDATEWEB,option).then(
           (res) =>{
+
+            if(that.flag == true){  // 样式初始化
+              that.loading = false;
+              return false;
+            }
             that.$message({
               type: 'success',
               message: '保存成功',
