@@ -221,7 +221,12 @@
       }
       request(URL.requestHost+WEBINFO,option).then(
         (res) =>{
-          this.initData(res)
+         // console.log("标记",res.WebChatSettingModel.Code)
+          if(res.WebChatSettingModel.Code == null || res.WebChatSettingModel.Code == ""){
+            this.validate("formData");
+          }else{
+            this.initData(res);
+          }
         }
       )
     },
