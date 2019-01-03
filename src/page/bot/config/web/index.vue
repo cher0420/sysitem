@@ -143,10 +143,10 @@
     </el-form-item>
     <title-item title="添加授信域名"></title-item>
     <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:56px">
-      <section style="margin-top: 20px;line-height: 36px;">仅支持已添加的授信域名或IP地址的URL访问 <span class="c999">(授信域名： www...  IP地址：192.888.8.8)</span></section>
+      <section style="margin-top: 20px;line-height: 36px;">请添加授信的来访IP地址或域名 <span class="c999">(例如：255.255.255.255)</span></section>
       <el-row>
         <el-col :span="18" style="padding-bottom: 5px">
-          <el-input type="textarea" :rows="5" placeholder="请输入授信域名" v-model="formData.AuthorizedAddress"></el-input>
+          <el-input type="textarea" :rows="5" placeholder="多域名或IP请用英文半角分号隔开" v-model="formData.AuthorizedAddress"></el-input>
         </el-col>
      </el-row>
     </el-form-item>
