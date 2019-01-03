@@ -126,6 +126,10 @@ form label
         font-size: 13px !important;
       }
 }
+.el-button.is-disabled, .el-button.is-disabled:hover, .el-button.is-disabled:focus{
+  cursor: default;
+}
+
 .sayHello{
   .el-textarea__inner {
     padding-left: 10px !important;

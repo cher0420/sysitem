@@ -123,6 +123,7 @@
   import {PUBLISHORTRAIN} from "../../../../constants/api";
   import store from '../../../../store';
   import {REPLACE} from "../../../../store/mutations";
+  import $ from 'jquery';
 
   import {mapActions} from 'vuex';
 
@@ -286,39 +287,59 @@
         //   const newScreen = window.open()
         //   newScreen.location = url
         //window.open(url, '_blank');
-        this.createSomeThing(url)
+        // this.createSomeThing(url)
         //this.callbackfunction(url)
+        this.downloadReportEvent(url,'someThing')
       },
-      createSomeThing(url){
+      downloadReportEvent(downloadFileUrl,fileName) {
 
-        var o = document.body;
-        var a = document.createElement("a");
-        a.setAttribute("id", "blankNew");
-        a.setAttribute("target", "_blank");
+        var theAnchor = $("<a href='" + downloadFileUrl + "' target='_blank'>file</a >");
+        console.log('=====',theAnchor)
+        //判断是否为chroczme浏览器
+        // if (isChrome()) {
+        //   theAnchor.attr('download', fileName);
+        // }
 
-        a.href = url;
-        a.innerHTML = '特殊';
-        a.style.color = "red";
-        o.appendChild(a);
-        this.callbackfunction(url)
+        //var theAnchor = $('<a />')
+        //theAnchor.attr('href', urls[i].url);
+        //theAnchor[0].dispatchEvent(new MouseEvent('click'));//IE不支持此方式附加事件
 
+        var e = document.createEvent('MouseEvents');
+        e.initEvent('click', true, true);
+        theAnchor[0].dispatchEvent(e);
+
+        theAnchor.remove();
       },
-      callbackfunction(url){
-
-        var comment = document.getElementById('blankNew');
-
-        if (document.all) {
-          // For IE
-          comment.click();
-        } else if (document.createEvent) {
-          //FOR DOM2
-          var ev = document.createEvent('MouseEvents');
-          ev.initEvent('click', true, true);
-
-          comment.dispatchEvent(ev);
-        }
-
-      },
+      // createSomeThing(url){
+      //
+      //   var o = document.body;
+      //   var a = document.createElement("a");
+      //   a.setAttribute("id", "blankNew");
+      //   a.setAttribute("target", "_blank");
+      //
+      //   a.href = url;
+      //   a.innerHTML = '特殊';
+      //   a.style.color = "red";
+      //   o.appendChild(a);
+      //   this.callbackfunction(url)
+      //
+      // },
+      // callbackfunction(url){
+      //
+      //   var comment = document.getElementById('blankNew');
+      //
+      //   if (document.all) {
+      //     // For IE
+      //     comment.click();
+      //   } else if (document.createEvent) {
+      //     //FOR DOM2
+      //     var ev = document.createEvent('MouseEvents');
+      //     ev.initEvent('click', true, true);
+      //
+      //     comment.dispatchEvent(ev);
+      //   }
+      //
+      // },
       handleCurrentChange(v) {
         this.loading = true
         this.PageIndex = v
