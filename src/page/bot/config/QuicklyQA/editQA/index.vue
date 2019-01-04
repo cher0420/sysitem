@@ -136,9 +136,11 @@
       getData() {
         // let query = this.$route.query;
         let data = JSON.parse(sessionStorage.getItem('edit'));
+
         console.log("+++++++", data)
         this.Keyword = data.Keyword.replace(/,/g,'、');
         this.Question = data.Question;
+        // debugger;
         this.getCheckKeywords();
       },
       getCheckKeywords() {  //  	根据关键字 获取详情
@@ -172,6 +174,7 @@
                 that.Text = msg.Data.Text;
                 that.Image = msg.Data.Image;
                 that.KeyId = msg.Data.KeyId;
+                console.log( that.Image )
 
 
               }

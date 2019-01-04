@@ -850,6 +850,7 @@
     margin-right: 11px;
     max-width: 1000px;
     margin-top: 20px;
+    margin-bottom: 40px;
   }
 
   /*.nextStepTop {*/

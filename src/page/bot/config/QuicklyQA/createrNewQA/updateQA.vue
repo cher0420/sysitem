@@ -1,117 +1,126 @@
 <template>
   <!--<div class="mainStyle" v-loading="loadingEdit">-->
-    <el-row class="mainStyle">
-      <el-col :span="12">
-        <div class="oldQA">
+  <el-row class="mainStyle">
+    <el-col :span="12">
+      <div class="oldQA">
+        <div class="existingQues">
+          <span>已有问题</span>
+          <div class="createTime">
+            创建时间 ： {{CreateDate}}
+          </div>
+        </div>
+        <div class="questionDetail box-sizing" :style="{height:questionHeight}" id="quickQuizQuestionAlready">
+          问题 ： {{Question}}
+        </div>
+        <div class="existingQuestion">
           <div class="existingQues">
-            <span>已有问题</span>
-            <div class="createTime">
-              创建时间 ： {{CreateDate}}
-            </div>
-          </div>
-          <div class="questionDetail box-sizing" :style="{height:questionHeight}" id="quickQuizQuestionAlready">
-            问题 ： {{Question}}
-          </div>
-          <div class="existingQuestion">
-            <div class="existingQues" >
-              已有关键词
-            </div>
-          </div>
-          <div class="questionDetail box-sizing" :style="{height:keyWordsHeight}" id="quickQuizKeyWordsAlready">
-            关键词 ： {{Keyword}}
-          </div>
-          <div class="existingQuestion">
-            <div class="existingQues">
-              已设置答案
-            </div>
-          </div>
-          <div class="updateTextareaa">
-            <div class="editAnswerQA">
-              <div class="leftView" v-html="Text.Answer">
-              </div>
-            </div>
-          </div>
-          <div class="upload_warp_imgg" v-show="Image.length!=0"><div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
-              <div class="upload_warp_img_div_top">
-                <div class="upload_warp_img_div_text" @click="oldFD(index)">
-                  <i class="el-icon-zoom-in"></i>
-                </div>
-              </div>
-              <img :src="item.Answer">
-            </div></div><div class="alterKey">
-            <el-button plain size="small" @click="alterKeyWords()">修改关键词</el-button>
-            <el-button type="primary" size="small" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
-            <el-button type="primary" size="small" :loading="!loader" v-if="!loader">更新中...</el-button>
-
-
+            已有关键词
           </div>
         </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="newQA">
-          <div class="editQuestionBac">
-            <div class="editQuestion">
-              第一步： 添加问题
-            </div>
+        <div class="questionDetail box-sizing" :style="{height:keyWordsHeight}" id="quickQuizKeyWordsAlready">
+          关键词 ： {{Keyword}}
+        </div>
+        <div class="existingQuestion">
+          <div class="existingQues">
+            已设置答案
           </div>
-          <div class="questionDetail box-sizing" :style="{height:questionHeight}" id="quickQuizQuestionNew">
-            问题 ： {{QuestionNew}}
-          </div>
-          <div class="editQuestionBac">
-            <div class="editQuestion">
-              第二步 ： 确认关键词 ( 可选择2-4个 )
-            </div>
-          </div>
-          <div class="questionDetail box-sizing" :style="{height:keyWordsHeight}" id="quickQuizKeyWordsNew">
-            关键词 ： {{Keyword}}
-          </div>
-          <div class="editQuestionBac">
-            <div class="editQuestion">
-              第三步 ： 设置答案
-            </div>
-          </div>
+        </div>
+        <div class="updateTextareaa">
           <div class="editAnswerQA">
-            <textarea maxlength="500" v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
-            <span class="fontCount">{{newText.Answer.length}}/500字</span>
-          </div><div class="m16"><div class=""><input @change="fileChange($event)" type="file" id="upload_file" multiple style="display: none"/><div class="upload_warp_imgg photoView" v-show="imgList.length!=0"><div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
-                  <div class="upload_warp_img_div_top">
-                    <div class="upload_warp_img_div_text">
-                      <i class="el-icon-zoom-in" @click="photoMagnify(index)"></i>
-                      <i class="el-icon-delete " @click="fileDel(index)"></i>
-                    </div>
-
-                  </div>
-                  <img :src="item.file.src">
-                </div>
-              </div><div class="upload_warp_leftt" @click="fileClick" v-show="imgList.length<3" >
-                <i class="el-icon-plus"></i>
+            <div class="leftView" v-html="Text.Answer">
+            </div>
+          </div>
+        </div>
+        <div class="upload_warp_imgg" v-show="Image.length!=0">
+          <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
+            <div class="upload_warp_img_div_top">
+              <div class="upload_warp_img_div_text" @click="oldFD(index)">
+                <i class="el-icon-zoom-in"></i>
               </div>
+            </div>
+            <img :src="item.Answer">
+          </div>
+        </div>
+        <div class="alterKey">
+          <el-button plain size="small" @click="alterKeyWords()">修改关键词</el-button>
+          <el-button type="primary" size="small" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
+          <el-button type="primary" size="small" :loading="!loader" v-if="!loader">更新中...</el-button>
 
+
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="12">
+      <div class="newQA">
+        <div class="editQuestionBac">
+          <div class="editQuestion">
+            第一步： 添加问题
+          </div>
+        </div>
+        <div class="questionDetail box-sizing" :style="{height:questionHeight}" id="quickQuizQuestionNew">
+          问题 ： {{QuestionNew}}
+        </div>
+        <div class="editQuestionBac">
+          <div class="editQuestion">
+            第二步 ： 确认关键词 ( 可选择2-4个 )
+          </div>
+        </div>
+        <div class="questionDetail box-sizing" :style="{height:keyWordsHeight}" id="quickQuizKeyWordsNew">
+          关键词 ： {{Keyword}}
+        </div>
+        <div class="editQuestionBac">
+          <div class="editQuestion">
+            第三步 ： 设置答案
+          </div>
+        </div>
+        <div class="editAnswerQA">
+          <textarea maxlength="500" v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
+          <span class="fontCount">{{newText.Answer.length}}/500字</span>
+        </div>
+        <div class="m16">
+          <div class=""><input @change="fileChange($event)" type="file" id="upload_file" multiple
+                               style="display: none"/>
+            <div class="upload_warp_imgg photoView" v-show="imgList.length!=0">
+              <div class="upload_warp_img_div cc222" v-for="(item,index) of imgList">
+                <div class="upload_warp_img_div_top">
+                  <div class="upload_warp_img_div_text">
+                    <i class="el-icon-zoom-in" @click="photoMagnify(index)"></i>
+                    <i class="el-icon-delete " @click="fileDel(index)"></i>
+                  </div>
+
+                </div>
+                <img :src="item.file.src">
+              </div>
+            </div>
+            <div class="upload_warp_leftt" @click="fileClick" v-show="imgList.length<3">
+              <i class="el-icon-plus"></i>
             </div>
 
           </div>
 
-          <div class="support_format">
-            （至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）
-          </div>
-
-
         </div>
 
-      </el-col>
-      <el-dialog
-        title="图片预览"
-        :visible.sync="dialogVisible"
-        width="45%"
-        :before-close="handleClose">
-        <div class="dialogg"><img :src="PreviewImg"></div>
-        <span slot="footer" class="dialog-footer">
+        <div class="support_format">
+          （至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）
+        </div>
+
+
+      </div>
+
+    </el-col>
+    <el-dialog
+      title="图片预览"
+      :visible.sync="dialogVisible"
+      width="45%"
+      :before-close="handleClose">
+      <div class="dialogg"><img :src="PreviewImg"></div>
+      <span slot="footer" class="dialog-footer">
   </span>
-      </el-dialog>
-    </el-row>
+    </el-dialog>
+  </el-row>
 
 
-    <!-- -->
+  <!-- -->
 
 
   <!--</div>-->
@@ -169,19 +178,19 @@
       this.checkSize(); // 文本域计数
 
     },
-    mounted(){
-      this.resetHeight('quickQuizQuestionAlready','quickQuizQuestionNew','questionHeight')
-      this.resetHeight('quickQuizKeyWordsAlready','quickQuizKeyWordsNew','keyWordsHeight')
+    mounted() {
+      this.resetHeight('quickQuizQuestionAlready', 'quickQuizQuestionNew', 'questionHeight')
+      this.resetHeight('quickQuizKeyWordsAlready', 'quickQuizKeyWordsNew', 'keyWordsHeight')
     },
 
     methods: {
       ...mapActions(
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataDis",]
       ),
-      resetHeight(el1,el2,value){
-          const elAlreadyHeight =document.getElementById(el1).offsetHeight
-          const elNewHeight = document.getElementById(el2).offsetHeight
-          this[value] = Math.max(elAlreadyHeight,elNewHeight)+'px'
+      resetHeight(el1, el2, value) {
+        const elAlreadyHeight = document.getElementById(el1).offsetHeight
+        const elNewHeight = document.getElementById(el2).offsetHeight
+        this[value] = Math.max(elAlreadyHeight, elNewHeight) + 'px'
 
       },
       getData() {
@@ -193,7 +202,7 @@
         this.CreateDate = data.CreateDate;
         this.Image = data.Image;
         this.KeyId = data.KeyId;
-        this.Keyword = data.Keyword.replace(/,/g,'、');
+        this.Keyword = data.Keyword.replace(/,/g, '、');
         this.Question = data.Question;
         this.QuestionNew = QuestionNew;
         if (data.Text.Answer != null) {
@@ -317,7 +326,7 @@
           "TenantId": TenantId,
           "KeyId": that.KeyId,
           "Question": that.Question,
-          "Keyword": that.Keyword.replace(/、/g,','),
+          "Keyword": that.Keyword.replace(/、/g, ','),
           "Text": that.newText,
           "Image": that.ImageNew,
           "DeleteIds": that.DeleteIds,
@@ -475,7 +484,7 @@
         let currSize = file.size / 1024;
 
 
-        if(  file.type == "image/svg+xml"){
+        if (file.type == "image/svg+xml") {
 
           this.$message({
             message: '添加失败，上传图片类型不合法',
@@ -484,7 +493,6 @@
 
           return false;
         }
-
 
 
         if (currSize > 200) {
@@ -617,7 +625,7 @@
     display: inline-block;
     margin-right: 20px;
     vert-align: middle;
-    border-radius:6px;
+    border-radius: 6px;
     background-color: #fbfdff;
   }
 
@@ -826,6 +834,7 @@
     /*text-align: right;*/
     max-width: 450px;
     margin-top: 50px;
+    padding-bottom: 40px;
   }
 
   .alterKey button {
@@ -919,7 +928,7 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
 
     width: 80px;
     height: 100%;

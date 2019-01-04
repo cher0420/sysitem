@@ -60,7 +60,7 @@
       };
       this.setInterval = setInterval( () => {
        /// console.log(444444444)
-        this.myResize();
+        that.myResize();
       },200)
 
     },
