@@ -1,8 +1,8 @@
 <template>
   <section class="yoy-header-container robotWidth " ref="scrollTop" style="flex:1">
     <bread class="navBar"></bread>
-    <section class="yoy-main" :style="{width:widthOS}" >
-      <router-view class="listItem"></router-view>
+    <section class="yoy-main listItem" :style="{width:widthOS}" >
+      <router-view class=""></router-view>
       <el-footer class="robotFoot">
       <footer-bar></footer-bar>
       </el-footer>
@@ -20,6 +20,7 @@
     data() {
       return {
         widthOS:'100%',
+        setInterval:"",
       }
     },
     components:{
@@ -57,6 +58,10 @@
       window.onresize = function () {
         that.myResize();
       };
+      this.setInterval = setInterval( () => {
+       /// console.log(444444444)
+        this.myResize();
+      },200)
 
     },
     methods: {
@@ -120,7 +125,11 @@
       scrollTop(){
         this.$refs.scrollTop.offsetParent.scrollTop = 0
       },
-    }
+    },
+    destroyed(){
+      let that = this;
+      clearInterval( this.setInterval);
+    },
   }
 </script>
 <style scoped>

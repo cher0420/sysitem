@@ -53,7 +53,7 @@
         <div class="addContent addContentDis" v-if="!keywordsDis">
           关键词 ： {{keywordsNew}}
         </div>
-        <div v-if="!keywordsDis">
+        <div v-show="!keywordsDis">
           <div class="addQuestion">
             第三步： 设置答案
           </div>

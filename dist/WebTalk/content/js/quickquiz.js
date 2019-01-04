@@ -12,7 +12,6 @@ $(function () {
       return;
     }
 
-    var botObject = {};
     $.getUrlParam = function (name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
         var r = window.location.search.substr(1).match(reg);
@@ -55,21 +54,20 @@ $(function () {
     });
 
     var urlParamId = $.getUrlParam('id');
+    var botObject = {
+        BotConfigId: urlParamId,
+        DialogGreetings: "您好，我是小嗨，我已经学会您培训的问答了，快来向我提问吧",
+        DialogColor: "#3B65B7",
+        DialogTitleColor: "#FFFFFF",
+        DialogTitle: "快速问答测试机器人",
+        WebTalkId: parseInt(Math.random() * (100000 - 999999 + 1) + 999999)
+    };
+
     init();
     function init() {
         if (urlParamId != "" && urlParamId != null && urlParamId != undefined) {
-            botObject = {};
-            $.post(adminApiUrl + "/WebTalk/GetWebTalkInfo", { id: urlParamId }, function (result) {
-                botObject = result.model;
-                renderPage();
-                if (botObject.BotConfigId == null) {
-                    return;
-                }
-
-                addMsg('Hightalk', botObject.DialogGreetings);
-            }).error(function () {
-                $(".webtalk").show();
-            });
+            renderPage();
+            addMsg('Hightalk', botObject.DialogGreetings);
         } else {
             $(".webtalk").show();
         }
@@ -155,7 +153,7 @@ $(function () {
             str += "<div class=\"msg guest\"><div class=\"msg-right\"><div class=\"msg-host headDefault\"></div><div class=\"msg-ball\" title=\"" + time + "\">" + content + "</div></div></div>"
         }
         else {
-            var rbg = (botObject.BotHeadPortrait == "" || botObject.BotHeadPortrait == null) ? "./content/image/robot.png" : botObject.BotHeadPortrait;
+            var rbg = "./content/image/robot.png";
             str += "<div class=\"msg robot\"><div class=\"msg-left\" worker=\"" + user + "\"><div class=\"msg-host photo\" style=\"background-image: url(" + rbg.replace("normal", "").replace("custom","") + ")\"></div><div class=\"msg-ball\" title=\"" + time + "\">" + content + "</div></div></div>";
         }
         return str;

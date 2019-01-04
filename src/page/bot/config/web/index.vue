@@ -143,7 +143,7 @@
     </el-form-item>
     <title-item title="添加授信域名"></title-item>
     <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:56px">
-      <section style="margin-top: 20px;line-height: 36px;">请添加授信的来访IP地址或域名 <span class="c999">(例如：255.255.255.255)</span></section>
+      <section style="margin-top: 20px;line-height: 36px;">请添加授信的来访IP地址或域名 <span class="c999">(当前IP地址：)</span></section>
       <el-row>
         <el-col :span="18" style="padding-bottom: 5px">
           <el-input type="textarea" :rows="5" placeholder="多域名或IP请用英文半角分号隔开" v-model="formData.AuthorizedAddress"></el-input>
@@ -156,6 +156,7 @@
   </el-form>
 </template>
 <script>
+  // import
   import TitleItem from '../../../../components/Title';
   import {IMAGE,html} from "./constants";
   import {request} from "../../../../serive/request";
