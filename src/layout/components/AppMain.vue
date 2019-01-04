@@ -73,7 +73,7 @@
                 "position": "absolute",
                 "left": "0",
                 "bottom": "0px",
-            "z-index":"9"
+                "z-index":"9"
           })
         }else {
           $(".robotFoot").css({
