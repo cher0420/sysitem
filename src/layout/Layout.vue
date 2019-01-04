@@ -6,7 +6,7 @@
       </el-header>
       <div class="full-height el-container">
         <!-- menu -->
-        <el-aside v-if='isCollapse' class="el-aside full-height" width='60px'
+        <el-aside  v-if='isCollapse' class="el-aside full-height" width='60px'
                   :style="{float:'left',minWidth:'60px',maxWidth: '240px'}">
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
@@ -14,21 +14,21 @@
           <sidebar class="sidebar-container full-height"></sidebar>
         </el-aside>
         <!-- display area -->
-        <!-- second -->
+           <!-- second -->
         <el-container class="full-height robotDisplayArea" style="position:static;width: 80vw;">
           <section v-if="config">
             <secondary-menu class="yoy-second-menu full-height">
             </secondary-menu>
           </section>
-          <!-- main -->
-          <el-container v-loading="mainLoading" :element-loading-text="loadingText" class="full-width robotDetail"
-                        style="position:relative;width: 70vw;">
+           <!-- main -->
+          <el-container v-loading="mainLoading" :element-loading-text="loadingText" class="full-width robotDetail" style="position:relative;width: 70vw;">
             <el-main class="p-relative scroll-content" style="display: flex;height: 100%;">
+
               <app-main></app-main>
             </el-main>
-            <el-footer class="robotFoot">
-            <footer-bar></footer-bar>
-            </el-footer>
+            <!--<el-footer class="robotFoot">-->
+              <!--<footer-bar></footer-bar>-->
+            <!--</el-footer>-->
           </el-container>
 
         </el-container>
@@ -41,7 +41,7 @@
   import NavBar from './components/NavBar'
   import Sidebar from './components/Sidebar'
   import AppMain from './components/AppMain'
-  import FooterBar from './components/Footer'
+  // import FooterBar from './components/Footer'
   import SecondaryMenu from './components/SecondaryMenu'
   import store from '../store/index'
   import {REPLACE} from "../store/mutations";
@@ -64,7 +64,7 @@
       isCollapse() {
         return store.state.app.isCollapse
       },
-      loadingText() {
+      loadingText(){
         return store.state.app.loadingText
       }
     },
@@ -76,7 +76,7 @@
       NavBar,
       Sidebar,
       AppMain,
-      FooterBar,
+      // FooterBar,
       SecondaryMenu
     },
   }
@@ -86,7 +86,6 @@
     position: absolute;
     left: 0;
     bottom: 0;
-
     width: 100%;
     background: #fff;
   }

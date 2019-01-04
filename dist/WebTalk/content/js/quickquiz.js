@@ -63,18 +63,15 @@ $(function () {
                 botObject = result.model;
                 renderPage();
                 if (botObject.BotConfigId == null) {
-                    $(".panel-alert, #recon").show();
                     return;
                 }
 
                 addMsg('Hightalk', botObject.DialogGreetings);
             }).error(function () {
                 $(".webtalk").show();
-                $(".panel-alert, #recon").show();
             });
         } else {
             $(".webtalk").show();
-            $(".panel-alert, #recon").show();
         }
     }
 
@@ -89,7 +86,9 @@ $(function () {
     }
 
     function callWebTalkService(question) {
-        $.post(fqavalidaimlApiUrl + "/api/AIML/GetAnswer", { BotRecordId: botObject.BotConfigId, UserId: botObject.WebTalkId, Question: question }, function (result) {
+        var userId = botObject.WebTalkId ? botObject.WebTalkId : parseInt(Math.random() * (100000 - 999999 + 1) + 999999);
+      var botRecordId = botObject.BotConfigId ? botObject.BotConfigId : urlParamId;
+        $.post(fqavalidaimlApiUrl + "/api/AIML/GetAnswer", { BotRecordId: botRecordId, UserId:userId, Question: question }, function (result) {
             if (result != undefined && result != null) {
                 if (result.Status) {
                     if (result.Data != "" && result.Data != null && result.Data != undefined) {

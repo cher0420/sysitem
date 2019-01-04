@@ -31,18 +31,15 @@ $(function () {
         botObject = result.model;
         renderPage();
         if (botObject.BotConfigId == null) {
-          $(".panel-alert, #recon").show();
           return;
         }
 
         addMsg('Hightalk', botObject.DialogGreetings);
       }).error(function () {
         $(".webtalk").show();
-        $(".panel-alert, #recon").show();
       });
     } else {
       $(".webtalk").show();
-      $(".panel-alert, #recon").show();
     }
   }
 

@@ -41,10 +41,10 @@
             <el-radio label="custom" class="align-middle margin-right-30 custom" style="margin-bottom: 0;">自定义 : </el-radio>
             <section class="file-box f-s-11 c555 dis-i-b align-middle" :style="{borderColor:headerPicture === 'custom'?'#2a8ce7':'#c0c4cc'}">
               <section :class="[headerPicture === 'custom'?'normal':'notAllow']">
-                <input :disabled="fileDisabled" type='file' accept="image/*" name="avatar" placeholder="上传" id="img" class="file-btn" @change="upLoadImg"/>选择文件
+                <input :disabled="fileDisabled" type='file' accept="image/*" name="avatar" placeholder="上传" id="img" class="file-btn" @change="upLoadImg" />选择文件
               </section>
             </section>
-            <img v-show="headerPicture === 'custom'&&formData.BotHeadPortrait" :src="formData.BotHeadPortrait" alt="自定义头像" class="align-middle header"/>
+            <img v-show="headerPicture === 'custom'&&baseImgData" :src="formData.BotHeadPortrait" alt="自定义头像" class="align-middle header"/>
             <span class="tips" v-if="headerPicture === 'custom'">
                （图片大小不超过200KB）
             </span>
@@ -151,7 +151,7 @@
      </el-row>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit('formData')">保存</el-button><el-button @click="preview">样式预览</el-button><el-tooltip class="item" effect="dark" content="保存后可预览最新样式" placement="top-start"><span class="previewIcon"><i class="el-icon-question f-s-16 c999" style="margin:10px"></i></span></el-tooltip>
+      <el-button type="primary" @click="submit('formData')">保存</el-button><el-button @click="preview" :disabled="buttonDisabled">样式预览</el-button><el-tooltip class="item" effect="dark" content="保存后可预览最新样式" placement="top-start"><span class="previewIcon"><i class="el-icon-question f-s-16 c999" style="margin:10px"></i></span></el-tooltip>
     </el-form-item>
   </el-form>
 </template>
@@ -182,6 +182,7 @@
           DialogTitle:'嗨聊智能服务机器人',
           DialogGreetings:'您好，我是小嗨，有什么可以帮助您？',
           AuthorizedAddress:'',
+          buttonDisabled: true,
         },
         rules: {
           AuthorizedAddress:[{required: false, message: '请填写授信域名'}],
@@ -197,6 +198,7 @@
         defaultPicture:IMAGE,
         loading:false,
         fileDisabled:true,
+        baseImgData:''
       }
     },
     name:'webTest',
@@ -234,13 +236,17 @@
         }
       )
     },
+    destroyed(){
+      this.headerPicture = 'normal'
+      this.baseImgData= ''
+    },
     methods: {
       upload(response, file, fileList){
 
       },
       preview(){
         const id = this.$route.query.recordId
-        const host = 'https://'+window.location.host
+        const host = URL.baseUrl
         const url = `${host}/WebTalk/preview.html?id=${id}`
         window.open(url)
       },
@@ -261,6 +267,7 @@
             that.fileDisabled = true
           }else{
             data.BotHeadPortrait = data.BotHeadPortrait.substr(6,data.BotHeadPortrait.length-1)
+            that.baseImgData = data.BotHeadPortrait
             that.fileDisabled = false
           }
         }else{
@@ -287,13 +294,15 @@
         data.AuthorizedAddress = data.AuthorizedAddress?data.AuthorizedAddress:''
         //头像位置是否有初始值
         data.Position = data.Position?data.Position:'right-down'
-        //判断对话标题的颜色
+        //如果code为空，则不能点击样式预览按钮
+        this.buttonDisabled = !data.Code
         this.formData = data
         store.dispatch(REPLACE, {mainLoading: false})
       },
       upLoadImg(e) {
-        // if(this.headerPicture === 'custom') {
+
           const that = this
+
           let files = e.target.files || e.dataTransfer.files;
           if (!files.length) return;
           if (files[0].type.indexOf("image") < 0) {
@@ -314,18 +323,17 @@
           }
           // 图片压缩成base64
           const reader = new FileReader();
-          reader.onload = (function (file) {
-            return function (e) {
-              that.formData.BotHeadPortrait = this.result
-            };
-          })(e.target.files[0]);
-          reader.readAsDataURL(e.target.files[0]);
-        // }
+          reader.onload = function(e) {
+            const data = e.target.result;
+            that.formData.BotHeadPortrait = data
+            that.baseImgData = data
+          };
+            reader.readAsDataURL(e.target.files[0]);
       },
       changeHeaderImage(v){
         //如果上传头像为自定义，则清空头像数据
         if(v === 'custom'){
-          this.formData.BotHeadPortrait = ''
+          this.formData.BotHeadPortrait = this.baseImgData
           this.fileDisabled = false
         }else{
           this.fileDisabled = true
@@ -335,6 +343,13 @@
       },
       submit(formName) {
         const that = this
+        if(this.headerPicture === 'custom' && !this.baseImgData){
+          this.$message({
+            type:'error',
+            message:'请上传自定义头像'
+          })
+          return
+        }
         that.$refs[formName].validate((valid) => {
           if (valid) {
             this.$confirm('确认保存?', '提示', {
@@ -357,7 +372,7 @@
       validate(formName){
             this.loading = true;
             const recordId = this.$route.query.recordId
-            const host = 'https://'+window.location.host
+            const host = URL.baseUrl
             const data  = JSON.parse(JSON.stringify(this.formData))
 
             const Code=`&lt;script id=&quot;bot&quot; type=&quot;text/javascript&quot; src=&quot;${host}/WebTalk/linkScript/bot.js&quot; dataposition=&quot;${data.Position}&quot; datahost=&quot;${host}&quot; dataid=&quot;${recordId}&quot; dataimg=&quot;${host}/WebTalk/linkScript/robot.png&quot; datatxt=&quot;机器人&quot;&gt;&lt;/script&gt;`
@@ -389,7 +404,6 @@
               LoginSwitch:data.LoginSwitch
             }
             this.submitForm(newData)
-
       },
       submitForm(data){
         const that = this
@@ -415,10 +429,12 @@
               type: 'success',
               message: '保存成功',
               duration: 2000,
-              onClose:() =>{
-                that.loading = false;
-              }
             })
+            if(that.headerPicture === 'normal'){
+              that.baseImgData = ''
+            }
+            that.loading = false;
+            that.buttonDisabled = false;
           }
         ).catch(
           ()=>{
@@ -557,6 +573,7 @@
     display: inline-block;
     width: 42px;
     height: 42px;
+    border-radius: 50%;
   }
   .f-w-900{
     font-weight: 900;
