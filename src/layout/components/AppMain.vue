@@ -1,14 +1,20 @@
 <template>
   <section class="yoy-header-container robotWidth " ref="scrollTop" style="flex:1">
     <bread></bread>
-    <section class="yoy-main" :style="{width:widthOS}">
+    <section class="yoy-main" :style="{width:widthOS}" >
       <router-view></router-view>
+      <el-footer class="robotFoot">
+      <footer-bar></footer-bar>
+      </el-footer>
     </section>
   </section>
 </template>
 <script>
   import Bread from './Bread'
-  import store from '../../store/index'
+
+  import store from '../../store/index';
+  import FooterBar from './Footer';
+
   export default {
     data() {
       return {
@@ -16,7 +22,8 @@
       }
     },
     components:{
-      Bread
+      Bread,
+      FooterBar,
     },
     computed: {
 
@@ -33,6 +40,13 @@
         const WIDTH = this.getScrollbarWidth()
         this.widthOS = res === 'Firefox'? `calc(100% - ${WIDTH}px)`:'100%'
       }
+    },
+    mounted(){
+
+      // if(){
+      //
+      // }
+
     },
     methods: {
       getOs() {
@@ -73,6 +87,14 @@
   }
 </script>
 <style scoped>
+  .robotFoot {
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+
+  }
   .robotWidth {
     width: 100%;
 
