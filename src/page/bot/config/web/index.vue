@@ -256,7 +256,7 @@
     },
     methods: {
 
-      getIP() {
+      getIP() { // 获取网关IP
         let ip = returnCitySN["cip"];
          return ip;
       },
