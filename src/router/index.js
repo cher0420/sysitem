@@ -200,7 +200,7 @@ const root = [{
   {
     path:'/webTalk',
     component: resolve =>
-      require(["../../dist/static/webtalk/index"], resolve),
+      require(["../page/webtalk/index"], resolve),
   },
   {
     path:'/webTalk/v2',
