@@ -1,8 +1,8 @@
 <template>
   <section class="yoy-header-container robotWidth " ref="scrollTop" style="flex:1">
-    <bread></bread>
+    <bread class="navBar"></bread>
     <section class="yoy-main" :style="{width:widthOS}" >
-      <router-view></router-view>
+      <router-view class="listItem"></router-view>
       <el-footer class="robotFoot">
       <footer-bar></footer-bar>
       </el-footer>
@@ -11,9 +11,10 @@
 </template>
 <script>
   import Bread from './Bread'
+  import FooterBar from './Footer';
 
   import store from '../../store/index';
-  import FooterBar from './Footer';
+
 
   export default {
     data() {
@@ -30,9 +31,14 @@
     },
     watch: {
       '$route'(to, from) {
+        // this.myResize();
+        // console.log(111)
         if(to&&from)
         this.scrollTop()
       }
+
+
+
     },
     created() {
       const res = this.getOs()
@@ -41,14 +47,45 @@
         this.widthOS = res === 'Firefox'? `calc(100% - ${WIDTH}px)`:'100%'
       }
     },
+    updated:function(){
+      this.myResize();
+    },
     mounted(){
+      let that = this;
 
-      // if(){
-      //
-      // }
+      this.myResize();
+      window.onresize = function () {
+        that.myResize();
+      };
 
     },
     methods: {
+      myResize() {
+        let robotWidthH = $(".robotWidth").outerHeight(true);
+        // console.log("all",robotWidthH);
+        let navBarH = $(".navBar").outerHeight(true);
+        // console.log("001",navBarH);
+        let listItem = $(".listItem").outerHeight(true);
+        // console.log("002",listItem);
+        let sum = navBarH +listItem;
+        if(robotWidthH > sum || robotWidthH ==  sum ){
+          $(".robotFoot").css({
+                "position": "absolute",
+                "left": "0",
+                "bottom": "0px",
+            "z-index":"9"
+          })
+        }else {
+          $(".robotFoot").css({
+            "position": "static",
+            "left": "0",
+            "bottom": "0px",
+            "z-index":"9"
+          })
+        }
+
+        // console.log(robotWidthH)
+      },
       getOs() {
         var OsObject = "";
         if(navigator.userAgent.indexOf("MSIE")>0) {

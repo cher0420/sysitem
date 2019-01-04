@@ -109,7 +109,7 @@
   }
 
   .robotDetail {
-    padding-bottom: 60px;
+    /*padding-bottom: 60px;*/
     height: 100%;
     /*width: 100%;*/
     /*overflow: scroll;*/
