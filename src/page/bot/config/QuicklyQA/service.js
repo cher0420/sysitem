@@ -4,8 +4,6 @@ import {TOKEN} from "../../../../constants/constants";
 import URL from '../../../../host/baseUrl';
 import {DELETEQUESTION, QUICKLYLIST,QUERYSTATUS} from "../../../../constants/api";
 import route from '../../../../router/index'
-import store from '../../../../store/index'
-import {REPLACE} from "../../../../store/mutations";
 import moment from 'moment';
 
 /*
@@ -53,15 +51,6 @@ export const getList  = (params) =>{
             data.forEach(
               (v,index) => {
                 switch (v.Status) {
-                  // case 4:
-                  //   store.dispatch(REPLACE,{mainLoading:true})
-                  //   break;
-                  // case 2:
-                  //   store.dispatch(REPLACE,{mainLoading:true})
-                  //   break;
-                  // case 3:
-                  //   v.checkedStatus = true;
-                  //   break;
                   case 5:
                     v.checkedStatus = true;
                     break;
@@ -114,9 +103,7 @@ export const del = (params) => {
 
 export const _ask = (botId = null) => {
   const token = getCookies(TOKEN)
-  // const id = store.state.app.id
   const BotConfigId = botId?botId:route.currentRoute.query.recordId
-  // const BotConfigId = route.currentRoute.query.recordId
   const params = {
     headers:{
       'Access-Token':token

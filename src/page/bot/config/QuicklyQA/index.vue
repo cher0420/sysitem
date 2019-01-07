@@ -145,12 +145,11 @@
         total:0,
         PageIndex:1,
         PageSize:10,
-        arr:[],
+        // arr:[],
         showDel:false,
-        reloadId:null,
+        // reloadId:null,
         originDisabled:true,
-        blankNew:false,
-        id:null,
+        // id:null,
         blankUrl:'',
       }
     },
@@ -160,10 +159,6 @@
     created(){
       this.tableData = []
       this.total = 0
-      // const status = sessionStorage.getItem('doingStatus')
-      // if(status === 'nothing'){
-      //   store.dispatch(REPLACE,{id:this.$route.query.recordId})
-      // }
 
       /*
       获取全部已发布的数据
@@ -187,12 +182,6 @@
       this.loading = true
       _ask().then(
         (res) => {
-          // sessionStorage.setItem('doingStatus','nothing')
-          /*
-               自定义列表内容,没有在发布中的内容
-              */
-          // that.isReloadBlankNew()
-
           getList().then(
             (res) => {
             that.complateGetList(res)
@@ -210,19 +199,17 @@
         (err) =>{
           store.dispatch(REPLACE,{loadingText:null})
           if(that.$route.path === '/bot/config/quicklyQA'){
-            store.dispatch(REPLACE,{mainLoading:true}).then(
-              () =>{
-                if(err.Data === 1){
-                  that.initStatus('train')
-                }else if(err.Data === 2){
-                  that.initStatus('publish')
-                }
-                that.loading = false
-
-                that.clearReloadId(err)
-                that._reload_ask(true,err.recordId)
-              }
-            )
+            store.dispatch(REPLACE,{mainLoading:true})
+            if(err.Data === 1){
+              store.dispatch(REPLACE,{loadingText:'培训预计需要几分钟，请稍后'})
+              that.initStatus('train')
+            }else if(err.Data === 2){
+              store.dispatch(REPLACE,{loadingText:'正在发布中，请稍后'})
+              that.initStatus('publish')
+            }
+            that.loading = false
+            that.clearReloadId(err)
+            that._reload_ask(true,err.recordId)
           }
         }
       )
@@ -241,7 +228,6 @@
           path:'/bot/config/quicklyQA/createrNewQA',
           query:{
             recordId:query.recordId,
-            // ...query,
           }
         })
       },
@@ -404,13 +390,6 @@
               }
 
               if(that.isReloadBlankNew(res.recordId)){
-                // that.tableData.forEach(
-                //   (v,index) =>{
-                //     if(v.checkedStatus){
-                //       // that.arr.push(v.ID)
-                //     }
-                //   }
-                // )
                 that.go(res.recordId)
               }else{
                 that.dataContainer = []
@@ -433,7 +412,6 @@
                   (v,index) =>{
                     if(v.checkedStatus){
                       v.Status = 5
-                      // that.arr.push(v.ID)
                     }else{
                       v.Status = 1
                     }
@@ -483,14 +461,12 @@
                   }
                 )
               }else if(res.Data === 1){
-                that.blankNew = true
                 that.initStatus('train',res.recordId)
                 if(that.$route.path === '/bot/config/quicklyQA'){
                   botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'培训预计需要几分钟，请稍后'}):null
                 }
 
               } else{
-                that.blankNew = false
                 that.initStatus('publish',res.recordId)
                 if(that.$route.path === '/bot/config/quicklyQA') {
                   botId === that.$route.query.recordId ? store.commit(REPLACE, {loadingText: '正在发布中，请稍后'}) : null
@@ -600,10 +576,6 @@
               v.checkedStatus = false
             }
           )
-          /*
-          初始化数组状态
-          */
-          // that.arr = []
           const params = {
             Keys:that.keys,
             PageIndex:that.PageIndex,
@@ -623,13 +595,11 @@
           /*
           当操作状态时选择时，初始化arr
           */
-          // that.arr = []
           that.tableDataCopy = that.dataContainer.slice(0)
           that.tableData.forEach(
             (v,index) =>{
               switch (v.Status) {
                 case 5:
-                  // that.arr.push(v.ID)
                   v.checkedStatus = true
                   break;
                 default:
@@ -734,15 +704,10 @@
          */
         if(v){
           this.tableDataCopy.push(id)
-          // this.arr.push(id)
         }else{
           /*
           取消时，删除此id
          */
-
-          // const arrIndex = this.arr.indexOf(id);
-          // this.arr.splice(arrIndex,1)
-
           const index = this.tableDataCopy.indexOf(id);
           this.tableDataCopy.splice(index,1)
         }
@@ -760,8 +725,6 @@
             Action:'train',
           }
           that.initStatus('train',that.$route.query.recordId)
-          that.blankNew = true
-          // sessionStorage.setItem('doingStatus','train')
           store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
             () =>{
               that._reload_ask(false,that.$route.query.recordId) //开启论询且不刷新列表
@@ -819,8 +782,6 @@
               Action:'publish',
             }
             that.initStatus('publish',that.$route.query.recordId)
-            that.blankNew = false
-            // sessionStorage.setItem('doingStatus','publish')
             store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
               () =>{
                 that._reload_ask(false,that.$route.query.recordId)
