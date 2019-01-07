@@ -49,7 +49,7 @@
       }
     },
     updated:function(){
-      this.myResize();
+     this.myResize();
     },
     mounted(){
       let that = this;
@@ -67,11 +67,11 @@
     methods: {
       myResize() {
         let robotWidthH = $(".robotWidth").outerHeight(true);
-        // console.log("all",robotWidthH);
+        console.log("all",robotWidthH);
         let navBarH = $(".navBar").outerHeight(true);
-        // console.log("001",navBarH);
+        console.log("fen001",navBarH);
         let listItem = $(".listItem").outerHeight(true);
-        // console.log("002",listItem);
+        console.log("fen002",listItem);
         let sum = navBarH +listItem +50;
         if(robotWidthH > sum || robotWidthH ==  sum ){
           $(".robotFoot").css({
@@ -127,8 +127,8 @@
       },
     },
     destroyed(){
-      let that = this;
-      clearInterval( this.setInterval);
+      // let that = this;
+      // clearInterval( this.setInterval);
     },
   }
 </script>
@@ -150,7 +150,7 @@
     /*padding-bottom: 50px;*/
   }
   .view {
-    padding-bottom: 20px;
+    /*padding-bottom: 20px;*/
   }
 </style>
 <style lang="scss">

@@ -102,18 +102,20 @@
         </template>
       </el-table-column>
     </el-table>
-    <section class="p-relative">
-      <el-pagination
-        @current-change="handleCurrentChange"
-        class="pagination p-absolute"
-        background
-        :page-size="PageSize"
-        layout="total, prev, pager, next"
-        :total="total"
-        :current-page.sync="PageIndex"
-      >
-      </el-pagination>
-    </section>
+<div style="height:70px;">
+  <section class="p-relative" style="height: 33px;">
+    <el-pagination
+      @current-change="handleCurrentChange"
+      class="pagination p-absolute"
+      background
+      :page-size="PageSize"
+      layout="total, prev, pager, next"
+      :total="total"
+      :current-page.sync="PageIndex"
+    >
+    </el-pagination>
+  </section>
+</div>
   </section>
 </template>
 <script>

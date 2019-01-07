@@ -111,6 +111,7 @@
   .robotDetail {
     /*padding-bottom: 60px;*/
     height: 100%;
+    /*min-height:calc(100% - 60px);*/
     /*width: 100%;*/
     /*overflow: scroll;*/
   }
