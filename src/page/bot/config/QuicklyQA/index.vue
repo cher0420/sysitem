@@ -103,10 +103,10 @@
       </el-table-column>
     </el-table>
 <div style="height:70px;">
-  <section class="p-relative" style="height: 33px;">
+  <section class="" style="height: 33px; text-align: center;padding: 30px 0">
     <el-pagination
       @current-change="handleCurrentChange"
-      class="pagination p-absolute"
+      class=""
       background
       :page-size="PageSize"
       layout="total, prev, pager, next"

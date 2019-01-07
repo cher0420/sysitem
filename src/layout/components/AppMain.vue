@@ -49,20 +49,23 @@
       }
     },
     updated:function(){
+      let that = this;
      this.myResize();
+      setTimeout(function () {
+        console.log(1111111)
+        that.myResize();
+      },3000);
     },
     mounted(){
       let that = this;
 
-      this.myResize();
+      that.myResize();
+      // console.log(3333333)
+
+
       window.onresize = function () {
         that.myResize();
       };
-      // this.setInterval = setInterval( () => {
-      //  console.log("计算++")
-      //   that.myResize();
-      // },200)
-
     },
     methods: {
       myResize() {
