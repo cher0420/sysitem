@@ -64,8 +64,8 @@
             <span v-if="scope.row.Status == 2||scope.row.Status == 5">
               <span class="config">
                 <i class="el-icon-setting"></i>
-                <a href="javascript:;" class="c555"
-                   @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">配置</a>
+                <span class="c555"
+                   @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">配置</span>
               </span>
               <span class="del">
                 <i class="el-icon-delete"></i>
