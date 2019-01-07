@@ -9,7 +9,7 @@ Vue.use(Vuex)
 
     app: {
       reloadId:0,
-      name:'小华智能助理',
+      name:'嗨聊智能服务机器人',
       config: false,
       activeKey: 'bot',
       defaultActiveSecondM:'config',                   //二级菜单active-key
@@ -29,8 +29,15 @@ Vue.use(Vuex)
       tableData:[],
       loading: false,
       description: '',
+      Key:'',
+      SkillNo:'',
+      quickQuizRecordId:null,
+      id:null,
+      // doingStatus: false,
+      quickQuizArr:[],
 
-      mainLoading:false
+      mainLoading:false,
+      loadingText:null,
     },
   },
   mutations: {
@@ -43,21 +50,21 @@ Vue.use(Vuex)
     [UPDATE] (state, payload) {
       state.app.tableData[payload.index] = payload.value
     },
-    detailshow:(state) =>{
-      state.indexPage = false;
-     state.indexPageDetail = true;
-    }
+    // detailshow:(state) =>{
+    //   state.indexPage = false;
+    //  state.indexPageDetail = true;
+    // }
   },
   actions: {
-    [REPLACE] (context, payload) {
+    [REPLACE] (context, payload) {  // replace
       context.commit(REPLACE, payload)
     },
-    [UPDATE] (context, payload) {
+    [UPDATE] (context, payload) {  // update
       context.commit(UPDATE, payload)
     },
-    detailshow:(context)=>{
-      context.commit("detailshow")
-    }
+    // detailshow:(context)=>{
+    //   context.commit("detailshow")
+    // }
   }
 })
 

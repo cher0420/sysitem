@@ -24,7 +24,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 >- 二级菜单（配置或设置页面）请配置
 >/bot/config... 即一级菜单/config/...
 >- 二级菜单内列表数据详情页，请配置
->/bot/config/.../... 并赋予name名为'detail'
+>/bot/config/.../... 并赋予name名为'detail'，新建页面name为'create'，编辑name为'edit'
 >```
 >{
 >         path:'config/knowledgeQuiz/knowledgeDetail',
@@ -33,3 +33,6 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 >        name: 'detail',
 >       },
 >```
+
+用户信息存储在store.state.app.userInfo
+

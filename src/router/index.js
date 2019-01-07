@@ -90,8 +90,13 @@ const arr = [
         name: 'config',
       },
       {
+        path:'config/config',
+        component: resolve =>
+          require(["../page/bot/config/config/index"], resolve),
+        name: 'config',
+      },
+      {
         path:'config/web',
-        //  标记
         component: resolve =>
           require(["../page/bot/config/web/index"], resolve),
         name: 'config',
@@ -138,12 +143,44 @@ const arr = [
           require(["../page/wait/index"], resolve),
         name: 'config',
       },
-      // {
-      //   path:'config/caseStore',
-      //   component: resolve =>
-      //     require(["../page/bot/config/caseStore/index"], resolve),
-      //   name: 'config',
-      // }
+      {
+        path:'config/caseStore',
+        component: resolve =>
+          require(["../page/bot/config/caseStore/index"], resolve),
+        name: 'config',
+      },
+      {
+        path:'config/quicklyQA',
+        component: resolve =>
+          require(["../page/bot/config/quicklyQA/index"], resolve),
+        name: 'config',
+      },
+      {
+        path:'config/quicklyQA/createrNewQA',  // 创建新问答
+        component: resolve =>
+          require(["../page/bot/config/quicklyQA/createrNewQA/index"], resolve),
+        name: 'create',
+      },
+      {
+        path:'config/quicklyQA/updateQA',  // 创建新问答/更新问答
+        component: resolve =>
+          require(["../page/bot/config/quicklyQA/createrNewQA/updateQA"], resolve),
+        name: 'edit',
+      },
+      {
+        path:'config/quicklyQA/editQA',  //  编辑答案
+        component: resolve =>
+          require(["../page/bot/config/quicklyQA/editQA/index"], resolve),
+        name: 'edit',
+      },
+      {
+        path:'config/quicklyQA/detailQA',  //  详情页面
+        component: resolve =>
+          require(["../page/bot/config/quicklyQA/detailQA/index"], resolve),
+        name: 'detail',
+      },
+
+
     ]
   }
 ]

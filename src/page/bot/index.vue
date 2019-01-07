@@ -1,8 +1,10 @@
 <template>
-  <section class="yoy-main">
+  <section>
     <section class="search box-sizing">
-      <el-input class='' size = 'small' v-model="keyWords" placeholder="搜索机器人名称或描述" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
-      </el-input></section>
+      <el-input class='searchInput' size='small' v-model="keyWords" placeholder="搜索机器人名称或描述" @keyup.enter.native="search"><i
+        slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      </el-input>
+    </section>
     <el-table
       v-loading="loading"
       class="margin-top20"
@@ -14,17 +16,20 @@
       <el-table-column
         prop="AliasName"
         label="机器人名称"
+        :resizable="resizable"
       >
       </el-table-column>
       <el-table-column
         prop="Description"
         label="描述"
         min-width="220"
+        :resizable="resizable"
       >
       </el-table-column>
       <el-table-column
         prop="StatusString"
         label="状态"
+        :resizable="resizable"
         :render-header="renderProductId"
         min-width="40"
       >
@@ -38,6 +43,7 @@
         prop="CreateDate"
         label="创建时间"
         min-width="50"
+        :resizable="resizable"
       >
         <template slot-scope="scope">
           <span v-if="scope.row.Status == 0||scope.row.Status == 1||scope.row.Status == 6">
@@ -51,13 +57,15 @@
       <el-table-column
         label="操作"
         width="230"
+        :resizable="resizable"
       >
         <template slot-scope="scope">
           <span class="yoy-list-todo c555">
             <span v-if="scope.row.Status == 2||scope.row.Status == 5">
               <span class="config">
                 <i class="el-icon-setting"></i>
-                <a href="javascript:;" class="c555" @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">配置</a>
+                <a href="javascript:;" class="c555"
+                   @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">配置</a>
               </span>
               <span class="del">
                 <i class="el-icon-delete"></i>
@@ -66,14 +74,14 @@
             </span>
             <span class="yoy-botList-create" v-else-if="scope.row.Status==1">
               <span class="primary-color">
-                <i class="el-icon-refresh rotate360" ></i>
+                <i class="el-icon-refresh rotate360"></i>
                 <span class="creating">创建中...</span>
                 <span class="wait">（ 预计需要三分钟 ）</span>
               </span>
             </span>
             <span class="yoy-botList-create" v-else-if="scope.row.Status==3">
               <span class="danger-color">
-                <i class="el-icon-refresh rotate360" ></i>
+                <i class="el-icon-refresh rotate360"></i>
                 <span class="creating">删除中...</span>
                 <span class="wait">（ 预计需要三分钟 ）</span>
               </span>
@@ -101,89 +109,93 @@
 </template>
 <script>
   import DrapDown from '../../components/DrapDown'
-  import {BOTLIST,ITEMKEY} from './constants'
+  import {BOTLIST, ITEMKEY} from './constants'
   import URL from '../../host/baseUrl'
-  import {BOT,DELETEBOT,CREATEBOT} from '../../constants/api'
+  import {BOT, DELETEBOT, CREATEBOT} from '../../constants/api'
   import {REPLACE} from "../../store/mutations";
   import {request} from "../../serive/request";
   import store from '../../store/index'
   import {getCookies} from "../../utils/cookie";
   import {TOKEN} from "../../constants/constants";
-  import {getList,reload} from "./service/requestMethod";
+  import {getList, reload} from "./service/requestMethod";
   import {STR} from "../../constants/constants";
 
   export default {
     data() {
       return {
         status: BOTLIST.status,
+        resizable: false,
       }
     },
-    computed:{
-      tableData(){
+    computed: {
+      tableData() {
         return store.state.app.tableData
       },
-      loading(){
+      loading() {
         return store.state.app.loading
       },
-      total(){
+      total() {
         return store.state.app.total
       },
-      PageIndex(){
+      PageIndex() {
         return store.state.app.PageIndex
       }
     },
-    components:{
+    components: {
       DrapDown,
     },
-    created(){
+    created() {
 
       const reloadId = store.state.app.reloadId
       clearInterval(reloadId)
 
-      store.dispatch(REPLACE,{PageIndex:1,searchStatus:null,description:null}).then(
-        ()=>{
-            //1、获取列表
-          getList(URL.requestHost + BOT,{},ITEMKEY,true)
+      store.dispatch(REPLACE, {tableData:[],total:0,PageIndex: 1, searchStatus: null, description: null}).then(
+        () => {
+          //1、获取列表
+          getList(URL.requestHost + BOT, {}, ITEMKEY, true)
         }
-      ).catch(err=>err)
+      ).catch(err => err)
     },
     destroyed: function () {
       const id = store.state.app.reloadId
       clearInterval(id)
     },
-    methods:{
-      go(path,id,name){
+    methods: {
+      go(path, id, name) {
+        sessionStorage.setItem('recordId', JSON.stringify(id));
+        sessionStorage.setItem('name',  JSON.stringify(name));
         const url = {
-          path:path,
+          path: path,
           query: {
-            recordId:id,
-            name:name
+            recordId: id,
+            name: name
+          }
         }
-      }
         const arr = path.split('/')
-        const index=STR[arr[arr.length-1]]
-        const config = this.$route.name === 'config'
-        store.dispatch(REPLACE,{navIndex:index,config}).then(
-          () =>{
+        const index = STR[arr[arr.length - 1]]
+        const config = this.$route.name === 'config';
+        console.log("name",config)
+        store.dispatch(REPLACE, {navIndex: index, config}).then(
+          () => {
             this.$router.push(url)
           }
         )
       },
       renderProductId(h, {column}) {
-        return h(DrapDown,{
-              props: {
-                options: BOTLIST.status,
-              },
+        return h(DrapDown, {
+            props: {
+              options: BOTLIST.status,
+            },
           }
         );
       },
-      create(k,row){
-        this.$confirm('确认创建机器人？', '警告！', {
+      create(k, row) {
+        this.$confirm('确认创建机器人？', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.add(k,row)
+          this.add(k, row)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -191,39 +203,39 @@
           });
         });
       },
-      add(k,row){
+      add(k, row) {
         const that = this
         const token = getCookies(TOKEN)
 
         let obj = JSON.parse(JSON.stringify(row))
-        let newObj = {...obj,Status:1}
+        let newObj = {...obj, Status: 1}
         const tableData = store.state.app.tableData
-        tableData.splice(k,1,newObj)
-        store.dispatch(REPLACE,{tableData:tableData})
+        tableData.splice(k, 1, newObj)
+        store.dispatch(REPLACE, {tableData: tableData})
 
         const userInfo = store.state.app.userInfo
         const data = {
-          botId:row.RecordId,
-          alias:row.AliasName,
-          description:row.Description,
-          botType:row.BotType,
-          deployModel:row.DeployModel,   //alone : share
-          UserInfo:{
-            Email:userInfo.Email,
-            FullName:userInfo.FullName,
-            TenantDomainName:userInfo.TenantDomainName
+          botId: row.RecordId,
+          alias: row.AliasName,
+          description: row.Description,
+          botType: row.BotType,
+          deployModel: row.DeployModel,   //alone : share
+          UserInfo: {
+            Email: userInfo.Email,
+            FullName: userInfo.FullName,
+            TenantDomainName: userInfo.TenantDomainName
           }
         }
         const body = JSON.stringify(data)
         const options = {
           method: 'POST',
-          headers:{
+          headers: {
             "Content-Type": "application/json; charset=utf-8",
-            'Access-Token':token
+            'Access-Token': token
           },
           body,
         }
-        request(URL.requestHost+CREATEBOT,options).then(
+        request(URL.requestHost + CREATEBOT, options).then(
           (res) => {
             that.$message({
               type: 'success',
@@ -236,7 +248,7 @@
 
           }
         ).catch(
-          (err)=>{
+          (err) => {
             that.$message({
               type: 'error',
               message: '操作失败',
@@ -245,13 +257,13 @@
           }
         )
       },
-      del(k,row) {
+      del(k, row) {
         this.$confirm('删除操作将永久删除机器人，是否继续?', '警告！', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.delItem(k,row)
+          this.delItem(k, row)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -259,40 +271,40 @@
           });
         });
       },
-      delItem(k,row){
+      delItem(k, row) {
         const that = this
 
         let obj = JSON.parse(JSON.stringify(row))
-        let newObj = {...obj,Status:3}
+        let newObj = {...obj, Status: 3}
         const tableData = store.state.app.tableData
-        tableData.splice(k,1,newObj)
-        store.dispatch(REPLACE,{tableData:tableData})
+        tableData.splice(k, 1, newObj)
+        store.dispatch(REPLACE, {tableData: tableData})
 
         const userInfo = store.state.app.userInfo
         const data = {
-          botId:row.RecordId,
-          regName:row.AliasName,
-          luisAppId:row.LuisAppId,
-          botType:row.BotType,
-          deployModel:row.DeployModel,   //alone : share
-          UserInfo:{
-            Email:userInfo.Email,
-            FullName:userInfo.FullName,
-            TenantDomainName:userInfo.TenantDomainName
+          botId: row.RecordId,
+          regName: row.AliasName,
+          luisAppId: row.LuisAppId,
+          botType: row.BotType,
+          deployModel: row.DeployModel,   //alone : share
+          UserInfo: {
+            Email: userInfo.Email,
+            FullName: userInfo.FullName,
+            TenantDomainName: userInfo.TenantDomainName
           }
         }
         const body = JSON.stringify(data)
         const token = getCookies(TOKEN)
         const options = {
           method: 'POST',
-          headers:{
+          headers: {
             "Content-Type": "application/json; charset=utf-8",
-            'Access-Token':token
+            'Access-Token': token
           },
           body,
         }
-        request(URL.requestHost + DELETEBOT,options).then(
-          (res)=>{
+        request(URL.requestHost + DELETEBOT, options).then(
+          (res) => {
             that.$message({
               type: 'success',
               message: '操作成功！'
@@ -306,7 +318,7 @@
 
           }
         ).catch(
-          (res)=>{
+          (res) => {
             that.$message({
               type: 'error',
               message: '操作失败，请稍后再试！'
@@ -314,37 +326,46 @@
           }
         )
       },
-      handleCurrentChange(v){
-        store.dispatch(REPLACE,{PageIndex:v}).then(
-          () =>{
+      handleCurrentChange(v) {
+        store.dispatch(REPLACE, {PageIndex: v}).then(
+          () => {
             const PageIndex = store.state.app.PageIndex
             const searchStatus = store.state.app.searchStatus
             const options = {
-              body:{
+              body: {
                 PageIndex: PageIndex,
                 description: this.keyWords,
                 searchStatus: searchStatus
               }
             }
 
-            getList(URL.requestHost + BOT,options,ITEMKEY)
+            getList(URL.requestHost + BOT, options, ITEMKEY)
           }
         )
       },
-      search(){
-        const that = this
+      search() {
+        const str ="<>%;/?'_"
+        const index = this.keyWords&&str.indexOf(this.keyWords) > -1
+        if(index){
+          this.$message({
+            type:'error',
+            message:"请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
+            duration:2000,
+          })
+          return
+        }
         const description = this.keyWords
         const searchStatus = store.state.app.searchStatus
-        store.dispatch(REPLACE,{PageIndex:1,description}).then(
-          () =>{
-            const options={
-              body:{
+        store.dispatch(REPLACE, {PageIndex: 1, description}).then(
+          () => {
+            const options = {
+              body: {
                 description,
                 searchStatus,
               }
             }
 
-            getList(URL.requestHost + BOT,options,ITEMKEY)
+            getList(URL.requestHost + BOT, options, ITEMKEY)
           }
         )
       },
@@ -352,71 +373,64 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   @import '../../style/index';
-  .yoy-search-button{
-    width: 32px!important;
-    height:30px!important;
-    line-height: 30px!important;
-    margin-top:1px;
-    margin-right: 1px;
-    margin-bottom: 1px;
-    background-color: $light-blue;
-  }
-  .yoy-search-button:hover{
-    cursor:pointer;
-  }
 
-  .search{
+  .search {
     width: 360px;
     height: 32px;
   }
-  .el-icon-search:before {
-    font-weight: 900;
-    font-size: 14px;
-    color: $primary-color;
-  }
+
+
   /*
   size
    */
-  .margin-top20{
+  .margin-top20 {
     margin-top: 20px;
   }
-  .pagination{
+
+  .pagination {
     left: 50%;
     top: 40px;
     transform: translateX(-50%);
   }
-  .yoy-list-todo{
-    span{
+
+  .yoy-list-todo {
+    span {
       cursor: pointer;
     }
-    a{
+    a {
       text-underline: none;
     }
   }
-  .create:hover{
-    a,i,span{
+
+  .create:hover {
+    a, i, span {
       color: $primary-color;
     }
   }
-  .del{
-    margin-left:14px;
+
+  .del {
+    margin-left: 14px;
   }
-  .del:hover{
-    a,i,span{
+
+  .del:hover {
+    a, i, span {
       color: $danger;
     }
   }
-  .config:hover{
-    a,i,span{
+
+  .config:hover {
+    a, i, span {
       color: $primary-color;
     }
   }
-  .wait{
+
+  .wait {
     opacity: .6;
   }
-  .rotate360{
+
+  .rotate360 {
     -webkit-transition-property: -webkit-transform;
     -webkit-transition-duration: 1s;
     -moz-transition-property: -moz-transform;
@@ -426,16 +440,40 @@
     -o-animation: rotate 3s linear infinite;
     animation: rotate 3s linear infinite;
   }
-  @-webkit-keyframes rotate{from{-webkit-transform: rotate(0deg)}
-    to{-webkit-transform: rotate(360deg)}
+
+  @-webkit-keyframes rotate {
+    from {
+      -webkit-transform: rotate(0deg)
+    }
+    to {
+      -webkit-transform: rotate(360deg)
+    }
   }
-  @-moz-keyframes rotate{from{-moz-transform: rotate(0deg)}
-    to{-moz-transform: rotate(359deg)}
+
+  @-moz-keyframes rotate {
+    from {
+      -moz-transform: rotate(0deg)
+    }
+    to {
+      -moz-transform: rotate(359deg)
+    }
   }
-  @-o-keyframes rotate{from{-o-transform: rotate(0deg)}
-    to{-o-transform: rotate(359deg)}
+
+  @-o-keyframes rotate {
+    from {
+      -o-transform: rotate(0deg)
+    }
+    to {
+      -o-transform: rotate(359deg)
+    }
   }
-  @keyframes rotate{from{transform: rotate(0deg)}
-    to{transform: rotate(359deg)}
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg)
+    }
+    to {
+      transform: rotate(359deg)
+    }
   }
 </style>

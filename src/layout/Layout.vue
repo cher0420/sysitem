@@ -21,14 +21,14 @@
             </secondary-menu>
           </section>
            <!-- main -->
-          <el-container v-loading="mainLoading" class="full-width robotDetail" style="position:relative;width: 70vw;">
+          <el-container v-loading="mainLoading" :element-loading-text="loadingText" class="full-width robotDetail" style="position:relative;width: 70vw;">
             <el-main class="p-relative scroll-content" style="display: flex;height: 100%;">
 
               <app-main></app-main>
             </el-main>
-            <el-footer class="robotFoot">
-              <footer-bar></footer-bar>
-            </el-footer>
+            <!--<el-footer class="robotFoot">-->
+              <!--<footer-bar></footer-bar>-->
+            <!--</el-footer>-->
           </el-container>
 
         </el-container>
@@ -41,7 +41,7 @@
   import NavBar from './components/NavBar'
   import Sidebar from './components/Sidebar'
   import AppMain from './components/AppMain'
-  import FooterBar from './components/Footer'
+  // import FooterBar from './components/Footer'
   import SecondaryMenu from './components/SecondaryMenu'
   import store from '../store/index'
   import {REPLACE} from "../store/mutations";
@@ -64,6 +64,9 @@
       isCollapse() {
         return store.state.app.isCollapse
       },
+      loadingText(){
+        return store.state.app.loadingText
+      }
     },
     beforeCreate() {
       const config = this.$route.name === 'config' //判断路由是否为配置二级菜单，是则为true，不是则false并隐藏二级菜单
@@ -73,7 +76,7 @@
       NavBar,
       Sidebar,
       AppMain,
-      FooterBar,
+      // FooterBar,
       SecondaryMenu
     },
   }
@@ -84,7 +87,6 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    z-index: 4444;
     background: #fff;
   }
 
@@ -103,11 +105,11 @@
     position: absolute;
     left: 0;
     top: 0;
-    z-index: 4444;
+    z-index: 0;
   }
 
   .robotDetail {
-    padding-bottom: 60px;
+    /*padding-bottom: 60px;*/
     height: 100%;
     /*width: 100%;*/
     /*overflow: scroll;*/

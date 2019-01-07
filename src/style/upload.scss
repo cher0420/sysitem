@@ -1,0 +1,29 @@
+$width:80px;
+$height:80px;
+@import './index';
+.el-upload--picture-card{
+  width: $width;
+  height: $height;
+  line-height: $height;
+}
+.el-upload--picture-card:hover{
+  i{
+    color: $primary-color;
+  }
+}
+.el-upload-list--picture-card .el-upload-list__item{
+  width: $width;
+  height: $height;
+  line-height: $height;
+  margin-right: 20px;
+}
+.el-upload-list--picture-card .el-upload-list__item-status-label i{
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  margin-top:0;
+}
+.el-upload-list--picture-card .el-upload-list__item-status-label{
+  width: 35px;
+  height: 20px;
+}

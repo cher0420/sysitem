@@ -1,30 +1,30 @@
 export const tableData={
   all:[
-    {id:1, index:0,name:'residentialPass',title:'居住证_办理_查询办理流程', status:{Wechat: true,web: true,desktop: true, Robot: true}},
-    {id:2, index:1,name:'residentialPass',title:'居住证_办理_查询办理条件', status:{Wechat: true,web: true,desktop: true, Robot: true}},
-    {id:3,index:2,name:'residentialPass',title:'居住证_办理_查询所需材料',status:{Wechat: true,web: false,desktop: true, Robot: true}},
-    {id:4, index:0,name:'socialSecurityCards',title:'社保卡_办理_查询办理流程', status:{Wechat: true,web: true,desktop: true, Robot: true}},
-    {id:5, index:1,name:'socialSecurityCards',title:'社保卡_办理_查询办理条件', status:{Wechat: true,web: true,desktop: true, Robot: true}},
-    {id:6,index:2,name:'socialSecurityCards',title:'社保卡_办理_查询所需材料',status:{Wechat: true,web: false,desktop: true, Robot: true}},
-    {id:7,index:0, name:'separation',title:'人户分离_受理_查询办理条件', status:{Wechat: true,web: true,desktop: true, Robot: true}},
-    {id:8, index:1,name:'separation',title:'人户分离_受理_查询所需材料', status:{Wechat: true,web: true,desktop: true, Robot: true}},
-    {id:9,index:2,name:'separation',title:'人户分离_受理_查询办理流程',status:{Wechat: true,web: false,desktop: true, Robot: true}},
+    {id:1, index:0,IntentName:'residentialPass',title:'居住证_办理_查询办理流程', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:2, index:1,IntentName:'residentialPass',title:'居住证_办理_查询办理条件', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:3,index:2,name:'residentialPass',title:'居住证_办理_查询所需材料',status:{weChat: true,web: false,desktop: true, robot: true}},
+    {id:4, index:0,name:'socialSecurityCards',title:'社保卡_办理_查询办理流程', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:5, index:1,name:'socialSecurityCards',title:'社保卡_办理_查询办理条件', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:6,index:2,name:'socialSecurityCards',title:'社保卡_办理_查询所需材料',status:{weChat: true,web: false,desktop: true, robot: true}},
+    {id:7,index:0, name:'separation',title:'人户分离_受理_查询办理条件', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:8, index:1,name:'separation',title:'人户分离_受理_查询所需材料', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:9,index:2,name:'separation',title:'人户分离_受理_查询办理流程',status:{weChat: true,web: false,desktop: true, robot: true}},
   ],
   residentialPass:[
-    {id:1, index:0, name:'residentialPass',title:'居住证_办理_查询办理流程', status:{Wechat: true,web: true,desktop: true, Robot: true}
+    {id:1, index:0, name:'residentialPass',title:'居住证_办理_查询办理流程', status:{weChat: true,web: true,desktop: true, robot: true}
     },
-    {id:2, index:1, name:'residentialPass',title:'居住证_办理_查询办理条件', status:{Wechat: true,web: true,desktop: true, Robot: true}},
-    {id:3,index:2, name:'residentialPass',title:'居住证_办理_查询所需材料',status:{Wechat: true,web: false,desktop: true, Robot: true}},
+    {id:2, index:1, name:'residentialPass',title:'居住证_办理_查询办理条件', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:3,index:2, name:'residentialPass',title:'居住证_办理_查询所需材料',status:{weChat: true,web: false,desktop: true, robot: true}},
   ],
   socialSecurityCards:[
-    {id:1, index:0, name:'socialSecurityCards',title:'社保卡_办理_查询办理流程', status:{Wechat: true,web: true,desktop: true, Robot: true}},
-    {id:2, index:1, name:'socialSecurityCards',title:'社保卡_办理_查询办理条件', status:{weChat: true,web: true,desktop: true, Robot: true}},
-    {id:3, index:2, name:'socialSecurityCards',title:'社保卡_办理_查询所需材料',status:{Wechat: true,web: false,desktop: true, Robot: true}},
+    {id:1, index:0, name:'socialSecurityCards',title:'社保卡_办理_查询办理流程', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:2, index:1, name:'socialSecurityCards',title:'社保卡_办理_查询办理条件', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:3, index:2, name:'socialSecurityCards',title:'社保卡_办理_查询所需材料',status:{weChat: true,web: false,desktop: true, robot: true}},
   ],
   separation:[
-    {id:1, index:0, name:'separation',title:'人户分离_受理_查询办理条件', status:{Wechat: true,web: true,desktop: true, Robot: true}},
-    {id:2, index:1, name:'separation',title:'人户分离_受理_查询所需材料', status:{Wechat: true,web: true,desktop: true, Robot: true}},
-    {id:3, index:2, name:'separation',title:'人户分离_受理_查询办理流程',status:{Wechat: true,web: false,desktop: true, Robot: true}},
+    {id:1, index:0, name:'separation',title:'人户分离_受理_查询办理条件', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:2, index:1, name:'separation',title:'人户分离_受理_查询所需材料', status:{weChat: true,web: true,desktop: true, robot: true}},
+    {id:3, index:2, name:'separation',title:'人户分离_受理_查询办理流程',status:{weChat: true,web: false,desktop: true, robot: true}},
   ]
 }
 export const detail={

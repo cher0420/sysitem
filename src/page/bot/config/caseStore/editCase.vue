@@ -70,6 +70,7 @@
 </script>
 <style scoped>
 
+  /*@import "../../../../../static/base.css";*/
   .caseTitle {
     margin: 10px 0;
     font-size: 18px;

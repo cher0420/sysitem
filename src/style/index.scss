@@ -6,6 +6,7 @@ $nav-height:60px;
 $fff:#fff;
 $danger: #f04b4b;
 $light-blue: #eaf6fe;
+$disabled: #c3c3c3;
 //二级菜单
 $second-side: #eaedf1;  //背景色
 $second-side-hover: #f5f6f8;
@@ -143,7 +144,9 @@ $f-pri-c: #555;
 
 //config
 .box-sizing{
-  box-sizing:border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 //border
 $border-color:#eaedf1;
@@ -156,8 +159,37 @@ $border-color:#eaedf1;
 //disabled
 .disabled{
   color:#c0c4cc;
-  cursor: not-allowed;
+  cursor: default !important;
+}
+.yoy-second-menu .el-menu-item.is-disabled{
+  cursor: default !important;
+}
+.el-input.is-disabled .el-input__inner{
+  cursor: default !important;
 }
 
-
-
+/*
+search button
+ */
+.yoy-search-button{
+  width: 32px!important;
+  height:30px!important;
+  line-height: 30px!important;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 1px;
+  background-color: $light-blue;
+  cursor:pointer;
+  box-sizing: border-box;
+}
+.el-icon-search:before {
+  font-weight: 900;
+  font-size: 14px;
+  color: $primary-color;
+}
+.searchInput{
+  width: 360px;
+  overflow: hidden;
+  position: relative;
+}

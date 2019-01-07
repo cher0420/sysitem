@@ -55,14 +55,14 @@
       },
       created(){
         const pathArr = this.$route.path.split('/')
-        const defaultActiveSecondM = pathArr[pathArr.length-1]
-        const name = this.$route.query.name
+        const defaultActiveSecondM = pathArr.length>4?pathArr[3]:pathArr[pathArr.length-1]
+        const str = JSON.parse(sessionStorage.getItem('name'))
+        const name = str?str:this.$route.query.name
         store.dispatch(REPLACE,{defaultActiveSecondM,name})
       },
       methods:{
         handleOpen(index,indexPath){
           this.$refs.test['aria-expanded'] = 'false'
-          console.log(this.$refs.test);
         },
         handleClose(index,indexPath){
 
@@ -88,8 +88,12 @@
               }else{
                 url = `${urlfir}/${urlSec}/${index}`
               }
+
               const pathObj={
-                query:this.$route.query,
+                query:{
+                  recordId:this.$route.query.recordId,
+                  name:this.$route.query.name
+                },
                 path:url
               }
               this.$router.push(
@@ -102,7 +106,7 @@
     }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import '../../style/index';
 .omit{
   overflow:hidden;

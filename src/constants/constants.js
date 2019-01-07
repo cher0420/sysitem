@@ -121,7 +121,7 @@ export const MENUS=[
         }
       ]
   },
-]
+];
 
 export const SECONDMENUS = [
   {
@@ -185,10 +185,16 @@ export const SECONDMENUS = [
       //   chineseName:'案例库',
       //   englishName:'caseStore',
       //   path:'caseStore',
-      // }
+      // },
+      {
+        id:'quicklyQA',
+        chineseName:'快速问答',
+        englishName:'quicklyQA',
+        path:'quicklyQA',
+      }
     ]
   }
-]
+];
 export const STR = {
   authority:'权限管理',
   custom:'定制服务',
@@ -206,7 +212,11 @@ export const STR = {
   desktopApp:'桌面应用',
   knowledgeQuiz:'知识问答',
   knowledgeDetail:'知识问答',
-  caseStore:'案例库'
+  caseStore:'案例库',
+  quicklyQA:'快速问答',
+  createrNewQA:'创建新问答',
+  updateQA:'创建新问答',
+  editQA:'编辑',
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

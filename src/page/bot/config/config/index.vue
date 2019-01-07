@@ -1,9 +1,8 @@
 <template>
-  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="200px" v-loading="loading" class="yoy-main">
+  <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="200px" v-loading="loading">
     <el-form-item label="机器人姓名" prop='Bot_Name'>
       <el-col :span="13">
-        <el-input v-model="ruleForm.Bot_Name" maxlength="15"></el-input>
-        <section class="c999 f-s-12" style="line-height: 11px;margin-top:8px">请输入3-15个字符以内</section>
+        <el-input v-model="ruleForm.Bot_Name" maxlength="15" placeholder="请输入3-15个字符以内"></el-input>
       </el-col>
     </el-form-item>
     <el-form-item label="机器人性别" prop='Bot_Gender'>
@@ -81,7 +80,7 @@
       </el-col>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit('ruleForm')" size="medium">{{button}}</el-button>
+      <el-button type="primary" @click="submit('ruleForm')" >{{button}}</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -107,20 +106,20 @@
         button:'保存',
         editable:false,
         rules: {
-          Bot_Name:[{required: true, message: '请填写姓名!'},{min:3,message: '请输入3-15个字符'}],
-          Bot_Gender:[{required: true, message: '请选择性别!'}],
-          Bot_BloodType:[{required: true, message: '请选择血型!'}],
+          Bot_Name:[{required: true, message: '请填写姓名'},{min:3,message: '请输入3-15个字符'}],
+          Bot_Gender:[{required: true, message: '请选择性别'}],
+          Bot_BloodType:[{required: true, message: '请选择血型'}],
           Bot_Height: [
-            {required: false, message: '请填写身高!'},
+            {required: false, message: '请填写身高'},
           ],
           Bot_Weight:[
-            {required: false, message: '请填写体重!'},
+            {required: false, message: '请填写体重'},
           ],
           Bot_Birthplace:{
-            province:[{required: true, message: '请选择省份和城市!'}],
+            province:[{required: true, message: '请选择省份和城市'}],
           },
-          Bot_Company:[{required: false},{max:50,message:'最多50个字符！'}],
-          Bot_School:[{required: false},{max:50,message:'最多50个字符！'}],
+          Bot_Company:[{required: false},{max:50,message:'最多50个字符'}],
+          Bot_School:[{required: false},{max:50,message:'最多50个字符'}],
         },
         ruleForm: {
           Bot_Name: '',
@@ -140,8 +139,9 @@
       }
     },
     beforeCreate(){
-      store.dispatch(REPLACE, {mainLoading: true})
-      const BotConfigId = this.$route.query.recordId
+      store.dispatch(REPLACE, {mainLoading: true,loadingText:null})
+      const id = JSON.parse(sessionStorage.getItem('recordId'))
+      const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
       const body = {
         BotConfigId,
       }
@@ -158,6 +158,8 @@
           const data = res['Data'][0]
           if(data){
             this.filterData(data)
+          }else{
+            this.getBot_Constellation()
           }
           store.dispatch(REPLACE, {mainLoading: false})
         }
@@ -194,7 +196,8 @@
       submitForm(v){
         const that = this
         that.loading = true
-        const BotConfigId = this.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const body = {
           ...v,
           BotConfigId,
@@ -257,15 +260,16 @@
       },
       filterData(data){
         const that = this
-        for(let v in data){
-          if(!data[v]){
-            data[v] = that.ruleForm[v]
-          }
-        }
         //更改机器人的名字
         const name = this.$route.query.name
         data.Bot_Name=data.Bot_Name?data.Bot_Name:name
+        //更改机器人的性别
+        data.Bot_Gender = data.Bot_Gender?data.Bot_Gender:'女'
+        //更改机器人的血型
+        data.Bot_BloodType = data.Bot_BloodType?data.Bot_BloodType:'O'
 
+        data.Bot_Company = data.Bot_Company?data.Bot_Company:'上海灵羚科技有限公司'
+          data.Bot_School=data.Bot_School?data.Bot_School:'上海灵羚科技有限公司'
         // 更改出生日期格式
         const date = data.Bot_DayOfBirth
         if(date){
@@ -286,11 +290,10 @@
           const bot_Constellation = "魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯".substr(m*2-(d<"102223444433".charAt(m-1)- -19)*2,2);
           data.Bot_Constellation = bot_Constellation+'座'
         }
-
         data.Bot_Height = data.Bot_Height?data.Bot_Height.replace('cm',''):'160'
         data.Bot_Weight = data.Bot_Weight?data.Bot_Weight.replace('KG',''):'50'
         // 判断获取到的城市
-        const Bot_Birthplace = data.Bot_Birthplace?data.Bot_Birthplace.split('-'):[]
+        const Bot_Birthplace = data.Bot_Birthplace?data.Bot_Birthplace.split('-'):['上海','上海']
         data.Bot_Birthplace = {
           province:Bot_Birthplace[0],
           city:Bot_Birthplace[1],
@@ -299,7 +302,7 @@
         ADDRESS.forEach((key,value,arr) =>{
           if(data.Bot_Birthplace.province === key['name']){
             that.city = key['child']
-            return
+            return;
           }
         })
         store.dispatch(REPLACE,{Bot_Name:data.Bot_Name}).then(
