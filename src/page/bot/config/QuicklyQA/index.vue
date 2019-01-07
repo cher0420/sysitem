@@ -486,7 +486,7 @@
                 that.blankNew = true
                 that.initStatus('train',res.recordId)
                 if(that.$route.path === '/bot/config/quicklyQA'){
-                  botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'正在培训中，请稍后'}):null
+                  botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'培训预计需要几分钟，请稍后'}):null
                 }
 
               } else{

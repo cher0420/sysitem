@@ -233,6 +233,7 @@
     margin-bottom: 30px;
     max-width: 1040px;
     box-sizing: border-box;
+    padding-bottom: 80px;
   }
   .buttonSubb .buttonSubbButton {
     width: 80px;

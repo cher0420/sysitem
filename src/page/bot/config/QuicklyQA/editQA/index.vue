@@ -593,6 +593,7 @@
     /*right: 0;*/
     /*top: 30px;*/
     padding-top: 20px;
+    padding-bottom: 80px;
   }
 
   .imgLimit {

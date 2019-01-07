@@ -2,7 +2,7 @@
   <section class="yoy-header-container robotWidth " ref="scrollTop" style="flex:1">
     <bread class="navBar"></bread>
     <section class="yoy-main listItem" :style="{width:widthOS}" >
-      <router-view class=""></router-view>
+      <router-view class="view" ></router-view>
       <el-footer class="robotFoot">
       <footer-bar></footer-bar>
       </el-footer>
@@ -58,10 +58,10 @@
       window.onresize = function () {
         that.myResize();
       };
-      this.setInterval = setInterval( () => {
-       /// console.log(444444444)
-        that.myResize();
-      },200)
+      // this.setInterval = setInterval( () => {
+      //  console.log("计算++")
+      //   that.myResize();
+      // },200)
 
     },
     methods: {
@@ -72,7 +72,7 @@
         // console.log("001",navBarH);
         let listItem = $(".listItem").outerHeight(true);
         // console.log("002",listItem);
-        let sum = navBarH +listItem;
+        let sum = navBarH +listItem +50;
         if(robotWidthH > sum || robotWidthH ==  sum ){
           $(".robotFoot").css({
                 "position": "absolute",
@@ -142,8 +142,15 @@
 
   }
   .robotWidth {
+    /*display:flex ;*/
     width: 100%;
 
+  }
+  .listItem {
+    /*padding-bottom: 50px;*/
+  }
+  .view {
+    padding-bottom: 20px;
   }
 </style>
 <style lang="scss">

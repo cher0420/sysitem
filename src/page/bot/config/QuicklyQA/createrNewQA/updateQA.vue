@@ -135,7 +135,7 @@
   import {UploadAndDeleteAsync} from "../../../../../api/getdata";  //  异步请求
 
   export default {
-    name: "editdateQA",
+    name: "editdatem",
     data() {
       return {
         loadingEdit: false,
@@ -180,13 +180,34 @@
     },
     mounted() {
       this.resetHeight('quickQuizQuestionAlready', 'quickQuizQuestionNew', 'questionHeight')
-      this.resetHeight('quickQuizKeyWordsAlready', 'quickQuizKeyWordsNew', 'keyWordsHeight')
+      this.resetHeight('quickQuizKeyWordsAlready', 'quickQuizKeyWordsNew', 'keyWordsHeight');
+      // this.myResizee();
     },
 
     methods: {
       ...mapActions(
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataDis",]
       ),
+      myResizee() {
+        console.log("触发UUUUUU")
+        let robotWidthH = $(".robotWidth").outerHeight(true);
+        // console.log("all",robotWidthH);
+        let navBarH = $(".navBar").outerHeight(true);
+        // console.log("001",navBarH);
+        let listItem = $(".listItem").outerHeight(true);
+        // console.log("002",listItem);
+        let sum = navBarH + listItem;
+
+          $(".robotFoot").css({
+            "position": "static",
+            "left": "0",
+            "bottom": "0px",
+            "z-index": "9"
+          })
+
+
+        // console.log(robotWidthH)
+      },
       resetHeight(el1, el2, value) {
         const elAlreadyHeight = document.getElementById(el1).offsetHeight
         const elNewHeight = document.getElementById(el2).offsetHeight
@@ -834,7 +855,7 @@
     /*text-align: right;*/
     max-width: 450px;
     margin-top: 50px;
-    padding-bottom: 40px;
+    padding-bottom: 80px;
   }
 
   .alterKey button {

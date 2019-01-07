@@ -13,7 +13,7 @@
           请用最简洁的方式描述你的问题
         </div>
         <div class="nextStepTop">
-          <el-button type="primary" size="small" @click="getKeywords" v-if="!loading" >下一步</el-button>
+          <el-button type="primary" size="small" @click="getKeywords" v-if="!loading">下一步</el-button>
           <el-button type="primary" size="small" v-if="loading" :disabled="loading" :loading="loading">下一步</el-button>
         </div>
       </div>
@@ -44,9 +44,10 @@
           </div>
 
           <div class="nextStepp mt30">
-            <el-button  plain size="small" class="nextSteppButton" @click="stepOne()">上一步</el-button><el-button type="primary" size="small" @click="getCheckKeywords()" :disabled="checkboxDisabled">
-            下一步
-          </el-button>
+            <el-button plain size="small" class="nextSteppButton" @click="stepOne()">上一步</el-button>
+            <el-button type="primary" size="small" @click="getCheckKeywords()" :disabled="checkboxDisabled">
+              下一步
+            </el-button>
 
           </div>
         </div>
@@ -76,7 +77,8 @@
                   </div>
                   <img :src="item.file.src">
                 </div>
-              </div><div v-show="imgList.length<3" class="upload_warp_left" @click="fileClick" >
+              </div>
+              <div v-show="imgList.length<3" class="upload_warp_left" @click="fileClick">
                 <i class="el-icon-plus"></i>
               </div>
               <div class="imgLimit">
@@ -85,8 +87,10 @@
             </div>
 
             <div style="text-align: left;margin-top: 50px;" class="nextStepp">
-              <el-button  plain size="small" class="nextSteppButton" @click="keywordsLast" >上一步
-              </el-button><el-button type="primary" size="small" @click="getPhotoUrl" v-if="loader">完成</el-button> <el-button type="primary" size="small" :loading="!loader" v-if="!loader">提交中...</el-button>
+              <el-button plain size="small" class="nextSteppButton" @click="keywordsLast">上一步
+              </el-button>
+              <el-button type="primary" size="small" @click="getPhotoUrl" v-if="loader">完成</el-button>
+              <el-button type="primary" size="small" :loading="!loader" v-if="!loader">提交中...</el-button>
 
 
             </div>
@@ -145,7 +149,7 @@
         size: 0,
         imgListNew: [],
         Image: [],
-        maxlength:100
+        maxlength: 100
       }
     },
     computed: {
@@ -199,6 +203,33 @@
       ...mapActions(
         ["yourselfStatusLast", "yourselfStatusAdd", "questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataHid"]
       ),
+      myResize() {
+        console.log("触发+++")
+        let robotWidthH = $(".robotWidth").outerHeight(true);
+        // console.log("all",robotWidthH);
+        let navBarH = $(".navBar").outerHeight(true);
+        // console.log("001",navBarH);
+        let listItem = $(".listItem").outerHeight(true);
+        // console.log("002",listItem);
+        let sum = navBarH + listItem +50 ;
+        if (robotWidthH > sum || robotWidthH == sum) {
+          $(".robotFoot").css({
+            "position": "absolute",
+            "left": "0",
+            "bottom": "0px",
+            "z-index": "9"
+          })
+        } else {
+          $(".robotFoot").css({
+            "position": "static",
+            "left": "0",
+            "bottom": "0px",
+            "z-index": "9"
+          })
+        }
+
+        // console.log(robotWidthH)
+      },
       stepOne() { // 上一步
         this.addKey = "";
         this.questionLast();
@@ -365,7 +396,7 @@
         // console.log("recordId",recordId)
         let data = {
           "BotConfigId": recordId,
-          "Keys": this.keywordsNew.replace(/、/g,',')
+          "Keys": this.keywordsNew.replace(/、/g, ',')
         }
 
 
@@ -406,7 +437,10 @@
 
           }
         })
-
+        setTimeout(function () {
+          console.log("yanshi")
+          that.myResize();
+        }, 300)
 
       },
       saveKeywords() {  // 	存储 新创建的答案
@@ -435,7 +469,7 @@
           "BotConfigId": recordId,
           "TenantId": TenantId,
           "Question": that.Question,
-          "Keyword": this.keywordsNew.replace(/、/g,','),
+          "Keyword": this.keywordsNew.replace(/、/g, ','),
           "Text": {
             "ID": "",
             "Answer": this.textarea,
@@ -642,14 +676,14 @@
         //  console.log("daxiao", file.size / 1024)
         let currSize = file.size / 1024;
 
-        if(  file.type == "image/svg+xml"){
+        if (file.type == "image/svg+xml") {
 
           this.$message({
             message: '添加失败，上传图片类型不合法',
             type: 'warning'
           });
 
-            return false;
+          return false;
         }
 
 
@@ -729,7 +763,7 @@
   @import '../../../../../style/index';
 
   /*.upload_warp_img_div img {*/
-    /*width: 80px;*/
+  /*width: 80px;*/
   /*}*/
 
   .clickBtn {
@@ -806,7 +840,8 @@
     max-width: 997px;
     color: #999;
     font-size: 12px;
-    word-break: break-all;word-wrap: break-word;
+    word-break: break-all;
+    word-wrap: break-word;
   }
 
   .addContent input {
@@ -850,7 +885,7 @@
     margin-right: 11px;
     max-width: 1000px;
     margin-top: 20px;
-    margin-bottom: 40px;
+    padding-bottom: 80px;
   }
 
   /*.nextStepTop {*/
@@ -867,11 +902,12 @@
     max-width: 996px;
     /*margin-left: 40px;*/
   }
-  .nextStepTop button{
-width: 80px;
+
+  .nextStepTop button {
+    width: 80px;
     padding: 0;
     text-align: center;
-    line-height:32px;
+    line-height: 32px;
     height: 32px;
   }
 
@@ -889,16 +925,17 @@ width: 80px;
     height: 32px;
     line-height: 32px;
     padding: 0;
-    border:1px solid #2a8ce7;
+    border: 1px solid #2a8ce7;
 
   }
+
   .nextStepp .nextSteppButton {
     width: 80px;
     text-align: center;
     height: 32px;
     line-height: 32px;
     padding: 0;
-    border:1px solid #2a8ce7;
+    border: 1px solid #2a8ce7;
     color: #2a8ce7;
   }
 
@@ -941,7 +978,7 @@ width: 80px;
     display: inline-block;
     margin-right: 20px;
     /*border: 1px dashed #fff;*/
-    border-radius:5px;
+    border-radius: 5px;
     background-color: #fbfdff;
   }
 
@@ -964,7 +1001,7 @@ width: 80px;
   }
 
   /*.upload_warp_img_div img {*/
-    /*width: 80px;*/
+  /*width: 80px;*/
   /*}*/
 
   .upload_warp_img {
@@ -977,7 +1014,7 @@ width: 80px;
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
 
     width: 80px;
     height: 100%;
@@ -1013,6 +1050,7 @@ width: 80px;
     -moz-border-radius: 6px;
     border-radius: 6px;
   }
+
   .photoUp {
     text-align: left;
   }
