@@ -22,11 +22,9 @@
           </section>
            <!-- main -->
           <el-container v-loading="mainLoading" :element-loading-text="loadingText" class="full-width robotDetail" style="position:relative;width: 70vw;">
-            <el-main class="" style="">
+            <el-main class="full-width">
               <app-main></app-main>
             </el-main>
-            <!--<el-footer class="robotFoot">-->
-            <!--</el-footer>-->
           </el-container>
 
         </el-container>
