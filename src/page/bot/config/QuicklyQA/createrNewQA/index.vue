@@ -876,7 +876,7 @@
     width: 1000px;
     padding-top: 20px;
     box-sizing: content-box;
-    margin-bottom: 20px;
+    margin-bottom: 3px;
   }
 
   .nextStepp {
@@ -885,7 +885,7 @@
     margin-right: 11px;
     max-width: 1000px;
     margin-top: 20px;
-    padding-bottom: 80px;
+    /*padding-bottom: 80px;*/
   }
 
   /*.nextStepTop {*/

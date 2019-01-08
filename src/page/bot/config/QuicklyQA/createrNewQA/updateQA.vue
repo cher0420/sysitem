@@ -855,7 +855,7 @@
     /*text-align: right;*/
     max-width: 450px;
     margin-top: 50px;
-    padding-bottom: 80px;
+    padding-bottom:3px;
   }
 
   .alterKey button {
