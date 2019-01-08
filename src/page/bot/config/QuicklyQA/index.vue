@@ -102,11 +102,9 @@
         </template>
       </el-table-column>
     </el-table>
-<div style="height:70px;">
-  <section class="" style="height: 33px; text-align: center;padding: 30px 0">
     <el-pagination
       @current-change="handleCurrentChange"
-      class=""
+      class="pagination"
       background
       :page-size="PageSize"
       layout="total, prev, pager, next"
@@ -114,8 +112,6 @@
       :current-page.sync="PageIndex"
     >
     </el-pagination>
-  </section>
-</div>
   </section>
 </template>
 <script>
@@ -282,7 +278,6 @@
       downloadReportEvent(downloadFileUrl,fileName) {
 
         var theAnchor = $("<a href='" + downloadFileUrl + "' target='_blank'>file</a >");
-        console.log('=====',theAnchor)
         //判断是否为chroczme浏览器
         // if (isChrome()) {
         //   theAnchor.attr('download', fileName);
@@ -667,8 +662,11 @@
             (res) => {
               this.tableData.splice(index,1)
               this.total--;
+
               if(this.total%this.PageSize === 0){
-                this.PageIndex--;
+                if(this.PageIndex !== 1){
+                  this.PageIndex --
+                }
                 const params = {
                   PageIndex: this.PageIndex,
                   Status: this.status,
@@ -801,7 +799,6 @@
                   message: '服务器错误,请稍后重试',
                   duration:2000,
                 });
-                console.log(err)
                 that.clearReloadId(err)
                 store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
               }

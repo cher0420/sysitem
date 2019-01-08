@@ -22,12 +22,10 @@
           </section>
            <!-- main -->
           <el-container v-loading="mainLoading" :element-loading-text="loadingText" class="full-width robotDetail" style="position:relative;width: 70vw;">
-            <el-main class="p-relative scroll-content" style="display: flex;height: 100%;">
-
+            <el-main class="" style="">
               <app-main></app-main>
             </el-main>
             <!--<el-footer class="robotFoot">-->
-              <!--<footer-bar></footer-bar>-->
             <!--</el-footer>-->
           </el-container>
 
@@ -41,7 +39,7 @@
   import NavBar from './components/NavBar'
   import Sidebar from './components/Sidebar'
   import AppMain from './components/AppMain'
-  // import FooterBar from './components/Footer'
+  import FooterBar from './components/Footer'
   import SecondaryMenu from './components/SecondaryMenu'
   import store from '../store/index'
   import {REPLACE} from "../store/mutations";
@@ -76,18 +74,18 @@
       NavBar,
       Sidebar,
       AppMain,
-      // FooterBar,
+      FooterBar,
       SecondaryMenu
     },
   }
 </script>
 <style lang="scss" scoped>
   .robotFoot {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background: #fff;
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*width: 100%;*/
+    /*background: #fff;*/
   }
 
   .robotDisplayArea {

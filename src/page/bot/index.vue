@@ -94,10 +94,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <section class="p-relative">
+    <!--<section class="">-->
       <el-pagination
         @current-change="handleCurrentChange"
-        class="pagination p-absolute"
+        class="pagination"
         background
         layout="total, prev, pager, next"
         :total="total"
@@ -105,7 +105,7 @@
       >
       </el-pagination>
     </section>
-  </section>
+  <!--</section>-->
 </template>
 <script>
   import DrapDown from '../../components/DrapDown'
@@ -388,13 +388,6 @@
   .margin-top20 {
     margin-top: 20px;
   }
-
-  .pagination {
-    left: 50%;
-    top: 40px;
-    transform: translateX(-50%);
-  }
-
   .yoy-list-todo {
     span {
       cursor: pointer;

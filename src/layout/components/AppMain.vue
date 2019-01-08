@@ -1,12 +1,7 @@
 <template>
   <section class="yoy-header-container robotWidth " ref="scrollTop" style="flex:1;">
     <bread class="navBar"></bread>
-    <section class="yoy-main listItem" :style="{width:widthOS}">
-      <router-view class="view"></router-view>
-      <el-footer class="robotFoot">
-        <footer-bar></footer-bar>
-      </el-footer>
-    </section>
+    <router-view class="view yoy-main listItem"  :style="{width:widthOS}"></router-view><footer-bar></footer-bar>
   </section>
 </template>
 <script>
@@ -43,36 +38,7 @@
         this.widthOS = res === 'Firefox' ? `calc(100% - ${WIDTH}px)` : '100%'
       }
     },
-    updated: function () {
-      let that = this;
-      this.myResize();
-
-      $(".robotFoot").css({
-        "bottom": "-9999px",
-      })
-
-
-        setTimeout(function () {
-          that.myResize();
-        },1500);
-
-
-    },
-    mounted() {
-      let that = this;
-
-       that.myResize();
-      window.onresize = function () {
-        that.myResize();
-      };
-
-
-    },
     methods: {
-      // handleScroll () {
-      //   var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-      //   console.log(scrollTop)
-      // },
       myResize() {
         let robotWidthH = $(".robotWidth").outerHeight(true);
         // console.log("all", robotWidthH);
@@ -136,23 +102,9 @@
         this.$refs.scrollTop.offsetParent.scrollTop = 0
       },
     },
-    destroyed() {
-      // let that = this;
-      // clearInterval( this.setInterval);
-    },
   }
 </script>
 <style scoped>
-  .robotFoot {
-    position: relative;
-    left: 0;
-    bottom:-9999px;
-    width: 100%;
-    background: #fff;
-
-
-  }
-
   .robotWidth {
     /*display:flex ;*/
     width: 100%;
@@ -190,6 +142,7 @@
     box-sizing: border-box;
     padding-left: 40px;
     padding-right: 40px;
+    min-height: calc(100vh - 235px);
   }
 
   .line {
