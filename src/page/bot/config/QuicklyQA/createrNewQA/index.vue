@@ -239,6 +239,7 @@
         setTimeout(function () {
           that.yourselfStatusLast();
           that.yourselfStatusLast();
+          that.addKey = "";
         }, 300)
 
         // console.log(2222222222)
