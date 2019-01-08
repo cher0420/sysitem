@@ -163,14 +163,12 @@
           </el-col>
         </el-row>
       </el-form-item>
-      <el-form-item>
+      <el-form-item style="margin-bottom: 0;">
         <el-button type="primary" @click="submit('formData')">保存</el-button>
-        <!--<el-button @click="preview" :disabled="buttonDisabled">样式预览</el-button>-->
         <el-button @click="preview">样式预览</el-button>
         <el-tooltip class="item" effect="dark" content="保存后可预览最新样式" placement="top-start"><span class="previewIcon"><i
           class="el-icon-question f-s-16 c999" style="margin:10px"></i></span></el-tooltip>
       </el-form-item>
-
     </el-form>
   </div>
 </template>
