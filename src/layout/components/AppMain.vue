@@ -51,9 +51,12 @@
         "bottom": "-9999px",
       })
 
-      setTimeout(function () {
-        that.myResize();
-      },1000);
+
+        setTimeout(function () {
+          that.myResize();
+        },1500);
+
+
     },
     mounted() {
       let that = this;
@@ -62,6 +65,8 @@
       window.onresize = function () {
         that.myResize();
       };
+
+
     },
     methods: {
       // handleScroll () {
