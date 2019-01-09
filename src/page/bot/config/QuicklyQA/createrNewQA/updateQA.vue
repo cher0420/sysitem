@@ -6,7 +6,7 @@
         <div class="existingQues">
           <span>已有问题</span>
           <div class="createTime">
-            创建时间 ： {{CreateDate}}
+            创建时间 ： {{ CreateDate}}
           </div>
         </div>
         <div class="questionDetail box-sizing" :style="{height:questionHeight}" id="quickQuizQuestionAlready">
@@ -41,13 +41,7 @@
             <img :src="item.Answer">
           </div>
         </div>
-        <div class="alterKey">
-          <el-button plain size="small" @click="alterKeyWords()">修改关键词</el-button>
-          <el-button type="primary" size="small" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
-          <el-button type="primary" size="small" :loading="!loader" v-if="!loader">更新中...</el-button>
 
-
-        </div>
       </div>
     </el-col>
     <el-col :span="12">
@@ -103,7 +97,13 @@
         <div class="support_format">
           （至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）
         </div>
+        <div class="alterKey">
+          <el-button plain size="small" @click="alterKeyWords()">修改关键词</el-button>
+          <el-button type="primary" size="small" @click="getPhotoUrl()" v-if="loader">更新回答</el-button>
+          <el-button type="primary" size="small" :loading="!loader" v-if="!loader">更新中...</el-button>
 
+
+        </div>
 
       </div>
 
@@ -132,6 +132,7 @@
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index";
+  import moment from 'moment'
   import {UploadAndDeleteAsync} from "../../../../../api/getdata";  //  异步请求
 
   export default {
@@ -179,15 +180,23 @@
 
     },
     mounted() {
+      let that = this;
       this.resetHeight('quickQuizQuestionAlready', 'quickQuizQuestionNew', 'questionHeight')
       this.resetHeight('quickQuizKeyWordsAlready', 'quickQuizKeyWordsNew', 'keyWordsHeight');
       // this.myResizee();
+    //  console.log(that.formatDateTime(that.CreateDate))
     },
 
     methods: {
       ...mapActions(
         ["questionNext", "questionLast", "keywordsNext", "keywordsLast", "newDataDis",]
       ),
+      // formatDateTime() {
+      //   let time = this.CreateDate;
+      //   let m = moment(time).format('YY-MM-DD')
+      //   return m;
+      // },
+
       myResizee() {
         console.log("触发UUUUUU")
         let robotWidthH = $(".robotWidth").outerHeight(true);
@@ -198,12 +207,12 @@
         // console.log("002",listItem);
         let sum = navBarH + listItem;
 
-          $(".robotFoot").css({
-            "position": "static",
-            "left": "0",
-            "bottom": "0px",
-            "z-index": "9"
-          })
+        $(".robotFoot").css({
+          "position": "static",
+          "left": "0",
+          "bottom": "0px",
+          "z-index": "9"
+        })
 
 
         // console.log(robotWidthH)
@@ -220,7 +229,7 @@
         let QuestionNew = JSON.parse(sessionStorage.getItem('Question'));
         // console.log("******",QuestionNew)
         // debugger;
-        this.CreateDate = data.CreateDate;
+        this.CreateDate = moment(data.CreateDate).format('YYYY.MM.DD HH:mm');
         this.Image = data.Image;
         this.KeyId = data.KeyId;
         this.Keyword = data.Keyword.replace(/,/g, '、');
@@ -655,6 +664,11 @@
     color: #409eff;
     cursor: pointer;
   }
+  .upload_warp_leftt:focus {
+    border-color: #409eff;
+    color: #409eff;
+    cursor: pointer;
+  }
 
   .editQuestion {
     color: #555;
@@ -854,8 +868,8 @@
   .alterKey {
     /*text-align: right;*/
     max-width: 450px;
-    margin-top: 50px;
-    padding-bottom:3px;
+    margin-top: 20px;
+    padding-bottom: 3px;
   }
 
   .alterKey button {
@@ -910,6 +924,9 @@
   .editAnswerQA textarea:hover {
     border: 1px solid #2A8CE7;
   }
+  .editAnswerQA textarea:focus {
+    border: 1px solid #2A8CE7;
+  }
 
   .editAnswerQA .leftView {
     color: #999;
@@ -926,6 +943,9 @@
   }
 
   .editAnswerQA .leftView:hover {
+    border: 1px solid #2A8CE7;
+  }
+  .editAnswerQA .leftView:focus {
     border: 1px solid #2A8CE7;
   }
 
