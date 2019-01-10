@@ -259,7 +259,7 @@
       )
     },
     mounted(){
-      $("body").append("<script class='ip' src='https://pv.sohu.com/cityjson?ie=utf-8'><\/script>");
+      $("head").append("<script class='ip' src='https://pv.sohu.com/cityjson?ie=utf-8'><\/script>");
       this.getIP()
     },
     destroyed() {
@@ -270,6 +270,7 @@
     methods: {
 
       getIP() { // 获取网关IP
+
         let that = this;
         setTimeout(()=>{
           that.ip = returnCitySN["cip"];

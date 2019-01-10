@@ -11,7 +11,7 @@ function host() {
     api:'https://hightalkadminapi-staging.azurewebsites.net/api',
     fqavalidaimlApi:'https://hightalkfqavalidaiml-staging.azurewebsites.net',
   }
-  return TEST
+  return STAGING
 }
 
 Date.prototype.Format = function (fmt) { //author: meizz
