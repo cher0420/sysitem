@@ -16,7 +16,8 @@ export function redirect(type) {
   const host = window.location.host
   setCookies('SID', random, {expires: 1}).then(
     () => {
-      const callbackString = `https://${host}/?sid=${random}`
+      const http = host === 'localhost:3000'?'http':'https'
+      const callbackString = `${http}://${host}/?sid=${random}`
       window.location.href = URL.SSOWebUrl.zh + type + callbackString
     }
   )

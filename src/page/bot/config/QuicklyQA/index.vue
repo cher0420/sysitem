@@ -198,7 +198,21 @@
           store.dispatch(REPLACE,{loadingText:null})
           if(that.$route.path === '/bot/config/quicklyQA'){
             store.dispatch(REPLACE,{mainLoading:true})
-            if(err.Data === 1){
+            if(err.Data === 3){
+              that.clearReloadId(err)
+              const params = {Status:null}
+              getList(params).then(
+                (res) =>{
+                  that.complateGetList(res)
+                  store.dispatch(
+                    REPLACE,{mainLoading:false,loadingText:null}
+                  )
+                }
+              ).catch(
+                err => err
+              )
+              return ;
+            }else if(err.Data === 1){
               store.dispatch(REPLACE,{loadingText:'培训预计需要几分钟，请稍后'})
               that.initStatus('train')
             }else if(err.Data === 2){
@@ -330,7 +344,6 @@
           PageIndex: this.PageIndex,
           Status: this.status,
           Keys:this.keys
-
         }
         getList(options).then(
           (res) =>{
@@ -462,7 +475,6 @@
                 if(that.$route.path === '/bot/config/quicklyQA'){
                   botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'培训预计需要几分钟，请稍后'}):null
                 }
-
               } else{
                 that.initStatus('publish',res.recordId)
                 if(that.$route.path === '/bot/config/quicklyQA') {
