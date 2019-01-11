@@ -34,7 +34,7 @@ const PRODUCT = {
   SSOServerApi:"https://hightalkssoapi-staging.azurewebsites.net",
   requestHost: 'https://hightalkadminapi-staging.azurewebsites.net'
 }
-export default  STAGING_URL
+export default  TEST_URL
 
 
 
