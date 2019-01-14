@@ -1,8 +1,8 @@
 export const VOILD_TOKEN_URL = '/api/Tenant/ValidateToken'
 export const VOILD_USERINFO = '/api/Tenant/GetUserInfo'
 
-export const LOGIN = '/login/index?redirecturl='
-export const LOGOUT = '/login/logout?redirecturl='
+export const LOGIN = '/?redirecturl='
+export const LOGOUT = '/?redirecturl='
 
 export const BOT = '/api/ChatBot/GetBotList'
 export const DELETEBOT = '/api/ChatBot/DeleteBot'

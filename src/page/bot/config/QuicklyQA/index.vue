@@ -456,7 +456,7 @@
                   }
                 ).catch(
                   (err) =>{
-                    that.message(
+                    that.$message(
                       {
                         type:'error',
                         message:'服务器错误，请稍后重试',
