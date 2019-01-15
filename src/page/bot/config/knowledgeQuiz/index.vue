@@ -49,10 +49,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <section class="p-relative">
       <el-pagination
         @current-change="handleCurrentChange"
-        class="pagination p-absolute"
+        class="pagination"
         background
         layout="total, prev, pager, next"
         :total="total"
@@ -60,7 +59,6 @@
       >
       </el-pagination>
     </section>
-  </section>
 </template>
 
 <script>
@@ -260,11 +258,6 @@
 </script>
 <style scoped lang="scss">
   @import '../../../../style/index';
-  .pagination{
-    left: 50%;
-    top: 40px;
-    transform: translateX(-50%);
-  }
   .select{
     position: absolute;
   }

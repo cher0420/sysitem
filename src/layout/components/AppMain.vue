@@ -1,12 +1,7 @@
 <template>
-  <section class="yoy-header-container robotWidth " ref="scrollTop" style="flex:1">
+  <section class="yoy-header-container robotWidth " ref="scrollTop" style="flex:1;">
     <bread class="navBar"></bread>
-    <section class="yoy-main listItem" :style="{width:widthOS}" >
-      <router-view class="view" ></router-view>
-      <el-footer class="robotFoot">
-      <footer-bar></footer-bar>
-      </el-footer>
-    </section>
+    <router-view class="view yoy-main listItem"  :style="{width:widthOS}"></router-view><footer-bar></footer-bar>
   </section>
 </template>
 <script>
@@ -19,162 +14,138 @@
   export default {
     data() {
       return {
-        widthOS:'100%',
-        setInterval:"",
+        widthOS: '100%',
+        setInterval: "",
       }
     },
-    components:{
+    components: {
       Bread,
       FooterBar,
     },
-    computed: {
-
-    },
+    computed: {},
     watch: {
       '$route'(to, from) {
-        // this.myResize();
-        // console.log(111)
-        if(to&&from)
-        this.scrollTop()
+        if (to && from)
+          this.scrollTop()
       }
-
 
 
     },
     created() {
       const res = this.getOs()
-      if(res === 'Firefox' ){
+      if (res === 'Firefox') {
         const WIDTH = this.getScrollbarWidth()
-        this.widthOS = res === 'Firefox'? `calc(100% - ${WIDTH}px)`:'100%'
+        this.widthOS = res === 'Firefox' ? `calc(100% - ${WIDTH}px)` : '100%'
       }
-    },
-    updated:function(){
-      this.myResize();
-    },
-    mounted(){
-      let that = this;
-
-      this.myResize();
-      window.onresize = function () {
-        that.myResize();
-      };
-      // this.setInterval = setInterval( () => {
-      //  console.log("计算++")
-      //   that.myResize();
-      // },200)
-
     },
     methods: {
       myResize() {
         let robotWidthH = $(".robotWidth").outerHeight(true);
-        // console.log("all",robotWidthH);
+        // console.log("all", robotWidthH);
         let navBarH = $(".navBar").outerHeight(true);
-        // console.log("001",navBarH);
+        // console.log("fen001", navBarH);
         let listItem = $(".listItem").outerHeight(true);
-        // console.log("002",listItem);
-        let sum = navBarH +listItem +50;
-        if(robotWidthH > sum || robotWidthH ==  sum ){
+        // console.log("fen002", listItem);
+        let sum = navBarH + listItem + 50;
+        if (robotWidthH > sum || robotWidthH == sum) {
           $(".robotFoot").css({
-                "position": "absolute",
-                "left": "0",
-                "bottom": "0px",
-                "z-index":"9"
+            "position": "absolute",
+            "left": "0",
+            "bottom": "0px",
+            "z-index": "9",
+
+
           })
-        }else {
+        } else {
           $(".robotFoot").css({
             "position": "static",
             "left": "0",
             "bottom": "0px",
-            "z-index":"9"
+            "z-index": "9",
+
           })
         }
 
-        // console.log(robotWidthH)
       },
       getOs() {
         var OsObject = "";
-        if(navigator.userAgent.indexOf("MSIE")>0) {
+        if (navigator.userAgent.indexOf("MSIE") > 0) {
           return "MSIE";
         }
-        if(OsObject=navigator.userAgent.indexOf("Firefox")>0){
+        if (OsObject = navigator.userAgent.indexOf("Firefox") > 0) {
           return "Firefox";
         }
-        if(OsObject=navigator.userAgent.indexOf("Safari")>0) {
+        if (OsObject = navigator.userAgent.indexOf("Safari") > 0) {
           return "Safari";
         }
-        if(OsObject=navigator.userAgent.indexOf("Camino")>0){
+        if (OsObject = navigator.userAgent.indexOf("Camino") > 0) {
           return "Camino";
         }
-        if(OsObject=navigator.userAgent.indexOf("Gecko/")>0){
+        if (OsObject = navigator.userAgent.indexOf("Gecko/") > 0) {
           return "Gecko";
         }
       },
       getScrollbarWidth() {
-    var odiv = document.createElement('div'),//创建一个div
-      styles = {
-        width: '100px',
-        height: '100px',
-        overflowY: 'scroll'//让他有滚动条
-      }, i, scrollbarWidth;
-    for (i in styles) odiv.style[i] = styles[i];
-    document.body.appendChild(odiv);//把div添加到body中
-    scrollbarWidth = odiv.offsetWidth - odiv.clientWidth;//相减
-    odiv.remove();//移除创建的div
-    return scrollbarWidth;//返回滚动条宽度
-  },
-      scrollTop(){
+        var odiv = document.createElement('div'),//创建一个div
+          styles = {
+            width: '100px',
+            height: '100px',
+            overflowY: 'scroll'//让他有滚动条
+          }, i, scrollbarWidth;
+        for (i in styles) odiv.style[i] = styles[i];
+        document.body.appendChild(odiv);//把div添加到body中
+        scrollbarWidth = odiv.offsetWidth - odiv.clientWidth;//相减
+        odiv.remove();//移除创建的div
+        return scrollbarWidth;//返回滚动条宽度
+      },
+      scrollTop() {
         this.$refs.scrollTop.offsetParent.scrollTop = 0
       },
-    },
-    destroyed(){
-      let that = this;
-      clearInterval( this.setInterval);
     },
   }
 </script>
 <style scoped>
-  .robotFoot {
-    position: relative;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background: #fff;
-
-  }
   .robotWidth {
     /*display:flex ;*/
     width: 100%;
 
   }
+
   .listItem {
     /*padding-bottom: 50px;*/
   }
+
   .view {
-    padding-bottom: 20px;
+    /*padding-bottom: 20px;*/
   }
 </style>
 <style lang="scss">
   @import '../../style/index';
+
   $bread-background: #2a8ce7;
   $bread-height: 48px;
   $title-height: 65px;
-  .align-middle{
+  .align-middle {
     vertical-align: middle;
   }
-  .line{
-    width:2px;
-    height:20px;
+
+  .line {
+    width: 2px;
+    height: 20px;
     background-color: $primary-color;
     margin-right: 6px;
   }
-  .yoy-main{
+
+  .yoy-main {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     padding-left: 40px;
     padding-right: 40px;
+    min-height: calc(100vh - 235px);
   }
-  .line{
+
+  .line {
     width: 2px;
     height: 24px;
     line-height: 24px;

@@ -66,7 +66,7 @@
       <el-checkbox disabled>知识分类功能 </el-checkbox>
       <a href="javascript:;" class="primary-color padding-l-20px disabled">什么是知识分类</a>
     </el-form-item>
-    <el-form-item>
+    <el-form-item style="margin-bottom: 0">
       <el-button type="primary" @click="onSubmit('formData')">保存</el-button>
     </el-form-item>
   </el-form>

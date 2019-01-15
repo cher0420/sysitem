@@ -1,83 +1,86 @@
 <template>
-  <el-form ref="formData" :rules="rules" label-width="38px" :model="formData" class=" full-height c555 webpage"
-           v-loading="loading">
-    <title-item title="网站中嵌入代码"></title-item>
-    <el-form-item label="" class="margin-top30 margin-bottom-30">
-      <el-col :span="23" class="borderAround htmlContent p-relative">
-        <section style="line-height: 1.5">
-          {{formData.Code}}
-        </section>
-        <el-button id='copyBtn' class="p-absolute yoy-button" type="primary" plain @click="copyText">
-          复制
-        </el-button>
-      </el-col>
-    </el-form-item>
-    <title-item title="客服图标悬浮位置"></title-item>
-    <el-form-item label="" class="margin-top30 margin-bottom-30">
-      <el-col :span="18">
-        <el-radio-group v-model="formData.Position" class="full-width">
-          <el-col :span="6">
-            <el-radio label="right-down">右下角</el-radio>
-          </el-col>
-          <el-col :span="6">
-            <el-radio label="left-down">左下角</el-radio>
-          </el-col>
-          <el-col :span="6">
-            <el-radio label="right-up">右上角</el-radio>
-          </el-col>
-          <el-col :span="6">
-            <el-radio label="left-up">左上角</el-radio>
-          </el-col>
-        </el-radio-group>
-      </el-col>
-    </el-form-item>
-    <title-item title="自定义机器人头像"></title-item>
-    <el-form-item label="" class="margin-top30 margin-bottom-30">
-      <el-radio-group v-model="headerPicture" class="full-width" @change="changeHeaderImage">
-        <el-col :span="9">
-          <el-radio label="normal" class="align-middle margin-right-30">默认 :</el-radio>
-          <img :src="defaultPicture" alt="默认头像" class="align-middle header">
-        </el-col>
-        <el-col :span="14" class="">
-          <el-radio label="custom" class="align-middle margin-right-30 custom" style="margin-bottom: 0;">自定义 :
-          </el-radio>
-          <section class="file-box f-s-11 c555 dis-i-b align-middle"
-                   :style="{borderColor:headerPicture === 'custom'?'#2a8ce7':'#c0c4cc'}">
-            <section :class="[headerPicture === 'custom'?'normal':'notAllow']">
-              <input :disabled="fileDisabled" type='file' accept="image/*" name="avatar" placeholder="上传" id="img"
-                     class="file-btn" @change="upLoadImg"/>选择文件
-            </section>
+  <div>
+    <!--<Title title="测试条"></Title>-->
+    <Footer></Footer>
+    <el-form ref="formData" :rules="rules" label-width="38px" :model="formData" class=" full-height c555 webpage"
+             v-loading="loading">
+      <title-item title="网站中嵌入代码"></title-item>
+      <el-form-item label="" class="margin-top30 margin-bottom-30">
+        <el-col :span="23" class="borderAround htmlContent p-relative">
+          <section style="line-height: 1.5">
+            {{formData.Code}}
           </section>
-          <img v-show="headerPicture === 'custom'&&baseImgData" :src="formData.BotHeadPortrait" alt="自定义头像"
-               class="align-middle header"/>
-          <span class="tips" v-if="headerPicture === 'custom'">
+          <el-button id='copyBtn' class="p-absolute yoy-button" type="primary" plain @click="copyText">
+            复制
+          </el-button>
+        </el-col>
+      </el-form-item>
+      <title-item title="客服图标悬浮位置"></title-item>
+      <el-form-item label="" class="margin-top30 margin-bottom-30">
+        <el-col :span="18">
+          <el-radio-group v-model="formData.Position" class="full-width">
+            <el-col :span="6">
+              <el-radio label="right-down">右下角</el-radio>
+            </el-col>
+            <el-col :span="6">
+              <el-radio label="left-down">左下角</el-radio>
+            </el-col>
+            <el-col :span="6">
+              <el-radio label="right-up">右上角</el-radio>
+            </el-col>
+            <el-col :span="6">
+              <el-radio label="left-up">左上角</el-radio>
+            </el-col>
+          </el-radio-group>
+        </el-col>
+      </el-form-item>
+      <title-item title="自定义机器人头像"></title-item>
+      <el-form-item label="" class="margin-top30 margin-bottom-30">
+        <el-radio-group v-model="headerPicture" class="full-width" @change="changeHeaderImage">
+          <el-col :span="9">
+            <el-radio label="normal" class="align-middle margin-right-30">默认 :</el-radio>
+            <img :src="defaultPicture" alt="默认头像" class="align-middle header">
+          </el-col>
+          <el-col :span="14" class="">
+            <el-radio label="custom" class="align-middle margin-right-30 custom" style="margin-bottom: 0;">自定义 :
+            </el-radio>
+            <section class="file-box f-s-11 c555 dis-i-b align-middle"
+                     :style="{borderColor:headerPicture === 'custom'?'#2a8ce7':'#c0c4cc'}">
+              <section :class="[headerPicture === 'custom'?'normal':'notAllow']">
+                <input :disabled="fileDisabled" type='file' accept="image/*" name="avatar" placeholder="上传" id="img"
+                       class="file-btn" @change="upLoadImg"/>选择文件
+              </section>
+            </section>
+            <img v-show="headerPicture === 'custom'&&baseImgData" :src="formData.BotHeadPortrait" alt="自定义头像"
+                 class="align-middle header"/>
+            <span class="tips" v-if="headerPicture === 'custom'">
                （图片大小不超过200KB）
             </span>
-        </el-col>
-      </el-radio-group>
-    </el-form-item>
-    <title-item title="自定义标题栏背景颜色"></title-item>
-    <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
-      <el-col :span="9">
-        <el-col :span="2" v-for="item in titleColorItems" :index="index">
+          </el-col>
+        </el-radio-group>
+      </el-form-item>
+      <title-item title="自定义标题栏背景颜色"></title-item>
+      <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
+        <el-col :span="9">
+          <el-col :span="2" v-for="item in titleColorItems" :index="index">
           <span class="colorItem"
                 :style="{background:item,opacity:item === DialogColor?'1':'.6'}"
                 @click="changeColor('DialogColor',item)"
           >
             <i class="el-icon-check c-fff f-w-900" :style="{display:item === DialogColor?'inline-block':'none'}"></i>
           </span>
+          </el-col>
         </el-col>
-      </el-col>
-      <el-col :span="14">
-        自定义标题栏背景颜色 ：
-        <el-input v-model="formData.DialogColor" placeholder="请输入标题栏背景色色值（如#999999) "
-                  @blur="typeColor('DialogColor','titleColorItems')" style="width: 360px;"></el-input>
-      </el-col>
-    </el-form-item>
-    <title-item title="自定义标题栏字体颜色"></title-item>
-    <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
-      <el-col :span="9">
-        <el-col :span="2" v-for="item in textColorItems" :index="index">
+        <el-col :span="14">
+          自定义标题栏背景颜色 ：
+          <el-input v-model="formData.DialogColor" placeholder="请输入标题栏背景色色值（如#999999) "
+                    @blur="typeColor('DialogColor','titleColorItems')" style="width: 360px;"></el-input>
+        </el-col>
+      </el-form-item>
+      <title-item title="自定义标题栏字体颜色"></title-item>
+      <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
+        <el-col :span="9">
+          <el-col :span="2" v-for="item in textColorItems" :index="index">
           <span class="colorItem"
                 :style="{background:item,border:item === '#FFFFFF'?'1px solid #eaedf1':'none',opacity:item === DialogTitleColor?'1':'.6'}"
                 @click="changeColor('DialogTitleColor',item)"
@@ -85,88 +88,89 @@
             <i class="el-icon-check c555 f-w-900"
                :style="{display:item === DialogTitleColor?'inline-block':'none',color:item === '#FFFFFF'?'#555':'white'}"></i>
           </span>
+          </el-col>
         </el-col>
-      </el-col>
-      <el-col :span="14">
-        自定义标题栏字体颜色 ：
-        <el-input v-model="formData.DialogTitleColor" placeholder="请输入标题栏字体色值（如#999999)"
-                  @blur="typeColor('DialogTitleColor','textColorItems')" style="width: 360px;"></el-input>
-      </el-col>
-    </el-form-item>
-    <title-item title="功能开关"></title-item>
-    <el-form-item label="" style="margin-bottom: 32px;margin-top: 18px;">
-      <el-col :span="12">
-        <el-checkbox v-model="formData.LoginSwitch" style="width: 134px;">登录验证</el-checkbox>
-        <span class="primary-color f-s-14 disabled">提示：开启后则需登录后才可进入网页版</span>
-      </el-col>
-    </el-form-item>
-    <el-form-item label="" style="margin-bottom: 10px;display: none">
-      <el-col :span="24">
-        <el-radio-group style="width: 100%;">
-          <el-col :span="9" style="height: 32px;line-height: 32px">
-            <el-checkbox v-model="formData.knowledge" disabled style="width: 134px;">知识分类功能</el-checkbox>
-            <el-radio :label="1" disabled>默认：自助导航</el-radio>
-          </el-col>
-          <el-col :span="15">
-            <el-radio :label="2" disabled>自定义：</el-radio>
-            <el-input placeholder="最多6个字符" disabled style="width: 360px;margin-right:10px;"></el-input>
-            <a href="javascript:;" class="primary-color disabled f-s-14">什么是知识分类？</a>
-          </el-col>
-        </el-radio-group>
-      </el-col>
-    </el-form-item>
-    <el-form-item label="" style="margin-bottom: 40px;display: none">
-      <el-col :span="24">
-        <el-radio-group style="width: 100%;">
-          <el-col :span="9" style="height: 32px;line-height: 32px">
-            <el-checkbox v-model="formData.demo" disabled style="width: 134px;">案例库</el-checkbox>
-            <el-radio :label="1" disabled>默认：案例库</el-radio>
-          </el-col>
-          <el-col :span="15">
-            <el-radio :label="2" disabled>自定义：</el-radio>
-            <el-input placeholder="最多6个字符" disabled style="width: 360px;margin-right:10px;"></el-input>
-            <a href="javascript:;" class="primary-color disabled f-s-14">什么是案例库？</a>
-          </el-col>
-        </el-radio-group>
-      </el-col>
-    </el-form-item>
-    <title-item title="自定义问候语"></title-item>
-    <el-form-item class="none-label" prop="DialogTitle" style='margin-top: 26px;margin-bottom: 26px;'>
+        <el-col :span="14">
+          自定义标题栏字体颜色 ：
+          <el-input v-model="formData.DialogTitleColor" placeholder="请输入标题栏字体色值（如#999999)"
+                    @blur="typeColor('DialogTitleColor','textColorItems')" style="width: 360px;"></el-input>
+        </el-col>
+      </el-form-item>
+      <title-item title="功能开关"></title-item>
+      <el-form-item label="" style="margin-bottom: 32px;margin-top: 18px;">
+        <el-col :span="12">
+          <el-checkbox v-model="formData.LoginSwitch" style="width: 134px;">登录验证</el-checkbox>
+          <span class="primary-color f-s-14 disabled">提示：开启后则需登录后才可进入网页版</span>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="" style="margin-bottom: 10px;display: none">
+        <el-col :span="24">
+          <el-radio-group style="width: 100%;">
+            <el-col :span="9" style="height: 32px;line-height: 32px">
+              <el-checkbox v-model="formData.knowledge" disabled style="width: 134px;">知识分类功能</el-checkbox>
+              <el-radio :label="1" disabled>默认：自助导航</el-radio>
+            </el-col>
+            <el-col :span="15">
+              <el-radio :label="2" disabled>自定义：</el-radio>
+              <el-input placeholder="最多6个字符" disabled style="width: 360px;margin-right:10px;"></el-input>
+              <a href="javascript:;" class="primary-color disabled f-s-14">什么是知识分类？</a>
+            </el-col>
+          </el-radio-group>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="" style="margin-bottom: 40px;display: none">
+        <el-col :span="24">
+          <el-radio-group style="width: 100%;">
+            <el-col :span="9" style="height: 32px;line-height: 32px">
+              <el-checkbox v-model="formData.demo" disabled style="width: 134px;">案例库</el-checkbox>
+              <el-radio :label="1" disabled>默认：案例库</el-radio>
+            </el-col>
+            <el-col :span="15">
+              <el-radio :label="2" disabled>自定义：</el-radio>
+              <el-input placeholder="最多6个字符" disabled style="width: 360px;margin-right:10px;"></el-input>
+              <a href="javascript:;" class="primary-color disabled f-s-14">什么是案例库？</a>
+            </el-col>
+          </el-radio-group>
+        </el-col>
+      </el-form-item>
+      <title-item title="自定义问候语"></title-item>
+      <el-form-item class="none-label" prop="DialogTitle" style='margin-top: 26px;margin-bottom: 26px;'>
       <span style="width:70px;" class="dis-i-b text-align-right">
         对话框标题
       </span>
-      <el-input v-model="formData.DialogTitle" maxlength="15" style="width: 60%;margin-left: 20px;">
-        <span slot="suffix">最多15个字符 &nbsp;</span>
-      </el-input>
-    </el-form-item>
-    <el-form-item label="" class="none-label" prop="DialogGreetings" style="margin-bottom: 50px;">
+        <el-input v-model="formData.DialogTitle" maxlength="15" style="width: 60%;margin-left: 20px;">
+          <span slot="suffix">最多15个字符 &nbsp;</span>
+        </el-input>
+      </el-form-item>
+      <el-form-item label="" class="none-label" prop="DialogGreetings" style="margin-bottom: 50px;">
       <span style="width:70px;line-height: 32px;" class="dis-i-b text-align-right align-top">
         问候语
       </span>
-      <section class="dis-i-b full-width p-relative" style="width: 60%;padding-bottom: 5px;">
-        <el-input class='sayHello' v-model="formData.DialogGreetings" type="textarea" :rows="5" maxlength="50"
-                  style="margin-left: 20px;">
-        </el-input>
-        <span class="p-absolute " style="bottom: 0;color:#c0c4cc;right: -20px;">最多50个字符 &nbsp;</span>
-      </section>
-    </el-form-item>
-    <title-item title="添加授信域名"></title-item>
-    <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:56px">
-      <section style="margin-top: 20px;line-height: 36px;">请添加授信的来访IP地址或需要嵌入的网站域名 <span class="c999">( 当前IP地址：{{getIP()}} )</span></section>
-      <el-row>
-        <el-col :span="18" style="padding-bottom: 5px">
-          <el-input type="textarea" :rows="5" placeholder="多域名或IP请用英文半角分号隔开"
-                    v-model="formData.AuthorizedAddress"></el-input>
-        </el-col>
-      </el-row>
-    </el-form-item>
-    <el-form-item>
-      <el-button type="primary" @click="submit('formData')">保存</el-button>
-      <el-button @click="preview" :disabled="buttonDisabled">样式预览</el-button>
-      <el-tooltip class="item" effect="dark" content="保存后可预览最新样式" placement="top-start"><span class="previewIcon"><i
-        class="el-icon-question f-s-16 c999" style="margin:10px"></i></span></el-tooltip>
-    </el-form-item>
-  </el-form>
+        <section class="dis-i-b full-width p-relative" style="width: 60%;padding-bottom: 5px;">
+          <el-input class='sayHello' v-model="formData.DialogGreetings" type="textarea" :rows="5" maxlength="50"
+                    style="margin-left: 20px;">
+          </el-input>
+          <span class="p-absolute " style="bottom: 0;color:#c0c4cc;right: -20px;">最多50个字符 &nbsp;</span>
+        </section>
+      </el-form-item>
+      <title-item title="添加授信域名"></title-item>
+      <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:56px">
+        <section style="margin-top: 20px;line-height: 36px;">请添加授信的来访IP地址或需要嵌入的网站域名 <span class="c999">( 当前IP地址：{{ip}} )</span></section>
+        <el-row>
+          <el-col :span="18" style="padding-bottom: 5px">
+            <el-input type="textarea" :rows="5" placeholder="多域名或IP请用英文半角分号隔开"
+                      v-model="formData.AuthorizedAddress"></el-input>
+          </el-col>
+        </el-row>
+      </el-form-item>
+      <el-form-item style="margin-bottom: 0;">
+        <el-button type="primary" @click="submit('formData')">保存</el-button>
+        <el-button @click="preview">样式预览</el-button>
+        <el-tooltip class="item" effect="dark" content="保存后可预览最新样式" placement="top-start"><span class="previewIcon"><i
+          class="el-icon-question f-s-16 c999" style="margin:10px"></i></span></el-tooltip>
+      </el-form-item>
+    </el-form>
+  </div>
 </template>
 <script>
   // import
@@ -180,7 +184,8 @@
   import {unhtml, htmlDecodeByRegExp} from "../../../../utils/utils";
   import store from '../../../../store/index'
   import {REPLACE} from "../../../../store/mutations";
-
+  import Title from '../../../../components/Title'
+  // import Footer from '../../../../layout/components/Footer';
 
   export default {
     data() {
@@ -194,7 +199,7 @@
           DialogColor: '#3B65B7',
           DialogTitleColor: '#FFFFFF',
           LoginSwitch: true, //true 为需要 ，false 为不需要
-          DialogTitle: '嗨聊智能服务机器人',
+          DialogTitle: '智能服务机器人',
           DialogGreetings: '您好，我是小嗨，有什么可以帮助您？',
           AuthorizedAddress: '',
           buttonDisabled: true,
@@ -213,13 +218,16 @@
         defaultPicture: IMAGE,
         loading: false,
         fileDisabled: true,
-        baseImgData: ''
+        baseImgData: '',
+        ip:"",
       }
     },
     name: 'webTest',
     computed: {},
     components: {
       TitleItem,
+      Title,
+      // Footer,
     },
     created() {
       store.dispatch(REPLACE, {mainLoading: true, loadingText: null})
@@ -250,15 +258,24 @@
         }
       )
     },
+    mounted(){
+      $("head").append("<script class='ip' src='https://pv.sohu.com/cityjson?ie=utf-8'><\/script>");
+      this.getIP()
+    },
     destroyed() {
-      this.headerPicture = 'normal'
-      this.baseImgData = ''
+      this.headerPicture = 'normal';
+      this.baseImgData = '';
+      $(".ip").remove();
     },
     methods: {
 
       getIP() { // 获取网关IP
-        let ip = returnCitySN["cip"];
-         return ip;
+
+        let that = this;
+        setTimeout(()=>{
+          that.ip = returnCitySN["cip"];
+        },1000)
+
       },
 
       upload(response, file, fileList) {
@@ -307,7 +324,7 @@
         this.DialogTitleColor = data.DialogTitleColor ? data.DialogTitleColor : this.DialogTitleColor
         this.DialogColor = data.DialogColor ? data.DialogColor : this.DialogColor
         //对话框标题 判断是否有初始值
-        data.DialogTitle = data.DialogTitle ? data.DialogTitle : '嗨聊智能服务机器人'
+        data.DialogTitle = data.DialogTitle ? data.DialogTitle : '智能服务机器人'
         //问候语 判断是否有初始值
         data.DialogGreetings = data.DialogGreetings ? data.DialogGreetings : '您好，我是小嗨，有什么可以帮助您？'
         //授信域名 判断是否有初始值

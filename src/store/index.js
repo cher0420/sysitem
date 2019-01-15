@@ -9,7 +9,7 @@ Vue.use(Vuex)
 
     app: {
       reloadId:0,
-      name:'嗨聊智能服务机器人',
+      name:'智能服务机器人',
       config: false,
       activeKey: 'bot',
       defaultActiveSecondM:'config',                   //二级菜单active-key

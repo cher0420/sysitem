@@ -64,8 +64,8 @@
             <span v-if="scope.row.Status == 2||scope.row.Status == 5">
               <span class="config">
                 <i class="el-icon-setting"></i>
-                <a href="javascript:;" class="c555"
-                   @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">配置</a>
+                <span class="c555"
+                   @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">配置</span>
               </span>
               <span class="del">
                 <i class="el-icon-delete"></i>
@@ -94,10 +94,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <section class="p-relative">
+    <!--<section class="">-->
       <el-pagination
         @current-change="handleCurrentChange"
-        class="pagination p-absolute"
+        class="pagination"
         background
         layout="total, prev, pager, next"
         :total="total"
@@ -105,7 +105,7 @@
       >
       </el-pagination>
     </section>
-  </section>
+  <!--</section>-->
 </template>
 <script>
   import DrapDown from '../../components/DrapDown'
@@ -388,13 +388,6 @@
   .margin-top20 {
     margin-top: 20px;
   }
-
-  .pagination {
-    left: 50%;
-    top: 40px;
-    transform: translateX(-50%);
-  }
-
   .yoy-list-todo {
     span {
       cursor: pointer;

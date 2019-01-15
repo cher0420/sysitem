@@ -22,13 +22,9 @@
           </section>
            <!-- main -->
           <el-container v-loading="mainLoading" :element-loading-text="loadingText" class="full-width robotDetail" style="position:relative;width: 70vw;">
-            <el-main class="p-relative scroll-content" style="display: flex;height: 100%;">
-
+            <el-main class="full-width">
               <app-main></app-main>
             </el-main>
-            <!--<el-footer class="robotFoot">-->
-              <!--<footer-bar></footer-bar>-->
-            <!--</el-footer>-->
           </el-container>
 
         </el-container>
@@ -39,9 +35,9 @@
 
 <script>
   import NavBar from './components/NavBar'
-  import Sidebar from './components/Sidebar'
+  import Sidebar from './components/SideBar'
   import AppMain from './components/AppMain'
-  // import FooterBar from './components/Footer'
+  import FooterBar from './components/Footer'
   import SecondaryMenu from './components/SecondaryMenu'
   import store from '../store/index'
   import {REPLACE} from "../store/mutations";
@@ -76,18 +72,18 @@
       NavBar,
       Sidebar,
       AppMain,
-      // FooterBar,
+      FooterBar,
       SecondaryMenu
     },
   }
 </script>
 <style lang="scss" scoped>
   .robotFoot {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background: #fff;
+    /*position: absolute;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*width: 100%;*/
+    /*background: #fff;*/
   }
 
   .robotDisplayArea {
@@ -111,6 +107,7 @@
   .robotDetail {
     /*padding-bottom: 60px;*/
     height: 100%;
+    /*min-height:calc(100% - 60px);*/
     /*width: 100%;*/
     /*overflow: scroll;*/
   }

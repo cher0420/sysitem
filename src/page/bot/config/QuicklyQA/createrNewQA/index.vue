@@ -28,8 +28,8 @@
           <div class="keywords">
             <el-checkbox-group v-model="keywords" :min="0"
                                :max="4">
-              <div class="checkboxContent" v-for="item in keywordsOption" :key="item" :title="item">
-                <el-checkbox :label="item" name="keywords"></el-checkbox>
+              <div class="checkboxContent" v-for="item in keywordsOptionAfter" :key="item.name">
+                <el-checkbox :label="item.name" class="kwCheck" name="keywords" :title="item.name" :disabled="item.disabled"></el-checkbox>
               </div>
             </el-checkbox-group>
 
@@ -134,6 +134,7 @@
         addKey: "",
         keywords: [], // 选中的关键字
         keywordsOption: [], // 关键词
+        keywordsOptionAfter: [], // 关键词 z是否禁用
         PreviewImg: "", // 预览图片
         dialogVisible: false,
         addIcon: true,
@@ -143,6 +144,7 @@
         textarea: "",
         timer: "",
         checkboxDisabled: true,
+        checkOther: false,
         token: "",
         // 图片上传
         imgList: [],
@@ -183,7 +185,39 @@
     },
     watch: {
       keywords(curVal, oldVal) {
+        let that = this;
+        if (curVal.length == 4) {
+          this.checkOther = true;
+          for (var i = 0; i < curVal.length; i++) {
+            for (var j = 0; j < that.keywordsOptionAfter.length;j++) {
+              if(that.keywordsOptionAfter[j].name == curVal[i]){
+                that.keywordsOptionAfter[j].disabled = true;
+                console.log(22222)
+              }
+            }
+          }
+          for(var j = 0; j < that.keywordsOptionAfter.length;j++){
+            if(that.keywordsOptionAfter[j].disabled  == true){
+              that.keywordsOptionAfter[j].disabled = false;
+            }else{
+              that.keywordsOptionAfter[j].disabled = true;
+            }
+          }
+          console.log("当前值", curVal);
+
+
+        } else {
+          this.checkOther = false;
+        }
+        if(1 < curVal.length && curVal.length < 4){
+          for(var j = 0; j < that.keywordsOptionAfter.length;j++){
+            that.keywordsOptionAfter[j].disabled = false;
+          }
+        }
         if (1 < curVal.length && curVal.length < 5) {
+
+
+
           this.checkboxDisabled = false;
           return false;
         }
@@ -211,7 +245,7 @@
         // console.log("001",navBarH);
         let listItem = $(".listItem").outerHeight(true);
         // console.log("002",listItem);
-        let sum = navBarH + listItem +50 ;
+        let sum = navBarH + listItem + 50;
         if (robotWidthH > sum || robotWidthH == sum) {
           $(".robotFoot").css({
             "position": "absolute",
@@ -239,6 +273,7 @@
         setTimeout(function () {
           that.yourselfStatusLast();
           that.yourselfStatusLast();
+          that.addKey = "";
         }, 300)
 
         // console.log(2222222222)
@@ -284,6 +319,12 @@
           }
 
           that.keywordsOption.push(that.addKey);
+          that.keywordsOptionAfter.push(
+            {
+              name: that.addKey,
+              disabled: false
+            }
+            );
           that.keywords.push(that.addKey);
           that.yourselfStatusLast();
           that.addKey = "";
@@ -364,6 +405,12 @@
               if (msg.Data.length > 1) {
 
                 that.keywordsOption = msg.Data;
+                that.keywordsOptionAfter = that.keywordsOption.map(function (item) {
+                  return {
+                    name: item,
+                    disabled: false
+                  }
+                });
 
 
                 that.questionNext();
@@ -791,6 +838,11 @@
     cursor: pointer;
   }
 
+  .yourselfKeyword > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   .yourselfKeyword span {
     margin-left: 4px;
     font-size: 12px;
@@ -876,7 +928,7 @@
     width: 1000px;
     padding-top: 20px;
     box-sizing: content-box;
-    margin-bottom: 20px;
+    margin-bottom: 3px;
   }
 
   .nextStepp {
@@ -885,7 +937,7 @@
     margin-right: 11px;
     max-width: 1000px;
     margin-top: 20px;
-    padding-bottom: 80px;
+    /*padding-bottom: 80px;*/
   }
 
   /*.nextStepTop {*/
@@ -937,6 +989,13 @@
     padding: 0;
     border: 1px solid #2a8ce7;
     color: #2a8ce7;
+  }
+
+  .nextStepp .nextSteppButton:hover {
+
+    background: #2a8ce7;
+    color: #fff;
+
   }
 
   .keywords {
@@ -1053,6 +1112,7 @@
 
   .photoUp {
     text-align: left;
+    margin-left: 40px;
   }
 
   .upload_warp_img_div_text {
@@ -1085,6 +1145,7 @@
     position: relative;
     max-width: 1000px;
     height: 300px;
+    margin-left: 40px;
 
   }
 
@@ -1131,9 +1192,15 @@
     border: 1px solid #409eff;
   }
 
+  .CreateNewQAtextareaParentAdd textarea:focus {
+    border: 1px solid #409eff;
+  }
+
 </style>
 <style>
-
+  .creatNewQA  .el-checkbox__inner {
+  border: 1px solid #ebebeb !important;
+}
   .yourselfInput input {
     border: 1px solid #2a8ce7;
     border-radius: 5px;
@@ -1147,9 +1214,22 @@
     font-size: 12px;
   }
 
-  .checkboxContent .el-checkbox__label {
+  /*.checkboxContent .el-checkbox__label {*/
+
+  /*width: 145px;*/
+  /*white-space: nowrap;*/
+  /*overflow: hidden;*/
+  /*text-overflow: ellipsis;*/
+  /*}*/
+  .checkboxContent {
 
     width: 145px;
+    /*white-space: nowrap;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+  }
+  .kwCheck {
+    width: 140px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

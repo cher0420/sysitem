@@ -102,18 +102,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <section class="p-relative">
-      <el-pagination
-        @current-change="handleCurrentChange"
-        class="pagination p-absolute"
-        background
-        :page-size="PageSize"
-        layout="total, prev, pager, next"
-        :total="total"
-        :current-page.sync="PageIndex"
-      >
-      </el-pagination>
-    </section>
+    <el-pagination
+      @current-change="handleCurrentChange"
+      class="pagination"
+      background
+      :page-size="PageSize"
+      layout="total, prev, pager, next"
+      :total="total"
+      :current-page.sync="PageIndex"
+    >
+    </el-pagination>
   </section>
 </template>
 <script>
@@ -200,7 +198,21 @@
           store.dispatch(REPLACE,{loadingText:null})
           if(that.$route.path === '/bot/config/quicklyQA'){
             store.dispatch(REPLACE,{mainLoading:true})
-            if(err.Data === 1){
+            if(err.Data === 3){
+              that.clearReloadId(err)
+              const params = {Status:null}
+              getList(params).then(
+                (res) =>{
+                  that.complateGetList(res)
+                  store.dispatch(
+                    REPLACE,{mainLoading:false,loadingText:null}
+                  )
+                }
+              ).catch(
+                err => err
+              )
+              return ;
+            }else if(err.Data === 1){
               store.dispatch(REPLACE,{loadingText:'培训预计需要几分钟，请稍后'})
               that.initStatus('train')
             }else if(err.Data === 2){
@@ -280,7 +292,6 @@
       downloadReportEvent(downloadFileUrl,fileName) {
 
         var theAnchor = $("<a href='" + downloadFileUrl + "' target='_blank'>file</a >");
-        console.log('=====',theAnchor)
         //判断是否为chroczme浏览器
         // if (isChrome()) {
         //   theAnchor.attr('download', fileName);
@@ -333,7 +344,6 @@
           PageIndex: this.PageIndex,
           Status: this.status,
           Keys:this.keys
-
         }
         getList(options).then(
           (res) =>{
@@ -446,7 +456,7 @@
                   }
                 ).catch(
                   (err) =>{
-                    that.message(
+                    that.$message(
                       {
                         type:'error',
                         message:'服务器错误，请稍后重试',
@@ -465,7 +475,6 @@
                 if(that.$route.path === '/bot/config/quicklyQA'){
                   botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'培训预计需要几分钟，请稍后'}):null
                 }
-
               } else{
                 that.initStatus('publish',res.recordId)
                 if(that.$route.path === '/bot/config/quicklyQA') {
@@ -665,8 +674,11 @@
             (res) => {
               this.tableData.splice(index,1)
               this.total--;
+
               if(this.total%this.PageSize === 0){
-                this.PageIndex--;
+                if(this.PageIndex !== 1){
+                  this.PageIndex --
+                }
                 const params = {
                   PageIndex: this.PageIndex,
                   Status: this.status,
@@ -799,7 +811,6 @@
                   message: '服务器错误,请稍后重试',
                   duration:2000,
                 });
-                console.log(err)
                 that.clearReloadId(err)
                 store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
               }

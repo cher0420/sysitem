@@ -79,7 +79,7 @@
         </el-input>
       </el-col>
     </el-form-item>
-    <el-form-item>
+    <el-form-item style="margin-bottom: 0">
       <el-button type="primary" @click="submit('ruleForm')" >{{button}}</el-button>
     </el-form-item>
   </el-form>
