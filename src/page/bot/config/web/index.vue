@@ -199,7 +199,7 @@
           DialogColor: '#3B65B7',
           DialogTitleColor: '#FFFFFF',
           LoginSwitch: true, //true 为需要 ，false 为不需要
-          DialogTitle: '嗨聊智能服务机器人',
+          DialogTitle: '智能服务机器人',
           DialogGreetings: '您好，我是小嗨，有什么可以帮助您？',
           AuthorizedAddress: '',
           buttonDisabled: true,
@@ -324,7 +324,7 @@
         this.DialogTitleColor = data.DialogTitleColor ? data.DialogTitleColor : this.DialogTitleColor
         this.DialogColor = data.DialogColor ? data.DialogColor : this.DialogColor
         //对话框标题 判断是否有初始值
-        data.DialogTitle = data.DialogTitle ? data.DialogTitle : '嗨聊智能服务机器人'
+        data.DialogTitle = data.DialogTitle ? data.DialogTitle : '智能服务机器人'
         //问候语 判断是否有初始值
         data.DialogGreetings = data.DialogGreetings ? data.DialogGreetings : '您好，我是小嗨，有什么可以帮助您？'
         //授信域名 判断是否有初始值

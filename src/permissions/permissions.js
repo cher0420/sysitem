@@ -17,7 +17,7 @@ export function redirect(type) {
     setCookies('SID', random, { expires: 1 }).then(
         () => {
             const http = host === 'localhost:3000' ? 'http' : 'https'
-            const callbackString = `${http}://${host}/?sid=${random}`
+            const callbackString = `${http}://${host}/?sid=${random}&type=login`
             window.location.href = URL.SSOWebUrl.zh + type + callbackString
         }
     )
@@ -210,9 +210,18 @@ export const logOut = () => {
     Loading.service({ fullscreen: true });
     const token = getCookies('token')
     const redirectUrl = 'https://' + window.location.host
+    const host = window.location.host
+    let random = Math.floor(Math.random() * 1000000)
+
     removeCookies([USERNAME, TOKEN]).then(
         () => {
-            window.location.href = URL.SSOWebUrl.zh + LOGOUT + redirectUrl + '&token=' + token
+            setCookies('SID', random, { expires: 1 }).then(
+                () => {
+                    const http = host === 'localhost:3000' ? 'http' : 'https'
+                    const callbackString = `${http}://${host}/?sid=${random}&type=logout`
+                    window.location.href = URL.SSOWebUrl.zh + LOGOUT + callbackString
+                }
+            )
         }
     )
 }
