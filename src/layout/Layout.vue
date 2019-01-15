@@ -35,7 +35,7 @@
 
 <script>
   import NavBar from './components/NavBar'
-  import Sidebar from './components/SideBar'
+  import Sidebar from './components/Sidebar'
   import AppMain from './components/AppMain'
   import FooterBar from './components/Footer'
   import SecondaryMenu from './components/SecondaryMenu'
