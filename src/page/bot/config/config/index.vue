@@ -88,7 +88,7 @@
   import {ADDRESS} from "../../../../constants/address";
   import {request} from "../../../../serive/request";
   import URL from '../../../../host/baseUrl';
-  import {BOTINFO} from "../../../../constants/api";
+  import {BOTINFO,STOREINFO} from "../../../../constants/api";
   import {getCookies} from "../../../../utils/cookie";
   import {TOKEN} from "../../../../constants/constants";
   import moment from 'moment'
@@ -210,7 +210,7 @@
           method: "POST",
           body: JSON.stringify(body)
         }
-        request(URL.requestHost+'/api/BotProfile/StoreBotProfile',option).then(
+        request(URL.requestHost+STOREINFO,option).then(
           (res) =>{
             that.$message({
               type: 'success',
