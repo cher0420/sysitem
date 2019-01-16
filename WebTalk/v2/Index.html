@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hightalk</title>
+  <link rel="icon" type="image/x-icon" href="../content/image/icon.ico"/>
+    <link href="../content/css/talk.css" rel="stylesheet" />
+    <link href="../content/css/webtalk.css" rel="stylesheet" />
+    <link href="../content/css/bootstrap.css" rel="stylesheet" />
+    <script src="../content/js/jquery-1.10.2.min.js"></script>
+    <script src="https://pv.sohu.com/cityjson?ie=utf-8"></script>
+    <script src="../content/js/host.js"></script>
+    <script src="../content/js/webtalkV2.js"></script>
+</head>
+<body>
+    <div class="webtalk">
+        <img class="webtalk-bg abs cover" style="width:100%;height:100%" src="../content/image/WebTalk_bg.jpg">
+        <div class="webtalk-contaniner abs cover">
+            <div class="webtalk-panel abs cover no-navigation">
+                <div class="panel-head abs">
+                    <div class="panel-head-title"></div>
+                    <div class="panel-head-user">
+                        <!--<div class="user-name">您好！</div>
+                            <span class="user-line"></span>
+                            <div class="user-login"></div>-->
+                    </div>
+                </div>
+                <div class="panel-body abs cover" id="panelBody">
+                    <div class="panel-left abs cover">
+                        <div class="panel-left-content abs cover">
+                            <div class="panel-alert abs top" id="alert">请联系客服人员到客服管理后台填写并完善网页接入</div>
+                            <div class="panel-msgs scroll abs cover" id="show">
+                                <div class="msg min time" id="histStart">加载历史消息</div>
+                                <div class="msg-banner" id="msgbanner">
+                                    <div class="close" id="close"><i class="kh"></i></div>
+                                    <div id="banner"><strong>公告：</strong> 欢迎体验Hightalk智能客服，请发送消息体验对话</div>
+                                </div>
+                                <div class="panel-list" id="hists">
+                                    <!-- 历史消息 -->
+                                </div>
+                                <div class="panel-list" id="msgs"></div>
+                                <div class="panel-list hide" id="unreadLine">
+                                    <div class="msg min time unread">未读消息</div>
+                                </div>
+                            </div>
+                            <div class="panel-text abs bottom">
+                                <div class="panel-warn abs top" id="panelWarn">
+                                    <div class="fl btns rel panel-warn-free">
+
+                                    </div>
+                                </div>
+                                <div class="panel-input abs cover">
+                                    <textarea class="scroll" id="text" wrap="hard" placeholder="在此输入文字信息..."></textarea>
+                                </div>
+                                <div class="panel-btn abs" id="submit">发送</div>
+                                <!--<div class="panel-support" id="copyright"><a href="javascript:void(0)">HighTalk提供服务支持</a></div>-->
+                                <div class="abs cover input-mask" id="recon">
+                                    <div class="recon-tip" id="distype"></div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-right abs right">
+                            <div class="panel-right-head abs"></div>
+                            <div class="slider-container hide"></div>
+                            <div class="panel-right-content abs cover">
+                                <div class="panel-navigation">
+                                    <div class="crumbs-bar"></div>
+                                    <ul class="panel-navigation-list unselect scroll" id="navigation"></ul>
+                                </div>
+                                <div class="panel-FAQ" style="display: none;">
+                                    <div class="panel-FAQ-title"></div>
+                                    <ul class="panel-FAQ-list unselect scroll" id="FAQ"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>
+
