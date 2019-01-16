@@ -34,3 +34,7 @@ export const DELETEQUESTION = '/api/QuickQA/DeleteAnswer'
 export const QUERYSTATUS = '/api/QuickQA/QueryDataStaus'  //获取数据状态接口
 export const PUBLISHORTRAIN = '/api/QuickQA/PublishAiml'  //发布或测试接口
 
+export const GETKEYWORDS = "/api/QuickQA/GetKeyWords"; // 分词
+export const QUERYQADATA = "/api/QuickQA/QueryQAData"; //  根据关键字获取答案
+export const STOREQADATA = "/api/QuickQA/StoreQAData"; // 存储答案
+
