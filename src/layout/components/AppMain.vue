@@ -142,7 +142,7 @@
     box-sizing: border-box;
     padding-left: 40px;
     padding-right: 40px;
-    min-height: calc(100vh - 235px);
+    min-height: calc(100vh - 238px);
   }
 
   .line {
