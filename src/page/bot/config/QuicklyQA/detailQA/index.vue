@@ -57,7 +57,7 @@
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
-  import { IMG_UPLOADORDELETE,GETKEYWORDS,QUERYQADATA,GETKEYWORDS } from "../../../../../constants/api";
+  import { IMG_UPLOADORDELETE,GETKEYWORDS,QUERYQADATA } from "../../../../../constants/api";
 
   export default {
     name: "Allen-detailQA",
