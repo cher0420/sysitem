@@ -57,7 +57,7 @@
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
-
+  import { IMG_UPLOADORDELETE,GETKEYWORDS,QUERYQADATA,GETKEYWORDS } from "../../../../../constants/api";
 
   export default {
     name: "Allen-detailQA",
@@ -134,7 +134,7 @@
             "Content-Type": "application/json;charset=utf-8",
             'Access-Token': token
           },
-          url: base.requestHost + "/api/QuickQA/QueryQAData",
+          url: base.requestHost + QUERYQADATA,
           data: JSON.stringify(data),
           success: function (msg) {
             if (msg.Status == "1") {

@@ -78,7 +78,7 @@
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index";
   import {UploadAndDeleteAsync} from "../../../../../api/getdata";  //  异步请求
-
+  import { IMG_UPLOADORDELETE,GETKEYWORDS,QUERYQADATA,GETKEYWORDS } from "../../../../../constants/api";
 
   export default {
     name: "Allen-EditQA",
@@ -158,7 +158,7 @@
             "Content-Type": "application/json;charset=utf-8",
             'Access-Token': token
           },
-          url: base.requestHost + "/api/QuickQA/QueryQAData",
+          url: base.requestHost + QUERYQADATA,
           data: JSON.stringify(data),
           success: function (msg) {
 
@@ -232,7 +232,7 @@
               "Content-Type": "application/json;charset=utf-8",
               'Access-Token': token
             },
-            url: base.requestHost + "/api/KnowledgeQA/UploadAndDeleteAsync",
+            url: base.requestHost + IMG_UPLOADORDELETE ,
             data: JSON.stringify(data),
             success: function (msg) {
               //     console.log("photo反馈", msg)
@@ -316,7 +316,7 @@
             "Content-Type": "application/json;charset=utf-8",
             'Access-Token': token
           },
-          url: base.requestHost + "/api/QuickQA/StoreQAData",
+          url: base.requestHost + STOREQADATA ,
           data: JSON.stringify(data),
           success: function (msg) {
             if (msg.Status == "1") {
