@@ -35,7 +35,6 @@ export function getLoginStatus() {
         // 如果cookie里的SID存在
 
     if (token) {
-
         const sid = getCookies(SID)
         let search = window.location.search;
 
@@ -112,18 +111,18 @@ export const voildId = (sid) => {
  * @param tokens
  */
 export async function voildToken(tokens) {
-
-    const url = URL.SSOServerApi + VOILD_TOKEN_URL
-    const data = {
-        Token: tokens,
-    };
+    const url = VOILD_TOKEN_URL
+    // const data = {
+    //     Token: tokens,
+    // };
     const baseData = JSON.stringify(data)
     const options = {
         method: 'POST',
         headers: {
             "Content-Type": "application/json; charset=utf-8",
+            'Access-Token': tokens
         },
-        body: baseData
+        // body: baseData
     }
     request(url, options).then((res) => {
         if (res.IsValid) {
@@ -134,10 +133,12 @@ export async function voildToken(tokens) {
                 }
             )
         } else {
+          debugger;
             redirect(LOGIN)
         }
     }).catch(
         (err) => {
+          debugger;
             removeCookies([TOKEN]).then(
                 () => {
                     redirect(LOGIN)
@@ -161,7 +162,7 @@ export async function fetchUserInfo(token = null) {
         },
         body: null
     }
-    request(URL.SSOServerApi + VOILD_USERINFO, options).then((res) => {
+    request(VOILD_USERINFO, options).then((res) => {
         const name = res.UserInfo.FullName
         const userInfo = res.UserInfo
         const TenantId = res.UserInfo.TenantId

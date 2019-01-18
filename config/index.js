@@ -11,17 +11,16 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api':{
-        target:'https://www.easy-mock.com/mock/5b484af5d8d71b716154ea91/example/test',
-        changeOrigin:true,
-        pathRewrite:{
-          '/api':''
-        }
+      '/api/auth': {// '/api':匹配项
+        target: 'https://192.168.1.103:10001',// 接口的域名
+        secure: false,// 如果是https接口，需要配置这个参数
+        changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
       },
-
-
-
-
+      '/api': {// '/api':匹配项
+        target: 'https://192.168.1.103:10019',// 接口的域名
+        secure: false,// 如果是https接口，需要配置这个参数
+        changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
+      },
 
     },
 

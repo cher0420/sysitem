@@ -1,15 +1,16 @@
-export const VOILD_TOKEN_URL = '/api/Tenant/ValidateToken'
-export const VOILD_USERINFO = '/api/Tenant/GetUserInfo'
+
+export const VOILD_TOKEN_URL = '/api/auth/validateToken'
+export const VOILD_USERINFO = '/api/auth/GetUserInfo'
 
 export const LOGIN = '?redirecturl='
 export const LOGOUT = '?redirecturl='
 
-export const BOT = '/api/ChatBot/GetBotList'
-export const DELETEBOT = '/api/ChatBot/DeleteBot'
-export const CREATEBOT = '/api/ChatBot/GenerateBot'
+export const BOT = '/Api/Admin/BotManager/GetBotList'//获取机器人列表信息
+export const DELETEBOT = '/Api/Admin/BotManager/DeleteBot'//删除Bot
+export const CREATEBOT = '/Api/Admin/BotManager/CreateBot'//创建Bot
 
-export const WECHATDETAil = '/api/ChatBot/WeChatSetting'
-export const UPDATDETAIL = '/api/ChatBot/UpdateWeChatSetting'
+export const WECHATDETAil = '/Api/Admin/WeChatSetting/Get' //微信配置信息显示
+export const UPDATDETAIL = '/Api/Admin/WeChatSetting/Update'//网页配置信息更新
 
 export const BOTINFO = '/api/BotProfile/QueryBotConfigInfo'
 export const STOREINFO='/api/BotProfile/StoreBotProfile'

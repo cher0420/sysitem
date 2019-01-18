@@ -4,8 +4,8 @@ const TEST_URL = {
         zh: "https://hightalkauth-test.azurewebsites.net",
         en: '/'
     },
-    SSOServerApi: "https://hightalkssoapi-test.azurewebsites.net",
-    requestHost: 'https://hightalkadminapi-test.azurewebsites.net',
+    SSOServerApi: "",
+    requestHost: '',
 }
 const UAT_URL = {
     baseUrl: 'https://htadminweb-uat.azurewebsites.net',

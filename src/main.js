@@ -14,6 +14,8 @@ import 'whatwg-fetch'
 import './style/element-variables.scss';
 
 import {getLoginStatus} from "./permissions/permissions";
+import {request} from "./serive/request";
+
 Vue.config.productionTip = false
 
 // 富文本框
@@ -25,5 +27,3 @@ import '../static/summernote/dist/lang/summernote-zh-CN.js'
 //登录
 //vue render 函数在 getLoginStatus 内部执行，
 getLoginStatus()
-
-
