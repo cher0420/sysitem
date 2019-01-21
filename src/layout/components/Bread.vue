@@ -9,6 +9,7 @@
         v-for="(item,index) in breadArr"
         :class="index===breadArr.length-1?'notAllow':'first'"
         :to="index===breadArr.length-1?null:item.url"
+        :key="index"
         style="height: 100%;"
       >
         <span :class="index===breadArr.length-1?['text-overflow-hidden']:['']">

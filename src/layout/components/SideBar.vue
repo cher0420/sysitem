@@ -14,7 +14,7 @@
       :collapse="isCollapse"
       :router="isRouter"
     >
-      <el-menu-item :index="item.id" v-for="item in menus">
+      <el-menu-item :index="item.id" v-for="item in menus" :key="item.id">
         <p class="p-relative iconContainer" style="">
           <i class="p-absolute yoy-menu-icon dis-i-b yoy-icon1" :style="{background: 'url(' + require(`../../assets/${item.id}.png`) + ')center center no-repeat'}"></i>
           <i class="p-absolute yoy-menu-icon dis-i-b yoy-icon2" :style="{background: 'url(' + require(`../../assets/${item.id}-hover.png`) + ')center center no-repeat'}"></i>

@@ -36,3 +36,6 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 用户信息存储在store.state.app.userInfo
 
+element组件地址：
+http://element-cn.eleme.io/#/zh-CN/component/layout
+

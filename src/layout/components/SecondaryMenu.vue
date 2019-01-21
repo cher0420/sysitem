@@ -12,23 +12,17 @@
       <span slot="title" class="dis-i-b omit" style="width:152px">{{name}}</span>
     </el-menu-item>
     {{/*基本资料*/}}
-    <el-menu-item v-if='!item.children' v-for='item in secondMenus' :index="item.id" class="f-s-14">
+    <el-menu-item v-if='!item.children' :key="item.id" v-for='item in secondMenus' :index="item.id" class="f-s-14">
       <template slot="title">
         <span>{{item.chineseName}}</span>
         <i class="el-icon-arrow-right"></i>
       </template>
     </el-menu-item>
-    <el-submenu v-if="item.children" v-for='item in secondMenus' :index="item.id" class="f-s-14" ref="test">
+    <el-submenu v-if="item.children" v-for='item in secondMenus' :key="item.id" :index="item.id" class="f-s-14" ref="test">
       <template slot="title">{{item.chineseName}}</template>
-      <el-menu-item v-for='items in item.children' :index="items.id">{{items.chineseName}}</el-menu-item>
+      <el-menu-item v-for='items in item.children' :index="items.id" :key="item.id">{{items.chineseName}}</el-menu-item>
     </el-submenu>
   </el-menu>
-  <!--<section>-->
-    <!--<section></section>-->
-    <!--<section v-for="item in secondMenus">-->
-      <!--{{item.chineseName}}-->
-    <!--</section>-->
-  <!--</section>-->
 </template>
 
 <script>

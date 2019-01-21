@@ -116,7 +116,7 @@ export async function voildToken(tokens) {
         method: 'POST',
         headers: {
             "Content-Type": "application/json; charset=utf-8",
-            'Access-Token': '9589B5BE6058D44B8114819F3D80BD675B19A3800B134B0E3C3C3FFFAF722CF5'
+            'Access-Token': tokens
         },
     }
     request(url, options).then((res) => {

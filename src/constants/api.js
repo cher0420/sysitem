@@ -30,7 +30,7 @@ export const DELETEKMOWDETAIL = '/api/Channel/V2/WebChat/DeleteKnowledge'//删�
 export const IMG_UPLOADORDELETE = '/api/Admin/File/UploadAndDeleteAsync'//图片上传与图片删除接口
 
 /*快速问答列表*/
-export const QUICKLYLIST = '/api/QuickQA/QueryKeyWordsList'
+export const QUICKLYLIST = '/api/Admin/QQA/QueryKeyWordsList' //问题列表/关键字搜索
 export const DELETEQUESTION = '/api/Admin/QQA/Delete'
 export const QUERYSTATUS = '/api/Admin/QQA/QueryOperationStatus'  //获取数据状态接口
 export const PUBLISHORTRAIN = '/api/Admin/QQA/PublishAiml'  //发布或测试接口
