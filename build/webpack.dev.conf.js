@@ -42,6 +42,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
+    },
+    before(app){
+      app.get('/web/auth/login', function(req, res) {
+        res.redirect(302, 'https://hightalkauth-test.azurewebsites.net');
+      });
     }
   },
   plugins: [

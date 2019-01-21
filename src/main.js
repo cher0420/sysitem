@@ -14,7 +14,6 @@ import 'whatwg-fetch'
 import './style/element-variables.scss';
 
 import {getLoginStatus} from "./permissions/permissions";
-import {request} from "./serive/request";
 
 Vue.config.productionTip = false
 

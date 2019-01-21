@@ -112,17 +112,12 @@ export const voildId = (sid) => {
  */
 export async function voildToken(tokens) {
     const url = VOILD_TOKEN_URL
-    // const data = {
-    //     Token: tokens,
-    // };
-    const baseData = JSON.stringify(data)
     const options = {
         method: 'POST',
         headers: {
             "Content-Type": "application/json; charset=utf-8",
-            'Access-Token': tokens
+            'Access-Token': '9589B5BE6058D44B8114819F3D80BD675B19A3800B134B0E3C3C3FFFAF722CF5'
         },
-        // body: baseData
     }
     request(url, options).then((res) => {
         if (res.IsValid) {
@@ -133,12 +128,10 @@ export async function voildToken(tokens) {
                 }
             )
         } else {
-          debugger;
             redirect(LOGIN)
         }
     }).catch(
         (err) => {
-          debugger;
             removeCookies([TOKEN]).then(
                 () => {
                     redirect(LOGIN)

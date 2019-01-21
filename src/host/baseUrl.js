@@ -1,7 +1,7 @@
 const TEST_URL = {
     baseUrl: 'https://portal-test.hightalk.ai',
     SSOWebUrl: {
-        zh: "https://hightalkauth-test.azurewebsites.net",
+        zh: "/web/auth/login",
         en: '/'
     },
     SSOServerApi: "",
