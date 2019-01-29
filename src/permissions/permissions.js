@@ -36,7 +36,7 @@ export function getLoginStatus() {
 
     if (token) {
         const sid = getCookies(SID)
-        let search = window.location.search;
+        let search = window.location.search
 
         //验证 url 上的 SID 是否存在
         const matchStr = search.match(/sid=(\S*)?&token=/)
@@ -82,7 +82,7 @@ export function getLoginStatus() {
 
 export const voildId = (sid) => {
 
-    let search = window.location.search;
+    let search = window.location.search
 
     //验证 url 上的 SID 是否存在
     const matchStr = search.match(/sid=(\S*)?&token=/)
@@ -124,7 +124,7 @@ export async function voildToken(tokens) {
 
             setCookies(TOKEN, tokens, { expires: 1 }).then(
                 () => {
-                    fetchUserInfo(tokens)
+                  fetchUserInfo(tokens)
                 }
             )
         } else {
@@ -164,18 +164,18 @@ export async function fetchUserInfo(token = null) {
                 setCookies(USERNAME, name, { expires: 1 }).then(
                     setCookies(TENANTID, TenantId, { expires: 1 }).then(
                         () => {
-                            /*
-                            render 函数
-                             */
-                            new Vue({
-                                el: '#app',
-                                store,
-                                router,
-                                components: { App },
-                                template: '<App/>'
-                            })
+                          /*
+                         render 函数
+                          */
+                          new Vue({
+                            el: '#app',
+                            store,
+                            router,
+                            components: { App },
+                            template: '<App/>'
+                          })
+                          loadingInstance.close();
                             hiddenTokenInUrl()
-                            loadingInstance.close();
                         }
                     )
                 )
@@ -213,6 +213,7 @@ export const logOut = () => {
                 () => {
                     const http = host === 'localhost:3000' ? 'http' : 'https'
                     const callbackString = `${http}://${host}/?sid=${random}&type=logout`
+
                     window.location.href = URL.SSOWebUrl.zh + LOGOUT + callbackString
                 }
             )

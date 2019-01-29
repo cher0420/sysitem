@@ -46,10 +46,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     before(app){
       app.get('/web/auth/login', function(req, res) {
         const value = req.query
-        console.log('=======',value)
         const redirecturl = value.redirecturl
         const type = value.type
+
         res.redirect(302, 'http://localhost:3000?redirecturl='+redirecturl+'&type='+type);
+        // res.redirect(302, 'https://192.168.1.103:10003?redirecturl='+redirecturl+'&type='+type);
       });
     }
   },

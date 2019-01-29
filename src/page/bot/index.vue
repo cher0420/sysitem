@@ -105,7 +105,6 @@
       >
       </el-pagination>
     </section>
-  <!--</section>-->
 </template>
 <script>
   import DrapDown from '../../components/DrapDown'
@@ -245,7 +244,6 @@
 
             const newData = store.state.app.tableData
             reload(newData)
-
           }
         ).catch(
           (err) => {
@@ -254,6 +252,11 @@
               message: '操作失败',
               duration: 2000
             });
+            let obj = JSON.parse(JSON.stringify(row))
+            let newObj = {...obj, Status: 6}
+            const tableData = store.state.app.tableData
+            tableData.splice(k, 1, newObj)
+            store.dispatch(REPLACE, {tableData: tableData})
           }
         )
       },
