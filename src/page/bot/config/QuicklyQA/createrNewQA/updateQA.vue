@@ -68,7 +68,7 @@
           </div>
         </div>
         <div class="editAnswerQA">
-          <textarea maxlength="500" v-model="newText.Answer" placeholder="请输入自定义回答,最多500个字符"></textarea>
+          <textarea maxlength="500" v-model="newText.Answer" placeholder="请输入自定义回答，最多500个字符"></textarea>
           <span class="fontCount">{{newText.Answer.length}}/500字</span>
         </div>
         <div class="m16">
