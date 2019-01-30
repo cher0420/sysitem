@@ -13,7 +13,7 @@
     </div>
     <div class="edit_textarea">
       <textarea maxlength="500"
-                placeholder="请输入自定义回答,最多500个字符"
+                placeholder="请输入自定义回答，最多500个字符"
                 v-model="Text.Answer" class="editTextarea">
       </textarea>
       <span class="fontCount">{{Text.Answer.length}}/500字</span>

@@ -2,7 +2,7 @@
   <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="200px" v-loading="loading">
     <el-form-item label="机器人姓名" prop='Bot_Name'>
       <el-col :span="13">
-        <el-input v-model="ruleForm.Bot_Name" maxlength="15" placeholder="请输入3-15个字符以内"></el-input>
+        <el-input v-model="ruleForm.Bot_Name" maxlength="15" placeholder="请输入2-15个字符以内"></el-input>
       </el-col>
     </el-form-item>
     <el-form-item label="机器人性别" prop='Bot_Gender'>
@@ -106,7 +106,7 @@
         button:'保存',
         editable:false,
         rules: {
-          Bot_Name:[{required: true, message: '请填写姓名'},{min:3,message: '请输入3-15个字符'}],
+          Bot_Name:[{required: true, message: '请填写姓名'},{min:2,message: '请输入2-15个字符'}],
           Bot_Gender:[{required: true, message: '请选择性别'}],
           Bot_BloodType:[{required: true, message: '请选择血型'}],
           Bot_Height: [
