@@ -1,5 +1,4 @@
-﻿var adminApiUrl = host().api
-var fqavalidaimlApiUrl = host().fqavalidaimlApi
+﻿var adminApiUrl = host()
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};
@@ -86,7 +85,7 @@ $(function () {
     function callWebTalkService(question) {
         var userId = botObject.WebTalkId ? botObject.WebTalkId : parseInt(Math.random() * (100000 - 999999 + 1) + 999999);
       var botRecordId = botObject.BotConfigId ? botObject.BotConfigId : urlParamId;
-        $.post(fqavalidaimlApiUrl + "/api/AIML/GetAnswer", { BotRecordId: botRecordId, UserId:userId, Question: question }, function (result) {
+        $.post(adminApiUrl.fqavalidaimlApi, { BotRecordId: botRecordId, UserId:userId, Question: question }, function (result) {
             if (result != undefined && result != null) {
                 if (result.Status) {
                     if (result.Data != "" && result.Data != null && result.Data != undefined) {

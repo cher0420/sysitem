@@ -1,17 +1,17 @@
 function host() {
-  var TEST = {
-    api:'https://hightalkadminapi-test.azurewebsites.net/api',
-    fqavalidaimlApi:'https://hightalkfqavalidaiml-test.azurewebsites.net',
+  var apiUrl = {
+    getwebchatinfoApi = "/api/channel/webchat/getwebchatinfo", // 获取客户端网页聊天窗口配置信息
+    verifyauthorizationApi = "/api/channel/webchat/verifyauthorization", // 客户端网页聊天窗口授权认证
+    getanswerApi = "/api/channel/webchat/getanswer", // 获取bot答案
+    getkbApi = "/api/channel/webchat/getkb", // 获取KB库的答案
+    getnavigationApi = "/api/channel/webchat/getnavigation", // 获取导航栏信息
+    getfaqlistApi = "/api/channel/webchat/getfaqlist", // 获取常见问题
+    getcategorylistApi = "/api/channel/webchat/getcategorylist", // 获取全部的分类数据
+    getanswerV2Api = "/api/channel/v2/webchat/getanswer", // 获取bot答案
+    getknowledgeV2Api = "/api/channel/v2/webchat/getknowledge", // 获取答案
+    fqavalidaimlApi = "/api/aiml/qqa/getanswer", // 快速问答培训测试接口
   }
-  var UAT = {
-    api:'https://htadminapi-uat.azurewebsites.net/api',
-    fqavalidaimlApi:'https://hightalkfqavalidaiml-uat.azurewebsites.net',
-  }
-  var STAGING = {
-    api:'https://hightalkadminapi-staging.azurewebsites.net/api',
-    fqavalidaimlApi:'https://hightalkfqavalidaiml-staging.azurewebsites.net',
-  }
-  return STAGING
+  return apiUrl
 }
 
 Date.prototype.Format = function (fmt) { //author: meizz

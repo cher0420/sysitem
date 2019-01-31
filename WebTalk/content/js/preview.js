@@ -1,4 +1,4 @@
-﻿var adminApiUrl = host().api
+﻿var adminApiUrl = host()
 $(function () {
   var token = getCookie('token');
   if(token == "" || token == null || token == undefined){
@@ -27,7 +27,7 @@ $(function () {
   function init() {
     if (urlParamId != "" && urlParamId != null && urlParamId != undefined) {
       botObject = {};
-      $.post(adminApiUrl + "/WebTalk/GetWebTalkInfo", { id: urlParamId }, function (result) {
+      $.post(adminApiUrl.getwebchatinfoApi, { id: urlParamId }, function (result) {
         botObject = result.model;
         renderPage();
         if (botObject.BotConfigId == null) {

@@ -5,37 +5,37 @@ export const VOILD_USERINFO = '/api/auth/getUserInfo'
 export const LOGIN = '?redirecturl='
 export const LOGOUT = '?redirecturl='
 
-export const BOT = '/api/admin/botmanager/getbotList' //获取机器人列表信息
-export const DELETEBOT = '/api/admin/botmanager/deletebot'//删除Bot
-export const CREATEBOT = '/api/admin/botmanager/createBot'//创建Bot
+export const BOT = '/api/admin/portal/botmanager/getbotlist' //获取机器人列表信息
+export const DELETEBOT = '/api/admin/portal/botmanager/deletebot'//删除Bot
+export const CREATEBOT = '/api/admin/portal/botmanager/createbot'//创建Bot
 
-export const WECHATDETAil = '/api/admin/wechatsetting/get' //微信配置信息显示
-export const UPDATDETAIL = '/api/admin/wechatsetting/update'//网页配置信息更新
+export const WECHATDETAil = '/api/admin/portal/webchatsetting/get' //微信配置信息显示
+export const UPDATDETAIL = '/api/admin/portal/webchatsetting/update'//网页配置信息更新
 
-export const BOTINFO = '/api/admin/botprofile/getbotbaseinfo'//机器人信息获取
-export const STOREINFO='/api/admin/botprofile/updatebotbaseinfo'//机器人信息获取
+export const BOTINFO = '/api/admin/bot/botprofile/getbotbaseinfo'//机器人信息获取
+export const STOREINFO='/api/admin/bot/botprofile/updatebotbaseinfo'//更新机器人信息
 
-export const WEBINFO = '/api/admin/webchatsetting/get'//网页配置信息显示
-export const UPDATEWEB = '/api/admin/webchatsetting/update'//网页配置信息更新
-export const UPDATESTATUS = '/api/admin/botmanager/getbotstatus'//机器人信息获取
+export const WEBINFO = '/api/admin/portal/webchatsetting/get'//网页配置信息显示
+export const UPDATEWEB = '/api/admin/portal/webchatsetting/update'//网页配置信息更新
+export const UPDATESTATUS = '/api/admin/portal/botmanager/getbotstatus'//机器人状态值获取
 
 /*机器人知识问答*/
-export const BOTKNOWQUIZSKILL = '/api/admin/botmanager/skillsetlist'//获取技能列表
-export const BOTKNOWQUIZLIST = '/api/channel/v2/webchat/getskillintent'//获取意图列表
-export const BOTKNOWDETAIL = '/api/channel/v2/webchat/getknowledge'//获取答案
-export const UPDATEKNOWDETAIL = '/api/channel/v2/webchat/updateknowledge'//更新、添加知识库
-export const DELETEKMOWDETAIL = '/api/channel/v2/webchat/deleteknowledge'//删除答案
+export const BOTKNOWQUIZSKILL = '/api/admin/portal/botmanager/skillsetlist'//获取技能列表
+export const BOTKNOWQUIZLIST = '/api/admin/channel/v2/webchat/getskillintent'//获取意图列表
+export const BOTKNOWDETAIL = '/api/admin/channel/v2/webchat/getknowledge'//获取答案
+export const UPDATEKNOWDETAIL = '/api/admin/channel/v2/webchat/updateknowledge'//更新、添加知识库
+export const DELETEKMOWDETAIL = '/api/admin/channel/v2/webchat/deleteknowledge'//删除答案
 
 /*图片上传或删除*/
-export const IMG_UPLOADORDELETE = '/api/admin/file/uploadanddeleteasync'//图片上传与图片删除接口
+export const IMG_UPLOADORDELETE = '/api/admin/portal/file/uploadanddeleteasync'//图片上传与图片删除接口
 
 /*快速问答列表*/
-export const QUICKLYLIST = '/api/admin/qqa/querykeywordslist' //问题列表/关键字搜索
-export const DELETEQUESTION = '/api/admin/qqa/delete'
-export const QUERYSTATUS = '/api/admin/qqa/queryoperationstatus'  //获取数据状态接口
-export const PUBLISHORTRAIN = '/api/admin/qqa/publishaiml'  //发布或测试接口
+export const QUICKLYLIST = '/api/admin/portal/qqa/querykeywordslist' //问题列表/关键字搜索
+export const DELETEQUESTION = '/api/admin/portal/qqa/delete'//删除快速问答关键字
+export const QUERYSTATUS = '/api/admin/portal/qqa/queryoperationstatus'  //快速问答获取数据状态接口
+export const PUBLISHORTRAIN = '/api/admin/portal/qqa/publishaiml'  //快速问答发布或测试接口
 
-export const GETKEYWORDS = "/api/admin/qqa/getkeywords"; // 分词
-export const QUERYQADATA = "/api/admin/qqa/querybykeyword"; //  根据关键字获取答案
-export const STOREQADATA = "/api/admin/qqa/save"; // 存储答案
+export const GETKEYWORDS = "/api/admin/portal/qqa/getkeywords"; // 快速问答分词接口
+export const QUERYQADATA = "/api/admin/portal/qqa/querybykeyword"; //  快速问答根据关键字获取答案
+export const STOREQADATA = "/api/admin/portal/qqa/save"; // 快速问答存储答案
 

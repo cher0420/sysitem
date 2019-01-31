@@ -1,4 +1,4 @@
-﻿var adminApiUrl = host().api;
+﻿var adminApiUrl = host();
 var navigationList = {};
 var intentKeyList = [];
 var FAQList = {};
@@ -70,7 +70,7 @@ $(function () {
         if (urlParamId != "" && urlParamId != null && urlParamId != undefined) {
             GetCategoryList();
             botObject = {};
-            $.post(adminApiUrl + "/WebTalk/GetWebTalkInfo", { id: urlParamId }, function (result) {
+            $.post(adminApiUrl.getwebchatinfoApi, { id: urlParamId }, function (result) {
                 botObject = result.model;
                 renderPage();
                 if (botObject.BotConfigId == null) {
@@ -80,13 +80,15 @@ $(function () {
 
                 verifyAuthorization(host, returnCitySN.cip, function () {
                     if (isAuthorize) {
-                        getBotConfig(function(){
-                            addMsg('Hightalk', botObject.DialogGreetings);
+                        if (botObject.InvokeAPIVersion) {
+                            invokeAPIVersion = botObject.InvokeAPIVersion;
+                        }
 
-                            if (botObject.NavigationSwitch == "1") {
-                                getNavigation("homepage", "首页");
-                            }
-                        })
+                        addMsg('Hightalk', botObject.DialogGreetings);
+
+                        if (botObject.NavigationSwitch == "1") {
+                            getNavigation("homepage", "首页");
+                        }
                     } else {
                         $(".panel-alert, #recon").show();
                     }
@@ -99,20 +101,6 @@ $(function () {
             $(".webtalk").show();
             $(".panel-alert, #recon").show();
         }
-    }
-
-    function getBotConfig(callback){
-        $.post(adminApiUrl + "/Tenant/GetBotConfig", { BotConfigRecordId: botObject.BotConfigId }, function (result) {
-            if (result != undefined && result != null) {
-                if (result.Status == 1 && result.BotConfig.InvokeAPIVersion) {
-                    invokeAPIVersion = result.BotConfig.InvokeAPIVersion;
-                }
-
-                if (callback != undefined && typeof (callback) == "function") {
-                    callback();
-                }
-            }
-        });
     }
 
     function renderPage() {
@@ -139,7 +127,7 @@ $(function () {
 
     // 验证是否被授权
     function verifyAuthorization(host, cip, callback) {
-        $.post(adminApiUrl + "/WebTalk/VerifyAuthorization", { id: botObject.BotConfigId, host: host, cip: cip }, function (result) {
+        $.post(adminApiUrl.verifyauthorizationApi, { id: botObject.BotConfigId, host: host, cip: cip }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     isAuthorize = result.isAuthorization;
@@ -154,7 +142,7 @@ $(function () {
 
     function callWebTalkService(question) {
         if (invokeAPIVersion == "V1") {
-            $.post(adminApiUrl + "/WebTalk/GetWebTalkAnswer", { id: botObject.BotConfigId, webtalkid: botObject.WebTalkId, question: question }, function (result) {
+            $.post(adminApiUrl.getanswerApi, { id: botObject.BotConfigId, webtalkid: botObject.WebTalkId, question: question }, function (result) {
                 if (result != undefined && result != null) {
                     if (result.status == 1) {
                         if (result.answer != "" && result.answer != null && result.answer != undefined) {
@@ -461,7 +449,7 @@ $(function () {
 
     function getKnowledgeBase(intentName, name) {
         if (invokeAPIVersion == "V1") {
-            $.post(adminApiUrl + "/WebTalk/GetKnowledgeBase", { id: botObject.BotConfigId, intentName: intentName }, function (result) {
+            $.post(adminApiUrl.getkbApi, { id: botObject.BotConfigId, intentName: intentName }, function (result) {
                 if (result != undefined && result != null) {
                     if (result.status == 1) {
                         if (result.knowledgeBase != "" && result.knowledgeBase != null && result.knowledgeBase != undefined) {
@@ -486,7 +474,7 @@ $(function () {
 
     function getNavigation(id, name) {
         var navId = id == "homepage" ? null : id;
-        $.post(adminApiUrl + "/WebTalk/GetNavigation", { id: botObject.BotConfigId, navId: navId }, function (result) {
+        $.post(adminApiUrl.getnavigationApi, { id: botObject.BotConfigId, navId: navId }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     buildNavigationList(result.data);
@@ -498,7 +486,7 @@ $(function () {
     }
 
     function getFAQList(parentID) {
-        $.post(adminApiUrl + "/WebTalk/GetFAQList", { id: botObject.BotConfigId, parentID: parentID }, function (result) {
+        $.post(adminApiUrl.getfaqlistApi, { id: botObject.BotConfigId, parentID: parentID }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     buildFAQList(result.data);
@@ -510,7 +498,7 @@ $(function () {
     }
 
     function GetCategoryList() {
-        $.post(adminApiUrl + "/WebTalk/GetCategoryList", { id: urlParamId }, function (result) {
+        $.post(adminApiUrl.getcategorylistApi, { id: urlParamId }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     buildCategoryList(result.data);
@@ -521,7 +509,7 @@ $(function () {
 
     /*V2版本*/
     function callWebTalkServiceV2(question) {
-        $.post(adminApiUrl + "/V2/WebTalk/GetWebTalkAnswer", { id: botObject.BotConfigId, webtalkid: botObject.WebTalkId, question: question, channels: _channels }, function (result) {
+        $.post(adminApiUrl.getanswerV2Api, { id: botObject.BotConfigId, webtalkid: botObject.WebTalkId, question: question, channels: _channels }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     var answer = "";
@@ -617,7 +605,7 @@ $(function () {
     }
 
     function getKnowledgeBaseV2(intentName, name) {
-        $.post(adminApiUrl + "/V2/WebTalk/GetKnowledgeBase", { id: botObject.BotConfigId, intentName: intentName, channels: _channels }, function (result) {
+        $.post(adminApiUrl.getknowledgeV2Api, { id: botObject.BotConfigId, intentName: intentName, channels: _channels }, function (result) {
             if (result != undefined && result != null) {
                 if (result.status == 1) {
                     var knowledgeBase = "";

@@ -11,22 +11,27 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api/auth': {// '/api':匹配项
+      '/api/auth': {// HT.Api.Auth API接口
         target: 'https://192.168.1.103:10001',// 接口的域名
         secure: false,// 如果是https接口，需要配置这个参数
         changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
       },
-      '/api/admin': {// '/api':匹配项
+      '/api/admin/portal': {//HT.Api.Admin.Portal API 接口
         target: 'https://192.168.1.103:10019',// 接口的域名
         secure: false,// 如果是https接口，需要配置这个参数
         changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
       },
-      '/api/channel': {// '/api':匹配项
+      '/api/admin/channel': {// HT.Api.Admin.WebChat API 接口
         target: 'https://192.168.1.103:10017',// 接口的域名
         secure: false,// 如果是https接口，需要配置这个参数
         changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
       },
-      '/api/aiml': {// '/api':匹配项
+      '/api/admin/bot':{
+        target: 'https://192.168.1.103:10021',// 接口的域名
+        secure: false,// 如果是https接口，需要配置这个参数
+        changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
+      },
+      '/api/aiml': {//HT.Api.Aiml.BotSupport API 接口
         target: 'https://192.168.1.103:10031',// 接口的域名
         secure: false,// 如果是https接口，需要配置这个参数
         changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
