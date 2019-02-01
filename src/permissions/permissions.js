@@ -49,8 +49,8 @@ export function getLoginStatus() {
         // url上的sid不空且与cookie的sid一致
         if (tokenUrl && str && str === sid) {
             // url上的sid不空且与cookie的sid一致移除cookie的SID
-            removeCookies(SID).then(
-                () => {
+            // removeCookies(SID).then(
+            //     () => {
                     if (tokenUrl !== token) {
                         //验证url上的token是否存在并且与cookie的token一致
                         voildToken(tokenUrl).then()
@@ -61,8 +61,8 @@ export function getLoginStatus() {
                             }
                         )
                     }
-                }
-            )
+            //     }
+            // )
         } else {
             redirect(LOGIN)
         }
@@ -74,7 +74,6 @@ export function getLoginStatus() {
         if (sid) {
             voildId(sid)
         } else {
-
             redirect(LOGIN)
         }
     }
@@ -121,7 +120,6 @@ export async function voildToken(tokens) {
     }
     request(url, options).then((res) => {
         if (res.IsValid) {
-
             setCookies(TOKEN, tokens, { expires: 1 }).then(
                 () => {
                   fetchUserInfo(tokens)
@@ -213,7 +211,6 @@ export const logOut = () => {
                 () => {
                     const http = host === 'localhost:3000' ? 'http' : 'https'
                     const callbackString = `${http}://${host}/?sid=${random}&type=logout`
-
                     window.location.href = URL.SSOWebUrl.zh + LOGOUT + callbackString
                 }
             )

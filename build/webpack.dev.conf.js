@@ -49,8 +49,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         const redirecturl = value.redirecturl
         const type = value.type
 
-        // res.redirect(302, 'http://localhost:3000?redirecturl='+redirecturl+'&type='+type);
-        res.redirect(302, 'https://192.168.1.103:10003?redirecturl='+redirecturl+'&type='+type);
+        res.redirect(302, 'http://localhost:3000?redirecturl='+redirecturl+'&type='+type);
+        // res.redirect(302, 'https://192.168.1.103:10003?redirecturl='+redirecturl+'&type='+type);
       });
     }
   },

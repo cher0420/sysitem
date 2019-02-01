@@ -1,20 +1,14 @@
 <template>
-  <section >
-    <div class="inputBox">
-      <el-select v-model="value4" clearable placeholder="请选择技能集" class="select" @change="select">
+  <section>
+    <el-select v-model="value4" clearable placeholder="请选择技能集" class="select" @change="select">
       <el-option
         v-for="item in options"
         :key="item.ID"
         :label="item.SkillName"
         :value="item.SkillNo">
       </el-option>
-    </el-select>
-    
-    <el-input class='searchInput'    size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+    </el-select><el-input class='searchInput'  style="left: 210px;" size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
-
-    </div>
-    
     <el-table
       v-loading="loading"
       :data="tableData"
@@ -40,12 +34,12 @@
       <el-table-column
         prop="status"
         :resizable="resizable"
-        label="回答">
+        label="友好回答">
         <template slot-scope="scope">
-            <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.FriendlyName,scope.row.ID)">
+            <span v-for="(data,key,index) in scope.row.status" :index='index' class="handleIcon dis-i-b p-relative" @click="handleDetail(scope.row.name,key, scope.row.index,scope.row.FriendlyName,scope.row.ID,scope.row.IntentName)">
               <span class="p-absolute"
                     :style="{
-                    background: 'url(' + require(`../../../../assets/bot/${key}Checked.png`) + ')center center no-repeat'
+                    background: 'url(' + require(`../../../../assets/bot/${key}.png`) + ')center center no-repeat'
                     }"></span>
               <span class='p-absolute'
                     :style="{
@@ -226,8 +220,7 @@
           }
         )
       },
-      handleDetail(name,v,index,title,ID){
-        
+      handleDetail(name,v,index,title,ID,IntentName){
         store.dispatch(REPLACE,{navIndex:title}).then(
           () => {
             const query = this.$route.query
@@ -238,7 +231,8 @@
                 botCheckIndex:v,
                 botName:name,
                 title:title,
-                IntentID:ID
+                IntentID:ID,
+                IntentName
               }
             }
             this.$router.push(url)
@@ -265,14 +259,8 @@
 </script>
 <style scoped lang="scss">
   @import '../../../../style/index';
-  .inputBox{
-    width:100%; height: 30px;
-  }
   .select{
-   float: left;
-  }
-  .searchInput{
-     margin-left:20px;
+    position: absolute;
   }
   .table{
     margin-top: 20px;

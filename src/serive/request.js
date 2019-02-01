@@ -3,6 +3,8 @@ import {redirect} from "../permissions/permissions";
 import {LOGIN} from "../constants/api";
 import URL from '../host/baseUrl'
 import {IMG_UPLOADORDELETE} from "../constants/api";
+import {TOKEN} from "../constants/constants";
+import {getCookies} from "../utils/cookie";
 
 export const isIE9 = () => {
   if(!-[1,]){
@@ -119,8 +121,12 @@ export const request = (api,params = {}) => {
   }
 }
 export const upload_delete_img = (params) => {
+  const token = getCookies(TOKEN)
   const options = {
     method: 'POST',
+    headers:{
+      'Access-Token':token
+    },
     ...params
   }
   return new Promise(
