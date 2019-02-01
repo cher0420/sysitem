@@ -131,7 +131,7 @@
         request(url,option).then(
           (res) =>{
             that.$message({
-              type: 'info',
+              type: 'success',
               message: '保存成功',
               duration: 2000,
               onClose: () =>{

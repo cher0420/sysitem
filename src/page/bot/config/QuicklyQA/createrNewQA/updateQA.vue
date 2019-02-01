@@ -134,7 +134,7 @@
   import store from "../../../../../store/index";
   import moment from 'moment'
   import {UploadAndDeleteAsync} from "../../../../../api/getdata";  //  异步请求
-  import { IMG_UPLOADORDELETE,GETKEYWORDS,QUERYQADATA } from "../../../../../constants/api";
+  import { IMG_UPLOADORDELETE,GETKEYWORDS,QUERYQADATA,STOREQADATA } from "../../../../../constants/api";
 
   export default {
     name: "editdatem",

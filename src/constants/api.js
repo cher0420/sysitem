@@ -9,8 +9,8 @@ export const BOT = '/api/admin/portal/botmanager/getbotlist' //获取机器人�
 export const DELETEBOT = '/api/admin/portal/botmanager/deletebot'//删除Bot
 export const CREATEBOT = '/api/admin/portal/botmanager/createbot'//创建Bot
 
-export const WECHATDETAil = '/api/admin/portal/webchatsetting/get' //微信配置信息显示
-export const UPDATDETAIL = '/api/admin/portal/webchatsetting/update'//网页配置信息更新
+export const WECHATDETAil = '/api/admin/portal/wechatsetting/get' //微信配置信息显示
+export const UPDATDETAIL = '/api/admin/portal/wechatsetting/update'//微信配置信息更新
 
 export const BOTINFO = '/api/admin/bot/botprofile/getbotbaseinfo'//机器人信息获取
 export const STOREINFO='/api/admin/bot/botprofile/updatebotbaseinfo'//更新机器人信息

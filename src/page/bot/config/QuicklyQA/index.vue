@@ -275,8 +275,7 @@
       },
       go(recordId){
         const BotConfigId = recordId?recordId:this.$route.query.recordId
-        const host = URL.baseUrl
-        const url = `${host}/WebTalk/validaiml.html?id=${BotConfigId}`
+        const url = `/WebTalk/validaiml.html?id=${BotConfigId}`
         // this.blankUrl = url
 
         // const link = this.$refs['blankNew']

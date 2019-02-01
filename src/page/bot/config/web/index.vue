@@ -283,8 +283,7 @@
       },
       preview() {
         const id = this.$route.query.recordId
-        const host = URL.baseUrl
-        const url = `${host}/WebTalk/preview.html?id=${id}`
+        const url = `/WebTalk/preview.html?id=${id}`
         window.open(url)
       },
       initData(res) {

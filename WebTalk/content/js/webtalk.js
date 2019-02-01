@@ -70,7 +70,7 @@ $(function () {
         if (urlParamId != "" && urlParamId != null && urlParamId != undefined) {
             GetCategoryList();
             botObject = {};
-            $.post(adminApiUrl.getwebchatinfoApi, { id: urlParamId }, function (result) {
+            $.post(adminApiUrl.getwebchatinfoApi, JSON.stringify({ id: urlParamId }) , function (result) {
                 botObject = result.model;
                 renderPage();
                 if (botObject.BotConfigId == null) {
