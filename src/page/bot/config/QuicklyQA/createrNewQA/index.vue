@@ -807,7 +807,6 @@
   }
 </script>
 <style lang="scss" scoped>
-  /*@import "../../../../../static/base.css";*/
   @import '../../../../../style/index';
 
   /*.upload_warp_img_div img {*/

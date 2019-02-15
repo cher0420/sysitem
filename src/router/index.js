@@ -143,12 +143,12 @@ const arr = [
           require(["../page/wait/index"], resolve),
         name: 'config',
       },
-      {
-        path:'config/caseStore',
-        component: resolve =>
-          require(["../page/bot/config/caseStore/index"], resolve),
-        name: 'config',
-      },
+      // {
+      //   path:'config/caseStore',
+      //   component: resolve =>
+      //     require(["../page/bot/config/caseStore/index"], resolve),
+      //   name: 'config',
+      // },
       {
         path:'config/quicklyQA',
         component: resolve =>
@@ -197,16 +197,6 @@ const root = [{
       require(["../page/bot/index"], resolve),
   }]
 },
-  {
-    path:'/webTalk',
-    component: resolve =>
-      require(["../page/webtalk/index"], resolve),
-  },
-  {
-    path:'/webTalk/v2',
-    component: resolve =>
-      require(["../page/v2/index"], resolve),
-  },
   {
     path: '*',
     name: 'Error',

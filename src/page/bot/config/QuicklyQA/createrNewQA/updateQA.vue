@@ -626,8 +626,6 @@
   }
 </script>
 <style lang="scss" scoped>
-  /*@import '../../../../style/index';*/
-  /*@import "../../../../../static/base.css";*/
 
   .upload_warp_img_div img {
     width: 80px;

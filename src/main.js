@@ -16,10 +16,10 @@ import './style/element-variables.scss';
 import {getLoginStatus} from "./permissions/permissions";
 
 Vue.config.productionTip = false
-
-// 富文本框
-import '../static/summernote/dist/summernote.css'
-import '../static/summernote/dist/lang/summernote-zh-CN.js'
+//
+// // 富文本框
+// import '../static/summernote/dist/summernote.css'
+// import '../static/summernote/dist/lang/summernote-zh-CN.js'
 
 
 

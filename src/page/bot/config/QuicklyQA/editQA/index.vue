@@ -544,8 +544,6 @@
 </script>
 <style lang="scss" scoped>
   @import '../../../../../style/index';
-  /*@import "../../../../../static/base.css";*/
-
   .photoYl {
 
     text-align: center;

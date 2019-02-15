@@ -225,7 +225,6 @@
 </script>
 <style lang="scss" scoped>
   @import '../../../../../style/index';
-  /*@import "../../../../../static/base.css";*/
 
   .buttonSubb {
     /*text-align: right;*/
