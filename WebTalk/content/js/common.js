@@ -8,7 +8,7 @@ function host() {
     getfaqlistApi : "/api/admin/channel/webchat/getfaqlist", // 获取常见问题
     getcategorylistApi : "/api/admin/channel/webchat/getcategorylist", // 获取全部的分类数据
     getanswerV2Api : "/api/admin/channel/v2/webchat/getanswer", // 获取bot答案
-    getknowledgeV2Api : "/api/admin/channel/v2/webchat/getknowledge", // 获取答案
+    getkbV2Api : "/api/admin/channel/v2/webchat/getkb", // 获取答案
     fqavalidaimlApi : "/api/aiml/qqa/getanswer", // 快速问答培训测试接口
   }
   return apiUrl

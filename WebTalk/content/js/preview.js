@@ -27,16 +27,23 @@ $(function () {
   function init() {
     if (urlParamId != "" && urlParamId != null && urlParamId != undefined) {
       botObject = {};
-      $.post(adminApiUrl.getwebchatinfoApi, { id: urlParamId }, function (result) {
-        botObject = result.model;
-        renderPage();
-        if (botObject.BotConfigId == null) {
-          return;
+      $.ajax({
+        url: adminApiUrl.getwebchatinfoApi,
+        method: 'POST',
+        data: JSON.stringify({ id: urlParamId }),
+        headers	:{'Content-Type': 'application/json'},
+        success: function(result) {
+          botObject = result.model;
+          renderPage();
+          if (botObject.BotConfigId == null) {
+            return;
+          }
+  
+          addMsg('Hightalk', botObject.DialogGreetings);
+        },
+        error: function () {
+          $(".webtalk").show();
         }
-
-        addMsg('Hightalk', botObject.DialogGreetings);
-      }).error(function () {
-        $(".webtalk").show();
       });
     } else {
       $(".webtalk").show();

@@ -70,28 +70,35 @@ $(function () {
         if (urlParamId != "" && urlParamId != null && urlParamId != undefined) {
             GetCategoryList();
             botObject = {};
-            $.post(adminApiUrl.getwebchatinfoApi, { id: urlParamId }, function (result) {
-                botObject = result.model;
-                renderPage();
-                if (botObject.BotConfigId == null) {
-                    $(".panel-alert, #recon").show();
-                    return;
-                }
-
-                verifyAuthorization(host, returnCitySN.cip, function () {
-                    if (isAuthorize) {
-                        addMsg('Hightalk', botObject.DialogGreetings);
-
-                        if (botObject.NavigationSwitch == "1") {
-                            getNavigation("homepage", "首页");
-                        }
-                    } else {
+            $.ajax({
+                url: adminApiUrl.getwebchatinfoApi,
+                method: 'POST',
+                data: JSON.stringify({ id: urlParamId }),
+                headers	:{'Content-Type': 'application/json'},
+                success: function(result) {
+                    botObject = result.model;
+                    renderPage();
+                    if (botObject.BotConfigId == null) {
                         $(".panel-alert, #recon").show();
+                        return;
                     }
-                });
-            }).error(function () {
-                $(".webtalk").show();
-                $(".panel-alert, #recon").show();
+
+                    verifyAuthorization(host, returnCitySN.cip, function () {
+                        if (isAuthorize) {
+                            addMsg('Hightalk', botObject.DialogGreetings);
+
+                            if (botObject.NavigationSwitch == "1") {
+                                getNavigation("homepage", "首页");
+                            }
+                        } else {
+                            $(".panel-alert, #recon").show();
+                        }
+                    });
+                },
+                error: function(){
+                    $(".webtalk").show();
+                    $(".panel-alert, #recon").show();
+                }
             });
         } else {
             $(".webtalk").show();
@@ -123,112 +130,125 @@ $(function () {
 
     // 验证是否被授权
     function verifyAuthorization(host, cip, callback) {
-        $.post(adminApiUrl.verifyauthorizationApi, { id: botObject.BotConfigId, host: host, cip: cip }, function (result) {
-            if (result != undefined && result != null) {
-                if (result.status == 1) {
-                    isAuthorize = result.isAuthorization;
-                }
-
-                if (callback != undefined && typeof (callback) == "function") {
-                    callback();
+        $.ajax({
+            url: adminApiUrl.verifyauthorizationApi,
+            method: 'POST',
+            data: JSON.stringify({ id: botObject.BotConfigId, host: host, cip: cip }),
+            headers	:{'Content-Type': 'application/json'},
+            success: function(result) {
+                if (result != undefined && result != null) {
+                    if (result.status == 1) {
+                        isAuthorize = result.isAuthorization;
+                    }
+    
+                    if (callback != undefined && typeof (callback) == "function") {
+                        callback();
+                    }
                 }
             }
-        })
+        });
     }
 
     function callWebTalkService(question) {
-      $.post(adminApiUrl.getanswerV2Api, { id: botObject.BotConfigId, webtalkid: botObject.WebTalkId, question: question, channels: _channels }, function (result) {
-            if (result != undefined && result != null) {
-                if (result.status == 1) {
-                    var answer = "";
-                    var i = 0;
-                    if (result.responseType == 2) {
-                        if (result.context.Header != null && result.context.Header.length > 0) {
-                            for (i = 0; i < result.context.Header.length; i++) {
-                                answer += filterMsgSpechars(result.context.Header[i]);
-                                answer += "\n";
+        $.ajax({
+            url: adminApiUrl.getanswerV2Api,
+            method: 'POST',
+            data: JSON.stringify({ id: botObject.BotConfigId, webtalkid: botObject.WebTalkId, question: question, channels: _channels }),
+            headers	:{'Content-Type': 'application/json'},
+            success: function(result) {
+                if (result != undefined && result != null) {
+                    if (result.status == 1) {
+                        var answer = "";
+                        var i = 0;
+                        if (result.responseType == 2) {
+                            if (result.context.Header != null && result.context.Header.length > 0) {
+                                for (i = 0; i < result.context.Header.length; i++) {
+                                    answer += filterMsgSpechars(result.context.Header[i]);
+                                    answer += "\n";
+                                }
+                            }
+
+                            if (result.context.Content != null && result.context.Content.length > 0) {
+                                for (i = 0; i < result.context.Content.length; i++) {
+                                    answer += filterMsgSpechars(result.context.Content[i].Value);
+                                    answer += "\n";
+                                }
+                            }
+
+                            if (result.context.Footer != null && result.context.Footer.length > 0) {
+                                for (i = 0; i < result.context.Footer.length; i++) {
+                                    answer += filterMsgSpechars(result.context.Footer[i]);
+                                    answer += "\n";
+                                }
+                            }
+                        } else {
+                            if (result.answer.Header != null && result.answer.Header.length > 0) {
+                                for (i = 0; i < result.answer.Header.length; i++) {
+                                    answer += filterMsgSpechars(result.answer.Header[i]);
+                                    answer += "\n";
+                                }
+                            }
+
+                            if (result.answer.Text != null && result.answer.Text.length > 0) {
+                                for (i = 0; i < result.answer.Text.length; i++) {
+                                    answer += filterMsgSpechars(result.answer.Text[i]);
+                                    answer += "\n";
+                                }
+                            }
+
+                            if (result.answer.ImageUrl != null && result.answer.ImageUrl.length > 0) {
+                                answer += "<div class='answer-image'>"
+                                for (i = 0; i < result.answer.ImageUrl.length; i++) {
+                                    answer += drawImageElement(result.answer.ImageUrl[i]);
+                                }
+
+                                answer += "<div class='answer-image'>";
+                            }
+
+                            if (result.answer.VideoUrl != null && result.answer.VideoUrl.length > 0) {
+                                for (i = 0; i < result.answer.VideoUrl.length; i++) {
+                                    answer += filterMsgSpechars(result.answer.VideoUrl[i]);
+                                    answer += "\n";
+                                }
+                            }
+                            if (result.answer.Footer != null && result.answer.Footer.length > 0) {
+                                answer = answer == "" ? "" : answer + "\n";
+                                for (i = 0; i < result.answer.Footer.length; i++) {
+                                    answer += filterMsgSpechars(result.answer.Footer[i]);
+                                    answer += "\n";
+                                }
                             }
                         }
 
-                        if (result.context.Content != null && result.context.Content.length > 0) {
-                            for (i = 0; i < result.context.Content.length; i++) {
-                                answer += filterMsgSpechars(result.context.Content[i].Value);
-                                answer += "\n";
+                        if (result.categoryid != "" && result.categoryid != null) {
+                            if (categoryNewList.hasOwnProperty(result.categoryid)) {
+                                isRelevance = true;
+                                var category = categoryList[result.categoryid];
+                                if (navigationList.hasOwnProperty(category.ID)) {
+                                    drawCrumbsBar(category.ID, category.CategoryName);
+                                } else {
+                                    getNavigation(category.ID, category.CategoryName);
+                                }
                             }
                         }
 
-                        if (result.context.Footer != null && result.context.Footer.length > 0) {
-                            for (i = 0; i < result.context.Footer.length; i++) {
-                                answer += filterMsgSpechars(result.context.Footer[i]);
-                                answer += "\n";
+                        if (answer == "") {
+                            sendErrorMsg();
+                        } else {
+                            if (answer.substring(answer.length - 2) == "\n") {
+                                answer = answer.substring(0, answer.length - 2);
                             }
+
+                            addMsg("Hightalk", sendMsgDispose(answer));
                         }
                     } else {
-                        if (result.answer.Header != null && result.answer.Header.length > 0) {
-                            for (i = 0; i < result.answer.Header.length; i++) {
-                                answer += filterMsgSpechars(result.answer.Header[i]);
-                                answer += "\n";
-                            }
-                        }
-
-                        if (result.answer.Text != null && result.answer.Text.length > 0) {
-                            for (i = 0; i < result.answer.Text.length; i++) {
-                                answer += filterMsgSpechars(result.answer.Text[i]);
-                                answer += "\n";
-                            }
-                        }
-
-                        if (result.answer.ImageUrl != null && result.answer.ImageUrl.length > 0) {
-                            answer += "<div class='answer-image'>"
-                            for (i = 0; i < result.answer.ImageUrl.length; i++) {
-                                answer += drawImageElement(result.answer.ImageUrl[i]);
-                            }
-
-                            answer += "<div class='answer-image'>";
-                        }
-
-                        if (result.answer.VideoUrl != null && result.answer.VideoUrl.length > 0) {
-                            for (i = 0; i < result.answer.VideoUrl.length; i++) {
-                                answer += filterMsgSpechars(result.answer.VideoUrl[i]);
-                                answer += "\n";
-                            }
-                        }
-                        if (result.answer.Footer != null && result.answer.Footer.length > 0) {
-                            answer = answer == "" ? "" : answer + "\n";
-                            for (i = 0; i < result.answer.Footer.length; i++) {
-                                answer += filterMsgSpechars(result.answer.Footer[i]);
-                                answer += "\n";
-                            }
-                        }
-                    }
-
-                    if (result.categoryid != "" && result.categoryid != null) {
-                        if (categoryNewList.hasOwnProperty(result.categoryid)) {
-                            isRelevance = true;
-                            var category = categoryList[result.categoryid];
-                            if (navigationList.hasOwnProperty(category.ID)) {
-                                drawCrumbsBar(category.ID, category.CategoryName);
-                            } else {
-                                getNavigation(category.ID, category.CategoryName);
-                            }
-                        }
-                    }
-
-                    if (answer == "") {
                         sendErrorMsg();
-                    } else {
-                        if (answer.substring(answer.length - 2) == "\n") {
-                            answer = answer.substring(0, answer.length - 2);
-                        }
-
-                        addMsg("Hightalk", sendMsgDispose(answer));
                     }
-                } else {
-                    sendErrorMsg();
                 }
+            },
+            error: function () {
+                sendErrorMsg();
             }
-        }).error(function () {
-            sendErrorMsg();
         });
     }
 
@@ -496,85 +516,110 @@ $(function () {
     }
 
     function getKnowledgeBase(intentName, name) {
-      $.post(adminApiUrl.getknowledgeV2Api, { id: botObject.BotConfigId, intentName: intentName, channels: _channels }, function (result) {
-          if (result != undefined && result != null) {
-              if (result.status == 1) {
-                  var knowledgeBase = "";
-                  if (result.knowledgeBase.Text.length == 0 && result.knowledgeBase.ImageUrl.length == 0 && result.knowledgeBase.VideoUrl.length == 0) {
-                      sendErrorMsg();
-                      return;
-                  }
+        $.ajax({
+            url: adminApiUrl.getknowledgeV2Api,
+            method: 'POST',
+            data: JSON.stringify({ id: botObject.BotConfigId, intentName: intentName, channels: _channels }),
+            headers	:{'Content-Type': 'application/json'},
+            success: function(result) {
+                if (result != undefined && result != null) {
+                    if (result.status == 1) {
+                        var knowledgeBase = "";
+                        if (result.knowledgeBase.Text.length == 0 && result.knowledgeBase.ImageUrl.length == 0 && result.knowledgeBase.VideoUrl.length == 0) {
+                            sendErrorMsg();
+                            return;
+                        }
 
-                  if (name != "" && name != null && name != undefined) {
-                      knowledgeBase += "您好！您的问题是：" + result.knowledgeBase.FriendlyName + "，相关条款如下：\n";
-                  }
+                        if (name != "" && name != null && name != undefined) {
+                            knowledgeBase += "您好！您的问题是：" + result.knowledgeBase.FriendlyName + "，相关条款如下：\n";
+                        }
 
-                  var i = 0;
-                  if (result.knowledgeBase.Text.length > 0) {
-                      for (i = 0; i < result.knowledgeBase.Text.length; i++) {
-                        knowledgeBase += filterMsgSpechars(result.knowledgeBase.Text[i].KnowledgeBase);
-                        knowledgeBase += "\n";
-                      }
-                  }
+                        var i = 0;
+                        if (result.knowledgeBase.Text.length > 0) {
+                            for (i = 0; i < result.knowledgeBase.Text.length; i++) {
+                                knowledgeBase += filterMsgSpechars(result.knowledgeBase.Text[i].KnowledgeBase);
+                                knowledgeBase += "\n";
+                            }
+                        }
 
-                  if (result.knowledgeBase.ImageUrl.length > 0) {
-                      knowledgeBase += "<div class='answer-image'>"
-                      for (i = 0; i < result.knowledgeBase.ImageUrl.length; i++) {
-                        knowledgeBase += drawImageElement(result.knowledgeBase.ImageUrl[i].KnowledgeBase);
-                      }
+                        if (result.knowledgeBase.ImageUrl.length > 0) {
+                            knowledgeBase += "<div class='answer-image'>"
+                            for (i = 0; i < result.knowledgeBase.ImageUrl.length; i++) {
+                                knowledgeBase += drawImageElement(result.knowledgeBase.ImageUrl[i].KnowledgeBase);
+                            }
 
-                    knowledgeBase += "</div>";
-                    knowledgeBase += "\n";
-                  }
+                            knowledgeBase += "</div>";
+                            knowledgeBase += "\n";
+                        }
 
-                  if (result.knowledgeBase.VideoUrl.length > 0) {
-                      for (i = 0; i < result.knowledgeBase.VideoUrl.length; i++) {
-                        knowledgeBase += filterMsgSpechars(result.knowledgeBase.VideoUrl[i].KnowledgeBase);
-                        knowledgeBase += "\n";
-                      }
-                  }
+                        if (result.knowledgeBase.VideoUrl.length > 0) {
+                            for (i = 0; i < result.knowledgeBase.VideoUrl.length; i++) {
+                                knowledgeBase += filterMsgSpechars(result.knowledgeBase.VideoUrl[i].KnowledgeBase);
+                                knowledgeBase += "\n";
+                            }
+                        }
 
-                  knowledgeBase += "\n亲，请问我还有什么可以帮助您的么？";
-                  addMsg("Hightalk", sendMsgDispose(knowledgeBase));
-              } else {
+                        knowledgeBase += "\n亲，请问我还有什么可以帮助您的么？";
+                        addMsg("Hightalk", sendMsgDispose(knowledgeBase));
+                    } else {
+                        sendErrorMsg();
+                    }
+                }
+            },
+            error: function(){
                 sendErrorMsg();
-              }
-          }
-      }).error(function () {
-          sendErrorMsg();
-      });
+            }
+        });
     }
 
     function getNavigation(id, name) {
         var navId = id == "homepage" ? null : id;
-        $.post(adminApiUrl.getnavigationApi, { id: botObject.BotConfigId, navId: navId }, function (result) {
-            if (result != undefined && result != null) {
-                if (result.status == 1) {
-                    buildNavigationList(result.data);
+        $.ajax({
+            url: adminApiUrl.getnavigationApi,
+            method: 'POST',
+            data: JSON.stringify({ id: botObject.BotConfigId, navId: navId }),
+            headers	:{'Content-Type': 'application/json'},
+            success: function(result) {
+                if (result != undefined && result != null) {
+                    if (result.status == 1) {
+                        buildNavigationList(result.data);
+                    }
+    
+                    drawCrumbsBar(id, name);
                 }
-
-                drawCrumbsBar(id, name);
             }
         });
     }
 
     function getFAQList(parentID) {
-        $.post(adminApiUrl.getfaqlistApi, { id: botObject.BotConfigId, parentID: parentID }, function (result) {
-            if (result != undefined && result != null) {
-                if (result.status == 1) {
-                    buildFAQList(result.data);
+        $.ajax({
+            url: adminApiUrl.getfaqlistApi,
+            method: 'POST',
+            data: JSON.stringify({ id: botObject.BotConfigId, parentID: parentID }),
+            headers	:{'Content-Type': 'application/json'},
+            success: function(result) {
+                if (result != undefined && result != null) {
+                    if (result.status == 1) {
+                        buildFAQList(result.data);
+                    }
+    
+                    drawFAQ(parentID);
                 }
-
-                drawFAQ(parentID);
             }
         });
     }
 
     function GetCategoryList() {
-        $.post(adminApiUrl.getcategorylistApi, { id: urlParamId }, function (result) {
-            if (result != undefined && result != null) {
-                if (result.status == 1) {
-                    buildCategoryList(result.data);
+        $.ajax({
+            url: adminApiUrl.getcategorylistApi,
+            method: 'POST',
+            data: JSON.stringify({ id: urlParamId }),
+            headers	:{'Content-Type': 'application/json'},
+            success: function(result) {
+                if (result != undefined && result != null) {
+                    if (result.status == 1) {
+                        buildCategoryList(result.data);
+                    }
                 }
             }
         });

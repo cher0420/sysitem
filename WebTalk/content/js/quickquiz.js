@@ -84,28 +84,35 @@ $(function () {
 
     function callWebTalkService(question) {
         var userId = botObject.WebTalkId ? botObject.WebTalkId : parseInt(Math.random() * (100000 - 999999 + 1) + 999999);
-      var botRecordId = botObject.BotConfigId ? botObject.BotConfigId : urlParamId;
-        $.post(adminApiUrl.fqavalidaimlApi, { BotRecordId: botRecordId, UserId:userId, Question: question }, function (result) {
-            if (result != undefined && result != null) {
-                if (result.Status) {
-                    if (result.Data != "" && result.Data != null && result.Data != undefined) {
-                        var answer = result.Data.Message;
-                        answer = filterMsgSpechars(answer);
-                        var msg = sendMsgDispose(answer);
-                        if(msg == null || msg == "" || msg == undefined){
-                            msg = "抱歉，当前问题中不包含培训的关键字"
+        var botRecordId = botObject.BotConfigId ? botObject.BotConfigId : urlParamId;
+        $.ajax({
+            url: adminApiUrl.fqavalidaimlApi,
+            method: 'POST',
+            data: JSON.stringify({ BotRecordId: botRecordId, UserId:userId, Question: question }),
+            headers	:{'Content-Type': 'application/json'},
+            success: function(result) {
+                if (result != undefined && result != null) {
+                    if (result.Status) {
+                        if (result.Data != "" && result.Data != null && result.Data != undefined) {
+                            var answer = result.Data.Message;
+                            answer = filterMsgSpechars(answer);
+                            var msg = sendMsgDispose(answer);
+                            if(msg == null || msg == "" || msg == undefined){
+                                msg = "抱歉，当前问题中不包含培训的关键字"
+                            }
+    
+                            addMsg("Hightalk", msg);
+                        } else {
+                            sendErrorMsg();
                         }
-
-                        addMsg("Hightalk", msg);
                     } else {
                         sendErrorMsg();
                     }
-                } else {
-                    sendErrorMsg();
                 }
+            },
+            error: function(){
+                sendErrorMsg();
             }
-        }).error(function () {
-            sendErrorMsg();
         });
     }
 
