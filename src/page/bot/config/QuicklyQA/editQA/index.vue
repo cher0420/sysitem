@@ -214,8 +214,8 @@
           // console.log("++++", this.imgList)
           let Files = this.imgList.map(product => {
             return {
-              "Context": product.file.src.slice(22),
-              "Suffix": product.file.type.slice(6),
+              "Content": product.file.src.slice(22),
+              "Extension": product.file.type.slice(6),
             };
           });
           this.imgListNew = Files;
@@ -356,8 +356,8 @@
           let index = item.lastIndexOf(".");
           let Suffix = item.substring(index + 1)
           return {
-            "Context": item,
-            "Suffix": Suffix
+            "Content": item,
+            "Extension": Suffix
 
           }
         })

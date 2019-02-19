@@ -356,8 +356,8 @@
             if(v.KnowledgeBase.match(/base64,(\S*)/)){
               const Context = v.KnowledgeBase.match(/base64,(\S*)/)[1]
               const obj = {
-                Context,
-                Suffix:v.type
+                Content:Context,
+                Extension:v.type
               }
               Files.push(obj)
             }

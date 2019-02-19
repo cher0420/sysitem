@@ -300,8 +300,8 @@
               };
             }
             return {
-              "Context": product.file.src.slice(22),
-              "Suffix": product.file.type.slice(6),
+              "Content": product.file.src.slice(22),
+              "Extension": product.file.type.slice(6),
             };
           });
           let recordId = JSON.parse(sessionStorage.getItem('recordId'));
