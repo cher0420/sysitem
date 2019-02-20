@@ -1,13 +1,11 @@
 <template>
-  <section>
+  <section ref='menu'>
     <section index="" class="handle-item text-a-c" @click="show">
       <i class="yoy-menu-icon"></i>
     </section>
     <el-menu
       :default-active="activeKey"
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
       @select="handle"
       text-color="#cfd9e2"
       active-text-color="#fff"
@@ -34,7 +32,7 @@
   import {REPLACE} from "../../store/mutations";
   import {STR} from "../../constants/constants";
   import {MENUS} from "../../constants/constants";
-
+  import {isIE9} from '../../serive/request';
   export default {
     data() {
       return {
@@ -60,9 +58,7 @@
       '$route' (to, from) {
         const that = this
         if(to&&from){
-
-          store.dispatch(REPLACE,{}).then(
-            () =>{
+    
               // 面包屑，带优化
               this.setBreadArr(to)
               // 进入配置二级菜单页面
@@ -89,18 +85,14 @@
               }
               store.dispatch(REPLACE,{config,aSideWidth,activeKey}).then(
                 () => {
-                  // setTimeout(
-                  //   () =>{
-                  //     store.dispatch(REPLACE,{mainLoading:false})
-                  //   },1200
-                  // )
+                  that.reComputed()
                 }
               )
-            }
-          )
+    
         }else{
           this.$router.push('/dashboard')
         }
+
       }
     },
     methods: {
@@ -131,23 +123,33 @@
           REPLACE,{breadArr:newArr}
         )
       },
+      reComputed(){
+        if(isIE9()){
+       
+            const realMenuWidth = this.$refs.menu.offsetWidth
+            const realMainWidth = document.body.clientWidth - realMenuWidth-1 +'px'
+            console.log('=====>',realMenuWidth,realMainWidth)
+            store.dispatch(REPLACE,{realMainWidth})
+       
+          
+        }
+      },
       show(){
         store.dispatch(REPLACE, {isCollapse: !this.isCollapse}).then(
           ()=>{
-            console.log(this.isCollapse)
+            
             this.isCollapse?
               store.commit(REPLACE,{aSideWidth: '60px !important'}):
               store.commit(REPLACE,{aSideWidth: '14vw'})
+
+            this.reComputed()
+
           }
+
         )
       },
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      },
       handle(key, keyPath){
+        const that = this
         if(key){
           window.location.hash=key
           const url = key
@@ -157,7 +159,11 @@
           }
           const arr=[obj]
           store.commit(REPLACE,{breadArr:arr})
-          store.dispatch(REPLACE, {defaultActiveSecondM: 'config'})
+          store.dispatch(REPLACE, {defaultActiveSecondM: 'config'}).then(
+            () => {
+              that.reComputed()
+            })
+
           this.$router.push(key)
           window.location.hash = '#/'+key
         }
@@ -179,6 +185,9 @@
       // 初始化面包屑
       this.setBreadArr(to)
     },
+    mounted(){
+      this.reComputed()
+    }
   }
 </script>
 <style lang="scss" scoped>

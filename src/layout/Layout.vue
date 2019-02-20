@@ -6,27 +6,25 @@
       </el-header>
       <div class="full-height el-container">
         <!-- menu -->
-        <el-aside  v-if='isCollapse' class="el-aside full-height" width='60px'
-                  :style="{float:'left',minWidth:'60px',maxWidth: '240px'}">
-          <sidebar class="sidebar-container full-height"></sidebar>
-        </el-aside>
-        <el-aside v-else class="el-aside full-height" width='14vw' :style="{float:'left',maxWidth: '240px'}">
-          <sidebar class="sidebar-container full-height"></sidebar>
-        </el-aside>
+
+          <el-aside  v-if='isCollapse' class="el-aside full-height" width='60px'
+                    :style="{float:'left',minWidth:'60px',maxWidth: '240px'}">
+            <sidebar class="sidebar-container full-height"></sidebar>
+          </el-aside>
+          <el-aside v-else class="el-aside full-height" width='14vw' :style="{float:'left',maxWidth: '240px'}">
+            <sidebar class="sidebar-container full-height"></sidebar>
+          </el-aside>
+    
         <!-- display area -->
            <!-- second -->
-        <el-container class="full-height robotDisplayArea" style="position:static;width: 80vw;">
-          <section v-if="config">
-            <secondary-menu class="yoy-second-menu full-height">
-            </secondary-menu>
-          </section>
-           <!-- main -->
-          <el-container v-loading="mainLoading" :element-loading-text="loadingText" class="full-width robotDetail" style="position:relative;width: 70vw;">
-            <el-main class="full-width">
+        <el-container class="full-height robotDisplayArea" :style="{width:realMainWidth}">
+            <section v-if="config"  class='full-height' style="float:left">
+              <secondary-menu class='full-height yoy-second-menu'>
+              </secondary-menu>
+            </section>
+            <el-main class="full-height " v-loading="mainLoading" :element-loading-text="loadingText">
               <app-main></app-main>
             </el-main>
-          </el-container>
-
         </el-container>
       </div>
     </el-container>
@@ -42,11 +40,10 @@
   import store from '../store/index'
   import {REPLACE} from "../store/mutations";
 
+
   export default {
     name: 'layout',
-    data() {
-      return {}
-    },
+
     computed: {
       mainLoading() {
         return store.state.app.mainLoading
@@ -62,12 +59,16 @@
       },
       loadingText(){
         return store.state.app.loadingText
+      },
+      realMainWidth(){
+        return store.state.app.realMainWidth
       }
     },
-    beforeCreate() {
+    created() {
       const config = this.$route.name === 'config' //判断路由是否为配置二级菜单，是则为true，不是则false并隐藏二级菜单
       store.dispatch(REPLACE, {config})
     },
+
     components: {
       NavBar,
       Sidebar,
@@ -78,17 +79,9 @@
   }
 </script>
 <style lang="scss" scoped>
-  .robotFoot {
-    /*position: absolute;*/
-    /*left: 0;*/
-    /*bottom: 0;*/
-    /*width: 100%;*/
-    /*background: #fff;*/
-  }
 
   .robotDisplayArea {
-    height: 100%;
-    width: 100%;
+    float:left;
   }
 
   .robotFull {
@@ -104,13 +97,6 @@
     z-index: 0;
   }
 
-  .robotDetail {
-    /*padding-bottom: 60px;*/
-    height: 100%;
-    /*min-height:calc(100% - 60px);*/
-    /*width: 100%;*/
-    /*overflow: scroll;*/
-  }
 </style>
 <style lang="scss">
   @import '../style/index';

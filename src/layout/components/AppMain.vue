@@ -1,5 +1,5 @@
 <template>
-  <section class="yoy-header-container robotWidth " ref="scrollTop" style="flex:1;">
+  <section class="yoy-header-container robotWidth " ref="scrollTop" :style = '{width:realArticleWidth,float:"left",flex:"1"}'>
     <bread class="navBar"></bread>
     <router-view class="view yoy-main listItem"  :style="{width:widthOS}"></router-view><footer-bar></footer-bar>
   </section>
@@ -7,8 +7,8 @@
 <script>
   import Bread from './Bread'
   import FooterBar from './Footer';
-
   import store from '../../store/index';
+  import {isIE9} from '../../serive/request'
 
 
   export default {
@@ -16,26 +16,36 @@
       return {
         widthOS: '100%',
         setInterval: "",
+         realArticleWidth:'100%'
       }
     },
     components: {
       Bread,
       FooterBar,
     },
-    computed: {},
     watch: {
       '$route'(to, from) {
         if (to && from)
           this.scrollTop()
       }
-
-
     },
     created() {
       const res = this.getOs()
       if (res === 'Firefox') {
         const WIDTH = this.getScrollbarWidth()
         this.widthOS = res === 'Firefox' ? `calc(100% - ${WIDTH}px)` : '100%'
+      }
+    },
+    mounted(){
+      if(isIE9() ){
+        if(store.state.app.config){
+          const width =  store.state.app.realMainWidth.replace('px','')
+          console.log('==>',width)
+          this.realArticleWidth =width - 201 + 'px'
+        }else{
+          this.realArticleWidth = '100%'
+        }
+        
       }
     },
     methods: {
