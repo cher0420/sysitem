@@ -82,7 +82,7 @@ export const request = (api,params = {}) => {
       )
     }else{
       return new Promise(
-        (resolve, reject) =>{
+(resolve, reject) =>{
           const headers = {...params.headers,"Content-Type": "application/json; charset=utf-8"}
           const body = params.body
           const method = params.method||"GET"

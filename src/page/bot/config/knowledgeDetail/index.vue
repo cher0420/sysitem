@@ -213,9 +213,6 @@ export default {
       statusTest: "basic"
     };
   },
-  destroyed() {
-    store.dispatch(REPLACE, { navIndexSecond: "" });
-  },
   created() {
     const query = this.$route.query;
     const botCheckIndex = query.botCheckIndex; // 选中项

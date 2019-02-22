@@ -8,36 +8,35 @@ Vue.use(Vuex)
   state: {
 
     app: {
-      reloadId:0,
-      name:'智能服务机器人',
-      config: false,
-      activeKey: 'bot',
+      reloadId:0,                                      //bot页面轮询id
+      name:'智能服务机器人',                              //config默认机器人名
+      config: false,                                   //是否显示二级菜单
+      activeKey: 'bot',                                //一级菜单默认选中项
       defaultActiveSecondM:'config',                   //二级菜单active-key
-      userName: '',
-      userInfo: {},
-      navIndex: '',
-      navIndexSecond:'',
-      isCollapse: false,
-      aSideWidth: '14vw',
-      breadArr:[{url:'/',name :'首页'}],
+      userName: '',                                    //用户名
+      userInfo: {},                                    //用户信息
+      navIndex: '',                                    //标题
+      isCollapse: false,                               //折叠菜单状态
+      aSideWidth: '14vw',                              //菜单宽度
+      breadArr:[{url:'/',name :'首页'}],                //面包屑数组
 
 
       PageIndex: 1,                                     //分页页数
       PageSize: 10,                                     //当前页的条数
       total: 0,                                         //列表总数
-      searchStatus:null,
-      tableData:[],
-      loading: false,
+      searchStatus:null,                                //搜索状态
+      tableData:[],                                     //列表数据
+      loading: false,                                   //加载状态
       description: '',
       Key:'',
       SkillNo:'',
       quickQuizRecordId:null,
       id:null,
       // doingStatus: false,
-      quickQuizArr:[],
+      quickQuizArr:[],                                   //快速问答数组
 
-      mainLoading:false,
-      loadingText:null,
+      mainLoading:false,                                 //整页加载
+      loadingText:null,                                  //全局加载时显示提示语
     },
   },
   mutations: {

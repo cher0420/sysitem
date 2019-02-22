@@ -44,12 +44,8 @@
         return store.state.app.breadArr
       },
       navIndex(){
-
         return store.state.app.navIndex
       },
-      navIndexSecond(){
-        return store.state.app.navIndexSecond
-      }
     },
     created(){
       //判断面包屑初始化时是否为详情页
