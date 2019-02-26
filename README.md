@@ -1,4 +1,5 @@
 # admin-portal
+推荐采用Xmind格式查看
 ##请按照以下顺序熟悉项目
 - 安装node、npm，地址：https://nodejs.org/zh-cn/
 - 命令行 node -v，出现 ```v10.13.0```版本号即为安装成功
@@ -11,7 +12,7 @@ npm run build
 >##项目ip地址
 https://192.168.1.103:10033
 >##docker环境更新
-checkin代码即可
+checkin至master代码即可
 >###增加页面
 - 需先配置路由，注意大小写，地址：src/router/index.js
 - 编写页面，src/page/...
