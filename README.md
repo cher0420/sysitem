@@ -81,9 +81,38 @@ router/index.js
         name: 'edit',
       },
 ```
+- 标题部分需要配置中文名
+src/constants/constants.js
+```
+export const STR = {
+  authority:'权限管理',
+  custom:'定制服务',
+  opinion:'意见反馈',
+  bot:'机器人列表',
+  skill:'机器人技能',
+  dashboard:'仪表盘',
+  create: '创建',
+  edit: '编辑',
+  config:'基本资料',
+  web:'网页',
+  weChatService:'微信服务号',
+  weChatCompany:'微信企业号',
+  robot:'实体机器人',
+  desktopApp:'桌面应用',
+  knowledgeQuiz:'知识问答',
+  knowledgeDetail:'知识问答',
+  caseStore:'案例库',
+  quicklyQA:'快速问答',
+  createrNewQA:'创建新问答',
+  updateQA:'创建新问答',
+  editQA:'编辑',
+  keywordResponse:'关键词回复'
+}
+```
 >###样式
 src/style
 - 公共样式 :src/style/index.scss
+- 公共样式里有默认色、默认背景、各种字体大小等
 - 修改ui框架样式：src/style/form.scss （不同组件请单独命名）
 - 私有样式请单独开发在相应page需求内
 >###请求方法

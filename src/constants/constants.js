@@ -191,6 +191,12 @@ export const SECONDMENUS = [
         chineseName:'快速问答',
         englishName:'quicklyQA',
         path:'quicklyQA',
+      },
+      {
+        id:'keywordResponse',
+        chineseName:'关键词回复',
+        englishName:'keywordResponse',
+        path:'keywordResponse',
       }
     ]
   }
@@ -217,6 +223,7 @@ export const STR = {
   createrNewQA:'创建新问答',
   updateQA:'创建新问答',
   editQA:'编辑',
+  keywordResponse:'关键词回复'
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

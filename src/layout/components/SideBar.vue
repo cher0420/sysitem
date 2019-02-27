@@ -58,7 +58,7 @@
       '$route' (to, from) {
         const that = this
         if(to&&from){
-    
+
               // 面包屑，带优化
               this.setBreadArr(to)
               // 进入配置二级菜单页面
@@ -88,7 +88,7 @@
                   that.reComputed()
                 }
               )
-    
+
         }else{
           this.$router.push('/dashboard')
         }
@@ -125,19 +125,15 @@
       },
       reComputed(){
         if(isIE9()){
-       
             const realMenuWidth = this.$refs.menu.offsetWidth
             const realMainWidth = document.body.clientWidth - realMenuWidth-1 +'px'
-            console.log('=====>',realMenuWidth,realMainWidth)
             store.dispatch(REPLACE,{realMainWidth})
-       
-          
         }
       },
       show(){
         store.dispatch(REPLACE, {isCollapse: !this.isCollapse}).then(
           ()=>{
-            
+
             this.isCollapse?
               store.commit(REPLACE,{aSideWidth: '60px !important'}):
               store.commit(REPLACE,{aSideWidth: '14vw'})

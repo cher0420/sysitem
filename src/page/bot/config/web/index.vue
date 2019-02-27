@@ -62,7 +62,7 @@
       <title-item title="自定义标题栏背景颜色"></title-item>
       <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
         <el-col :span="9">
-          <el-col :span="2" v-for="item in titleColorItems" :index="index">
+          <el-col :span="2" v-for="item in titleColorItems" :index="index" :key="index">
           <span class="colorItem"
                 :style="{background:item,opacity:item === DialogColor?'1':'.6'}"
                 @click="changeColor('DialogColor',item)"
@@ -80,7 +80,7 @@
       <title-item title="自定义标题栏字体颜色"></title-item>
       <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
         <el-col :span="9">
-          <el-col :span="2" v-for="item in textColorItems" :index="index">
+          <el-col :span="2" v-for="(item,index) in textColorItems" :index="index" :key="index">
           <span class="colorItem"
                 :style="{background:item,border:item === '#FFFFFF'?'1px solid #eaedf1':'none',opacity:item === DialogTitleColor?'1':'.6'}"
                 @click="changeColor('DialogTitleColor',item)"

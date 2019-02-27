@@ -35,6 +35,14 @@ form label
   padding: 8px 25px;
   font-size:14px;
 }
+.el-button.big-button{
+  width: 100px;
+  box-sizing: border-box;
+  font-size:14px;
+  text-align: center;
+  padding:0;
+  height: 32px;
+}
 .el-button--medium{
   padding:10px 25px;
 }

@@ -107,7 +107,6 @@
     </section>
 </template>
 <script>
-  import DrapDown from '../../components/DrapDown'
   import {BOTLIST, ITEMKEY} from './constants'
   import URL from '../../host/baseUrl'
   import {BOT, DELETEBOT, CREATEBOT} from '../../constants/api'
@@ -118,12 +117,14 @@
   import {TOKEN} from "../../constants/constants";
   import {getList, reload} from "./service/requestMethod";
   import {STR} from "../../constants/constants";
+  import DrapDown from '../../components/DrapDown'
 
   export default {
     data() {
       return {
         status: BOTLIST.status,
         resizable: false,
+        keyWords: null,
       }
     },
     computed: {
@@ -139,9 +140,6 @@
       PageIndex() {
         return store.state.app.PageIndex
       }
-    },
-    components: {
-      DrapDown,
     },
     created() {
 

@@ -5,6 +5,9 @@ import URL from '../host/baseUrl'
 import {IMG_UPLOADORDELETE} from "../constants/api";
 import {TOKEN} from "../constants/constants";
 import {getCookies} from "../utils/cookie";
+import {Message} from 'element-ui';
+import store from '../../src/store/index';
+import {REPLACE} from "../store/mutations";
 
 export const isIE9 = () => {
   if(!-[1,]){
@@ -66,7 +69,6 @@ export const request = (api,params = {}) => {
             type,
             data,
             success: function(res){
-              alert('success'+res.Status)
               if(res.Status){
                 return resolve(res)
               }else{
@@ -74,7 +76,6 @@ export const request = (api,params = {}) => {
               }
             },
             error: function(res){
-              alert('error'+res.Status)
               return reject(res)
             }
           })
@@ -99,7 +100,14 @@ export const request = (api,params = {}) => {
                   redirect(LOGIN)
                   break;
                 default:
-                alert('服务器异常，请联系工作人员')
+                  Message({
+                    type: 'error',
+                    message: '服务器异常，请联系工作人员',
+                    duration: 2000,
+                    onClose: () => {
+                      store.dispatch(REPLACE, { mainLoading : false })
+                    }
+                  })
               }
             }
           ).then(

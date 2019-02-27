@@ -5,8 +5,8 @@
       <span  v-for="(data,key) in tapList"  class="text-a-c"  v-bind:class="{isChecked:key === botCheckIndex}"  @click="handleClick(key)" :index="key" >
         <i
           :style="{background: key === botCheckIndex?
-        'url(' + require(`../../../../assets/bot/${key}Checked.png`) + ')center center no-repeat':
-          'url(' + require(`../../../../assets/bot/${key}.png`) + ')center center no-repeat'
+        'url(' + require(`../../../../../assets/bot/${key}Checked.png`) + ')center center no-repeat':
+          'url(' + require(`../../../../../assets/bot/${key}.png`) + ')center center no-repeat'
         }"
           alt
           class="align-middle"
@@ -63,7 +63,7 @@
           class="el-upload-list el-upload-list--picture-card"
           style="float: left;"
         >
-          <el-col v-for="(item,index) in uploadList" class="p-relative picItem text-a-c" >
+          <el-col v-for="(item,index) in uploadList" :key="index" class="p-relative picItem text-a-c" >
             <img :src="item.KnowledgeBase" alt="图片" class="align-middle-img">
             <!--<img src="item.KnowledgeBase" alt="图片" class="align-middle-img"/>-->
             <section class="p-absolute opacity f-s-20" >
@@ -118,7 +118,7 @@
           class="el-upload-list el-upload-list--picture-card"
           style="float: left;"
         >
-          <el-col v-for="(item,index) in uploadList2" class="p-relative picItem text-a-c" >
+          <el-col v-for="(item,index) in uploadList2" :key="index" class="p-relative picItem text-a-c" >
             <img :src="item.KnowledgeBase" alt="图片" class="align-middle-img">
             <!--<img src="item.KnowledgeBase" alt="图片" class="align-middle-img"/>-->
             <section class="p-absolute opacity f-s-20">
@@ -172,18 +172,18 @@
   </section>
 </template>
 <script>
-import store from "../../../../store/index";
-import { REPLACE } from "../../../../store/mutations";
+import store from "../../../../../store/index";
+import { REPLACE } from "../../../../../store/mutations";
 import { handleDetail } from "./service";
-import URL from "../../../../host/baseUrl";
+import URL from "../../../../../host/baseUrl";
 import {
   BOTKNOWDETAIL,
   UPDATEKNOWDETAIL,
   DELETEKMOWDETAIL
-} from "../../../../constants/api";
-import { upload_delete_img } from "../../../../serive/request";
-import { TENANTID, USERNAME } from "../../../../constants/constants";
-import { getCookies } from "../../../../utils/cookie";
+} from "../../../../../constants/api";
+import { upload_delete_img } from "../../../../../serive/request";
+import { TENANTID, USERNAME } from "../../../../../constants/constants";
+import { getCookies } from "../../../../../utils/cookie";
 
 export default {
   data() {
@@ -631,7 +631,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "../../../../style/index";
+@import "../../../../../style/index";
 .deleteBtn{display:none;}
 .tapList {
   height: 48px;

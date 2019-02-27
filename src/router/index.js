@@ -102,12 +102,6 @@ const arr = [
         name: 'config',
       },
       {
-        path:'config/questionBuild',
-        component: resolve =>
-          require(["../page/bot/config/questionBuild/index"], resolve),
-        name: 'config',
-      },
-      {
         path:'config/knowledgeQuiz',
         component: resolve =>
           require(["../page/bot/config/knowledgeQuiz/index"], resolve),
@@ -116,7 +110,7 @@ const arr = [
       {
         path:'config/knowledgeQuiz/knowledgeDetail',
         component: resolve =>
-          require(["../page/bot/config/knowledgeDetail/index"], resolve),
+          require(["../page/bot/config/knowledgeQuiz/knowledgeDetail/index"], resolve),
         name: 'detail',
       },
       {
@@ -178,7 +172,25 @@ const arr = [
         component: resolve =>
           require(["../page/bot/config/quicklyQA/detailQA/index"], resolve),
         name: 'detail',
+      },{
+        path:'config/keywordResponse',   //  关键词回复
+        component: resolve =>
+          require(["../page/bot/config/keywordResponse/index"], resolve),
+        name: 'config',
       },
+      // {
+      //   path:'config/keywordResponse/addKeyword',   //  关键词回复
+      //   component: resolve =>
+      //     require(["../page/bot/config/keywordResponse/addKeyword/addKeyword"], resolve),
+      //   name: 'create',
+      // },
+      // {
+      //   path:'config/keywordResponse/editAnswer',   //  关键词回复
+      //   component: resolve =>
+      //     require(["../page/bot/config/keywordResponse/editAnswer/editAnswer"], resolve),
+      //   name: 'edit',
+      //
+      // }
 
 
     ]
