@@ -124,6 +124,7 @@
       return {
         status: BOTLIST.status,
         resizable: false,
+        keyWords: null,
       }
     },
     computed: {

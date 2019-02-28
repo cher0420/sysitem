@@ -426,6 +426,7 @@
         data.LoginSwitch = data.LoginSwitch === true ? 1 : 0
         const TenantId = getCookies(TENANTID)
         const newData = {
+          'ID': data.ID,
           "TenantId": TenantId,
           "BotConfigId": data.BotConfigId,
           "Position": data.Position,
