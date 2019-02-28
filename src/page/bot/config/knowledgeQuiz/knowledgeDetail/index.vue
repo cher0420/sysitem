@@ -154,7 +154,7 @@
               style="display: none"
               ref="yoy-image-upload"
               @change="uploadHandle"
-            >
+            />
           </section>
           <section class="tips">（至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）</section>
         </section>
