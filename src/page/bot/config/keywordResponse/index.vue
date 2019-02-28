@@ -20,11 +20,11 @@
           <span style="margin-left: 10px">{{ scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="关键词" :resizable="resizable"></el-table-column>
+      <el-table-column prop="IntentName" label="关键词" :resizable="resizable"></el-table-column>
       <el-table-column prop="year" label="创建时间" :resizable="resizable"></el-table-column>
       <el-table-column label="操作" :resizable="resizable" width="200">
         <template slot-scope="scope">
-          <span class="hover edit"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px"><i class="el-icon-close"></i>删除</span>
+          <span class="hover edit"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px" @click="delete(scope.row)"><i class="el-icon-close"></i>删除</span>
         </template>
       </el-table-column>
     </el-table>
@@ -35,15 +35,13 @@
       class="pagination"
       layout="total, prev, pager, next"
       :current-page.sync="PageIndex"
-      :total="1000">
+      :total="total">
     </el-pagination>
   </section>
 </template>
 <script>
-  import store from '../../../../store/index'
-  import {REPLACE} from "../../../../store/mutations";
   import {request} from "../../../../serive/request";
-  import {BOTKNOWQUIZLIST} from "../../../../constants/api";
+  import {KEYWORDLIST, DELETEKEYWORD} from "../../../../constants/api";
   import { getCookies } from "../../../../utils/cookie";
   import {TOKEN} from "../../../../constants/constants";
 
@@ -56,7 +54,8 @@
         tableData: [{name: 'uouo', year: 'dafs'}],
         loading: false,
         resizable: false,
-        PageIndex: 1
+        PageIndex: 1,
+        total: 0
       }
     },
     computed: {
@@ -66,8 +65,13 @@
       this.getList()
     },
     methods: {
+      init () {
+        this.tableData = []
+        this.total = 0
+      },
       async getList () {
         const that = this
+        that.loading = true
         const BotConfigRecordId = this.$route.query.recordId
         const token = getCookies( TOKEN )
         const params = {
@@ -78,19 +82,21 @@
           body: JSON.stringify( { BotConfigRecordId, Data: { PageIndex: this.PageIndex, Key: this.keyWords, SkillNo: '', PageSize: 10 } } )
         }
         request (
-          BOTKNOWQUIZLIST , params
+          KEYWORDLIST , params
         ).then(
           ( res ) => {
-            that.clearData( res.Data )
+            that.clearData( res )
           }
         ).catch()
       },
       clearData ( v ) {
-        const data = v.slice(0)
-        console.log(data);
+        const data = v.Data.slice(0)
+        this.tableData = data
+        this.total = v.TotalCount
+        this.loading = false
       },
-      handleCurrentChange () {
-
+      handleCurrentChange (v) {
+        this.getList()
       },
 
       download () {
@@ -101,13 +107,17 @@
         console.log('删除全部')
       },
       search() {
-        console.log('搜索')
+        this.PageIndex = 1
+        this.getList()
       },
       openIt () {
         this.status = true
       },
       closedIt(v) {
         this.status = false
+      },
+      delete () {
+        request(DELETEKEYWORD)
       }
     }
   }
