@@ -105,7 +105,7 @@ export const request = (api,params = {}) => {
                     message: '服务器异常，请联系工作人员',
                     duration: 2000,
                     onClose: () => {
-                      store.dispatch(REPLACE, { mainLoading : false })
+                      store.dispatch(REPLACE, { mainLoading : false, loading: false })
                     }
                   })
               }
