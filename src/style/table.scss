@@ -42,4 +42,12 @@ $table-title-color:#333;
   text-align: center;
   margin-bottom: 3px;
 }
+.el-table--border th:first-child .cell, .el-table--border td:first-child .cell{
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.el-table .cell, .el-table th div, .el-table--border td:first-child .cell, .el-table--border th:first-child .cell{
+  padding-left: 20px;
+  padding-right: 20px;
+}
 

@@ -39,3 +39,7 @@ export const GETKEYWORDS = "/api/admin/portal/qqa/getkeywords"; // 快速问答�
 export const QUERYQADATA = "/api/admin/portal/qqa/querybykeyword"; //  快速问答根据关键字获取答案
 export const STOREQADATA = "/api/admin/portal/qqa/save"; // 快速问答存储答案
 
+// 关键词回复
+export const KEYWORDLIST = '';//关键词列表
+export const KEYWORDLEADEXCEL = '';//导入关键词
+export const KEYWORDDOWNLOAD = '';//下载关键词模版
