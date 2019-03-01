@@ -242,6 +242,29 @@
         });
       },
       deleteSingle (id, index) {
+        const params = {
+          headers: {
+            'Access-Token': getCookies( TOKEN )
+          },
+          methods: 'POST',
+          body: JSON.stringify( id )
+        }
+
+        request( DELETEKEYWORD, params)
+          .then ( () => {
+            this.$message( {
+              type: 'success',
+              message: '删除成功',
+              duration: 2000,
+            } )
+          } )
+          .catch( () => {
+            that.$message( {
+              type: 'error',
+              message: '删除失败',
+              duration: 2000
+            } )
+          } )
         const that = this
         this.tableData.splice( index, 1 )
         this.total -- ;
@@ -250,38 +273,8 @@
           if(that.PageIndex !== 1){
             that.PageIndex --
           }
-
-          that.getList().then((res) =>{
-            that.$message( {
-              type: 'success',
-              message: '删除成功',
-              duration: 2000
-            } )
-          })
-            .catch( () => {
-              that.$message( {
-                type: 'error',
-                message: '删除失败',
-                duration: 2000
-              } )
-            } )
+          that.getList()
         }
-        // const params = {
-        //   headers: {
-        //     'Access-Token': getCookies( TOKEN )
-        //   },
-        //   methods: 'POST',
-        //   body: JSON.stringify( id )
-        // }
-        //
-        // request( DELETEKEYWORD, params)
-        //   .then ( () => {
-        //     this.$message( {
-        //       type: 'success',
-        //       message: '删除成功！',
-        //       duration: 2000,
-        //     } )
-        //   } )
       }
     }
   }

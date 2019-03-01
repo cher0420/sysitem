@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '../layout/Layout'
-import {MENUS} from "../constants/constants";
 
 Vue.use(Router)
 const arr = [
