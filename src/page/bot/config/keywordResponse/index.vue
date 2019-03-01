@@ -32,7 +32,7 @@
       <el-table-column prop="year" label="创建时间" :resizable="resizable"></el-table-column>
       <el-table-column label="操作" :resizable="resizable" width="200">
         <template slot-scope="scope">
-          <span class="hover edit"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px" @click="delete(scope.row)"><i class="el-icon-close"></i>删除</span>
+          <span class="hover edit"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px" @click="doDelete(scope.row, scope.$index)"><i class="el-icon-close"></i>删除</span>
         </template>
       </el-table-column>
     </el-table>
@@ -160,7 +160,7 @@
         if (!file || file.size > 200 * 1024) {
           this.$message({
             type: "error",
-            message: "请上传文件不大于200KB的图片！"
+            message: "请上传文件不大于200KB的图片"
           });
           return;
         }
@@ -204,14 +204,14 @@
             that.getList()
             that.$message({
               type: 'success',
-              message: '清空成功!',
+              message: '清空成功',
               duration: 2000,
             });
           } )
           .catch( () => {
             that.$message({
               type: 'error',
-              message: '清空失败!',
+              message: '清空失败',
               duration: 2000
             });
           })
@@ -226,8 +226,62 @@
       closedIt(v) {
         this.status = false
       },
-      delete () {
-        request(DELETEKEYWORD)
+      doDelete (id, index) {
+        this.$confirm('此操作将删除此条关键词回复, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.deleteSingle (id, index)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作',
+            duration: 2000
+          });
+        });
+      },
+      deleteSingle (id, index) {
+        const that = this
+        this.tableData.splice( index, 1 )
+        this.total -- ;
+
+        if(this.total%this.PageSize === 0){
+          if(that.PageIndex !== 1){
+            that.PageIndex --
+          }
+
+          that.getList().then((res) =>{
+            that.$message( {
+              type: 'success',
+              message: '删除成功',
+              duration: 2000
+            } )
+          })
+            .catch( () => {
+              that.$message( {
+                type: 'error',
+                message: '删除失败',
+                duration: 2000
+              } )
+            } )
+        }
+        // const params = {
+        //   headers: {
+        //     'Access-Token': getCookies( TOKEN )
+        //   },
+        //   methods: 'POST',
+        //   body: JSON.stringify( id )
+        // }
+        //
+        // request( DELETEKEYWORD, params)
+        //   .then ( () => {
+        //     this.$message( {
+        //       type: 'success',
+        //       message: '删除成功！',
+        //       duration: 2000,
+        //     } )
+        //   } )
       }
     }
   }
