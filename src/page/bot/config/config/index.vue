@@ -138,7 +138,7 @@
         },
       }
     },
-    beforeCreate(){
+    created(){
       store.dispatch(REPLACE, {mainLoading: true,loadingText:null})
       const id = JSON.parse(sessionStorage.getItem('recordId'))
       const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
@@ -268,8 +268,7 @@
         //更改机器人的血型
         data.Bot_BloodType = data.Bot_BloodType?data.Bot_BloodType:'O'
 
-        data.Bot_Company = data.Bot_Company?data.Bot_Company:'上海灵羚科技有限公司'
-          data.Bot_School=data.Bot_School?data.Bot_School:'上海灵羚科技有限公司'
+        data.Bot_School=data.Bot_School?data.Bot_School:'上海灵羚科技有限公司'
         // 更改出生日期格式
         const date = data.Bot_DayOfBirth
         if(date){
