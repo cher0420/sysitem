@@ -22,7 +22,7 @@ $(function () {
   });
 
   var urlParamId = $.getUrlParam('id');
-  
+
   init();
   function init() {
     if (urlParamId != "" && urlParamId != null && urlParamId != undefined) {
@@ -33,12 +33,12 @@ $(function () {
         data: JSON.stringify({ id: urlParamId }),
         headers	:{'Content-Type': 'application/json'},
         success: function(result) {
-          botObject = result.model;
+          botObject = result.Data;
           renderPage();
           if (botObject.BotConfigId == null) {
             return;
           }
-  
+
           addMsg('Hightalk', botObject.DialogGreetings);
         },
         error: function () {
