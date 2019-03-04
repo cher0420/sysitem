@@ -76,21 +76,21 @@ $(function () {
                 data: JSON.stringify({ id: urlParamId }),
                 headers	:{'Content-Type': 'application/json'},
                 success: function(result) {
-                    botObject = result.model;
+                    botObject = result.Data;
                     renderPage();
                     if (botObject.BotConfigId == null) {
                         $(".panel-alert, #recon").show();
                         return;
                     }
-    
+
                     verifyAuthorization(host, returnCitySN.cip, function () {
                         if (isAuthorize) {
                             if (botObject.InvokeAPIVersion) {
                                 invokeAPIVersion = botObject.InvokeAPIVersion;
                             }
-    
+
                             addMsg('Hightalk', botObject.DialogGreetings);
-    
+
                             if (botObject.NavigationSwitch == "1") {
                                 getNavigation("homepage", "首页");
                             }
@@ -144,7 +144,7 @@ $(function () {
                     if (result.status == 1) {
                         isAuthorize = result.isAuthorization;
                     }
-    
+
                     if (callback != undefined && typeof (callback) == "function") {
                         callback();
                     }
@@ -173,7 +173,7 @@ $(function () {
                                         answer += "\n\n";
                                     }
                                 }
-    
+
                                 if (result.categoryid != "" && result.categoryid != null) {
                                     if (categoryNewList.hasOwnProperty(result.categoryid)) {
                                         isRelevance = true;
@@ -185,7 +185,7 @@ $(function () {
                                         }
                                     }
                                 }
-    
+
                                 addMsg("Hightalk", sendMsgDispose(answer));
                             } else {
                                 sendErrorMsg();
@@ -511,7 +511,7 @@ $(function () {
                     if (result.status == 1) {
                         buildNavigationList(result.data);
                     }
-    
+
                     drawCrumbsBar(id, name);
                 }
             }
@@ -529,7 +529,7 @@ $(function () {
                     if (result.status == 1) {
                         buildFAQList(result.data);
                     }
-    
+
                     drawFAQ(parentID);
                 }
             }
@@ -571,14 +571,14 @@ $(function () {
                                     answer += "\n";
                                 }
                             }
-    
+
                             if (result.context.Content != null && result.context.Content.length > 0) {
                                 for (i = 0; i < result.context.Content.length; i++) {
                                     answer += filterMsgSpechars(result.context.Content[i].Value);
                                     answer += "\n";
                                 }
                             }
-    
+
                             if (result.context.Footer != null && result.context.Footer.length > 0) {
                                 for (i = 0; i < result.context.Footer.length; i++) {
                                     answer += filterMsgSpechars(result.context.Footer[i]);
@@ -592,23 +592,23 @@ $(function () {
                                     answer += "\n";
                                 }
                             }
-    
+
                             if (result.answer.Text != null && result.answer.Text.length > 0) {
                                 for (i = 0; i < result.answer.Text.length; i++) {
                                     answer += filterMsgSpechars(result.answer.Text[i]);
                                     answer += "\n";
                                 }
                             }
-    
+
                             if (result.answer.ImageUrl != null && result.answer.ImageUrl.length > 0) {
                                 answer += "<div class='answer-image'>"
                                 for (i = 0; i < result.answer.ImageUrl.length; i++) {
                                     answer += drawImageElement(result.answer.ImageUrl[i]);
                                 }
-    
+
                                 answer += "<div class='answer-image'>";
                             }
-    
+
                             if (result.answer.VideoUrl != null && result.answer.VideoUrl.length > 0) {
                                 for (i = 0; i < result.answer.VideoUrl.length; i++) {
                                     answer += filterMsgSpechars(result.answer.VideoUrl[i]);
@@ -623,7 +623,7 @@ $(function () {
                                 }
                             }
                         }
-    
+
                         if (result.categoryid != "" && result.categoryid != null) {
                             if (categoryNewList.hasOwnProperty(result.categoryid)) {
                                 isRelevance = true;
@@ -635,14 +635,14 @@ $(function () {
                                 }
                             }
                         }
-    
+
                         if (answer == "") {
                             sendErrorMsg();
                         } else {
                             if (answer.substring(answer.length - 2) == "\n") {
                                 answer = answer.substring(0, answer.length - 2);
                             }
-    
+
                             addMsg("Hightalk", sendMsgDispose(answer));
                         }
                     } else {
@@ -670,11 +670,11 @@ $(function () {
                             sendErrorMsg();
                             return;
                         }
-    
+
                         if (name != "" && name != null && name != undefined) {
                             knowledgeBase += "您好！您的问题是：" + result.knowledgeBase.FriendlyName + "，相关条款如下：\n";
                         }
-    
+
                         var i = 0;
                         if (result.knowledgeBase.Text.length > 0) {
                             for (i = 0; i < result.knowledgeBase.Text.length; i++) {
@@ -682,24 +682,24 @@ $(function () {
                                 knowledgeBase += "\n";
                             }
                         }
-    
+
                         if (result.knowledgeBase.ImageUrl.length > 0) {
                             knowledgeBase += "<div class='answer-image'>"
                             for (i = 0; i < result.knowledgeBase.ImageUrl.length; i++) {
                                 knowledgeBase += drawImageElement(result.knowledgeBase.ImageUrl[i].KnowledgeBase);
                             }
-    
+
                             knowledgeBase += "</div>";
                             knowledgeBase += "\n";
                         }
-    
+
                         if (result.knowledgeBase.VideoUrl.length > 0) {
                             for (i = 0; i < result.knowledgeBase.VideoUrl.length; i++) {
                                 knowledgeBase += filterMsgSpechars(result.knowledgeBase.VideoUrl[i].KnowledgeBase);
                                 knowledgeBase += "\n";
                             }
                         }
-    
+
                         knowledgeBase += "\n亲，请问我还有什么可以帮助您的么？";
                         addMsg("Hightalk", sendMsgDispose(knowledgeBase));
                     } else {

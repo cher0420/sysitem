@@ -76,7 +76,7 @@ $(function () {
                 data: JSON.stringify({ id: urlParamId }),
                 headers	:{'Content-Type': 'application/json'},
                 success: function(result) {
-                    botObject = result.model;
+                    botObject = result.Data;
                     renderPage();
                     if (botObject.BotConfigId == null) {
                         $(".panel-alert, #recon").show();
@@ -140,7 +140,7 @@ $(function () {
                     if (result.status == 1) {
                         isAuthorize = result.isAuthorization;
                     }
-    
+
                     if (callback != undefined && typeof (callback) == "function") {
                         callback();
                     }
@@ -584,7 +584,7 @@ $(function () {
                     if (result.status == 1) {
                         buildNavigationList(result.data);
                     }
-    
+
                     drawCrumbsBar(id, name);
                 }
             }
@@ -602,7 +602,7 @@ $(function () {
                     if (result.status == 1) {
                         buildFAQList(result.data);
                     }
-    
+
                     drawFAQ(parentID);
                 }
             }
