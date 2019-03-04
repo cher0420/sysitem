@@ -32,6 +32,8 @@
   import store from '../../store/index'
   import {STR} from "../../constants/constants";
   import {REPLACE} from "../../store/mutations";
+  import {MENUS} from "../../constants/constants";
+  import {computedUrl} from "../../utils/setTitle";
 
   export default {
     data(){
@@ -62,14 +64,8 @@
       }
     },
     methods:{
+
       back(){
-        const to = this.$route
-        const url={
-          path: to.path,
-          query:{
-            ...to.query,
-          }
-        }
         this.$router.back()
       },
     }

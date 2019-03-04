@@ -26,20 +26,31 @@
 </template>
 
 <script>
-  import {SECONDMENUS} from "../../constants/constants";
+  import {MENUS} from "../../constants/constants";
   import {REPLACE} from "../../store/mutations";
   import store from '../../store/index'
-  import {STR} from "../../constants/constants";
 
   export default {
       data(){
         return{
           openArr:['channel','knowledgeBuild'],
-          secondMenus:SECONDMENUS,
         }
       },
       name: "SecondaryMenu",
       computed:{
+        secondMenus () {
+          const pathArr = this.$route.path.split('/').filter( d => d )
+
+          let arr = []
+          for ( let item of MENUS.values() ) {
+            switch (item.id) {
+              case pathArr[0]:
+                arr = item.children;
+                break;
+            }
+          }
+          return arr
+        },
         defaultActiveSecondM(){
           return store.state.app.defaultActiveSecondM
         },
@@ -55,7 +66,7 @@
         store.dispatch(REPLACE,{defaultActiveSecondM,name})
       },
       methods:{
-        handleOpen(index,indexPath){
+        handleOpen(){
           this.$refs.test['aria-expanded'] = 'false'
         },
         handleClose(index,indexPath){
@@ -64,13 +75,12 @@
         select(index,indexPath){
           const arr = store.state.app.breadArr
           const obj={
-            name:STR[index],
             url:'/config'
           }
           arr.splice(1,arr.length-1,obj)
           const to =  this.$route.path.split('/')
           const config = to[2] ==='config'
-          store.dispatch(REPLACE,{breadArr:arr,config,navIndex:STR[index]}).then(
+          store.dispatch(REPLACE,{breadArr:arr,config}).then(
             () =>{
               //拼接路由，目前三级路由
               const urlfir= this.$route.matched[0].path

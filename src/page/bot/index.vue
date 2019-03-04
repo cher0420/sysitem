@@ -116,7 +116,6 @@
   import {getCookies} from "../../utils/cookie";
   import {TOKEN} from "../../constants/constants";
   import {getList, reload} from "./service/requestMethod";
-  import {STR} from "../../constants/constants";
   import DrapDown from '../../components/DrapDown'
 
   export default {
@@ -168,11 +167,8 @@
             name: name
           }
         }
-        const arr = path.split('/')
-        const index = STR[arr[arr.length - 1]]
         const config = this.$route.name === 'config';
-        console.log("name",config)
-        store.dispatch(REPLACE, {navIndex: index, config}).then(
+        store.dispatch(REPLACE, {config}).then(
           () => {
             this.$router.push(url)
           }

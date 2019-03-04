@@ -186,7 +186,7 @@ export const hiddenTokenInUrl = () => {
     const newUrl = path;
     const status = isIE9()
     if (!status) {
-        window.history.pushState(stateObject, title, newUrl);
+        // window.history.pushState(stateObject, title, newUrl);
     }
 }
 

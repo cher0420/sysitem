@@ -2,60 +2,123 @@ export const MENUS=[
   {
     id:'dashboard',
     chineseName:'仪表盘',
-    englishName:'dashboard',
     path:'wait',
-    children:
-      [
-        {
-          id:'config',
-          chineseName:'配置',
-          englishName:'config',
-          path:'config'
-        }
-      ]
   },
   {
     id:'bot',
     chineseName:'机器人列表',
-    englishName:'bot',
     path:'bot',
     children:
       [
         {
           id:'config',
-          chineseName:'配置',
-          englishName:'config',
+          chineseName:'基本资料',
           path:'config',
+          parent: 'bot'
+        },
+        {
+          id:'channel',
+          chineseName:'渠道配置',
+          path:'channel',
+          parent: 'bot',
           children:[
             {
               id:'web',
               chineseName:'网页',
-              englishName:'web',
               path:'web',
+              parent: 'channel'
             },
             {
               id:'weChatService',
               chineseName:'微信服务号',
-              englishName:'weChatService',
               path:'weChatService',
+              parent: 'channel'
             },
             {
               id:'weChatCompany',
               chineseName:'微信企业号',
-              englishName:'weChatCompany',
               path:'weChatCompany',
+              parent: 'channel'
             },
             {
               id:'robot',
               chineseName:'实体机器人',
-              englishName:'robot',
               path:'robot',
+              parent: 'channel'
             },
             {
               id:'desktopApp',
               chineseName:'桌面应用',
-              englishName:'desktopApp',
               path:'desktopApp',
+              parent: 'channel'
+            },
+          ]
+        },
+        {
+          id:'knowledgeBuild',
+          chineseName:'知识建设',
+          path:'knowledgeBuild',
+          parent: 'bot',
+          children:[
+            {
+              id:'knowledgeQuiz',
+              chineseName:'知识问答',
+              path:'knowledgeQuiz',
+              parent: 'knowledgeBuild',
+              children:[
+                {
+                  id:'create',
+                  chineseName:'新建',
+                  path:'create',
+                  parent: 'knowledgeQuiz',
+                },
+                {
+                  id:'edit',
+                  chineseName:'编辑',
+                  path:'edit',
+                  parent: 'knowledgeQuiz',
+                }
+              ]
+            },
+            {
+              id:'quicklyQA',
+              chineseName:'快速问答',
+              path:'quicklyQA',
+              parent: 'knowledgeBuild',
+              children:[
+                {
+                  id:'create',
+                  chineseName:'新建',
+                  path:'create',
+                  parent: 'quicklyQA',
+                },
+                {
+                  id:'edit',
+                  chineseName:'编辑',
+                  path:'edit',
+                  parent: 'quicklyQA',
+                }
+              ]
+            },
+            {
+              id:'keywordResponse',
+              chineseName:'关键词回复',
+              path:'keywordResponse',
+              parent: 'knowledgeBuild',
+              children:[
+                {
+                  id:'create',
+                  chineseName:'新建',
+                  path:'create',
+                  parent: 'keywordResponse',
+                },
+                {
+                  id:'edit',
+                  chineseName:'编辑',
+                  path:'edit',
+                  parent: 'keywordResponse',
+                }
+              ]
             }
           ]
         }
@@ -64,14 +127,12 @@ export const MENUS=[
   {
     id:'skill',
     chineseName:'机器人技能',
-    englishName:'skill',
     path:'wait',
     children:
       [
         {
           id:'config',
           chineseName:'配置',
-          englishName:'config',
           path:'config'
         }
       ]
@@ -79,14 +140,12 @@ export const MENUS=[
   {
     id:'custom',
     chineseName:'定制服务',
-    englishName:'custom',
     path:'wait',
     children:
       [
         {
           id:'config',
           chineseName:'配置',
-          englishName:'config',
           path:'config'
         }
       ]
@@ -94,14 +153,12 @@ export const MENUS=[
   {
     id:'opinion',
     chineseName:'意见反馈',
-    englishName:'opinion',
     path:'wait',
     children:
       [
         {
           id:'config',
           chineseName:'配置',
-          englishName:'config',
           path:'config'
         }
       ]
@@ -109,98 +166,18 @@ export const MENUS=[
   {
     id:'authority',
     chineseName:'权限管理',
-    englishName:'authority',
     path:'wait',
     children:
       [
         {
           id:'config',
           chineseName:'配置',
-          englishName:'config',
           path:'config'
         }
       ]
   },
 ];
 
-export const SECONDMENUS = [
-  {
-    id:'config',
-    chineseName:'基本资料',
-    englishName:'config',
-    path:'config',
-  },
-  {
-    id:'channel',
-    chineseName:'渠道配置',
-    englishName:'channel',
-    path:'channel',
-    children:[
-      {
-        id:'web',
-        chineseName:'网页',
-        englishName:'web',
-        path:'web',
-      },
-      {
-        id:'weChatService',
-        chineseName:'微信服务号',
-        englishName:'weChatService',
-        path:'weChatService',
-      },
-      {
-        id:'weChatCompany',
-        chineseName:'微信企业号',
-        englishName:'weChatCompany',
-        path:'weChatCompany',
-      },
-      {
-        id:'robot',
-        chineseName:'实体机器人',
-        englishName:'robot',
-        path:'robot',
-      },
-      {
-        id:'desktopApp',
-        chineseName:'桌面应用',
-        englishName:'desktopApp',
-        path:'desktopApp',
-      },
-    ]
-  },
-  {
-    id:'knowledgeBuild',
-    chineseName:'知识建设',
-    englishName:'knowledgeBuild',
-    path:'knowledgeBuild',
-    children:[
-      {
-        id:'knowledgeQuiz',
-        chineseName:'知识问答',
-        englishName:'knowledgeQuiz',
-        path:'knowledgeQuiz',
-      },
-      // {
-      //   id:'caseStore',
-      //   chineseName:'案例库',
-      //   englishName:'caseStore',
-      //   path:'caseStore',
-      // },
-      {
-        id:'quicklyQA',
-        chineseName:'快速问答',
-        englishName:'quicklyQA',
-        path:'quicklyQA',
-      },
-      {
-        id:'keywordResponse',
-        chineseName:'关键词回复',
-        englishName:'keywordResponse',
-        path:'keywordResponse',
-      }
-    ]
-  }
-];
 export const STR = {
   authority:'权限管理',
   custom:'定制服务',
