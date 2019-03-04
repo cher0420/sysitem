@@ -15,6 +15,49 @@ https://192.168.1.103:10033
 checkin至master代码即可
 >###增加页面
 - 需先配置路由，注意大小写，地址：src/router/index.js
+- 配置菜单
+  1.确定页面为第几级菜单，仿照下列嵌套规则。
+  2.当前级别下的子菜单，使用children参数添加数组
+  3.子菜单请添加parent字段，值为父级id
+
+```
+ {
+    id:'bot',
+    chineseName:'机器人列表',
+    path:'bot',
+    children:
+      [
+        {
+          id:'config',
+          chineseName:'基本资料',
+          path:'config',
+          parent: 'bot'
+        },
+        {
+          id:'knowledgeBuild',
+          chineseName:'知识建设',
+          path:'knowledgeBuild',
+          parent: 'bot',
+          children:[
+            {
+              id:'knowledgeQuiz',
+              chineseName:'知识问答',
+              path:'knowledgeQuiz',
+              parent: 'knowledgeBuild',
+              children:[
+                {
+                  id:'create',
+                  chineseName:'新建',
+                  path:'create',
+                  parent: 'knowledgeQuiz',
+                },
+              ]
+            },
+          ]
+        }
+      ]
+  },
+```
 - 编写页面，src/page/...
 - 一个路由对应一个文件夹
 - 页面布局文件 src/layout
