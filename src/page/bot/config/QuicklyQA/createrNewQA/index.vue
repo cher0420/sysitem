@@ -122,7 +122,7 @@
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
-  import {participle} from "../../../../../api/getdata";  // api
+  import {participle} from "../../knowledgeQuiz/knowledgeDetail/api/getdata";  // api
   import { IMG_UPLOADORDELETE,QUERYQADATA,GETKEYWORDS,STOREQADATA} from "../../../../../constants/api";
 
   export default {

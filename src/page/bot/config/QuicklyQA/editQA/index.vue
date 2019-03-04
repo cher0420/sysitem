@@ -77,7 +77,7 @@
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index";
-  import {UploadAndDeleteAsync} from "../../../../../api/getdata";  //  异步请求
+  import {UploadAndDeleteAsync} from "../../knowledgeQuiz/knowledgeDetail/api/getdata";  //  异步请求
   import { IMG_UPLOADORDELETE,GETKEYWORDS,QUERYQADATA,STOREQADATA} from "../../../../../constants/api";
 
   export default {

@@ -5,14 +5,12 @@
 *
 * */
 
-import base from "../host/baseUrl";
-import {TOKEN} from "../constants/constants";
-import {getCookies} from "../utils/cookie";
+import {TOKEN} from "../../../../../../constants/constants";
+import {getCookies} from "../../../../../../utils/cookie";
 
 export default async (url="", data = {}, type = 'GET') => {
   type = type.toUpperCase();
   const token = getCookies(TOKEN);
-  let thisDate;
 
   if (type == 'GET') {
     let dataStr = ''; //数据拼接字符串
@@ -25,7 +23,6 @@ export default async (url="", data = {}, type = 'GET') => {
     }
   }
 
-  url = base.requestHost + url;
   if (window.fetch ) {
     let body = data;
     let requestConfig = {
@@ -89,33 +86,6 @@ export default async (url="", data = {}, type = 'GET') => {
         }
       }
     });
-
-
-/*
-* jquery ajax
-* */
-    // $.ajax({
-    //   url: url,
-    //   type: type,
-    //   headers: {
-    //     "Content-Type": "application/json;charset=utf-8",
-    //     'Access-Token': token
-    //   },
-    //   async: false,
-    //   dataType: 'json',
-    //   data: JSON.stringify(data),
-    // })
-    //   .done(function (res) {
-    //     thisDate = res;    //需要返回thisDate
-    //   })
-    //   .fail(function (err) {
-    //     console.log(err);
-    //   })
-    //   .always(function () {
-    //
-    //   });
-   //  return thisDate;
-
   }
 };
 
