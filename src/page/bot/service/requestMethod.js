@@ -5,7 +5,6 @@ import {getCookies} from "../../../utils/cookie";
 import {TOKEN,TENANTID} from "../../../constants/constants";
 import URL from '../../../host/baseUrl'
 import {UPDATESTATUS} from "../../../constants/api";
-import moment from 'moment'
 
 const token = getCookies(TOKEN)
 
