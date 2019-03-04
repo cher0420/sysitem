@@ -169,7 +169,7 @@
             const PageSize = res['PageSize']
             store.dispatch(REPLACE,{tableData: res.Data,total:TotalCount,PageIndex,PageSize}).then(
               () =>{
-
+                that.loading = false
               }
             )
           }
