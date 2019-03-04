@@ -49,20 +49,12 @@ export function getLoginStatus() {
         // url上的sid不空且与cookie的sid一致
         if (tokenUrl && str && str === sid) {
             // url上的sid不空且与cookie的sid一致移除cookie的SID
-            // removeCookies(SID).then(
-            //     () => {
-                    if (tokenUrl !== token) {
-                        //验证url上的token是否存在并且与cookie的token一致
-                        voildToken(tokenUrl).then()
-                    } else {
-                        voildToken(token).then(
-                            () => {
-                                console.log(' 正确响应');
-                            }
-                        )
-                    }
-            //     }
-            // )
+          if (tokenUrl !== token) {
+            //验证url上的token是否存在并且与cookie的token一致
+            voildToken(tokenUrl).then()
+          } else {
+            voildToken(token)
+          }
         } else {
             redirect(LOGIN)
         }
@@ -194,7 +186,7 @@ export const hiddenTokenInUrl = () => {
     const newUrl = path;
     const status = isIE9()
     if (!status) {
-        // window.history.pushState(stateObject, title, newUrl);
+        window.history.pushState(stateObject, title, newUrl);
     }
 }
 
