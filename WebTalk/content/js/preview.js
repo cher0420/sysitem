@@ -52,7 +52,6 @@ $(function () {
 
   function renderPage() {
     var webtalk = $(".webtalk");
-
     webtalk.find(".panel-head").css("background-color", botObject.DialogColor).css('color',botObject.DialogTitleColor);
     webtalk.find(".panel-head-title").html(botObject.DialogTitle);
 

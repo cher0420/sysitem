@@ -86,12 +86,21 @@
       }
     },
     computed:{
+      /**
+       * @return {number}
+       */
       PageIndex(){
         return store.state.app.PageIndex
       },
+      /**
+       * @return {number}
+       */
       PageSize(){
         return store.state.app.PageSize
       },
+      /**
+       * @return {string}
+       */
       Key(){
         return store.state.app.Key
       },
@@ -101,12 +110,15 @@
       total(){
         return store.state.app.total
       },
+      /**
+       * @return {string}
+       */
       SkillNo(){
         return store.state.app.SkillNo
       }
     },
     created(){
-      store.dispatch(REPLACE,{tableData:[],total:0}).then(
+      store.dispatch(REPLACE,{tableData:[],total:0,PageIndex: 1 }).then(
         () =>{
           /*获取答案列表*/
           this.get_Answer_List()
