@@ -22,7 +22,7 @@ $(function () {
   });
 
   var urlParamId = $.getUrlParam('id');
-  
+
   init();
   function init() {
     if (urlParamId != "" && urlParamId != null && urlParamId != undefined) {
@@ -33,12 +33,12 @@ $(function () {
         data: JSON.stringify({ id: urlParamId }),
         headers	:{'Content-Type': 'application/json'},
         success: function(result) {
-          botObject = result.model;
+          botObject = result.Data;
           renderPage();
           if (botObject.BotConfigId == null) {
             return;
           }
-  
+
           addMsg('Hightalk', botObject.DialogGreetings);
         },
         error: function () {
@@ -52,7 +52,6 @@ $(function () {
 
   function renderPage() {
     var webtalk = $(".webtalk");
-
     webtalk.find(".panel-head").css("background-color", botObject.DialogColor).css('color',botObject.DialogTitleColor);
     webtalk.find(".panel-head-title").html(botObject.DialogTitle);
 

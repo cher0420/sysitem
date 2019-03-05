@@ -175,17 +175,16 @@
 <script>
   // import
   import TitleItem from '../../../../components/Title';
-  import {IMAGE, html} from "./constants";
+  import {IMAGE} from "./constants";
   import {request} from "../../../../serive/request";
   import URL from '../../../../host/baseUrl'
   import {WEBINFO, UPDATEWEB} from "../../../../constants/api";
   import {getCookies} from "../../../../utils/cookie";
   import {TOKEN, TENANTID} from "../../../../constants/constants";
-  import {unhtml, htmlDecodeByRegExp} from "../../../../utils/utils";
+  import {htmlDecodeByRegExp} from "../../../../utils/utils";
   import store from '../../../../store/index'
   import {REPLACE} from "../../../../store/mutations";
   import Title from '../../../../components/Title'
-  // import Footer from '../../../../layout/components/Footer';
 
   export default {
     data() {
