@@ -138,7 +138,7 @@ $(function () {
             success: function(result) {
                 if (result != undefined && result != null) {
                     if (result.Status == 1) {
-                        isAuthorize = result.isAuthorization;
+                        isAuthorize = result.Data;
                     }
 
                     if (callback != undefined && typeof (callback) == "function") {
