@@ -122,7 +122,6 @@
   import {getCookies} from "../../../../../utils/cookie";
   import base from "../../../../../host/baseUrl";
   import store from "../../../../../store/index"
-  import {participle} from "../../../../../api/getdata";  // api
   import { IMG_UPLOADORDELETE,QUERYQADATA,GETKEYWORDS,STOREQADATA} from "../../../../../constants/api";
 
   export default {
@@ -356,20 +355,9 @@
         // 加载中
         this.loading = true;
 
-
         let data = {
           "Question": this.Question
         };
-
-
-        try {
-          let test = await participle(data); // 测试
-          console.log("participle+++", test);
-
-        } catch (err) {
-          console.log(err)
-        }
-
 
         //  debugger;
 
