@@ -2,7 +2,9 @@
   <section class="p-relative">
     <section class="f-l done">
       <el-input class='searchInput middle' size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
-      </el-input><el-button :disabled='!status' type="primary" class="middle margin-left-20 big-button">添加关键词</el-button><input
+      </el-input>
+      <el-button :disabled='!status' type="primary" class="middle margin-left-20 big-button" @click="go('/bot/config/keywordResponse/addKeyword')">添加关键词</el-button>
+      <input
         type="file"
         accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         class="el-upload__input"
@@ -32,7 +34,7 @@
       <el-table-column prop="year" label="创建时间" :resizable="resizable"></el-table-column>
       <el-table-column label="操作" :resizable="resizable" width="200">
         <template slot-scope="scope">
-          <span class="hover edit"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px" @click="doDelete(scope.row, scope.$index)"><i class="el-icon-close"></i>删除</span>
+          <span class="hover edit" @click="go('/bot/config/keywordResponse/editAnswer')"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px" @click="doDelete(scope.row, scope.$index)"><i class="el-icon-close"></i>删除</span>
         </template>
       </el-table-column>
     </el-table>
@@ -76,6 +78,16 @@
       init () {
         this.tableData = []
         this.total = 0
+      },
+      go (v) {
+        const query = this.$route.query
+        this.$router.push(
+          {
+            path: v,
+            query,
+
+          }
+        )
       },
       async getList () {
         const that = this

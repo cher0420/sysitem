@@ -200,7 +200,9 @@ export const STR = {
   createrNewQA:'创建新问答',
   updateQA:'创建新问答',
   editQA:'编辑',
-  keywordResponse:'关键词回复'
+  keywordResponse:'关键词回复',
+  addKeyword:'添加关键词回复',
+  editAnswer: '编辑'
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';
