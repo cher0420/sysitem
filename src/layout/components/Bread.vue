@@ -32,8 +32,6 @@
   import store from '../../store/index'
   import {STR} from "../../constants/constants";
   import {REPLACE} from "../../store/mutations";
-  import {MENUS} from "../../constants/constants";
-  import {computedUrl} from "../../utils/setTitle";
 
   export default {
     data(){
