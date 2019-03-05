@@ -141,7 +141,7 @@ $(function () {
             headers	:{'Content-Type': 'application/json'},
             success: function(result) {
                 if (result != undefined && result != null) {
-                    if (result.status == 1) {
+                    if (result.Status == 1) {
                         isAuthorize = result.isAuthorization;
                     }
 
