@@ -41,6 +41,6 @@ export const STOREQADATA = "/api/admin/portal/qqa/save"; // 快速问答存储�
 
 // 关键词回复
 export const KEYWORDLIST = '/api/admin/channel/v2/webchat/getskillintent';//关键词列表
-export const KEYWORDLEADEXCEL = '';//导入关键词
+export const KEYWORDLEADEXCEL = '/api/admin/keyword/KQA/upload';//导入关键词
 export const KEYWORDDOWNLOAD = '';//下载关键词模版
 export const DELETEKEYWORD = '';//删除关键词

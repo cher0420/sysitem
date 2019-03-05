@@ -9,7 +9,7 @@
         accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         class="el-upload__input"
         style="display: none"
-        ref="yoy-upload"
+        ref="yoy-upload-excel"
         @change="uploadHandle"
       /><el-button :disabled='!status' type="primary" class="middle big-button margin-left-20" @click="uploadContainer">导入关键词</el-button>
       <span :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']" @click="download">下载导入模版</span>
@@ -153,54 +153,53 @@
 
       },
       uploadContainer(v) {
-        const input = this.$refs["yoy-upload"];
+        const input = this.$refs["yoy-upload-excel"];
         input.click();
         // 监听change事件:
       },
       uploadHandle(v) {
-
         const that = this;
         const file = v.target.files[0];
-        const type = file.type;
-        if (!/image\/\w+/.test(type) || file.type.indexOf("svg") > -1) {
-          this.$message({
-            type: "error",
-            message: "只能上传jpg, jpeg, png, gif格式类型的图片"
-          });
-          return;
-        }
-        if (!file || file.size > 200 * 1024) {
-          this.$message({
-            type: "error",
-            message: "请上传文件不大于200KB的图片"
-          });
-          return;
-        }
         // 读取文件:
         const reader = new FileReader();
-        //初始化图像对象
-        let obj = {};
         //获取文件名字
         const name = file.name;
         reader.onload = function(e) {
-          const KnowledgeBase = e.target.result;
-
-          //图像对象赋值
-          // debugger;
-          const type = name.substring(name.lastIndexOf(".")).replace(".", "");
-          obj = {
-            name,
-            KnowledgeBase,
-            type
-          };
-          that.defaultState === 'first'? that.uploadList.push(obj): that.uploadList2.push(obj);//需要根据类型增加不同的图片
-
-          that.$refs["yoy-image-upload"].value = "";
+          console.log(name,e)
+          that.uploadExcel(name, e )
+          that.$refs["yoy-upload-excel"].value = "";
         };
         // 以DataURL的形式读取文件:
         reader.readAsDataURL(file);
         // });
+      },
+      uploadExcel (name, file) {
+        const id = this.$route.query.recordId
+        const formData = new FormData(file);
 
+        formData.append('BotId', '68B018D4-390F-4DBF-BBB1-5B4262CE92F9');
+        formData.append('TenantDomain', 'ACCFAFE0-2592-460B-99A8-49C3503DA8B9');
+
+        const params = {
+          headers: {
+            'Access-Token': getCookies( TOKEN ),
+            'Content-Type': 'multipart/form-data;charset=UTF-8',
+          },
+          method: "POST",
+          processData: false,
+          body: formData
+        }
+        request( KEYWORDLEADEXCEL ,  params)
+          .then(
+            (res) => {
+              console.log(res);
+            }
+          )
+          .catch(
+            (err) => {
+              console.log(err);
+            }
+          )
       },
       doDumpAll() {
         const that = this
