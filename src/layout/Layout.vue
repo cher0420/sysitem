@@ -14,7 +14,7 @@
           <el-aside v-else class="el-aside full-height" width='14vw' :style="{float:'left',maxWidth: '240px'}">
             <sidebar class="sidebar-container full-height"></sidebar>
           </el-aside>
-    
+
         <!-- display area -->
            <!-- second -->
         <el-container class="full-height robotDisplayArea" :style="{width:realMainWidth}">

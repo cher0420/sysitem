@@ -136,12 +136,6 @@ const arr = [
           require(["../page/wait/index"], resolve),
         name: 'config',
       },
-      // {
-      //   path:'config/caseStore',
-      //   component: resolve =>
-      //     require(["../page/bot/config/caseStore/index"], resolve),
-      //   name: 'config',
-      // },
       {
         path:'config/quicklyQA',
         component: resolve =>
@@ -155,7 +149,7 @@ const arr = [
         name: 'create',
       },
       {
-        path:'config/quicklyQA/updateQA',  // 创建新问答/更新问答
+        path:'config/quicklyQA/updateQA',  // 更新问答
         component: resolve =>
           require(["../page/bot/config/quicklyQA/createrNewQA/updateQA"], resolve),
         name: 'edit',
@@ -177,21 +171,18 @@ const arr = [
           require(["../page/bot/config/keywordResponse/index"], resolve),
         name: 'config',
       },
-      // {
-      //   path:'config/keywordResponse/addKeyword',   //  关键词回复
-      //   component: resolve =>
-      //     require(["../page/bot/config/keywordResponse/addKeyword/addKeyword"], resolve),
-      //   name: 'create',
-      // },
-      // {
-      //   path:'config/keywordResponse/editAnswer',   //  关键词回复
-      //   component: resolve =>
-      //     require(["../page/bot/config/keywordResponse/editAnswer/editAnswer"], resolve),
-      //   name: 'edit',
-      //
-      // }
-
-
+      {
+        path:'config/keywordResponse/addKeyword',   //  关键词回复
+        component: resolve =>
+          require(["../page/bot/config/keywordResponse/addKeyword/addKeyword"], resolve),
+        name: 'create',
+      },
+      {
+        path:'config/keywordResponse/editAnswer',   //  关键词回复
+        component: resolve =>
+          require(["../page/bot/config/keywordResponse/editAnswer/editAnswer"], resolve),
+        name: 'edit',
+      }
     ]
   }
 ]

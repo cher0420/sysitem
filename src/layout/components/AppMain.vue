@@ -1,5 +1,5 @@
 <template>
-  <section class="yoy-header-container robotWidth " ref="scrollTop" :style = '{width:realArticleWidth,float:"left",flex:"1"}'>
+  <section class="yoy-header-container robotWidth" ref="scrollTop" :style = '{width:realArticleWidth,float:"left",flex:"1"}'>
     <bread class="navBar"></bread>
     <router-view class="view yoy-main listItem"  :style="{width:widthOS}"></router-view><footer-bar></footer-bar>
   </section>
@@ -45,38 +45,10 @@
         }else{
           this.realArticleWidth = '100%'
         }
-        
+
       }
     },
     methods: {
-      myResize() {
-        let robotWidthH = $(".robotWidth").outerHeight(true);
-        // console.log("all", robotWidthH);
-        let navBarH = $(".navBar").outerHeight(true);
-        // console.log("fen001", navBarH);
-        let listItem = $(".listItem").outerHeight(true);
-        // console.log("fen002", listItem);
-        let sum = navBarH + listItem + 50;
-        if (robotWidthH > sum || robotWidthH == sum) {
-          $(".robotFoot").css({
-            "position": "absolute",
-            "left": "0",
-            "bottom": "0px",
-            "z-index": "9",
-
-
-          })
-        } else {
-          $(".robotFoot").css({
-            "position": "static",
-            "left": "0",
-            "bottom": "0px",
-            "z-index": "9",
-
-          })
-        }
-
-      },
       getOs() {
         var OsObject = "";
         if (navigator.userAgent.indexOf("MSIE") > 0) {
@@ -109,7 +81,8 @@
         return scrollbarWidth;//返回滚动条宽度
       },
       scrollTop() {
-        this.$refs.scrollTop.offsetParent.scrollTop = 0
+       console.log(this.$refs.scrollTop.offsetParent.scrollTop)
+        // this.$refs.scrollTop.offsetParent.scrollTop = 0
       },
     },
   }

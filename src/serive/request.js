@@ -102,7 +102,7 @@ export const request = (api,params = {}) => {
                 default:
                   Message({
                     type: 'error',
-                    message: '服务器异常，请联系工作人员',
+                    message: '服务器异常，请稍后重试',
                     duration: 2000,
                     onClose: () => {
                       store.dispatch(REPLACE, { mainLoading : false, loading: false })

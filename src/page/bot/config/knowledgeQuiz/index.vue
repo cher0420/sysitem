@@ -208,7 +208,7 @@
           (err) =>{
             that.$message({
               type:'error',
-              message:'服务器错误，请稍后重试！'
+              message:'服务器错误，请稍后重试'
             })
             /*捕获到错误时*/
           }

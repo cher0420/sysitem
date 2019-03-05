@@ -184,7 +184,7 @@ src/serive/request.js
                   redirect(LOGIN)
                   break;
                 default:
-                alert('服务器异常，请联系工作人员')
+                alert('服务器异常，请稍后重试')
               }
             }
           ).then(
