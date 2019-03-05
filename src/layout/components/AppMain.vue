@@ -1,5 +1,5 @@
 <template>
-  <section class="yoy-header-container robotWidth" ref="scrollTop" :style = '{width:realArticleWidth,float:"left",flex:"1"}'>
+  <section class="yoy-header-container robotWidth" :style = '{width:realArticleWidth,float:"left",flex:"1"}'>
     <bread class="navBar"></bread>
     <router-view class="view yoy-main listItem"  :style="{width:widthOS}"></router-view><footer-bar></footer-bar>
   </section>
@@ -81,8 +81,8 @@
         return scrollbarWidth;//返回滚动条宽度
       },
       scrollTop() {
-       console.log(this.$refs.scrollTop.offsetParent.scrollTop)
-        // this.$refs.scrollTop.offsetParent.scrollTop = 0
+        const DOM = document.getElementById('main')
+        DOM.scrollTop = 0
       },
     },
   }

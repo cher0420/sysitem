@@ -22,8 +22,8 @@
               <secondary-menu class='full-height yoy-second-menu'>
               </secondary-menu>
             </section>
-            <el-main class="full-height " v-loading="mainLoading" :element-loading-text="loadingText">
-              <app-main></app-main>
+            <el-main class="full-height " :element-loading-text="loadingText" id="main">
+              <app-main v-loading="mainLoading"></app-main>
             </el-main>
         </el-container>
       </div>
