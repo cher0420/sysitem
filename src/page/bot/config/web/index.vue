@@ -226,7 +226,6 @@
     components: {
       TitleItem,
       Title,
-      // Footer,
     },
     created() {
       store.dispatch(REPLACE, {mainLoading: true, loadingText: null})
@@ -246,16 +245,27 @@
       request(URL.requestHost + WEBINFO, option).then(
         (res) => {
           this.initData(res);
-          // console.log("标记",res.WebChatSettingModel.Code)
           if (res.WebChatSettingModel.Code == null || res.WebChatSettingModel.Code == "") {
-            // this.initData(res);
             this.validate("formData");
             this.flag = true;
           } else {
-            // this.initData(res);
           }
         }
       )
+        .catch(
+          () => {
+            this.$message(
+              {
+                type: 'error',
+                message: '服务器错误，请稍后重试',
+                duration: 2000,
+              }
+            )
+            store.dispatch(
+              REPLACE , { mainLoading: false }
+            )
+          }
+        )
     },
     mounted(){
       $("head").append("<script class='ip' src='https://pv.sohu.com/cityjson?ie=utf-8'><\/script>");
