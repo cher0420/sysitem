@@ -141,6 +141,7 @@
       get_Answer_List(){
         /*获取知识列表*/
         /*初始化请求参数*/
+        const that = this
         this.loading = true
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const recordId = id?id:this.$route.query.recordId
@@ -188,7 +189,10 @@
           (err) =>{
             this.$message({
               type:'error',
-              message:'服务器错误，请稍后重试！'
+              message:'服务器错误，请稍后重试',
+              onClose () {
+                that.loading = false
+              }
             })
           }
         )
