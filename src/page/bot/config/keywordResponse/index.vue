@@ -4,14 +4,19 @@
       <el-input class='searchInput middle' size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
       <el-button :disabled='!status' type="primary" class="middle margin-left-20 big-button" @click="go('/bot/config/keywordResponse/addKeyword')">添加关键词</el-button>
-      <input
-        type="file"
-        accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        class="el-upload__input"
-        style="display: none"
-        ref="yoy-upload-excel"
-        @change="uploadHandle"
-      /><el-button :disabled='!status' type="primary" class="middle big-button margin-left-20" @click="uploadContainer">导入关键词</el-button>
+      <!--<input-->
+        <!--id = 'file'-->
+        <!--type="file"-->
+        <!--accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"-->
+        <!--class="el-upload__input"-->
+        <!--style="display: none"-->
+        <!--ref="yoy-upload-excel"-->
+        <!--@change="uploadHandle"-->
+      <!--/>-->
+      <form id="upload" enctype="multipart/form-data" method="post" ref="yoy-upload-excel">
+        <input type="file" name="file" id="pic" @click="uploadHandle"/>
+      </form>
+      <el-button :disabled='!status' type="primary" class="middle big-button margin-left-20" @click="uploadContainer">导入关键词</el-button>
       <span :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']" @click="download">下载导入模版</span>
     </section>
     <section class="f-r">
@@ -54,6 +59,7 @@
   import {KEYWORDLIST, DELETEKEYWORD, KEYWORDLEADEXCEL, KEYWORDDOWNLOAD} from "../../../../constants/api";
   import { getCookies } from "../../../../utils/cookie";
   import {TOKEN} from "../../../../constants/constants";
+  import store from '../../../../store/index'
 
   export default {
     data() {
@@ -158,27 +164,30 @@
         // 监听change事件:
       },
       uploadHandle(v) {
-        const that = this;
-        const file = v.target.files[0];
-        // 读取文件:
-        const reader = new FileReader();
-        //获取文件名字
-        const name = file.name;
-        reader.onload = function(e) {
-          console.log(name,e)
-          that.uploadExcel(name, e )
-          that.$refs["yoy-upload-excel"].value = "";
-        };
-        // 以DataURL的形式读取文件:
-        reader.readAsDataURL(file);
-        // });
+        this.uploadExcel()
+        // const that = this;
+        // const file = v.target.files[0];
+        // // 读取文件:
+        // const reader = new FileReader();
+        // //获取文件名字
+        // const name = file.name;
+        // reader.onload = function(e) {
+        //   that.uploadExcel(name, e )
+        //   that.$refs["yoy-upload-excel"].value = "";
+        // };
+        // // 以DataURL的形式读取文件:
+        // reader.readAsDataURL(file);
+        // // });
       },
       uploadExcel (name, file) {
         const id = this.$route.query.recordId
-        const formData = new FormData(file);
-
-        formData.append('BotId', '68B018D4-390F-4DBF-BBB1-5B4262CE92F9');
-        formData.append('TenantDomain', 'ACCFAFE0-2592-460B-99A8-49C3503DA8B9');
+        const someFile = document.getElementById('upload')
+        const formData = new FormData(someFile);
+        const TenantDomain = store.state.app.userInfo.Email
+        formData.append('BotId', id);
+        formData.append('filename', 'key.csv');
+        formData.append('TenantDomain', TenantDomain);
+        formData.append('TenantId', '928d2511-6783-43c2-bde5-dcf059f55710');
 
         const params = {
           headers: {
