@@ -35,8 +35,8 @@
           <span style="margin-left: 10px">{{ scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="IntentName" label="关键词" :resizable="resizable"></el-table-column>
-      <el-table-column prop="year" label="创建时间" :resizable="resizable"></el-table-column>
+      <el-table-column prop="Keyword" label="关键词" :resizable="resizable"></el-table-column>
+      <el-table-column prop="CreateDate" label="创建时间" :resizable="resizable"></el-table-column>
       <el-table-column label="操作" :resizable="resizable" width="200">
         <template slot-scope="scope">
           <span class="hover edit" @click="go('/bot/config/keywordResponse/editAnswer')"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px" @click="doDelete(scope.row, scope.$index)"><i class="el-icon-close"></i>删除</span>
@@ -55,11 +55,12 @@
   </section>
 </template>
 <script>
+  import moment from 'moment'
   import {request} from "../../../../serive/request";
-  import {KEYWORDLIST, DELETEKEYWORD, KEYWORDLEADEXCEL, KEYWORDDOWNLOAD} from "../../../../constants/api";
+  import {KEYWORDLIST, DELETEKEYWORD, KEYWORDLEADEXCEL, KEYWORDDOWNLOAD, KEYWORDCLEAR} from "../../../../constants/api";
   import { getCookies } from "../../../../utils/cookie";
   import {TOKEN} from "../../../../constants/constants";
-  import store from '../../../../store/index'
+  import store from '../../../../store/index';
 
   export default {
     data() {
@@ -98,14 +99,16 @@
       async getList () {
         const that = this
         that.loading = true
-        const BotConfigRecordId = this.$route.query.recordId
+        const BotId = this.$route.query.recordId
+        const TenantId = store.state.app.userInfo.TenantId
+        const TenantDomain = store.state.app.userInfo.Email
         const token = getCookies( TOKEN )
         const params = {
           headers: {
             'Access-Token': token
           },
           method: 'POST',
-          body: JSON.stringify( { BotConfigRecordId, Data: { PageIndex: this.PageIndex, Key: this.keyWords, SkillNo: '', PageSize: 10 } } )
+          body: JSON.stringify(  { BotId, TenantId, TenantDomain, PageIndex: this.PageIndex, KeyWord: this.keyWords, PageSize: 10 } )
         }
         request (
           KEYWORDLIST , params
@@ -116,7 +119,11 @@
         ).catch()
       },
       clearData ( v ) {
-        const data = v.Data.slice(0)
+        const data = v.ResultValue.filter (
+          (v,key) => {
+            v.CreateDate = moment(v).formData('YYYY-MM-DD')
+          }
+        )
         this.tableData = data
         this.total = v.TotalCount
         this.loading = false
@@ -212,23 +219,24 @@
       },
       doDumpAll() {
         const that = this
+        const BotId = that.$route.query.recordId
+        const TenantId = store.state.app.userInfo.TenantId
+        const TenantDomain = store.state.app.userInfo.Email
         const params = {
           headers: getCookies( TOKEN ),
           methods: 'POST',
-          body: JSON.stringify( {ID : this.$route.query.recordId} )
+          body: JSON.stringify( { TenantId, TenantDomain, BotId} )
         }
-        request( DELETEKEYWORD,  params) //清空数据
-          .then( () => {
+        request( KEYWORDCLEAR,  params).then( () => {
             that.PageIndex = 1
             that.keyWords = ''
-            that.getList()
+            // that.getList()
             that.$message({
               type: 'success',
               message: '清空成功',
               duration: 2000,
             });
-          } )
-          .catch( () => {
+          } ).catch( () => {
             that.$message({
               type: 'error',
               message: '清空失败',
