@@ -3,20 +3,19 @@
     <section class="f-l done">
       <el-input class='searchInput middle' size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
-      <el-button :disabled='!status' type="primary" class="middle margin-left-20 big-button" @click="go('/bot/config/keywordResponse/addKeyword')">添加关键词</el-button>
-      <!--<input-->
-        <!--id = 'file'-->
-        <!--type="file"-->
-        <!--accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"-->
-        <!--class="el-upload__input"-->
-        <!--style="display: none"-->
-        <!--ref="yoy-upload-excel"-->
-        <!--@change="uploadHandle"-->
-      <!--/>-->
-      <form id="upload" enctype="multipart/form-data" method="post" ref="yoy-upload-excel">
-        <input type="file" name="file" id="pic" @click="uploadHandle"/>
-      </form>
-      <el-button :disabled='!status' type="primary" class="middle big-button margin-left-20" @click="uploadContainer">导入关键词</el-button>
+      <el-button :disabled='!status' type="primary" class="middle margin-left-20 big-button" @click="go('/bot/config/keywordResponse/addKeyword')">添加关键词</el-button><el-upload
+        class="upload-demo"
+        :headers="headers"
+        :data="dataNew"
+        :action="action"
+        accept="file"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :before-remove="beforeRemove"
+        :on-success = 'successUpload'
+        :limit="1"
+        :on-exceed="handleExceed"
+      ><el-button size="small" type="primary">导入模版</el-button></el-upload>
       <span :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']" @click="download">下载导入模版</span>
     </section>
     <section class="f-r">
@@ -65,6 +64,15 @@
   export default {
     data() {
       return {
+        action: KEYWORDLEADEXCEL,
+        headers: {
+          'Access-Token':'0469D6386D22D4BEA6522451B5D5D0DB690DE56D2AFF59504D7C0453FDF139EF'
+        },
+        dataNew:{
+          BotId:'6e42a832-b855-4439-8f60-7c2101f37bc3',
+          TenantDomain:'admin@testbot.hightalk.ai',
+          TenantId:'928d2511-6783-43c2-bde5-dcf059f55710'
+        },
         doingStatus: false,
         keyWords: '',
         status: true,
@@ -72,7 +80,8 @@
         loading: false,
         resizable: false,
         PageIndex: 1,
-        total: 0
+        total: 0,
+        fileList: []
       }
     },
     computed: {
@@ -96,6 +105,13 @@
           }
         )
       },
+      successUpload(){
+        this.$message({
+          type: 'success',
+          message:'上传成功',
+          duration: 2000
+        })
+      },
       async getList () {
         const that = this
         that.loading = true
@@ -116,7 +132,11 @@
           ( res ) => {
             that.clearData( res )
           }
-        ).catch()
+        ).catch(
+          () => {
+            that.loading = false
+          }
+        )
       },
       clearData ( v ) {
         const data = v.ResultValue.filter (
@@ -131,8 +151,20 @@
       handleCurrentChange (v) {
         this.getList()
       },
-
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      },
+      beforeRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${ file.name }？`);
+      },
       download () {
+        const token = getCookies( TOKEN )
         const params = {
           headers: {
             'Access-Token': token
@@ -166,7 +198,7 @@
 
       },
       uploadContainer(v) {
-        const input = this.$refs["yoy-upload-excel"];
+        const input = this.$refs["pic"];
         input.click();
         // 监听change事件:
       },
@@ -192,7 +224,6 @@
         const formData = new FormData(someFile);
         const TenantDomain = store.state.app.userInfo.Email
         formData.append('BotId', id);
-        formData.append('filename', 'key.csv');
         formData.append('TenantDomain', TenantDomain);
         formData.append('TenantId', '928d2511-6783-43c2-bde5-dcf059f55710');
 
@@ -307,9 +338,16 @@
     }
   }
 </script>
-<style scoped lang="scss">
+<style lang="scss">
   @import "../../../../style/index.scss";
-
+  .upload-demo {
+    vertical-align: middle;
+    display: inline-block;
+    margin-left: 20px;
+    .el-upload-list {
+      display: none;
+    }
+  }
   .middle{
     vertical-align: middle;
   }
