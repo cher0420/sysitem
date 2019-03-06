@@ -192,7 +192,6 @@
             for (var j = 0; j < that.keywordsOptionAfter.length;j++) {
               if(that.keywordsOptionAfter[j].name == curVal[i]){
                 that.keywordsOptionAfter[j].disabled = true;
-                console.log(22222)
               }
             }
           }
@@ -203,7 +202,6 @@
               that.keywordsOptionAfter[j].disabled = true;
             }
           }
-          console.log("当前值", curVal);
 
 
         } else {
@@ -344,7 +342,6 @@
       },
 
       async getKeywords() {  //  第二步 将一句话分成多个词汇
-        console.log(this.Question.length)
         let that = this;
         const token = getCookies(TOKEN);
 
@@ -424,7 +421,6 @@
         return temp;
       },
       getCheckKeywords() {  // 第三步 	根据关键字确定 创建答案 或 更新答案
-
 
         let that = this;
         const token = getCookies(TOKEN);
