@@ -1,9 +1,7 @@
 <template>
   <div>
     <!--<Title title="测试条"></Title>-->
-    <Footer></Footer>
-    <el-form ref="formData" :rules="rules" label-width="38px" :model="formData" class=" full-height c555 webpage"
-             v-loading="loading">
+    <el-form ref="formData" :rules="rules" label-width="38px" :model="formData" class=" full-height c555 webpage">
       <title-item title="网站中嵌入代码"></title-item>
       <el-form-item label="" class="margin-top30 margin-bottom-30">
         <el-col :span="23" class="borderAround htmlContent p-relative">
@@ -190,8 +188,8 @@
     data() {
       return {
         formData: {
-          flag: false,
           Code: '',
+          CodeServiceUrl:'',
           Position: 'right-down',
           BotHeadPortrait: IMAGE,
           disabled: true,
@@ -215,7 +213,6 @@
         textColorItems: ['#FFFFFF', '#F45E63', '#FF9800', '#00BEAC', '#2A8CE7', '#9E3BC8', '#673AB7'],
         headerPicture: 'normal',
         defaultPicture: IMAGE,
-        loading: false,
         fileDisabled: true,
         baseImgData: '',
         ip:"",
@@ -245,11 +242,11 @@
       request(URL.requestHost + WEBINFO, option).then(
         (res) => {
           this.initData(res);
-          if (res.WebChatSettingModel.Code == null || res.WebChatSettingModel.Code == "") {
-            this.validate("formData");
-            this.flag = true;
-          } else {
-          }
+          // if (res.WebChatSettingModel.Code == null || res.WebChatSettingModel.Code == "") {
+          //   this.validate("formData");
+          //   this.flag = true;
+          // } else {
+          // }
         }
       )
         .catch(
@@ -340,7 +337,7 @@
         //头像位置是否有初始值
         data.Position = data.Position ? data.Position : 'right-down'
         //如果code为空，则不能点击样式预览按钮
-        this.buttonDisabled = !data.Code
+
         this.formData = data
         store.dispatch(REPLACE, {mainLoading: false})
       },
@@ -415,12 +412,10 @@
         })
       },
       validate(formName) {
-        this.loading = true;
         const recordId = this.$route.query.recordId
         const host = URL.baseUrl
         const data = JSON.parse(JSON.stringify(this.formData))
-
-        const Code = `&lt;script id=&quot;bot&quot; type=&quot;text/javascript&quot; src=&quot;${host}/WebTalk/linkScript/bot.js&quot; dataposition=&quot;${data.Position}&quot; datahost=&quot;${host}&quot; dataid=&quot;${recordId}&quot; dataimg=&quot;${host}/WebTalk/linkScript/robot.png&quot; datatxt=&quot;机器人&quot;&gt;&lt;/script&gt;`
+        const Code = `&lt;script id=&quot;bot&quot; type=&quot;text/javascript&quot; src=&quot;${data.CodeServiceUrl}/WebTalk/linkScript/bot.js&quot; dataposition=&quot;${data.Position}&quot; datahost=&quot;${host}&quot; dataid=&quot;${recordId}&quot; dataimg=&quot;${host}/WebTalk/linkScript/robot.png&quot; datatxt=&quot;机器人&quot;&gt;&lt;/script&gt;`
 
         this.formData.Code = htmlDecodeByRegExp(Code)
 
@@ -434,10 +429,10 @@
         }
         data.LoginSwitch = data.LoginSwitch === true ? 1 : 0
         const TenantId = getCookies(TENANTID)
+        const BotConfigId = this.$route.query.recordId
         const newData = {
-          'ID': data.ID,
           "TenantId": TenantId,
-          "BotConfigId": data.BotConfigId,
+          "BotConfigId": BotConfigId,
           "Position": data.Position,
           "BotHeadPortrait": BotHeadPortrait,
           "DialogColor": data.DialogColor, //#3B65B7
@@ -466,11 +461,11 @@
         }
         request(URL.requestHost + UPDATEWEB, option).then(
           (res) => {
-
-            if (that.flag == true) {  // 样式初始化
-              that.loading = false;
-              return false;
-            }
+            //
+            // if (that.flag == true) {  // 样式初始化
+            //   that.loading = false;
+            //   return false;
+            // }
             that.$message({
               type: 'success',
               message: '保存成功',
@@ -479,7 +474,6 @@
             if (that.headerPicture === 'normal') {
               that.baseImgData = ''
             }
-            that.loading = false;
             that.buttonDisabled = false;
           }
         ).catch(
@@ -488,9 +482,6 @@
               type: 'error',
               message: '保存失败',
               duration: 2000,
-              onClose: () => {
-                that.loading = false;
-              }
             })
           }
         )
