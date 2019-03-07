@@ -36,7 +36,7 @@
       </el-table-column>
       <el-table-column prop="Keyword" label="关键词" :resizable="resizable"></el-table-column>
       <el-table-column prop="CreateDate" label="创建时间" :resizable="resizable"></el-table-column>
-      <el-table-column label="操作" :resizable="resizable" width="200">
+      <el-table-column label="操作" :resizable="resizable" width="280">
         <template slot-scope="scope">
           <span class="hover edit" @click="go('/bot/config/keywordResponse/editAnswer')"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px" @click="doDelete(scope.row, scope.$index)"><i class="el-icon-close"></i>删除</span>
         </template>
@@ -139,6 +139,7 @@
         )
       },
       clearData ( v ) {
+        console.log(v)
         const data = v.ResultValue.filter (
           (v,key) => {
             v.CreateDate = moment(v).formData('YYYY-MM-DD')
