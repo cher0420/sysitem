@@ -31,7 +31,7 @@
             </div>
           </div>
         </div>
-        <div class="upload_warp_imgg" v-show="Image.length!=0">
+        <div class="upload_warp_imgg" v-show="Image && Image.length!=0">
           <div class="upload_warp_img_div cc222" v-for="(item,index) of Image">
             <div class="upload_warp_img_div_top">
               <div class="upload_warp_img_div_text" @click="oldFD(index)">
@@ -182,8 +182,8 @@
     },
     mounted() {
       let that = this;
-      this.resetHeight('quickQuizQuestionAlready', 'quickQuizQuestionNew', 'questionHeight')
-      this.resetHeight('quickQuizKeyWordsAlready', 'quickQuizKeyWordsNew', 'keyWordsHeight');
+      // this.resetHeight('quickQuizQuestionAlready', 'quickQuizQuestionNew', 'questionHeight')
+      // this.resetHeight('quickQuizKeyWordsAlready', 'quickQuizKeyWordsNew', 'keyWordsHeight');
       // this.myResizee();
     //  console.log(that.formatDateTime(that.CreateDate))
     },
@@ -233,21 +233,21 @@
         this.CreateDate = moment(data.CreateDate).format('YYYY.MM.DD HH:mm');
         this.Image = data.Image;
         this.KeyId = data.KeyId;
-        this.Keyword = data.Keyword.replace(/,/g, '、');
+        this.Keyword = data.Keyword && data.Keyword.replace(/,/g, '、');
         this.Question = data.Question;
         this.QuestionNew = QuestionNew;
-        if (data.Text.Answer != null) {
+        if (data.Text && data.Text.Answer != null) {
           this.Text = data.Text;
           this.Text.Answer = this.Text.Answer.replace(/\n+/g, "<br/>")
           const ID = this.Text.ID;  // 更新 回答 的id
           this.newText.ID = ID;
         }
-        let DeleteIdsRec = this.Image.map(function (item) {
+        let DeleteIdsRec = this.Image && this.Image.map(function (item) {
           return item.ID;
         });
 
         this.DeleteIds = DeleteIdsRec
-        this.DeleteAnswers = this.Image.map(function (item) {
+        this.DeleteAnswers = this.Image && this.Image.map(function (item) {
           return item.Answer;
         });
 
@@ -322,7 +322,7 @@
             success: function (msg) {
               // console.log("photo反馈", msg)
               if (msg.Status == "1") {
-                if (msg.Data.FilesName.length != 0) {
+                if (msg.Data && msg.Data.FilesName && msg.Data.FilesName.length != 0) {
                   for (var i = 0; i < msg.Data.FilesName.length; i++) {
                     that.ImageNew[i] = {
                       ID: "",
@@ -377,7 +377,7 @@
         }
 
 
-        if (that.newText.Answer.trim() == "" && that.ImageNew.length == 0) {
+        if (that.newText.Answer.trim() == "" && that.ImageNew && that.ImageNew.length == 0) {
           console.log("答案不能为空")
           that.$message({
             message: '答案不能为空',
