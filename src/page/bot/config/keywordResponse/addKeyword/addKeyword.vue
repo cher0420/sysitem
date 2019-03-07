@@ -5,9 +5,8 @@
       设置关键词（至多三个）
     </section>
      <div class="addContent">
-          <el-input class="keyword"   placeholder="关键词1"  v-for = "item in keywordList" :placeholder="item" v-model="input"  @input="inputFun">  </el-input>
+        <el-input class="keyword"   placeholder="关键词1"  v-for ="item,index,value in keywordList" :placeholder="item" v-model="keywordList[$event]"  :index="key">  </el-input>
         <el-button  class="keywordBtn"  @click="addKey"  v-if="counter<2">  <i class="el-icon-error icon" ></i>添加关键词 </el-button>
-
    </div>
     <div class="tip"> <i class="el-icon-warning tipIcon"></i><span class="keywordTip">所添加的关键词需要同时出现机器人才会回复所设定回答哦</span></div>
     <el-button class="nextBtn" @click="nextAnswer">下一步</el-button>
@@ -15,18 +14,24 @@
     </div>
 </template>
 <script>
-  // import {mapGetters} from 'vuex';
-  // import {mapActions} from 'vuex';
   import {mapGetters,mapActions} from 'vuex';
+  import {request} from "../../../../../serive/request";
+  import {KEYWORDLIST, DELETEKEYWORD, KEYWORDLEADEXCEL, KEYWORDDOWNLOAD} from "../../../../../constants/api";
+  import { getCookies } from "../../../../../utils/cookie";
+  import {TOKEN} from "../../../../../constants/constants";
 
   export default {
     // name: "Allen-EditQA",
     data() {
-
       return {
         counter:1,
-       keywordList: ["文思","海辉"],
-       inputValue: ''
+        keywordList: ["文思","海辉"],
+        //input: {'a':"文思",'b':"海辉"},
+        input:"name",
+        obj: {
+            a: 1, b: 2
+        }
+
       }
     },
     computed:{},
@@ -44,19 +49,43 @@
      },
      addKey(){
       this.counter = this.keywordList.length++
-      console.log(this.keywordList.length)
+      
      },
      answer(){
        console.log(1)
-      //  router.push('/config/keywordResponse/editAnswer2');
-      //  router.push({path:decodeURIComponent('/config/keywordResponse/editAnswer2')});
+      
      },
-    nextAnswer(){
-       const url={path:'/bot/config/keywordResponse/editAnswer2',}
+     
+      nextAnswer(){
+        const that = this
+ 
+
+      //  const url={path:'/bot/config/keywordResponse/editAnswer',}
+       const url={path:'/bot/config/keywordResponse/repeatAnswer',}
        this.$router.push(url)
+      //  const keywordList = []
+      
+        // addKeyword(URL.requestHost + ADDKEYWORD ).then(
+        // res => {
+        //   this.keywordList =  res.KeyWord.slice(0);
+        //   // let data = "梨&橙子";
+        //   // const arr = data.slice(1) + "&" 
+
+        //   console.log(data)
+        //   //判断关键词是否重复
+        //   if (ResultValue=true) {
+        //      const url={path:'/bot/config/keywordResponse/repeatAnswer',}
+        //   } else {
+        //     const url={path:'/bot/config/keywordResponse/editAnswer',}
+        //   }
+
+        // }
+        // );
+
       },
+      
       inputFun(e){
-       this.inputValue = e.target.value;
+      // this.inputValue = e.target.value;
       }
     },
     destroyed() {

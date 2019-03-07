@@ -46,3 +46,7 @@ export const KEYWORDDOWNLOAD = '';//下载关键词模版
 export const DELETEKEYWORD = '/api/admin/keyword/KQA/clear/';//删除关键词
 export const KEYWORDCLEAR = '/api/admin/keyword/KQA/clear' //清空数据
 export const KEYENABLE= '/api/Admin/Portal/KQA/UpdateEnable';//停用或开启功能
+export const ADDKEYWORD = '/api/admin/keyword/KQA/add';// 添加关键词
+export const VERIFYDUPLICATED = '/api/admin/keyword/KQA/verifyDuplicated';//重复校验
+export const UPDATEANSWER = '/api/admin/keyword/KQA/update';//更新答案
+export const SEARCHKERWORD = '/api/admin/keyword/KQA//api/admin/keyword/KQA/search';//查询关键字(加载数据)
