@@ -5,6 +5,7 @@
       </el-input>
       <el-button :disabled='!status' type="primary" class="middle margin-left-20 big-button" @click="go('/bot/config/keywordResponse/addKeyword')">添加关键词</el-button><el-upload
         class="upload-demo"
+        ref="upload"
         :headers="headers"
         :data="dataNew"
         :action="action"
@@ -106,10 +107,15 @@
         )
       },
       successUpload(){
+        const that = this
         this.$message({
           type: 'success',
           message:'上传成功',
-          duration: 2000
+          duration: 2000,
+          onClose () {
+            console.log(this)
+            that.$refs.upload.clearFiles();
+          }
         })
       },
       async getList () {
@@ -344,9 +350,11 @@
   .upload-demo {
     vertical-align: middle;
     display: inline-block;
+    position: relative;
     margin-left: 20px;
     .el-upload-list {
-      display: none;
+      position: absolute;
+      top: - 38px;
     }
   }
   .middle{
