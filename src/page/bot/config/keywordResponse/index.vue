@@ -39,7 +39,7 @@
       <el-table-column prop="CreateDate" label="创建时间" :resizable="resizable"></el-table-column>
       <el-table-column label="操作" :resizable="resizable" width="280">
         <template slot-scope="scope">
-          <span class="hover edit" @click="go('/bot/config/keywordResponse/editAnswer')"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px" @click="doDelete(scope.row, scope.$index)"><i class="el-icon-close"></i>删除</span>
+          <span class="hover edit" @click="go('/bot/config/keywordResponse/editAnswer', '编辑')"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px" @click="doDelete(scope.row.ID, scope.$index)"><i class="el-icon-close"></i>删除</span>
         </template>
       </el-table-column>
     </el-table>
@@ -77,7 +77,7 @@
         doingStatus: false,
         keyWords: '',
         status: true,
-        tableData: [{name: 'uouo', year: 'dafs'}],
+        tableData: [],
         loading: false,
         resizable: false,
         PageIndex: 1,
@@ -96,13 +96,15 @@
         this.tableData = []
         this.total = 0
       },
-      go (v) {
+      go (v, title) {
         const query = this.$route.query
         this.$router.push(
           {
             path: v,
-            query,
-
+            query: {
+              ...query,
+              title: title
+            },
           }
         )
       },
@@ -145,14 +147,12 @@
         )
       },
       clearData ( v ) {
-        console.log(v)
-        const data = v.ResultValue.filter (
-          (v,key) => {
-            v.CreateDate = moment(v).formData('YYYY-MM-DD')
-          }
-        )
+        const data = v.ResultValue.Datas.slice(0)
+        for ( let i of data ) {
+          i.CreateDate = moment(i.CreateDate).format('YYYY-MM-DD')
+        }
         this.tableData = data
-        this.total = v.TotalCount
+        this.total = v.ResultValue.Total
         this.loading = false
       },
       handleCurrentChange (v) {
@@ -262,13 +262,12 @@
         const TenantDomain = store.state.app.userInfo.Email
         const params = {
           headers: getCookies( TOKEN ),
-          methods: 'POST',
+          method: 'POST',
           body: JSON.stringify( { TenantId, TenantDomain, BotId} )
         }
         request( KEYWORDCLEAR,  params).then( () => {
             that.PageIndex = 1
             that.keyWords = ''
-            // that.getList()
             that.$message({
               type: 'success',
               message: '清空成功',
@@ -307,40 +306,46 @@
           });
         });
       },
-      deleteSingle (id, index) {
+      deleteSingle (ID, index) {
+        const that = this
         const params = {
           headers: {
             'Access-Token': getCookies( TOKEN )
           },
-          methods: 'POST',
-          body: JSON.stringify( id )
+          method: 'DELETE',
+          body: JSON.stringify( {ID} )
         }
 
-        request( DELETEKEYWORD, params)
-          .then ( () => {
+        const tenantDomain = store.state.app.userInfo.Email
+        const botId = this.$route.query.recordId
+        const tenantId = store.state.app.userInfo.TenantId
+
+        const url = encodeURI(`${ DELETEKEYWORD }${tenantDomain}/${tenantId}/${botId}`)
+        console.log(url, params);
+        request( url, params ).then ( () => {
             this.$message( {
               type: 'success',
               message: '删除成功',
               duration: 2000,
             } )
-          } )
-          .catch( () => {
+
+            this.tableData.splice( index, 1 )
+            this.total -- ;
+
+            if(this.total%this.PageSize === 0){
+              if(that.PageIndex !== 1){
+                that.PageIndex --
+              }
+              that.getList()
+            }
+
+          } ).catch( () => {
             that.$message( {
               type: 'error',
               message: '删除失败',
               duration: 2000
             } )
           } )
-        const that = this
-        this.tableData.splice( index, 1 )
-        this.total -- ;
-
-        if(this.total%this.PageSize === 0){
-          if(that.PageIndex !== 1){
-            that.PageIndex --
-          }
-          that.getList()
-        }
       }
     }
   }
