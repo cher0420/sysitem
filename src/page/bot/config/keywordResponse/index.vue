@@ -3,24 +3,30 @@
     <section class="f-l done">
       <el-input class='searchInput middle' size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
-      <el-button :disabled='!status' type="primary" class="middle margin-left-20 big-button" @click="go('/bot/config/keywordResponse/addKeyword')">添加关键词</el-button><el-upload
+      <el-button :disabled='!status' type="primary" class="middle margin-left-20 big-button" @click="go('/bot/config/keywordResponse/addKeyword')">添加关键词</el-button>
+      <el-upload
         class="upload-demo"
         ref="upload"
-        :headers="headers"
-        :data="dataNew"
-        :action="action"
-        accept="file"
+        :headers="params.headers"
+        :data="params.body"
+        :action="params.url"
+        accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
-        :before-remove="beforeRemove"
         :on-success = 'successUpload'
         :limit="1"
         :on-exceed="handleExceed"
-      ><el-button size="small" type="primary">导入模版</el-button></el-upload>
-      <span :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']" @click="download">下载导入模版</span>
+      ><el-button :disabled='!status' size="small" type="primary" @click="importExcel">导入模版</el-button></el-upload>
+      <!--<form id="form2" action="http://192.168.50.198/api/admin/keyword/kqa/upload" method="post" enctype="multipart/form-data" onsubmit="return false">-->
+        <!--<input type="text" name="BotId" value="6e42a832-b855-4439-8f60-7c2101f37bc3" />-->
+        <!--<input type="text" name="TenantId" value="928d2511-6783-43c2-bde5-dcf059f55710" />-->
+        <!--<input type="text" name="TenantDomain" value="testbot" />-->
+        <!--<input type="file" name="files" id="j_file" @change="upload"/>-->
+      <!--</form>-->
+      <a href='../../../../../static/file/key2.csv' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
     </section>
     <section class="f-r">
-      <el-button  v-show='status' type="primary" class="big-button" @click="dumpAll">清空数据</el-button>
+      <el-button  :disabled='tableData.length === 0' v-show='status' type="primary" class="big-button" @click="dumpAll">清空数据</el-button>
       <el-button  v-show='status' type="danger" class=" stop" @click="closedIt">停用</el-button>
       <el-button  v-show='!status' type="primary" @click="openIt">开启</el-button>
     </section>
@@ -57,23 +63,19 @@
 <script>
   import moment from 'moment'
   import {request} from "../../../../serive/request";
-  import {KEYWORDLIST, DELETEKEYWORD, KEYWORDLEADEXCEL, KEYWORDDOWNLOAD, KEYWORDCLEAR} from "../../../../constants/api";
+  import {KEYWORDLIST, DELETEKEYWORD, KEYWORDLEADEXCEL, KEYWORDDOWNLOAD, KEYWORDCLEAR, KEYWORDENABLE} from "../../../../constants/api";
   import { getCookies } from "../../../../utils/cookie";
   import {TOKEN} from "../../../../constants/constants";
   import store from '../../../../store/index';
+  import { REPLACE } from "../../../../store/mutations";
+  import jq from 'jquery'
+  import '../../../../../static/jquery.form'
 
   export default {
     data() {
       return {
-        action: KEYWORDLEADEXCEL,
-        headers: {
-          'Access-Token':'0469D6386D22D4BEA6522451B5D5D0DB690DE56D2AFF59504D7C0453FDF139EF'
-        },
-        dataNew:{
-          BotId:'6e42a832-b855-4439-8f60-7c2101f37bc3',
-          TenantDomain:'admin@testbot.hightalk.ai',
-          TenantId:'928d2511-6783-43c2-bde5-dcf059f55710'
-        },
+        params: {},
+        autoUpload: false,
         doingStatus: false,
         keyWords: '',
         status: true,
@@ -82,21 +84,56 @@
         resizable: false,
         PageIndex: 1,
         total: 0,
-        fileList: []
+        fileList: [],
+        fileListArr: [],
+        webSocket: null
       }
     },
     computed: {
-
+      // headers () {
+      //   return {
+      //
+      //   }
+      // }
     },
-    created () {
+    created() {
+      this.params = {
+        headers: {'Access-Token': getCookies(TOKEN)},
+        url: KEYWORDLEADEXCEL,
+        // url: `http://192.168.50.198${KEYWORDLEADEXCEL}`,
+        body: {
+          BotId: this.$route.query.recordId,
+          TenantDomain: store.state.app.userInfo.FullName,
+          TenantId: store.state.app.userInfo.TenantId
+        }
+      }
       this.getList()
     },
+    beforeDestroy() {
+
+    },
+    destroyed(){
+      store.dispatch( REPLACE, { mainLoading: false } )
+
+    },
     methods: {
-      init () {
+      importExcel() {
+        this.webSocketFun()
+      },
+      upload() {
+          jq('#form2').ajaxSubmit({
+            type: 'post',
+            dataType: 'json',
+            success: function (responseText) {
+              alert(responseText);
+            }
+          });
+      },
+      init() {
         this.tableData = []
         this.total = 0
       },
-      go (v, title) {
+      go(v, title) {
         const query = this.$route.query
         this.$router.push(
           {
@@ -108,37 +145,40 @@
           }
         )
       },
-      successUpload(){
+      successUpload() {
         const that = this
-        this.$message({
-          type: 'success',
-          message:'上传成功',
-          duration: 2000,
-          onClose () {
-            console.log(this)
+        store.dispatch( REPLACE, { mainLoading: true } ).then(
+          () => {
             that.$refs.upload.clearFiles();
           }
-        })
+        )
       },
-      async getList () {
+      async getList() {
         const that = this
         that.loading = true
         const BotId = this.$route.query.recordId
         const TenantId = store.state.app.userInfo.TenantId
         const TenantDomain = store.state.app.userInfo.Email
-        const token = getCookies( TOKEN )
+        const token = getCookies(TOKEN)
         const params = {
           headers: {
-            'Access-Token': token
+            'Access-Token': token,
           },
           method: 'POST',
-          body: JSON.stringify(  { BotId, TenantId, TenantDomain, PageIndex: this.PageIndex, KeyWord: this.keyWords, PageSize: 10 } )
+          body: JSON.stringify({
+            BotId,
+            TenantId,
+            TenantDomain,
+            PageIndex: this.PageIndex,
+            KeyWord: this.keyWords,
+            PageSize: 10
+          })
         }
-        request (
-          KEYWORDLIST , params
+        request(
+          KEYWORDLIST, params
         ).then(
-          ( res ) => {
-            that.clearData( res )
+          (res) => {
+            that.clearData(res)
           }
         ).catch(
           () => {
@@ -146,16 +186,113 @@
           }
         )
       },
-      clearData ( v ) {
+      webSocketFun() {
+        const that = this
+        return new Promise(
+          (resolve, reject) => {
+            const id = this.$route.query.recordId
+            // const url = `ws://localhost:3000/socket/ws?BotId=${id}`
+            const url = `ws://192.168.50.198/ws?BotId=${id}`
+            // const url = `/ws?BotId=${id}`
+            const token = getCookies(TOKEN)
+            that.webSocket = new WebSocket(url, token);
+            that.webSocket.onopen = function (event) {
+              switch (event.currentTarget.readyState) {
+                case 0:
+                  that.$refs.upload.abort()
+                  that.$refs.upload.clearFiles()
+                  that.$message({
+                    type: 'error',
+                    message: '上传功能暂时不能使用，请稍后重试',
+                    duration: 2000
+                  })
+                  reject(false);
+                  break;
+              }
+            };
+            that.webSocket.onmessage = function (res) {
+              const response = JSON.parse(res.data)
+              if (response) {
+                console.log('====_', JSON.parse(res.data));
+
+                switch (response.Code) {
+                  case "IRV00004":
+                    store.dispatch( REPLACE, { mainLoading: false } )
+                    that.$message({
+                      type: 'error',
+                      message: `${response.Message} 请重新上传`,
+                      duration: 2000,
+                    })
+                        break;
+                  case "IRV00003":
+                    that.$confirm(`${response.Message}`, '提示', {
+                      confirmButtonText: '覆盖',
+                      cancelButtonText: '跳过',
+                      type: 'warning',
+                      closeOnPressEscape:false,
+                      closeOnClickModal:false,
+                      showClose:false,
+                      distinguishCancelAndClose: true,
+                    }).then(() => {
+                      const params = {"Command":"Overrides","BotId": that.$route.query.recordId,"Domain":response.Domain,"TenantId":store.state.app.userInfo.TenantId}
+                      that.webSocket.send( JSON.stringify(params) )
+                    }).catch((action) => {
+                      if( action === 'closed' ){
+                        const params = {"Command":"Cancel","BotId": that.$route.query.recordId,"Domain":response.Domain,"TenantId":store.state.app.userInfo.TenantId}
+                        that.webSocket.send( JSON.stringify(params) )
+                      } else {
+                        const params = {"Command":"SkipDuplicates","BotId": that.$route.query.recordId,"Domain":response.Domain,"TenantId":store.state.app.userInfo.TenantId}
+                        that.webSocket.send( JSON.stringify(params) )
+                      }
+                    });
+                    break;
+                  case 'Succeed':
+                    that.$message( {
+                      type: 'success',
+                      message: `${response.Message}`,
+                      duration: 2000,
+                    } )
+                    store.dispatch( REPLACE, { mainLoading: false } )
+                        break;
+                  }
+              }
+            }
+            that.webSocket.onerror = (err) => {
+              console.log(err);
+            }
+            that.webSocket.onclose = (info) => {
+              console.log(info);
+            }
+          }
+        )
+
+      },
+      closed(callback) {
+        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
+          dangerouslyUseHTMLString: true
+        });
+        // this.$confirm('取消后上传操作?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '返回',
+        //   type: 'warning'
+        // }).then(() => {
+        //   callback
+        //   this.$message({
+        //     type: 'success',
+        //     message: '已取消上传!'
+        //   });
+        // })
+      },
+      clearData(v) {
         const data = v.ResultValue.Datas.slice(0)
-        for ( let i of data ) {
+        for (let i of data) {
           i.CreateDate = moment(i.CreateDate).format('YYYY-MM-DD')
         }
         this.tableData = data
         this.total = v.ResultValue.Total
         this.loading = false
       },
-      handleCurrentChange (v) {
+      handleCurrentChange(v) {
         this.getList()
       },
       handleRemove(file, fileList) {
@@ -170,25 +307,26 @@
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);
       },
-      download () {
-        const token = getCookies( TOKEN )
-        const params = {
-          headers: {
-            'Access-Token': token
-          },
-          method: 'POST',
-          body: JSON.stringify( { id: this.$route.query.recordId } )
-        }
-        request( KEYWORDDOWNLOAD, params)
-          .catch( () => {
-            this.$message({
-              type: 'error',
-              message: '下载失败',
-              duration: 2000
-            });
-          } )
+      download() {
+        window.open('../../../../../static/file/csv')
+        // const token = getCookies( TOKEN )
+        // const params = {
+        //   headers: {
+        //     'Access-Token': token
+        //   },
+        //   method: 'POST',
+        //   body: JSON.stringify( { id: this.$route.query.recordId } )
+        // }
+        // request( KEYWORDDOWNLOAD, params)
+        //   .catch( () => {
+        //     this.$message({
+        //       type: 'error',
+        //       message: '下载失败',
+        //       duration: 2000
+        //     });
+        //   } )
       },
-      dumpAll () {
+      dumpAll() {
         this.$confirm('此操作将清空所有关键词回复, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -204,100 +342,94 @@
         });
 
       },
-      uploadContainer(v) {
-        const input = this.$refs["pic"];
-        input.click();
-        // 监听change事件:
-      },
-      uploadHandle(v) {
-        this.uploadExcel()
-        // const that = this;
-        // const file = v.target.files[0];
-        // // 读取文件:
-        // const reader = new FileReader();
-        // //获取文件名字
-        // const name = file.name;
-        // reader.onload = function(e) {
-        //   that.uploadExcel(name, e )
-        //   that.$refs["yoy-upload-excel"].value = "";
-        // };
-        // // 以DataURL的形式读取文件:
-        // reader.readAsDataURL(file);
-        // // });
-      },
-      uploadExcel (name, file) {
-        const id = this.$route.query.recordId
-        const someFile = document.getElementById('upload')
-        const formData = new FormData(someFile);
-        const TenantDomain = store.state.app.userInfo.Email
-        formData.append('BotId', id);
-        formData.append('TenantDomain', TenantDomain);
-        formData.append('TenantId', '928d2511-6783-43c2-bde5-dcf059f55710');
-
-        const params = {
-          headers: {
-            'Access-Token': getCookies( TOKEN ),
-            'Content-Type': 'multipart/form-data;charset=UTF-8',
-          },
-          method: "POST",
-          processData: false,
-          body: formData
-        }
-        request( KEYWORDLEADEXCEL ,  params)
-          .then(
-            (res) => {
-              console.log(res);
-            }
-          )
-          .catch(
-            (err) => {
-              console.log(err);
-            }
-          )
-      },
       doDumpAll() {
         const that = this
         const BotId = that.$route.query.recordId
         const TenantId = store.state.app.userInfo.TenantId
         const TenantDomain = store.state.app.userInfo.Email
         const params = {
-          headers: getCookies( TOKEN ),
+          headers: getCookies(TOKEN),
           method: 'POST',
-          body: JSON.stringify( { TenantId, TenantDomain, BotId} )
+          body: JSON.stringify({TenantId, TenantDomain, BotId})
         }
-        request( KEYWORDCLEAR,  params).then( () => {
-            that.PageIndex = 1
-            that.keyWords = ''
-            that.$message({
-              type: 'success',
-              message: '清空成功',
-              duration: 2000,
-            });
-          } ).catch( () => {
-            that.$message({
-              type: 'error',
-              message: '清空失败',
-              duration: 2000
-            });
-          })
+        request(KEYWORDCLEAR, params).then(() => {
+          that.PageIndex = 1
+          that.keyWords = ''
+          that.loading = true
+          that.$message({
+            type: 'success',
+            message: '清空成功',
+            duration: 2000,
+            onClose() {
+              that.getList()
+            }
+          });
+        }).catch(() => {
+          that.$message({
+            type: 'error',
+            message: '清空失败',
+            duration: 2000
+          });
+        })
       },
       search() {
+        const str = "<>%;/?'_"
+        const index = this.keyWords && str.indexOf(this.keyWords) > -1
+        if (index) {
+          this.$message({
+            type: 'error',
+            message: "请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
+            duration: 2000,
+          })
+          return
+        }
         this.PageIndex = 1
         this.getList()
       },
-      openIt () {
+      openIt() {
         this.status = true
+        this.doEnale(this.status)
       },
       closedIt(v) {
         this.status = false
+        this.doEnale(this.status)
       },
-      doDelete (id, index) {
+      doEnale(v) {
+        const that = this
+        const BotConfigId = this.$route.query.recordId
+        const params = {
+          headers: {
+            'Access-token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({BotConfigId, Enable: this.status,})
+        }
+        request(KEYWORDENABLE, params).then(
+          (res) => {
+            console.log(res)
+            that.$message({
+              type: 'success',
+              message: '操作成功',
+              duration: 2000
+            })
+          }
+        ).catch(
+          (err) => {
+            that.$message({
+              type: 'error',
+              message: '操作失败',
+              duration: 2000
+            })
+          }
+        )
+      },
+      doDelete(id, index) {
         this.$confirm('此操作将删除此条关键词回复, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.deleteSingle (id, index)
+          this.deleteSingle(id, index)
         }).catch(() => {
           this.$message({
             type: 'info',
@@ -306,46 +438,44 @@
           });
         });
       },
-      deleteSingle (ID, index) {
+      deleteSingle(ID, index) {
         const that = this
         const params = {
           headers: {
-            'Access-Token': getCookies( TOKEN )
+            'Access-Token': getCookies(TOKEN)
           },
           method: 'DELETE',
-          body: JSON.stringify( {ID} )
         }
 
         const tenantDomain = store.state.app.userInfo.Email
         const botId = this.$route.query.recordId
-        const tenantId = store.state.app.userInfo.TenantId
 
-        const url = encodeURI(`${ DELETEKEYWORD }${tenantDomain}/${tenantId}/${botId}`)
-        console.log(url, params);
-        request( url, params ).then ( () => {
-            this.$message( {
-              type: 'success',
-              message: '删除成功',
-              duration: 2000,
-            } )
+        const url = encodeURI(`${ DELETEKEYWORD }${tenantDomain}/${botId}/${ID}`)
 
-            this.tableData.splice( index, 1 )
-            this.total -- ;
+        request(url, params).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功',
+            duration: 2000,
+          })
 
-            if(this.total%this.PageSize === 0){
-              if(that.PageIndex !== 1){
-                that.PageIndex --
-              }
-              that.getList()
+          this.tableData.splice(index, 1)
+          this.total--;
+
+          if (this.total % this.PageSize === 0) {
+            if (that.PageIndex !== 1) {
+              that.PageIndex--
             }
+            that.getList()
+          }
 
-          } ).catch( () => {
-            that.$message( {
-              type: 'error',
-              message: '删除失败',
-              duration: 2000
-            } )
-          } )
+        }).catch(() => {
+          that.$message({
+            type: 'error',
+            message: '删除失败',
+            duration: 2000
+          })
+        })
       }
     }
   }
