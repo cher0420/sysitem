@@ -415,7 +415,7 @@
         const recordId = this.$route.query.recordId
         const host = URL.baseUrl
         const data = JSON.parse(JSON.stringify(this.formData))
-        const Code = `&lt;script id=&quot;bot&quot; type=&quot;text/javascript&quot; src=&quot;${data.CodeServiceUrl}/WebTalk/linkScript/bot.js&quot; dataposition=&quot;${data.Position}&quot; datahost=&quot;${host}&quot; dataid=&quot;${recordId}&quot; dataimg=&quot;${host}/WebTalk/linkScript/robot.png&quot; datatxt=&quot;机器人&quot;&gt;&lt;/script&gt;`
+        const Code = `&lt;script id=&quot;bot&quot; type=&quot;text/javascript&quot; src=&quot;${data.CodeServiceUrl}/WebTalk/linkScript/bot.js&quot; dataposition=&quot;${data.Position}&quot; datahost=&quot;${data.CodeServiceUrl}&quot; dataid=&quot;${recordId}&quot; dataimg=&quot;${data.CodeServiceUrl}/WebTalk/linkScript/robot.png&quot; datatxt=&quot;机器人&quot;&gt;&lt;/script&gt;`
 
         this.formData.Code = htmlDecodeByRegExp(Code)
 

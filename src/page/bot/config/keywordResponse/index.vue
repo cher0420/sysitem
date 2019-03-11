@@ -103,13 +103,6 @@
         uploadResponseStatus: false
       }
     },
-    computed: {
-      // headers () {
-      //   return {
-      //
-      //   }
-      // }
-    },
     created() {
       this.getList()
       this.getServiceStatus()
@@ -124,9 +117,6 @@
         }
       }
       this.webSocketFun()
-
-    },
-    beforeDestroy() {
 
     },
     destroyed(){
@@ -211,7 +201,8 @@
             const id = this.$route.query.recordId
             // const url = `ws://localhost:3000/socket?BotId=${id}`
             // const url = `ws://192.168.50.198/ws?BotId=${id}`
-            const url = `ws://192.168.1.103:10036/ws?BotId=${id}`
+            // const url = `ws://192.168.1.103:10036/ws?BotId=${id}`
+            const url = `/ws?BotId=${id}`
             const token = getCookies(TOKEN)
             that.webSocket = new WebSocket(url, token);
             that.webSocket.onopen = function (event) {
@@ -290,10 +281,7 @@
         this.getList()
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-      },
-      beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
+        this.$message.warning(`请依次上传文件`);
       },
       dumpAll() {
         this.$confirm('此操作将清空所有关键词回复, 是否继续?', '提示', {
