@@ -82,7 +82,7 @@
       >
       </el-table-column>
       <el-table-column
-        width="160"
+        width="180"
         :resizable="resizable"
         v-if="!showDel"
       >
@@ -92,7 +92,7 @@
           </section>
         </template>
         <template slot-scope="scope">
-          <section class="handle" style="height: 24px;line-height: 24px">
+          <section class="handle" style="line-height: 24px">
             <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px" @click="editSomething(scope.row)">
               <i class="el-icon-edit" style="margin-right: 5px;"></i>
               <span>编辑</span>
