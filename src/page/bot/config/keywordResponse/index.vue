@@ -14,15 +14,10 @@
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :on-success = 'successUpload'
+        :on-error = 'onError'
         :limit="1"
         :on-exceed="handleExceed"
-      ><el-button :disabled='!status' size="small" type="primary" @click="importExcel">导入模版</el-button></el-upload>
-      <!--<form id="form2" action="http://192.168.50.198/api/admin/keyword/kqa/upload" method="post" enctype="multipart/form-data" onsubmit="return false">-->
-        <!--<input type="text" name="BotId" value="6e42a832-b855-4439-8f60-7c2101f37bc3" />-->
-        <!--<input type="text" name="TenantId" value="928d2511-6783-43c2-bde5-dcf059f55710" />-->
-        <!--<input type="text" name="TenantDomain" value="testbot" />-->
-        <!--<input type="file" name="files" id="j_file" @change="upload"/>-->
-      <!--</form>-->
+      ><el-button :disabled='uploadStatus || !status' size="small" type="primary">导入模版 </el-button></el-upload>
       <a href='../../../../../static/file/key2.csv' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
     </section>
     <section class="f-r">
@@ -45,7 +40,7 @@
       <el-table-column prop="CreateDate" label="创建时间" :resizable="resizable"></el-table-column>
       <el-table-column label="操作" :resizable="resizable" width="280">
         <template slot-scope="scope">
-          <span class="hover edit" @click="go('/bot/config/keywordResponse/editAnswer', '编辑')"><i class="el-icon-edit" ></i>编辑</span><span class='hover delete' style="margin-left: 24px" @click="doDelete(scope.row.ID, scope.$index)"><i class="el-icon-close"></i>删除</span>
+          <span :class="status?['hover','edit']:['disabled','hover','edit']" @click="go('/bot/config/keywordResponse/editAnswer', '编辑')"><i class="el-icon-edit" ></i>编辑</span><span :class="status?['hover','edit']:['hover','edit','disabled']" style="margin-left: 24px" @click="doDelete(scope.row.ID, scope.$index)"><i class="el-icon-close"></i>删除</span>
         </template>
       </el-table-column>
     </el-table>
@@ -58,25 +53,41 @@
       :current-page.sync="PageIndex"
       :total="total">
     </el-pagination>
+    <div v-if='uploadResponseStatus' class="el-message-box__wrapper" style="z-index: 2004;background: rgba(0, 0, 0, 0.3);transition: background 1s">
+      <div class="el-message-box">
+        <div class="el-message-box__header">
+          <span>提示</span>
+          <div class="el-message-box__content">
+            <div class="el-message-box__status el-icon-warning">
+            </div>
+            <div class="el-message-box__message">
+              <p>{{response.message}}</p>
+            </div>
+          </div>
+          <div class="full-width">
+            <button class="el-button el-button--primary f-r margin-left-20" @click="operate('Overrides')">覆盖</button>
+            <button class="el-button el-button--primary f-r" @click="operate('SkipDuplicates')">跳过</button>
+            <button class="el-button f-r" @click="operate('Cancel')">取消上传</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 <script>
   import moment from 'moment'
   import {request} from "../../../../serive/request";
-  import {KEYWORDLIST, DELETEKEYWORD, KEYWORDLEADEXCEL, KEYWORDDOWNLOAD, KEYWORDCLEAR, KEYWORDENABLE} from "../../../../constants/api";
+  import {KEYWORDLIST, DELETEKEYWORD, KEYWORDLEADEXCEL, KEYWORDCLEAR, KEYWORDENABLE, KEYWORDSTATUS} from "../../../../constants/api";
   import { getCookies } from "../../../../utils/cookie";
   import {TOKEN} from "../../../../constants/constants";
   import store from '../../../../store/index';
   import { REPLACE } from "../../../../store/mutations";
-  import jq from 'jquery'
-  import '../../../../../static/jquery.form'
 
   export default {
     data() {
       return {
         params: {},
         autoUpload: false,
-        doingStatus: false,
         keyWords: '',
         status: true,
         tableData: [],
@@ -86,7 +97,10 @@
         total: 0,
         fileList: [],
         fileListArr: [],
-        webSocket: null
+        webSocket: null,
+        uploadStatus: false,
+        response:{message:'v '},
+        uploadResponseStatus: false
       }
     },
     computed: {
@@ -97,6 +111,8 @@
       // }
     },
     created() {
+      this.getList()
+      this.getServiceStatus()
       this.params = {
         headers: {'Access-Token': getCookies(TOKEN)},
         url: KEYWORDLEADEXCEL,
@@ -107,7 +123,8 @@
           TenantId: store.state.app.userInfo.TenantId
         }
       }
-      this.getList()
+      this.webSocketFun()
+
     },
     beforeDestroy() {
 
@@ -117,21 +134,32 @@
 
     },
     methods: {
-      importExcel() {
-        this.webSocketFun()
-      },
-      upload() {
-          jq('#form2').ajaxSubmit({
-            type: 'post',
-            dataType: 'json',
-            success: function (responseText) {
-              alert(responseText);
-            }
-          });
-      },
       init() {
         this.tableData = []
         this.total = 0
+      },
+      getServiceStatus () {
+        const that = this
+        const params = {
+          method: 'POST',
+          headers: {
+            'Access-token': getCookies(TOKEN)
+          },
+          body:  JSON.stringify( { BotConfigId: this.$route.query.recordId } )
+        }
+        request( KEYWORDSTATUS, params ).then(
+          (res) => {
+            that.status = res.Data.Enable
+          }
+        ).catch( () => {
+            that.status = false
+        } )
+      },
+      successUpload () {
+        this.$refs.upload.clearFiles();
+      },
+      onError () {
+        this.$refs.upload.clearFiles();
       },
       go(v, title) {
         const query = this.$route.query
@@ -142,14 +170,6 @@
               ...query,
               title: title
             },
-          }
-        )
-      },
-      successUpload() {
-        const that = this
-        store.dispatch( REPLACE, { mainLoading: true } ).then(
-          () => {
-            that.$refs.upload.clearFiles();
           }
         )
       },
@@ -188,12 +208,10 @@
       },
       webSocketFun() {
         const that = this
-        return new Promise(
-          (resolve, reject) => {
             const id = this.$route.query.recordId
-            // const url = `ws://localhost:3000/socket/ws?BotId=${id}`
-            const url = `ws://192.168.50.198/ws?BotId=${id}`
-            // const url = `/ws?BotId=${id}`
+            // const url = `ws://localhost:3000/socket?BotId=${id}`
+            // const url = `ws://192.168.50.198/ws?BotId=${id}`
+            const url = `ws://192.168.1.103:10036/ws?BotId=${id}`
             const token = getCookies(TOKEN)
             that.webSocket = new WebSocket(url, token);
             that.webSocket.onopen = function (event) {
@@ -206,45 +224,26 @@
                     message: '上传功能暂时不能使用，请稍后重试',
                     duration: 2000
                   })
-                  reject(false);
+                  that.uploadStatus = true
                   break;
+                default:
+                  that.uploadStatus = false
               }
             };
             that.webSocket.onmessage = function (res) {
               const response = JSON.parse(res.data)
               if (response) {
-                console.log('====_', JSON.parse(res.data));
-
                 switch (response.Code) {
                   case "IRV00004":
-                    store.dispatch( REPLACE, { mainLoading: false } )
                     that.$message({
                       type: 'error',
                       message: `${response.Message} 请重新上传`,
                       duration: 2000,
                     })
-                        break;
+                    store.dispatch( REPLACE, { mainLoading: false } )
+                    break;
                   case "IRV00003":
-                    that.$confirm(`${response.Message}`, '提示', {
-                      confirmButtonText: '覆盖',
-                      cancelButtonText: '跳过',
-                      type: 'warning',
-                      closeOnPressEscape:false,
-                      closeOnClickModal:false,
-                      showClose:false,
-                      distinguishCancelAndClose: true,
-                    }).then(() => {
-                      const params = {"Command":"Overrides","BotId": that.$route.query.recordId,"Domain":response.Domain,"TenantId":store.state.app.userInfo.TenantId}
-                      that.webSocket.send( JSON.stringify(params) )
-                    }).catch((action) => {
-                      if( action === 'closed' ){
-                        const params = {"Command":"Cancel","BotId": that.$route.query.recordId,"Domain":response.Domain,"TenantId":store.state.app.userInfo.TenantId}
-                        that.webSocket.send( JSON.stringify(params) )
-                      } else {
-                        const params = {"Command":"SkipDuplicates","BotId": that.$route.query.recordId,"Domain":response.Domain,"TenantId":store.state.app.userInfo.TenantId}
-                        that.webSocket.send( JSON.stringify(params) )
-                      }
-                    });
+                    that.alertFun(response);
                     break;
                   case 'Succeed':
                     that.$message( {
@@ -263,25 +262,20 @@
             that.webSocket.onclose = (info) => {
               console.log(info);
             }
-          }
-        )
 
       },
-      closed(callback) {
-        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
-          dangerouslyUseHTMLString: true
-        });
-        // this.$confirm('取消后上传操作?', '提示', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '返回',
-        //   type: 'warning'
-        // }).then(() => {
-        //   callback
-        //   this.$message({
-        //     type: 'success',
-        //     message: '已取消上传!'
-        //   });
-        // })
+      alertFun (res) {
+          this.uploadResponseStatus = true
+      },
+      operate (key) {
+        const params = {
+          "Command": key,
+          "BotId": this.$route.query.recordId,
+          "Domain": this.response.Domain,
+          "TenantId": store.state.app.userInfo.TenantId
+        }
+        this.webSocket.send( JSON.stringify(params) )
+        this.uploadResponseStatus = false
       },
       clearData(v) {
         const data = v.ResultValue.Datas.slice(0)
@@ -295,36 +289,11 @@
       handleCurrentChange(v) {
         this.getList()
       },
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(file);
-      },
       handleExceed(files, fileList) {
         this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
       beforeRemove(file, fileList) {
         return this.$confirm(`确定移除 ${ file.name }？`);
-      },
-      download() {
-        window.open('../../../../../static/file/csv')
-        // const token = getCookies( TOKEN )
-        // const params = {
-        //   headers: {
-        //     'Access-Token': token
-        //   },
-        //   method: 'POST',
-        //   body: JSON.stringify( { id: this.$route.query.recordId } )
-        // }
-        // request( KEYWORDDOWNLOAD, params)
-        //   .catch( () => {
-        //     this.$message({
-        //       type: 'error',
-        //       message: '下载失败',
-        //       duration: 2000
-        //     });
-        //   } )
       },
       dumpAll() {
         this.$confirm('此操作将清空所有关键词回复, 是否继续?', '提示', {
@@ -387,12 +356,35 @@
         this.getList()
       },
       openIt() {
-        this.status = true
-        this.doEnale(this.status)
+        this.$confirm('确定开启关键词回复功能?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.status = true
+          this.doEnale(this.status)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消开启'
+          });
+        });
       },
       closedIt(v) {
-        this.status = false
-        this.doEnale(this.status)
+        this.$confirm('确定停用关键词回复功能?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.status = false
+          this.doEnale(this.status)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消停用'
+          });
+        });
+
       },
       doEnale(v) {
         const that = this
@@ -433,7 +425,7 @@
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消操作',
+            message: '已取消删除',
             duration: 2000
           });
         });
@@ -485,11 +477,9 @@
   .upload-demo {
     vertical-align: middle;
     display: inline-block;
-    position: relative;
     margin-left: 20px;
     .el-upload-list {
-      position: absolute;
-      top: - 38px;
+      display: none;
     }
   }
   .middle{
@@ -540,6 +530,10 @@
   }
   .delete:hover {
     color: $danger;
+  }
+  .disabled.delete, .disabled.edit{
+    color: $disabled;
+    text-decoration: none;
   }
   .stop{
     background: $danger;

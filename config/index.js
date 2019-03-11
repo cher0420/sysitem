@@ -42,7 +42,7 @@ module.exports = {
         changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
       },
       '/socket/**': {
-        target:'ws://192.168.1.103:10036',
+        target:'ws://192.168.1.103:10036/ws',
         ws: true,
         secure:false,
         changeOrigin:true,
