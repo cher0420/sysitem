@@ -40,7 +40,7 @@
       <el-table-column prop="CreateDate" label="创建时间" :resizable="resizable"></el-table-column>
       <el-table-column label="操作" :resizable="resizable" width="280">
         <template slot-scope="scope">
-          <span :class="status?['hover','edit']:['disabled','hover','edit']" @click="go('/bot/config/keywordResponse/editAnswer', '编辑')"><i class="el-icon-edit" ></i>编辑</span><span :class="status?['hover','edit']:['hover','edit','disabled']" style="margin-left: 24px" @click="doDelete(scope.row.ID, scope.$index)"><i class="el-icon-close"></i>删除</span>
+          <span :class="status?['hover','edit']:['disabled','hover','edit']" @click="go('/bot/config/keywordResponse/editAnswer', '编辑')"><i class="el-icon-edit" ></i>编辑</span><span :class="status?['hover','delete']:['hover','delete','disabled']" style="" @click="doDelete(scope.row.ID, scope.$index)"><i class="el-icon-close"></i>删除</span>
         </template>
       </el-table-column>
     </el-table>
@@ -356,19 +356,19 @@
         this.getList()
       },
       openIt() {
-        this.$confirm('确定开启关键词回复功能?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+        // this.$confirm('确定开启关键词回复功能?', '提示', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   type: 'warning'
+        // }).then(() => {
           this.status = true
           this.doEnale(this.status)
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消开启'
-          });
-        });
+        // }).catch(() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '已取消开启'
+        //   });
+        // });
       },
       closedIt(v) {
         this.$confirm('确定停用关键词回复功能?', '提示', {
@@ -527,6 +527,7 @@
   }
   .delete {
     color: #999;
+    margin-left: 24px;
   }
   .delete:hover {
     color: $danger;
