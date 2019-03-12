@@ -27,3 +27,11 @@ $height:80px;
   width: 35px;
   height: 20px;
 }
+.upload-demo {
+  vertical-align: middle;
+  display: inline-block;
+  margin-left: 20px;
+  .el-upload-list {
+    display: none;
+  }
+}

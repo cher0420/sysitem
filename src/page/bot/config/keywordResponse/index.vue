@@ -202,7 +202,8 @@
             // const url = `ws://localhost:3000/socket?BotId=${id}`
             // const url = `ws://192.168.50.198/ws?BotId=${id}`
             // const url = `ws://192.168.1.103:10036/ws?BotId=${id}`
-            const url = `/ws?BotId=${id}`
+            const agreement = location.host.indexOf('localhost')> -1? 'ws':'wss'
+            const url = `${agreement}://${location.host}/ws?BotId=${id}`
             const token = getCookies(TOKEN)
             that.webSocket = new WebSocket(url, token);
             that.webSocket.onopen = function (event) {
@@ -460,16 +461,8 @@
     }
   }
 </script>
-<style lang="scss">
+<style scoped lang="scss">
   @import "../../../../style/index.scss";
-  .upload-demo {
-    vertical-align: middle;
-    display: inline-block;
-    margin-left: 20px;
-    .el-upload-list {
-      display: none;
-    }
-  }
   .middle{
     vertical-align: middle;
   }

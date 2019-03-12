@@ -14,7 +14,7 @@ export const participle  = params => fetch('/api/QuickQA/GetKeyWords' , params,"
 /**
  *  28.	图片上传与图片删除接口
  */
-export const UploadAndDeleteAsync = params => fetch('/api/KnowledgeQA/UploadAndDeleteAsync' , params,"POST");  //  	图片上传与图片删除接口
+export const UploadAndDeleteAsync = params => fetch('/api/admin/portal/file/uploadanddeleteasync' , params,"POST");  //  	图片上传与图片删除接口
 
 
 

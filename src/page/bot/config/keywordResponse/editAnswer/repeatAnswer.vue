@@ -1,5 +1,7 @@
 <template>
  <div v-loading="loadingEdit" >
+    <div class="keywordTip">
+
      <section class="title f-s-16 c555 box-sizing margin-b-30px"> 设置关键词（至多三个）  </section>
     <p class="keyword">{{keywordlist}}</p>
      <div class="addContent">
@@ -7,11 +9,12 @@
           </section>
      </div>
      <div class="area">
-    <textarea class="c555 anwer-area" v-model="getAnswer" rows="8" cols="10"  maxlength="500"   placeholder="请输入自定义友好回答,最多500字"></textarea>
+    <textarea class="c555 anwer-area"  rows="8" cols="10" maxlength="500" placeholder="请输入自定义友好回答,最多500字" v-model="getAnswer"></textarea>
+  
       <span>0/500字</span>
      </div>
-      <span>{{ result }}</span>
-      <el-button class="nextBtn" @click="nextBtn">保存</el-button>
+     <el-button class="nextBtn" @click="reviseKeyword">修改关键词</el-button><el-button class="nextBtn" @click="reviseKAnswer">更新回答</el-button>
+    </div>
     </div>
 </template>
 <script>
@@ -21,46 +24,32 @@ import {mapGetters,mapActions} from 'vuex';
   import { getCookies } from "../../../../../utils/cookie";
   import {TOKEN} from "../../../../../constants/constants";
   import store from '../../../../../store/index'
+  import {REPLACE} from "../../../../../store/mutations";
 
   export default {
     name: "Allen-EditQA",
     data() {
       return {
-        Answer:'',
-        result: null,
-
+      getAnswer:'',
+      store:'',
       }
     },
-    computed: {},
+    computed: {
+    
+    },
 
     created() {
-      this.init();  
-
-  
+       this.init();  // 页面初始化
+     
     },
     mounted() {
 
-
     },
-    watch: {
-      kilometers:function(val) {
-          this.kilometers = val;
-          this.meters = val * 1000;
-
-      },
-      meters : function (val) {
-          this.kilometers = val/ 1000;
-          this.meters = val;
-      },
-
-    },
-
+    watch: {},
     methods: {
+        
        init() {
          this.keyList();
-
-        this.getAnswer = sessionStorage.getItem('AnsWer');
-         console.log(this.getAnswer);
        },
 
       keyList() {
@@ -71,15 +60,23 @@ import {mapGetters,mapActions} from 'vuex';
          
       },
 
-     nextBtn(){
- 
+
+
+     reviseKeyword(){
+       const url={path:'/bot/config/keywordResponse/addKeyword',}
+       this.$router.push(url)
+     },
+      reviseKAnswer(){
+       //const index = this.Answer
       const ID = store.state.app.userInfo.ID//?
       const BotId = sessionStorage.getItem("recordId")
       const TenantDomain =store.state.app.userInfo.Email
       const UpdateUserId=store.state.app.userInfo.Email
       const UpdateUserName=store.state.app.userInfo.Email 
-       const AnsWer = this.getAnswer
+      const AnsWer = this.getAnswer
+      
       sessionStorage.setItem('AnsWer',this.getAnswer)
+     
 
        const params = {
          headers:{
@@ -92,29 +89,20 @@ import {mapGetters,mapActions} from 'vuex';
        }
         request(UPDATEANSWER,params).then(
           (res)=>{
-          
           console.log(res.ResultValue)
 
-           
-
           }
-        //   .then(() => {
-        //   this.deleteSingle (id, index)
-        // }).catch(() => {
-        //   this.$message({
-        //     type: 'info',
-        //     message: '已取消操作',
-        //     duration: 2000
-        //   });
         )
-    }
+     }
+
+
+
     },
     destroyed() {
-       
-    },
+      clearInterval(this.timer);
+    }
 
   }
-
 </script>
 <style lang="scss" scoped>
   @import '../../../../../style/index';
@@ -122,7 +110,7 @@ import {mapGetters,mapActions} from 'vuex';
  .area span{position: absolute;bottom:15px;right: 0;color:#999;}
  .title{ padding-left:10px; width: 100%; height:36px; line-height: 36px; background: #f9fafc;margin-bottom:30px;}
  .anwer-area{height: 300px;outline: none;width: 100%;resize: none;padding: 10px;border:1px solid #e5ebf8;}
- .nextBtn{color:#fff;background:#2a8ce7;border:none;margin-top:40px;display: block;}
+ .nextBtn{color:#fff;background:#2a8ce7;border:none;margin-top:40px;display: inline-block;}
  .keyword{font-size:14px;color:#555;margin-bottom: 40px;}
 </style>
 

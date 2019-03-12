@@ -283,7 +283,7 @@
           "Email": Email,
           "FullName": FullName
         };
-
+        console.log(that.DeleteIds)
         if(that.Text.Answer.trim() == "" && that.ImageNew.length == 0){
           console.log("答案不能为空")
           that.$message({

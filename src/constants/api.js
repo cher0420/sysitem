@@ -50,4 +50,4 @@ export const KEYWORDSTATUS = '/api/admin/portal/KQA/Get'; //获取功能开启�
 export const ADDKEYWORD = '/api/admin/keyword/KQA/add';// 添加关键词
 export const VERIFYDUPLICATED = '/api/admin/keyword/KQA/verifyDuplicated';//重复校验
 export const UPDATEANSWER = '/api/admin/keyword/KQA/update';//更新答案
-export const SEARCHKERWORD = '/api/admin/keyword/KQA//api/admin/keyword/KQA/search';//查询关键字(加载数据)
+export const SEARCHKERWORD = '/api/admin/keyword/KQA/search';//查询关键字(加载数据)

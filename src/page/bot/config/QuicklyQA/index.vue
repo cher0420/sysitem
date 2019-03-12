@@ -82,7 +82,7 @@
       >
       </el-table-column>
       <el-table-column
-        width="180"
+        width="200"
         :resizable="resizable"
         v-if="!showDel"
       >
