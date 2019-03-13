@@ -9,9 +9,9 @@
           </section>
      </div>
      <div class="area">
-    <textarea class="c555 anwer-area"  rows="8" cols="10" maxlength="500" placeholder="请输入自定义友好回答,最多500字" v-model="getAnswer"></textarea>
+    <textarea class="c555 anwer-area"  @input="getTextTotal" rows="8" cols="10" maxlength="500" placeholder="请输入自定义友好回答,最多500字" v-model="getAnswer" ></textarea>
   
-      <span>0/500字</span>
+      <span>{{textTotal}}/500字</span>
      </div>
      <el-button class="nextBtn" @click="reviseKeyword">修改关键词</el-button><el-button class="nextBtn" @click="reviseKAnswer">更新回答</el-button>
     </div>
@@ -20,7 +20,7 @@
 <script>
 import {mapGetters,mapActions} from 'vuex';
   import {request} from "../../../../../serive/request";
-  import {UPDATEANSWER} from "../../../../../constants/api";
+  import {UPDATEANSWER,ADDKEYWORD} from "../../../../../constants/api";
   import { getCookies } from "../../../../../utils/cookie";
   import {TOKEN} from "../../../../../constants/constants";
   import store from '../../../../../store/index'
@@ -32,6 +32,7 @@ import {mapGetters,mapActions} from 'vuex';
       return {
       getAnswer:'',
       store:'',
+      textTotal:0,
       }
     },
     computed: {
@@ -50,24 +51,30 @@ import {mapGetters,mapActions} from 'vuex';
         
        init() {
          this.keyList();
+         this. getTextTotal();
        },
 
       keyList() {
       this.keywordlist = sessionStorage.getItem('KeyWord');
-      // console.log(keywordlist)
-      this.getAnswer = sessionStorage.getItem('AnsWer');
-         console.log(this.getAnswer);
-         
+      this.getAnswer = sessionStorage.getItem('AnsWer'); 
       },
 
-
+  getTextTotal() {
+        this.textTotal =this.getAnswer.length;
+        console.log(this.textTotal)
+    },
 
      reviseKeyword(){
        const url={path:'/bot/config/keywordResponse/addKeyword',}
        this.$router.push(url)
      },
-      reviseKAnswer(){
+    reviseKAnswer(){
+      const that = this
        //const index = this.Answer
+      const KeyWord = sessionStorage.getItem('KeyWord');
+      const TenantId = store.state.app.userInfo.TenantId;
+      const CreateUserId = store.state.app.userInfo.UserId;
+
       const ID = store.state.app.userInfo.ID//?
       const BotId = sessionStorage.getItem("recordId")
       const TenantDomain =store.state.app.userInfo.Email
@@ -75,6 +82,10 @@ import {mapGetters,mapActions} from 'vuex';
       const UpdateUserName=store.state.app.userInfo.Email 
       const AnsWer = this.getAnswer
       
+
+     
+
+
       sessionStorage.setItem('AnsWer',this.getAnswer)
      
 
@@ -84,20 +95,33 @@ import {mapGetters,mapActions} from 'vuex';
          },
          method: 'POST',
          body: JSON.stringify({
-            ID, BotId,TenantDomain,UpdateUserId,UpdateUserName,AnsWer
+            ID, BotId,TenantDomain,UpdateUserId,UpdateUserName,AnsWer,KeyWord,TenantId,CreateUserId
          })
        }
         request(UPDATEANSWER,params).then(
           (res)=>{
           console.log(res.ResultValue)
-
+           that.$message({
+              type: 'success',
+              message: '操作成功',
+              duration: 2000
+            });
           }
         )
+      // request(ADDKEYWORD, params).then(res => {
+      //   console.log(123);
+      //   that.$message({
+      //     type: "success",
+      //     message: "操作成功",
+      //     duration: 2000
+      //   });
+      //  });
      }
 
 
 
     },
+  
     destroyed() {
       clearInterval(this.timer);
     }

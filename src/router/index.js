@@ -183,6 +183,13 @@ const arr = [
           require(["../page/bot/config/keywordResponse/editAnswer/editAnswer"], resolve),
         name: 'edit',
       }
+      ,
+      {
+        path:'config/keywordResponse/repeatAnswer',   //  关键词回复
+        component: resolve =>
+          require(["../page/bot/config/keywordResponse/editAnswer/repeatAnswer"], resolve),
+        name: 'edit',
+      }
     ]
   }
 ]

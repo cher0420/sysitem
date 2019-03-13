@@ -103,7 +103,9 @@ export const del = (params) => {
 
 export const _ask = (botId = null) => {
   const token = getCookies(TOKEN)
-  const BotConfigId = botId?botId:route.currentRoute.query.recordId
+  const id = JSON.parse(sessionStorage.getItem('recordId'))
+  const BotConfigId = route.currentRoute.query.recordId?route.currentRoute.query.recordId:id
+
   const params = {
     headers:{
       'Access-Token':token

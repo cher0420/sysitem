@@ -11,10 +11,8 @@
         :data="params.body"
         :action="params.url"
         accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :on-success = 'successUpload'
-        :on-error = 'onError'
+        :on-success='successUpload'
+        :on-error='onError'
         :limit="1"
         :on-exceed="handleExceed"
       ><el-button :disabled='uploadStatus || !status' size="small" type="primary">导入模版 </el-button></el-upload>
@@ -53,22 +51,23 @@
       :current-page.sync="PageIndex"
       :total="total">
     </el-pagination>
-    <div v-if='uploadResponseStatus' class="el-message-box__wrapper" style="z-index: 2004;background: rgba(0, 0, 0, 0.3);transition: background 1s">
-      <div class="el-message-box">
+    <div v-if='uploadResponseStatus' style="z-index: 2004;background: rgba(0, 0, 0, 0.4);" class="el-message-box__wrapper">
+      <div :class="uploadResponseStatus?['el-message-box','responseBack']:['el-message-box','nonBack']">
         <div class="el-message-box__header">
-          <span>提示</span>
-          <div class="el-message-box__content">
+          <div class="el-message-box__title">
+            <span >提示</span>
+          </div>
+        </div>
+        <div class="el-message-box__content">
             <div class="el-message-box__status el-icon-warning">
             </div>
             <div class="el-message-box__message">
-              <p>{{response.message}}</p>
+              <p>{{response.Message}}</p>
             </div>
-          </div>
-          <div class="full-width">
-            <button class="el-button el-button--primary f-r margin-left-20" @click="operate('Overrides')">覆盖</button>
-            <button class="el-button el-button--primary f-r" @click="operate('SkipDuplicates')">跳过</button>
-            <button class="el-button f-r" @click="operate('Cancel')">取消上传</button>
-          </div>
+          </div><div class="el-message-box__btns">
+          <button class="el-button el-button--small" @click="operate('Cancel')">取消上传</button>
+          <button class="el-button el-button--small el-button--primary" @click="operate('SkipDuplicates')">跳过</button>
+          <button class="el-button el-button--small el-button--primary margin-left-20" @click="operate('Overrides')">覆盖</button>
         </div>
       </div>
     </div>
@@ -87,7 +86,6 @@
     data() {
       return {
         params: {},
-        autoUpload: false,
         keyWords: '',
         status: true,
         tableData: [],
@@ -99,29 +97,30 @@
         fileListArr: [],
         webSocket: null,
         uploadStatus: false,
-        response:{message:'v '},
+        response:{ Message: '' },
         uploadResponseStatus: false
       }
     },
     created() {
       this.getList()
       this.getServiceStatus()
+      const id = JSON.parse(sessionStorage.getItem('recordId'))
+      const BotId = this.$route.query.recordId?this.$route.query.recordId:id
       this.params = {
         headers: {'Access-Token': getCookies(TOKEN)},
         url: KEYWORDLEADEXCEL,
         // url: `http://192.168.50.198${KEYWORDLEADEXCEL}`,
         body: {
-          BotId: this.$route.query.recordId,
-          TenantDomain: store.state.app.userInfo.FullName,
+          BotId,
+          TenantDomain: store.state.app.userInfo.Email,
           TenantId: store.state.app.userInfo.TenantId
         }
       }
       this.webSocketFun()
-
     },
     destroyed(){
+      this.webSocket.close()
       store.dispatch( REPLACE, { mainLoading: false } )
-
     },
     methods: {
       init() {
@@ -130,43 +129,70 @@
       },
       getServiceStatus () {
         const that = this
+        store.dispatch(REPLACE,{mainLoading: true})
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const params = {
           method: 'POST',
           headers: {
             'Access-token': getCookies(TOKEN)
           },
-          body:  JSON.stringify( { BotConfigId: this.$route.query.recordId } )
+          body:  JSON.stringify( { BotConfigId } )
         }
         request( KEYWORDSTATUS, params ).then(
           (res) => {
             that.status = res.Data.Enable
+            store.dispatch(REPLACE,{mainLoading: false})
           }
         ).catch( () => {
             that.status = false
         } )
       },
-      successUpload () {
+      successUpload (res, file, fileList) {
+        if(!res.Status){
+          this.$message(
+            {
+              type: 'error',
+              message: `${res.ErrorMsg}请稍后重试`,
+              duration: 2000
+            }
+          )
+        }
         this.$refs.upload.clearFiles();
       },
-      onError () {
+      onError (err, file, fileList) {
+        this.$message(
+          {
+            type: 'error',
+            message: '服务器错误，请稍后重试',
+            duration: 2000
+          }
+        )
         this.$refs.upload.clearFiles();
       },
       go(v, title) {
-        const query = this.$route.query
-        this.$router.push(
-          {
-            path: v,
-            query: {
-              ...query,
-              title: title
-            },
-          }
-        )
+        if(this.status){
+          const query = this.$route.query
+          this.$router.push(
+            {
+              path: v,
+              query: {
+                ...query,
+                title: title
+              },
+            }
+          )
+        }
+        else{
+          return
+        }
+
       },
       async getList() {
         const that = this
         that.loading = true
-        const BotId = this.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotId = this.$route.query.recordId?this.$route.query.recordId:id
         const TenantId = store.state.app.userInfo.TenantId
         const TenantDomain = store.state.app.userInfo.Email
         const token = getCookies(TOKEN)
@@ -198,12 +224,14 @@
       },
       webSocketFun() {
         const that = this
-            const id = this.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+
             // const url = `ws://localhost:3000/socket?BotId=${id}`
             // const url = `ws://192.168.50.198/ws?BotId=${id}`
             // const url = `ws://192.168.1.103:10036/ws?BotId=${id}`
             const agreement = location.host.indexOf('localhost')> -1? 'ws':'wss'
-            const url = `${agreement}://${location.host}/ws?BotId=${id}`
+            const url = `${agreement}://${location.host}/ws?BotId=${BotConfigId}`
             const token = getCookies(TOKEN)
             that.webSocket = new WebSocket(url, token);
             that.webSocket.onopen = function (event) {
@@ -226,7 +254,7 @@
               const response = JSON.parse(res.data)
               if (response) {
                 switch (response.Code) {
-                  case "IRV00004":
+                  case "IRV00002":
                     that.$message({
                       type: 'error',
                       message: `${response.Message} 请重新上传`,
@@ -238,35 +266,53 @@
                     that.alertFun(response);
                     break;
                   case 'Succeed':
+                    that.loading = true
                     that.$message( {
                       type: 'success',
                       message: `${response.Message}`,
                       duration: 2000,
+                      onClose(){
+                        that.getList()
+                      }
                     } )
                     store.dispatch( REPLACE, { mainLoading: false } )
                         break;
+                  default:
+                    that.$message({
+                      type: 'error',
+                      message: `${response.Message} 请重新上传`,
+                      duration: 2000,
+                    })
+                    store.dispatch( REPLACE, { mainLoading: false } )
                   }
               }
             }
             that.webSocket.onerror = (err) => {
-              console.log(err);
             }
             that.webSocket.onclose = (info) => {
-              console.log(info);
             }
-
       },
       alertFun (res) {
           this.uploadResponseStatus = true
+          this.response = res
       },
       operate (key) {
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const params = {
           "Command": key,
-          "BotId": this.$route.query.recordId,
+          "BotId": BotConfigId,
           "Domain": this.response.Domain,
           "TenantId": store.state.app.userInfo.TenantId
         }
         this.webSocket.send( JSON.stringify(params) )
+        if(key === 'Cancel'){
+          this.$message({
+            type: 'info',
+            message: '已取消上传文件',
+            duration: 2000
+          })
+        }
         this.uploadResponseStatus = false
       },
       clearData(v) {
@@ -350,7 +396,6 @@
         //   cancelButtonText: '取消',
         //   type: 'warning'
         // }).then(() => {
-          this.status = true
           this.doEnale(this.status)
         // }).catch(() => {
         //   this.$message({
@@ -365,7 +410,6 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.status = false
           this.doEnale(this.status)
         }).catch(() => {
           this.$message({
@@ -376,8 +420,11 @@
 
       },
       doEnale(v) {
+        store.dispatch(REPLACE, {mainLoading: true})
         const that = this
-        const BotConfigId = this.$route.query.recordId
+        this.status = !this.status
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const params = {
           headers: {
             'Access-token': getCookies(TOKEN)
@@ -387,7 +434,7 @@
         }
         request(KEYWORDENABLE, params).then(
           (res) => {
-            console.log(res)
+            store.dispatch(REPLACE, {mainLoading: false})
             that.$message({
               type: 'success',
               message: '操作成功',
@@ -405,19 +452,21 @@
         )
       },
       doDelete(id, index) {
-        this.$confirm('此操作将删除此条关键词回复, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.deleteSingle(id, index)
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除',
-            duration: 2000
+        if(this.status){
+          this.$confirm('此操作将删除此条关键词回复, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.deleteSingle(id, index)
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除',
+              duration: 2000
+            });
           });
-        });
+        }
       },
       deleteSingle(ID, index) {
         const that = this
@@ -429,7 +478,8 @@
         }
 
         const tenantDomain = store.state.app.userInfo.Email
-        const botId = this.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const botId = this.$route.query.recordId?this.$route.query.recordId:id
 
         const url = encodeURI(`${ DELETEKEYWORD }${tenantDomain}/${botId}/${ID}`)
 
@@ -532,5 +582,20 @@
   .do{
     text-align: right;
     margin-right: -100px;
+  }
+  //view
+  .responseBack {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%, -50%);
+    transition: transform 1s;
+}
+  .nonBack{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate( -50%, -50%);
+    transition: transform 1s;
   }
 </style>

@@ -66,8 +66,8 @@
               const activeKey =navIndexArr[1]
               //设置标题
               if(to.name === 'detail'||to.name === 'edit'){
-                const navIndex = to.query.title
-                store.dispatch(REPLACE,{navIndex})
+                const navIndex = to.query.title ?to.query.title:STR[to.name]
+                  store.dispatch(REPLACE,{navIndex})
               }else{
                 const navIndex = STR[navIndexArr[navIndexArr.length-1]]
                 store.dispatch(REPLACE,{navIndex})
