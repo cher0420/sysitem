@@ -38,7 +38,7 @@
       <el-table-column prop="CreateDate" label="创建时间" :resizable="resizable"></el-table-column>
       <el-table-column label="操作" :resizable="resizable" width="280">
         <template slot-scope="scope">
-          <span :class="status?['hover','edit']:['disabled','hover','edit']" @click="go('/bot/config/keywordResponse/editAnswer', '编辑')"><i class="el-icon-edit" ></i>编辑</span><span :class="status?['hover','delete']:['hover','delete','disabled']" style="" @click="doDelete(scope.row.ID, scope.$index)"><i class="el-icon-close"></i>删除</span>
+          <span :class="status?['hover','edit']:['disabled','hover','edit']" @click="go('/bot/config/keywordResponse/editAnswer', '编辑', scope.row.ID )"><i class="el-icon-edit" ></i>编辑</span><span :class="status?['hover','delete']:['hover','delete','disabled']" style="" @click="doDelete(scope.row.ID, scope.$index)"><i class="el-icon-close"></i>删除</span>
         </template>
       </el-table-column>
     </el-table>
@@ -170,7 +170,7 @@
         )
         this.$refs.upload.clearFiles();
       },
-      go(v, title) {
+      go(v, title, ID = undefined) {
         if(this.status){
           const query = this.$route.query
           this.$router.push(
@@ -178,7 +178,8 @@
               path: v,
               query: {
                 ...query,
-                title: title
+                title: title,
+                ID: ID
               },
             }
           )
