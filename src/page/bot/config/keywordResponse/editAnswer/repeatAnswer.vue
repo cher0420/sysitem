@@ -59,10 +59,7 @@ import {mapGetters,mapActions} from 'vuex';
       this.getAnswer = sessionStorage.getItem('AnsWer'); 
       },
 
-  getTextTotal() {
-        this.textTotal =this.getAnswer.length;
-        console.log(this.textTotal)
-    },
+ 
 
      reviseKeyword(){
        const url={path:'/bot/config/keywordResponse/addKeyword',}
@@ -81,14 +78,9 @@ import {mapGetters,mapActions} from 'vuex';
       const UpdateUserId=store.state.app.userInfo.Email
       const UpdateUserName=store.state.app.userInfo.Email 
       const AnsWer = this.getAnswer
-      
-
-     
-
 
       sessionStorage.setItem('AnsWer',this.getAnswer)
      
-
        const params = {
          headers:{
            'Access-token': getCookies(TOKEN)
@@ -121,7 +113,11 @@ import {mapGetters,mapActions} from 'vuex';
 
 
     },
-  
+
+    getTextTotal() {
+          this.textTotal =this.getAnswer.length;
+          console.log(this.textTotal)
+      },
     destroyed() {
       clearInterval(this.timer);
     }

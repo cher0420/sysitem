@@ -5,20 +5,25 @@
       <div style="overflow:hidden;zoom:1;display: inline-block;">
         <div class="addContent" v-for="(item,index) in keywordList" :key="index">
           <div class="inputContent keyword">
-            <el-input class :placeholder="keywordList[index]" v-model="keywordList[index]" :checked="emptyKey(index)"></el-input>
+            <el-input class :placeholder="keywordList[index]" v-model="keywordList[index]" @input="emptyKey(index)"></el-input>
             <i class="el-icon-error del" @click="delKeyword(index)"></i>
+            
           </div>
+         
         </div>
-        <el-button class="keywordBtn" @click="addKey" v-if="counter<2">
+        <el-button v-if="counter<2" class="keywordBtn" @click="addKey" >
           <i class="el-icon-error icon"></i>添加关键词
         </el-button>
+        <p v-show='!change' class="tipMessage">输入框不能为空</p> 
+        
+        
       </div>
 
       <div class="tip">
         <i class="el-icon-warning tipIcon"></i>
         <span class="keywordTip">所添加的关键词需要同时出现机器人才会回复所设定回答哦</span>
       </div>
-      <el-button class="nextBtn" @click="nextAnswer">下一步</el-button>
+      <el-button class="nextBtn" @click="nextAnswer" :disabled="disabled" >下一步</el-button>
     </div>
   </div>
 </template>
@@ -32,12 +37,12 @@ import store from "../../../../../store/index";
 import vue from "vue";
 import vuex from "vuex";
 
-export default {
-  // name: "Allen-EditQA",
+export default { 
   data() {
     return {
       counter: -1,
-      keywordList: []
+      keywordList: ['1','2'],
+		  change:true,
     };
   },
   computed: {},
@@ -50,25 +55,32 @@ export default {
     init() {
       this.store = sessionStorage.getItem("KeyWord");
       this.keywordList = this.store.split("&");
-      // sessionStorage.clear("KeyWord","AnsWer")
+    
     },
-    addKey() {
+    addKey() { 
       this.counter = this.keywordList.length++;
+      console.log(this.counter)
     },
     answer() {
       console.log(1);
     },
     emptyKey(index){
-      
       if (!this.keywordList[index]){
-         this.$message.error('输入框不能为空');
+       
+          this.change =false
           return;
+      }else{
+        this.change =true
+       
       }
+      
+
     },
     delKeyword(index) {
+      
       this.keywordList.splice(index,1)
       console.log(this.keywordList);
-     
+      this.counter--;
       
     },
     nextAnswer() {
@@ -80,7 +92,6 @@ export default {
       const CreateUserId = store.state.app.userInfo.UserId;
       const CreateUserName = store.state.app.userInfo.FullName;
       const TenantDomain = store.state.app.userInfo.Email;
-     
 
       sessionStorage.setItem("KeyWord", this.keywordList.join("&"));
 
@@ -92,12 +103,10 @@ export default {
         body: JSON.stringify({
           TenantId,
           BotId,
-           CreateUserName,
+          CreateUserName,
           CreateUserId,
-        
           TenantDomain,
           KeyWord,
-       
         })
       };
 
@@ -188,6 +197,8 @@ export default {
 .del:hover {
   color: #2a8ce7;
 }
+.tipMessage{color: red;}
+.tipMessages{display: block;}
 .icon {
   transform: rotate(45deg);
   color: #2a8ce7;
@@ -198,5 +209,3 @@ export default {
   -o-transform: rotate(45deg); /* Opera */
 }
 </style>
-
-

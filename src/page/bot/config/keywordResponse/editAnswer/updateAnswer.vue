@@ -1,7 +1,7 @@
 <template>
  <div v-loading="loadingEdit" >
      <section class="title f-s-16 c555 box-sizing margin-b-30px"> 设置关键词（至多三个）  </section>
-    <p class="keyword">{{keywordlist}}</p>
+    <p class="keyword">{{getKeyValue}}</p>
       <div class="addContent">
           <section class="title f-s-16 c555 box-sizing margin-b-30px">设置回答</section>
       </div>
@@ -27,7 +27,8 @@ import {mapGetters,mapActions} from 'vuex';
       return {
         Answer:'',
         result: null,
-        textTotal:0
+        textTotal:0,
+        getKeyValue:''
       }
     },
     computed: {},
@@ -54,21 +55,44 @@ import {mapGetters,mapActions} from 'vuex';
 
     methods: {
        init() {
-         this.keyList();
-         this.getTextTotal();
-
+        this.keyList();
+        this.getTextTotal();
+        this.getkey();
         this.getAnswer = sessionStorage.getItem('AnsWer'); 
        },
-
       keyList() {
-      this.keywordlist = sessionStorage.getItem('KeyWord'); 
+      //this.keywordlist = sessionStorage.getItem('KeyWord'); 
       this.getAnswer = sessionStorage.getItem('AnsWer'); 
       },
-
       getTextTotal() {
         this.textTotal =this.getAnswer.length;
-        // console.log(this.textTotal)
       },
+
+    getkey(){
+       const that = this;
+       const TenantDomain =store.state.app.userInfo.Email
+       const ID =this.$route.query.ID 
+       const BotId = JSON.parse(sessionStorage.getItem('recordId'))
+       const params = {
+      headers:{
+        'Access-token': getCookies(TOKEN)
+      },
+      method: 'get',
+    }
+       
+    request('/api/admin/keyword/KQA/get/'+TenantDomain+'/'+BotId+'/'+ID, params).then(res => {
+       
+      const that = this;
+      const getKeyValue = res.ResultValue.Keyword;
+      this.getKeyValue =getKeyValue
+
+      const getAnswer= res.ResultValue.Answer
+      this.getAnswer=getAnswer
+    console.log(res.ResultValue.Answer)
+
+      });
+    },
+
      nextBtn(){
       const that = this
       // console.log(sessionStorage.getItem('KeyWord'));
@@ -77,13 +101,12 @@ import {mapGetters,mapActions} from 'vuex';
       const CreateUserId = store.state.app.userInfo.UserId;
       const CreateUserName = store.state.app.userInfo.FullName;
       const ID = store.state.app.userInfo.ID//?
-      const BotId = sessionStorage.getItem("recordId")
+      const BotId = sessionStorage.getItem('recordId')
       const TenantDomain =store.state.app.userInfo.Email
       const UpdateUserId=store.state.app.userInfo.Email
       const UpdateUserName=store.state.app.userInfo.Email 
       const AnsWer = this.getAnswer
       
-
       sessionStorage.setItem('AnsWer',this.getAnswer)
        const params = {
          headers:{
@@ -94,24 +117,24 @@ import {mapGetters,mapActions} from 'vuex';
             CreateUserName,ID, BotId,TenantDomain,UpdateUserId,UpdateUserName,AnsWer,KeyWord,TenantId,CreateUserId
          })
        }
-        request(ADDKEYWORD, params).then(res => {
-        console.log(123);
-        that.$message({
-          type: "success",
-          message: "操作成功",
-          duration: 2000
-        });
-      });
+      //   request(ADDKEYWORD, params).then(res => {
+      //   console.log(123);
+      //   that.$message({
+      //     type: "success",
+      //     message: "操作成功",
+      //     duration: 2000
+      //   });
+      // });
 
-      // request(UPDATEANSWER,params).then(
-      //     (res)=>{
-      //   console.log(res.ResultValue)
-      //    that.$message({
-      //         type: 'success',
-      //         message: '操作成功',
-      //         duration: 2000
-      //    });
-      // })
+      request(UPDATEANSWER,params).then(
+          (res)=>{
+        console.log(res.ResultValue)
+         that.$message({
+              type: 'success',
+              message: '操作成功',
+              duration: 2000
+         });
+      })
     }
     },
     destroyed() {
