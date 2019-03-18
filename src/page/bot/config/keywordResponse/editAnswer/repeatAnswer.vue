@@ -59,7 +59,10 @@ import {mapGetters,mapActions} from 'vuex';
       this.getAnswer = sessionStorage.getItem('AnsWer'); 
       },
 
- 
+    getTextTotal() {
+      this.textTotal =this.getAnswer.length;
+          
+      },
 
      reviseKeyword(){
        const url={path:'/bot/config/keywordResponse/addKeyword',}
@@ -71,53 +74,49 @@ import {mapGetters,mapActions} from 'vuex';
       const KeyWord = sessionStorage.getItem('KeyWord');
       const TenantId = store.state.app.userInfo.TenantId;
       const CreateUserId = store.state.app.userInfo.UserId;
-
+      const CreateUserName = store.state.app.userInfo.FullName;
       const ID = store.state.app.userInfo.ID//?
-      const BotId = sessionStorage.getItem("recordId")
+      const BotId = JSON.parse(sessionStorage.getItem('recordId'))
       const TenantDomain =store.state.app.userInfo.Email
       const UpdateUserId=store.state.app.userInfo.Email
       const UpdateUserName=store.state.app.userInfo.Email 
       const AnsWer = this.getAnswer
 
       sessionStorage.setItem('AnsWer',this.getAnswer)
-     
        const params = {
          headers:{
            'Access-token': getCookies(TOKEN)
          },
          method: 'POST',
          body: JSON.stringify({
-            ID, BotId,TenantDomain,UpdateUserId,UpdateUserName,AnsWer,KeyWord,TenantId,CreateUserId
+            TenantId,BotId,TenantDomain,AnsWer,KeyWord,CreateUserId,CreateUserName
          })
        }
-        request(UPDATEANSWER,params).then(
-          (res)=>{
-          console.log(res.ResultValue)
-           that.$message({
-              type: 'success',
-              message: '操作成功',
-              duration: 2000
-            });
-          }
-        )
-      // request(ADDKEYWORD, params).then(res => {
-      //   console.log(123);
-      //   that.$message({
-      //     type: "success",
-      //     message: "操作成功",
-      //     duration: 2000
-      //   });
-      //  });
+        // request(UPDATEANSWER,params).then(
+        //   (res)=>{
+        //   console.log(res.ResultValue)
+        //    that.$message({
+        //       type: 'success',
+        //       message: '操作成功',
+        //       duration: 2000
+        //     });
+        //   }
+        // )
+      request(ADDKEYWORD, params).then(res => {
+        console.log(123);
+        that.$message({
+          type: "success",
+          message: "操作成功",
+          duration: 2000
+        });
+       });
      }
 
 
 
     },
 
-    getTextTotal() {
-          this.textTotal =this.getAnswer.length;
-          console.log(this.textTotal)
-      },
+    
     destroyed() {
       clearInterval(this.timer);
     }

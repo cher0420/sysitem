@@ -66,7 +66,6 @@ export default {
     },
     emptyKey(index){
       if (!this.keywordList[index]){
-       
           this.change =false
           return;
       }else{
@@ -77,7 +76,6 @@ export default {
 
     },
     delKeyword(index) {
-      
       this.keywordList.splice(index,1)
       console.log(this.keywordList);
       this.counter--;
@@ -88,7 +86,7 @@ export default {
       const KeyWord = this.keywordList.join("&");
       console.log(KeyWord); //梨&橙子
       const TenantId = store.state.app.userInfo.TenantId;
-      const BotId = sessionStorage.getItem("recordId");
+      const BotId = JSON.parse(sessionStorage.getItem('recordId'));
       const CreateUserId = store.state.app.userInfo.UserId;
       const CreateUserName = store.state.app.userInfo.FullName;
       const TenantDomain = store.state.app.userInfo.Email;
@@ -112,7 +110,7 @@ export default {
 
       request(VERIFYDUPLICATED, params).then(res => {
         console.log(res);
-        if ((res.ResultValue = false)) {
+        if (res.ResultValue == true) { 
           const url = { path: "/bot/config/keywordResponse/repeatAnswer" };
           this.$router.push(url);
         } else {

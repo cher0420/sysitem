@@ -77,13 +77,12 @@ import {mapGetters,mapActions} from 'vuex';
       const CreateUserId = store.state.app.userInfo.UserId;
       const CreateUserName = store.state.app.userInfo.FullName;
       const ID = store.state.app.userInfo.ID//?
-      const BotId = sessionStorage.getItem("recordId")
+     const BotId = JSON.parse(sessionStorage.getItem('recordId'))
       const TenantDomain =store.state.app.userInfo.Email
       const UpdateUserId=store.state.app.userInfo.Email
       const UpdateUserName=store.state.app.userInfo.Email 
       const AnsWer = this.getAnswer
       
-
       sessionStorage.setItem('AnsWer',this.getAnswer)
        const params = {
          headers:{
@@ -91,11 +90,10 @@ import {mapGetters,mapActions} from 'vuex';
          },
          method: 'POST',
          body: JSON.stringify({
-            CreateUserName,ID, BotId,TenantDomain,UpdateUserId,UpdateUserName,AnsWer,KeyWord,TenantId,CreateUserId
+            TenantId,BotId,TenantDomain,AnsWer,KeyWord,CreateUserId,CreateUserName
          })
        }
         request(ADDKEYWORD, params).then(res => {
-        console.log(123);
         that.$message({
           type: "success",
           message: "操作成功",
