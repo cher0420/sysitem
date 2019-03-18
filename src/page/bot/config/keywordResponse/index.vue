@@ -33,6 +33,7 @@
         <template slot-scope="scope">
           <span style="margin-left: 10px">{{ scope.$index + 1 }}</span>
         </template>
+
       </el-table-column>
       <el-table-column prop="Keyword" label="关键词" :resizable="resizable"></el-table-column>
       <el-table-column prop="CreateDate" label="创建时间" :resizable="resizable"></el-table-column>

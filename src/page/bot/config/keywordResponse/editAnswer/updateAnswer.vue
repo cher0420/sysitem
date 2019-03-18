@@ -14,12 +14,14 @@
   </div>
 </template>
 <script>
-import {mapGetters,mapActions} from 'vuex';
+  import {mapGetters,mapActions} from 'vuex';
   import {request} from "../../../../../serive/request";
   import {UPDATEANSWER,ADDKEYWORD} from "../../../../../constants/api";
   import { getCookies } from "../../../../../utils/cookie";
-  import {TOKEN} from "../../../../../constants/constants";
-  import store from '../../../../../store/index'
+  import {TOKEN} from "../../../../../constants/constants"; 
+  import store from '../../../../../store/index';
+  // import { REPLACE } from "../../../../store/mutations";
+
 
   export default {
     name: "Allen-EditQA",
@@ -28,7 +30,8 @@ import {mapGetters,mapActions} from 'vuex';
         Answer:'',
         result: null,
         textTotal:0,
-        getKeyValue:''
+        getKeyValue:'',
+        ID:'',
       }
     },
     computed: {},
@@ -37,8 +40,6 @@ import {mapGetters,mapActions} from 'vuex';
       this.init();  
     },
     mounted() {
-
-
     },
     watch: {
       kilometers:function(val) {
@@ -54,21 +55,16 @@ import {mapGetters,mapActions} from 'vuex';
     },
 
     methods: {
-       init() {
+       init() { 
+        this.getTextTotal(); 
         this.keyList();
-        this.getTextTotal();
+        this.getAnswer = sessionStorage.getItem('AnsWer');  
         this.getkey();
-        this.getAnswer = sessionStorage.getItem('AnsWer'); 
        },
-      keyList() {
-      //this.keywordlist = sessionStorage.getItem('KeyWord'); 
-      this.getAnswer = sessionStorage.getItem('AnsWer'); 
-      },
-      getTextTotal() {
-        this.textTotal =this.getAnswer.length;
-      },
+    
+    
 
-    getkey(){
+    getkey(){ 
        const that = this;
        const TenantDomain =store.state.app.userInfo.Email
        const ID =this.$route.query.ID 
@@ -79,33 +75,35 @@ import {mapGetters,mapActions} from 'vuex';
       },
       method: 'get',
     }
-       
-    request('/api/admin/keyword/KQA/get/'+TenantDomain+'/'+BotId+'/'+ID, params).then(res => {
-       
+    
+    const url = '/api/admin/keyword/KQA/get/'+TenantDomain+'/'+BotId+'/'+ID
+    request(url, params).then(res => { 
       const that = this;
       const getKeyValue = res.ResultValue.Keyword;
       this.getKeyValue =getKeyValue
-
       const getAnswer= res.ResultValue.Answer
-      this.getAnswer=getAnswer
-    console.log(res.ResultValue.Answer)
-
+      this.getAnswer=getAnswer 
+      
       });
     },
-
-     nextBtn(){
-      const that = this
-      // console.log(sessionStorage.getItem('KeyWord'));
+     getTextTotal() {
+        //this.textTotal =this.getAnswer.length;
+      },
+    keyList() {
+      this.getAnswer = sessionStorage.getItem('AnsWer');  
+    },
+    nextBtn(){
+      const that = this 
+      const ID = this.$route.query.ID
       const KeyWord = sessionStorage.getItem('KeyWord');
       const TenantId = store.state.app.userInfo.TenantId;
       const CreateUserId = store.state.app.userInfo.UserId;
-      const CreateUserName = store.state.app.userInfo.FullName;
-      const ID = store.state.app.userInfo.ID//?
-      const BotId = sessionStorage.getItem('recordId')
+      const CreateUserName = store.state.app.userInfo.FullName; 
+      const BotId = JSON.parse(sessionStorage.getItem('recordId'))
       const TenantDomain =store.state.app.userInfo.Email
       const UpdateUserId=store.state.app.userInfo.Email
       const UpdateUserName=store.state.app.userInfo.Email 
-      const AnsWer = this.getAnswer
+      const AnsWer =this.getAnswer
       
       sessionStorage.setItem('AnsWer',this.getAnswer)
        const params = {
@@ -114,17 +112,9 @@ import {mapGetters,mapActions} from 'vuex';
          },
          method: 'POST',
          body: JSON.stringify({
-            CreateUserName,ID, BotId,TenantDomain,UpdateUserId,UpdateUserName,AnsWer,KeyWord,TenantId,CreateUserId
+            ID,AnsWer,CreateUserId,UpdateUserName,TenantDomain,BotId
          })
        }
-      //   request(ADDKEYWORD, params).then(res => {
-      //   console.log(123);
-      //   that.$message({
-      //     type: "success",
-      //     message: "操作成功",
-      //     duration: 2000
-      //   });
-      // });
 
       request(UPDATEANSWER,params).then(
           (res)=>{
@@ -135,7 +125,10 @@ import {mapGetters,mapActions} from 'vuex';
               duration: 2000
          });
       })
-    }
+       sessionStorage.setItem('AnsWer',this.getAnswer)
+       console.log(this.getAnswer)
+    },
+   
     },
     destroyed() {
        
