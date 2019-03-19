@@ -23,7 +23,7 @@
         <i class="el-icon-warning tipIcon"></i>
         <span class="keywordTip">所添加的关键词需要同时出现机器人才会回复所设定回答哦</span>
       </div>
-      <el-button class="nextBtn" @click="nextAnswer" :disabled="disabled" >下一步</el-button>
+      <el-button class="nextBtn" @click="nextAnswer" :disabled="disabled">下一步</el-button>
     </div>
   </div>
 </template>
@@ -45,12 +45,16 @@ export default {
 		  change:true,
     };
   },
-  computed: {},
+  computed: {
+     
+  },
   created() {
     this.init(); // 页面初始化
   },
   mounted() {},
-  watch: {},
+  watch: { 
+    
+  },
   methods: {
     init() {
       this.store = sessionStorage.getItem("KeyWord");
@@ -60,25 +64,35 @@ export default {
     addKey() { 
       this.counter = this.keywordList.length++;
       console.log(this.counter)
+      this.emptyKey();
     },
     answer() {
       console.log(1);
     },
-    emptyKey(index){
+    emptyKey(index){ 
+     
       if (!this.keywordList[index]){
-          this.change =false
+         console.log(88888888888111)
+          this.change =false ;
+           this.disabled =true
           return;
       }else{
-        this.change =true
-       
-      }
-      
-
+         console.log(88888888889999)
+        this.change =true ;
+         this.disabled =false
+      } 
     },
     delKeyword(index) {
+      console.log(index)
       this.keywordList.splice(index,1)
       console.log(this.keywordList);
       this.counter--;
+      
+      if (!this.keywordList[index]){
+        this.change =true ;
+        this.disabled =false
+        return;
+      }
       
     },
     nextAnswer() {
@@ -119,14 +133,7 @@ export default {
         }
       });
 
-      // request(ADDKEYWORD, params).then(res => {
-      //   console.log(123);
-      //   that.$message({
-      //     type: "success",
-      //     message: "操作成功",
-      //     duration: 2000
-      //   });
-      // });
+     
     }
   },
 
@@ -195,6 +202,8 @@ export default {
 .del:hover {
   color: #2a8ce7;
 }
+.is-disabled{background: #409EFF;color:#fff}
+.is-disabled:hover{background: #409EFF;color:#fff}
 .tipMessage{color: red;}
 .tipMessages{display: block;}
 .icon {
