@@ -16,7 +16,7 @@
         :limit="1"
         :on-exceed="handleExceed"
       ><el-button :disabled='uploadStatus || !status' size="small" type="primary">导入模版 </el-button></el-upload>
-      <a href='../../../../../static/file/keywordsResponseTemplate.csv' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
+      <a href='../../../../../static/file/template.csv' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
     </section>
     <section class="f-r">
       <el-button  :disabled='tableData.length === 0' v-show='status' type="primary" class="big-button" @click="dumpAll">清空数据</el-button>
@@ -31,7 +31,7 @@
     >
       <el-table-column label="序号" align="center" width='90' :resizable="resizable">
         <template slot-scope="scope">
-          <span style="margin-left: 10px">{{ scope.$index + 1 }}</span>
+          <span>{{ scope.$index + 1 }}</span>
         </template>
 
       </el-table-column>
@@ -256,7 +256,7 @@
               const response = JSON.parse(res.data)
               if (response) {
                 switch (response.Code) {
-                  case "IRV00002":
+                  case "IRV00002" || "IRV00006":
                     that.$message({
                       type: 'error',
                       message: `${response.Message} 请重新上传`,
