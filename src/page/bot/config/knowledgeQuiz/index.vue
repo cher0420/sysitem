@@ -199,7 +199,8 @@
         )
       },
       get_Skill_List(){
-        const recordId = this.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const recordId = id?id:this.$route.query.recordId
         const that = this
         /*获取技能列表*/
         /*初始化请求数据*/

@@ -16,7 +16,7 @@
         :limit="1"
         :on-exceed="handleExceed"
       ><el-button :disabled='uploadStatus || !status' size="small" type="primary">导入模版 </el-button></el-upload>
-      <a href='../../../../../static/file/关键词回复导入模版.csv' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
+      <a href='../../../../../static/file/keywordsResponseTemplate.csv' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
     </section>
     <section class="f-r">
       <el-button  :disabled='tableData.length === 0' v-show='status' type="primary" class="big-button" @click="dumpAll">清空数据</el-button>
@@ -231,9 +231,9 @@
 
             // const url = `ws://localhost:3000/socket?BotId=${id}`
             // const url = `ws://192.168.50.198/ws?BotId=${id}`
-            // const url = `ws://192.168.1.103:10036/ws?BotId=${id}`
+            // const url = `ws://192.168.1.103:10036/ws?BotId=${BotConfigId}`
             const agreement = location.host.indexOf('localhost')> -1? 'ws':'wss'
-            const url = `${agreement}://${location.host}/ws?BotId=${BotConfigId}`
+            const url = `${agreement}://${location.host}/api/admin/keyword/ws?BotId=${BotConfigId}`
             const token = getCookies(TOKEN)
             that.webSocket = new WebSocket(url, token);
             that.webSocket.onopen = function (event) {
@@ -354,7 +354,9 @@
         const TenantId = store.state.app.userInfo.TenantId
         const TenantDomain = store.state.app.userInfo.Email
         const params = {
-          headers: getCookies(TOKEN),
+          headers: {
+            'Access-Token': getCookies(TOKEN)
+          },
           method: 'POST',
           body: JSON.stringify({TenantId, TenantDomain, BotId})
         }
