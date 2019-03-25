@@ -80,26 +80,26 @@ export const MENUS=[
                 }
               ]
             },
-            {
-              id:'quicklyQA',
-              chineseName:'快速问答',
-              path:'quicklyQA',
-              parent: 'knowledgeBuild',
-              children:[
-                {
-                  id:'create',
-                  chineseName:'新建',
-                  path:'create',
-                  parent: 'quicklyQA',
-                },
-                {
-                  id:'edit',
-                  chineseName:'编辑',
-                  path:'edit',
-                  parent: 'quicklyQA',
-                }
-              ]
-            },
+            // {
+            //   id:'quicklyQA',
+            //   chineseName:'快速问答',
+            //   path:'quicklyQA',
+            //   parent: 'knowledgeBuild',
+            //   children:[
+            //     {
+            //       id:'create',
+            //       chineseName:'新建',
+            //       path:'create',
+            //       parent: 'quicklyQA',
+            //     },
+            //     {
+            //       id:'edit',
+            //       chineseName:'编辑',
+            //       path:'edit',
+            //       parent: 'quicklyQA',
+            //     }
+            //   ]
+            // },
             {
               id:'keywordResponse',
               chineseName:'关键词回复',
@@ -202,7 +202,9 @@ export const STR = {
   editQA:'编辑',
   keywordResponse:'关键词回复',
   addKeyword:'添加关键词回复',
-  editAnswer: '编辑'
+  editAnswer: '添加关键词回复',
+  repeatAnswer:'添加关键词回复',
+  updateAnswer:'编辑',
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

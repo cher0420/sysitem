@@ -5,21 +5,25 @@
       <div style="overflow:hidden;zoom:1;display: inline-block;">
         <div class="addContent" v-for="(item,index) in keywordList" :key="index">
           <div class="inputContent keyword">
-            <el-input class :placeholder="keywordList[index]" v-model="keywordList[index]" @input="emptyKey(index)"></el-input>
+            <el-input  type="text"
+            onkeyup="value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" 
+            onpaste="value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" 
+            oncontextmenu = "value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')"
+            :placeholder="keywordList[index]" v-model="keywordList[index]" 
+             @blur.prevent="emptyKey(index)"  :class="[regIndex === index?'changeColor':'']">
+            </el-input>
+              <!-- @input="emptyKey(index)"  -->
             <i class="el-icon-error del" @click="delKeyword(index)"></i>
-            
           </div>
-         
         </div>
-        <el-button v-if="counter<2" class="keywordBtn" @click="addKey" >
+        <span class="add">
+        <el-button v-if="counter<2" class="keywordBtn" @click="addKey" :disabled="disabled">
           <i class="el-icon-error icon"></i>添加关键词
         </el-button>
-        <p v-show='!change' class="tipMessage">输入框不能为空</p> 
-        
-        
+        </span> 
       </div>
-
       <div class="tip">
+        <p v-show='!change' class="tipMessage" >请勿使用重复的关键词，且关键词不能为空</p>
         <i class="el-icon-warning tipIcon"></i>
         <span class="keywordTip">所添加的关键词需要同时出现机器人才会回复所设定回答哦</span>
       </div>
@@ -41,71 +45,78 @@ export default {
   data() {
     return {
       counter: -1,
-      keywordList: ['1','2'],
-		  change:true,
+      keywordList: [''],
+      change:true, 
+       isRed:false,
+       regIndex:''
     };
   },
   computed: {
      
   },
-  created() {
+  created(){
     this.init(); // 页面初始化
   },
   mounted() {},
   watch: { 
     
   },
-  methods: {
-    init() {
-      this.store = sessionStorage.getItem("KeyWord");
-      this.keywordList = this.store.split("&");
-    
+  methods: { 
+    init(index) {
+        this.store = sessionStorage.getItem("KeyWord");
+        if (this.store==null) {  
+            this.change =false ;
+            this.isRed=true;
+            this.disabled =true
+        } else {
+          this.keywordList = this.store.split("&"); 
+        } 
     },
-    addKey() { 
-      this.counter = this.keywordList.length++;
-      console.log(this.counter)
-      this.emptyKey();
-    },
-    answer() {
-      console.log(1);
-    },
-    emptyKey(index){ 
-     
-      if (!this.keywordList[index]){
-         console.log(88888888888111)
-          this.change =false ;
-           this.disabled =true
-          return;
-      }else{
-         console.log(88888888889999)
+    addKey(index) { 
+      this.counter = this.keywordList.length++; 
+       if (!this.keywordList[index]){
+        this.change =false ; 
+        this.isRed=true;
+        this.disabled =true
+      } else { 
         this.change =true ;
-         this.disabled =false
-      } 
+        this.isRed=false;
+        this.disabled =false   
+      }
     },
     delKeyword(index) {
-      console.log(index)
-      this.keywordList.splice(index,1)
-      console.log(this.keywordList);
-      this.counter--;
-      
-      if (!this.keywordList[index]){
-        this.change =true ;
-        this.disabled =false
+      if (this.keywordList.length>=2){
+        this.keywordList.splice(index,1) 
+        this.counter--; 
         return;
+      } 
+    },
+    emptyKey(index){
+      this.keywordList[index]=this.keywordList[index].replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');
+      var arr = this.keywordList ; 
+      var arr1 = Array.from(new Set(arr)); 
+      console.log(arr1.length)
+      if (!this.keywordList[index]||arr.length> arr1.length){
+        this.change =false ; 
+        this.isRed=true;
+        this.disabled =true
+        this.regIndex = index
+      } else { 
+        this.change =true ;
+        this.isRed=false;
+        this.disabled =false   
+         this.regIndex = ""
       }
-      
     },
     nextAnswer() {
       const that = this;
-      const KeyWord = this.keywordList.join("&");
-      console.log(KeyWord); //梨&橙子
+      const KeyWord = this.keywordList.join("&");  
       const TenantId = store.state.app.userInfo.TenantId;
       const BotId = JSON.parse(sessionStorage.getItem('recordId'));
       const CreateUserId = store.state.app.userInfo.UserId;
       const CreateUserName = store.state.app.userInfo.FullName;
       const TenantDomain = store.state.app.userInfo.Email;
-
-      sessionStorage.setItem("KeyWord", this.keywordList.join("&"));
+      sessionStorage.setItem("KeyWord", this.keywordList.join("&")); 
 
       const params = {
         headers: {
@@ -122,18 +133,16 @@ export default {
         })
       };
 
-      request(VERIFYDUPLICATED, params).then(res => {
-        console.log(res);
-        if (res.ResultValue == true) { 
-          const url = { path: "/bot/config/keywordResponse/repeatAnswer" };
-          this.$router.push(url);
+      request(VERIFYDUPLICATED, params).then(res => { 
+        if (res.ResultValue.IsRepeat == true) { 
+          const repeatId = res.ResultValue.RepeatModel.ID
+          const url = { path: "/bot/config/keywordResponse/repeatAnswer", query:{repeatId}};
+          this.$router.push(url); 
         } else {
           const url = { path: "/bot/config/keywordResponse/editAnswer" };
           this.$router.push(url);
         }
       });
-
-     
     }
   },
 
@@ -184,7 +193,7 @@ export default {
   margin-top: 40px;
 }
 .tip {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 .tipIcon {
   display: inline;
@@ -202,9 +211,16 @@ export default {
 .del:hover {
   color: #2a8ce7;
 }
-.is-disabled{background: #409EFF;color:#fff}
-.is-disabled:hover{background: #409EFF;color:#fff}
-.tipMessage{color: red;}
+.changeColor{border:1px solid red;}
+.add .is-disabled{background: none;color:#7abafc;
+.icon{color:#7abafc;}
+}
+.add .is-disabled:hover{background: none;color:#7abafc;
+.icon{color:#7abafc;}
+}
+.is-disabled{background: #7abafc;color:#fff}
+.is-disabled:hover{background: #7abafc;color:#fff}
+.tipMessage{color: red;margin-top:-12px;margin-bottom: 10px;}
 .tipMessages{display: block;}
 .icon {
   transform: rotate(45deg);

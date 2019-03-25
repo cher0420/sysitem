@@ -6,11 +6,13 @@
           <section class="title f-s-16 c555 box-sizing margin-b-30px">设置回答</section>
       </div>
       <div class="area">
-        <textarea class="c555 anwer-area" v-model="getAnswer" rows="8" cols="10" @input="getTextTotal" maxlength="500"   placeholder="请输入自定义友好回答,最多500字"></textarea>
+        <textarea class="c555 anwer-area" v-model="getAnswer" rows="8" cols="10" 
+        @input="getTextTotal" maxlength="500"   placeholder="请输入自定义回答，最多500个字符"
+         onkeyup="this.value=this.value.replace(/\s+/g,'')"></textarea>
         <span>{{textTotal}}/500字</span>
       </div>
       <span>{{ result }}</span>
-      <el-button class="nextBtn" @click="nextBtn">保存</el-button>
+      <el-button class="nextBtn" @click="nextBtn" :disabled="disabled">保存</el-button>
   </div>
 </template>
 <script>
@@ -55,15 +57,14 @@
     },
 
     methods: {
-       init() { 
-        this.getTextTotal(); 
+       init() {
         this.keyList();
-        this.getAnswer = sessionStorage.getItem('AnsWer');  
+        //this.getAnswer = sessionStorage.getItem('AnsWer');  
         this.getkey();
+        this.getTextTotal(); 
+        
        },
     
-    
-
     getkey(){ 
        const that = this;
        const TenantDomain =store.state.app.userInfo.Email
@@ -83,11 +84,24 @@
       this.getKeyValue =getKeyValue
       const getAnswer= res.ResultValue.Answer
       this.getAnswer=getAnswer 
-      
+      this.textTotal =this.getAnswer.length; 
       });
     },
-     getTextTotal() {
-        //this.textTotal =this.getAnswer.length;
+    
+
+      getTextTotal() {
+        if (this.getAnswer==null) {
+         this.disabled =true
+        } else {
+           this.getAnswer = this.getAnswer.replace(/\s/g,'')
+      
+          if (this.getAnswer.length <=0) {
+           this.disabled =true
+        } else {
+           this.disabled =false
+        }
+         this.textTotal =this.getAnswer.length;
+        }
       },
     keyList() {
       this.getAnswer = sessionStorage.getItem('AnsWer');  
@@ -124,9 +138,15 @@
               message: '操作成功',
               duration: 2000
          });
-      })
+      }).then(() => { 
+          const url = { path: "/bot/config/keywordResponse"};
+          this.$router.push(url);
+          sessionStorage.removeItem("KeyWord")
+          sessionStorage.removeItem("AnsWer")
+          })
        sessionStorage.setItem('AnsWer',this.getAnswer)
        console.log(this.getAnswer)
+       
     },
    
     },
@@ -145,6 +165,8 @@
  .anwer-area{height: 300px;outline: none;width: 100%;resize: none;padding: 10px;border:1px solid #e5ebf8;}
  .nextBtn{color:#fff;background:#2a8ce7;border:none;margin-top:40px;display: block;}
  .keyword{font-size:14px;color:#555;margin-bottom: 40px;}
+ .is-disabled{background: #7abafc;color:#fff}
+.is-disabled:hover{background: #7abafc;color:#fff}
 </style>
 
 

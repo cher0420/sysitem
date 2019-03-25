@@ -136,36 +136,37 @@ const arr = [
           require(["../page/wait/index"], resolve),
         name: 'config',
       },
+      // {
+      //   path:'config/quicklyQA',
+      //   component: resolve =>
+      //     require(["../page/bot/config/quicklyQA/index"], resolve),
+      //   name: 'config',
+      // },
+      // {
+      //   path:'config/quicklyQA/createrNewQA',  // 创建新问答
+      //   component: resolve =>
+      //     require(["../page/bot/config/quicklyQA/createrNewQA/index"], resolve),
+      //   name: 'create',
+      // },
+      // {
+      //   path:'config/quicklyQA/updateQA',  // 更新问答
+      //   component: resolve =>
+      //     require(["../page/bot/config/quicklyQA/createrNewQA/updateQA"], resolve),
+      //   name: 'edit',
+      // },
+      // {
+      //   path:'config/quicklyQA/editQA',  //  编辑答案
+      //   component: resolve =>
+      //     require(["../page/bot/config/quicklyQA/editQA/index"], resolve),
+      //   name: 'edit',
+      // },
+      // {
+      //   path:'config/quicklyQA/detailQA',  //  详情页面
+      //   component: resolve =>
+      //     require(["../page/bot/config/quicklyQA/detailQA/index"], resolve),
+      //   name: 'detail',
+      // },
       {
-        path:'config/quicklyQA',
-        component: resolve =>
-          require(["../page/bot/config/quicklyQA/index"], resolve),
-        name: 'config',
-      },
-      {
-        path:'config/quicklyQA/createrNewQA',  // 创建新问答
-        component: resolve =>
-          require(["../page/bot/config/quicklyQA/createrNewQA/index"], resolve),
-        name: 'create',
-      },
-      {
-        path:'config/quicklyQA/updateQA',  // 更新问答
-        component: resolve =>
-          require(["../page/bot/config/quicklyQA/createrNewQA/updateQA"], resolve),
-        name: 'edit',
-      },
-      {
-        path:'config/quicklyQA/editQA',  //  编辑答案
-        component: resolve =>
-          require(["../page/bot/config/quicklyQA/editQA/index"], resolve),
-        name: 'edit',
-      },
-      {
-        path:'config/quicklyQA/detailQA',  //  详情页面
-        component: resolve =>
-          require(["../page/bot/config/quicklyQA/detailQA/index"], resolve),
-        name: 'detail',
-      },{
         path:'config/keywordResponse',   //  关键词回复
         component: resolve =>
           require(["../page/bot/config/keywordResponse/index"], resolve),
@@ -181,13 +182,13 @@ const arr = [
         path:'config/keywordResponse/editAnswer',   //  关键词回复
         component: resolve =>
           require(["../page/bot/config/keywordResponse/editAnswer/editAnswer"], resolve),
-        name: 'edit',
+        name: 'create',
       },
       {
         path:'config/keywordResponse/repeatAnswer',   //  关键词回复
         component: resolve =>
           require(["../page/bot/config/keywordResponse/editAnswer/repeatAnswer"], resolve),
-        name: 'edit',
+        name: 'create',
       },
       {
         path:'config/keywordResponse/updateAnswer',   //  关键词回复

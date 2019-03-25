@@ -204,6 +204,9 @@ src/serive/request.js
 ```
 >###公用组件
 src/components
+>###面包屑及标题更改
+没有特殊标题时，只需在router里配置正确即可，
+特殊字符，请使用store.dispatch(REPlACE,{title: 'XXXXX'})
 >###公用工具js
 src/utils
 >###api处理

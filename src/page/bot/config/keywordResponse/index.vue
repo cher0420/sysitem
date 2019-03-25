@@ -7,6 +7,7 @@
       <el-upload
         class="upload-demo"
         ref="upload"
+        :disabled=' !status || uploadStatus '
         :headers="params.headers"
         :data="params.body"
         :action="params.url"
@@ -15,11 +16,11 @@
         :on-error='onError'
         :limit="1"
         :on-exceed="handleExceed"
-      ><el-button :disabled='uploadStatus || !status' size="small" type="primary">导入模版 </el-button></el-upload>
-      <a href='../../../../../static/file/template.csv' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
+      ><el-button :disabled=' !status || uploadStatus ' size="small" type="primary">导入关键词 </el-button></el-upload>
+      <a :href='status?"../../../../../static/file/template.csv":"javascript:;"' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
     </section>
     <section class="f-r">
-      <el-button  :disabled='tableData.length === 0' v-show='status' type="primary" class="big-button" @click="dumpAll">清空数据</el-button>
+      <el-button  :disabled='tableData.length === 0' v-show='tableData.length !== 0' type="primary" class="big-button" @click="dumpAll">清空数据</el-button>
       <el-button  v-show='status' type="danger" class=" stop" @click="closedIt">停用</el-button>
       <el-button  v-show='!status' type="primary" @click="openIt">开启</el-button>
     </section>
@@ -49,7 +50,7 @@
       background
       class="pagination"
       layout="total, prev, pager, next"
-      :current-page.sync="PageIndex"
+      :current-page.sync="Page"
       :total="total">
     </el-pagination>
     <div v-if='uploadResponseStatus' style="z-index: 2004;background: rgba(0, 0, 0, 0.4);" class="el-message-box__wrapper">
@@ -92,7 +93,7 @@
         tableData: [],
         loading: false,
         resizable: false,
-        PageIndex: 1,
+        Page: 1,
         total: 0,
         fileList: [],
         fileListArr: [],
@@ -207,7 +208,7 @@
             BotId,
             TenantId,
             TenantDomain,
-            PageIndex: this.PageIndex,
+            Page: Math.abs(this.Page-1),
             KeyWord: this.keyWords,
             PageSize: 10
           })
@@ -350,7 +351,8 @@
       },
       doDumpAll() {
         const that = this
-        const BotId = that.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotId = this.$route.query.recordId?this.$route.query.recordId:id
         const TenantId = store.state.app.userInfo.TenantId
         const TenantDomain = store.state.app.userInfo.Email
         const params = {
@@ -361,7 +363,7 @@
           body: JSON.stringify({TenantId, TenantDomain, BotId})
         }
         request(KEYWORDCLEAR, params).then(() => {
-          that.PageIndex = 1
+          that.Page = 1
           that.keyWords = ''
           that.loading = true
           that.$message({
@@ -391,7 +393,7 @@
           })
           return
         }
-        this.PageIndex = 1
+        this.Page = 1
         this.getList()
       },
       openIt() {
@@ -498,8 +500,8 @@
           this.total--;
 
           if (this.total % this.PageSize === 0) {
-            if (that.PageIndex !== 1) {
-              that.PageIndex--
+            if (that.Page !== 1) {
+              that.Page--
             }
             that.getList()
           }
