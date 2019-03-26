@@ -229,10 +229,6 @@
         const that = this
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-
-            // const url = `ws://localhost:3000/socket?BotId=${id}`
-            // const url = `ws://192.168.50.198/ws?BotId=${id}`
-            // const url = `ws://192.168.1.103:10036/ws?BotId=${BotConfigId}`
             const agreement = location.host.indexOf('localhost')> -1? 'ws':'wss'
             const url = `${agreement}://${location.host}/api/admin/keyword/ws?BotId=${BotConfigId}`
             const token = getCookies(TOKEN)
@@ -383,12 +379,12 @@
         })
       },
       search() {
-        const str = "<>%;/?'_"
+        const str = "<>%;/?'_*"
         const index = this.keyWords && str.indexOf(this.keyWords) > -1
         if (index) {
           this.$message({
             type: 'error',
-            message: "请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
+            message: "请不要输入特殊字符作为关键词搜索，例如 *，<，>，%，;，/，?，'，_等",
             duration: 2000,
           })
           return
@@ -498,7 +494,7 @@
 
           this.tableData.splice(index, 1)
           this.total--;
-
+          console.log(this.total % this.PageSize)
           if (this.total % this.PageSize === 0) {
             if (that.Page !== 1) {
               that.Page--
