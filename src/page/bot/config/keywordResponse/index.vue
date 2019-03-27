@@ -93,6 +93,7 @@
         tableData: [],
         loading: false,
         resizable: false,
+        PageSize:10,
         Page: 1,
         total: 0,
         fileList: [],
@@ -379,9 +380,7 @@
         })
       },
       search() {
-        const str = "<>%;/?'_*"
-        const index = this.keyWords && str.indexOf(this.keyWords) > -1
-        if (index) {
+        if (!(/^[0-9a-zA-Z\u4e00-\u9eff]{1,}$/).test(this.keyWords)&&this.keyWords) {
           this.$message({
             type: 'error',
             message: "请不要输入特殊字符作为关键词搜索，例如 *，<，>，%，;，/，?，'，_等",
@@ -494,7 +493,7 @@
 
           this.tableData.splice(index, 1)
           this.total--;
-          console.log(this.total % this.PageSize)
+          console.log(this.total ,this.PageSize)
           if (this.total % this.PageSize === 0) {
             if (that.Page !== 1) {
               that.Page--
