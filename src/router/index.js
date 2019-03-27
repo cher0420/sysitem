@@ -195,7 +195,13 @@ const arr = [
         component: resolve =>
           require(["../page/bot/config/keywordResponse/editAnswer/updateAnswer"], resolve),
         name: 'edit',
-      }
+      },
+      {
+        path:'config/guide',   //  引导问题
+        component: resolve =>
+          require(["../page/bot/config/guide/index"], resolve),
+        name: 'guide',
+      },
     ]
   }
 ]

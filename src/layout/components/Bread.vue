@@ -20,7 +20,7 @@
     </el-breadcrumb>
 
     {{/* title部分 */}}
-    <section class="yoy-title box-sizing border-bottom text-title">
+    <section v-if='navIndex' class="yoy-title box-sizing border-bottom text-title">
       <span class="align-middle dis-i-b line"></span>
       <span class="align-middle dis-i-b" style="width: 98%;line-height: 1.5">
         {{navIndex}}

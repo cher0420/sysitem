@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!--<Title title="测试条"></Title>-->
     <el-form ref="formData" :rules="rules" label-width="38px" :model="formData" class=" full-height c555 webpage">
       <title-item title="网站中嵌入代码"></title-item>
       <el-form-item label="" class="margin-top30 margin-bottom-30">
@@ -172,7 +171,6 @@
 </template>
 <script>
   // import
-  import TitleItem from '../../../../components/Title';
   import {IMAGE} from "./constants";
   import {request} from "../../../../serive/request";
   import URL from '../../../../host/baseUrl'
@@ -221,7 +219,6 @@
     name: 'webTest',
     computed: {},
     components: {
-      TitleItem,
       Title,
     },
     created() {
