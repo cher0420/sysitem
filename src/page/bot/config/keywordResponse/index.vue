@@ -499,7 +499,11 @@
             if (that.Page !== 1) {
               that.Page--
             }
-            that.getList()
+            setTimeout(
+              () => {
+                that.getList()
+              }, 500
+            )
           }
 
         }).catch(() => {

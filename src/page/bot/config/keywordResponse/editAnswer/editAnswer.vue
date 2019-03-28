@@ -7,9 +7,9 @@
       </div>
       <div class="area">
         <textarea class="c555 anwer-area"
-        v-model="getAnswer" rows="8" cols="10" type="text" 
-        @input="getTextTotal" maxlength="500"  
-        onkeyup="this.value=this.value.replace(/\s+/g,'')"
+        v-model.trim="getAnswer" rows="8" cols="10" type="text"
+        @input="getTextTotal" maxlength="500"
+
        placeholder="请输入自定义回答，最多500个字符" ></textarea>
         <span>{{textTotal}}/500字</span>
       </div>
@@ -37,7 +37,7 @@ import {mapGetters,mapActions} from 'vuex';
     computed: {},
 
     created() {
-      this.init();  
+      this.init();
     },
     mounted() {
     },
@@ -56,19 +56,22 @@ import {mapGetters,mapActions} from 'vuex';
        init() {
           this.keyList();
           this.getTextTotal();
-          this.getAnswer = sessionStorage.getItem('AnsWer'); 
+          this.getAnswer = sessionStorage.getItem('AnsWer');
        },
 
       keyList() {
-      this.keywordlist = sessionStorage.getItem('KeyWord'); 
-      this.getAnswer = sessionStorage.getItem('AnsWer'); 
+      this.keywordlist = sessionStorage.getItem('KeyWord');
+      this.getAnswer = sessionStorage.getItem('AnsWer');
       },
 
       getTextTotal() {
         if (this.getAnswer==null) {
          this.disabled =true
         } else {
-           this.getAnswer = this.getAnswer.replace(/\s/g,'') 
+           this.getAnswer = this.getAnswer.replace(/^[\s　]|[ ]$/gi,'');
+            //  var reg=/^[\s　]|[ ]$/gi;
+            // return !reg.test(value);
+             console.log(this.getAnswer)
           if (this.getAnswer.length <=0) {
            this.disabled =true
         } else {
@@ -88,7 +91,7 @@ import {mapGetters,mapActions} from 'vuex';
      const BotId = JSON.parse(sessionStorage.getItem('recordId'))
       const TenantDomain =store.state.app.userInfo.Email
       const UpdateUserId=store.state.app.userInfo.Email
-      const UpdateUserName=store.state.app.userInfo.Email 
+      const UpdateUserName=store.state.app.userInfo.Email
       const AnsWer = this.getAnswer
       console.log(KeyWord)
       sessionStorage.setItem('AnsWer',this.getAnswer)
@@ -108,12 +111,17 @@ import {mapGetters,mapActions} from 'vuex';
           duration: 2000
         });
 
-       
-      }).then(() => { 
+
+      }).then(() => {
           const url = { path: "/bot/config/keywordResponse"};
-          this.$router.push(url);
+
           sessionStorage.removeItem("KeyWord")
           sessionStorage.removeItem("AnsWer")
+          setTimeout(
+            () => {
+              this.$router.push(url);
+            }, 800
+          )
           })
 
       // request(UPDATEANSWER,params).then(
@@ -128,7 +136,7 @@ import {mapGetters,mapActions} from 'vuex';
     }
     },
     destroyed() {
-       
+
     },
 
   }
