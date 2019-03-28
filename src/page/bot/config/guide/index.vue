@@ -50,7 +50,7 @@
         <span>{{textTotal}}/500字</span>
       </div>
      <section class="config">选择引导问题（最多5个）</section>
-
+        <tap-item></tap-item>
         <el-button class="open" :disabled="!disabled">打开知识库</el-button>
      <section class="config">选择渠道</section>
      <div class="checkbox">
@@ -65,6 +65,7 @@
 </template>
 <script>
   import KnowledgeStore from './knowledgeStore'
+  import TapItem from './TapItem'
 
   export default {
     data() {
@@ -74,14 +75,15 @@
         getAnswer:'',
         textTotal:0,
          checked1: true,
-        checked2: true
+        checked2: true,
       }
     },
     created() {
 
     },
     components:{
-      KnowledgeStore
+      KnowledgeStore,
+      TapItem
     },
     destroyed(){
 
