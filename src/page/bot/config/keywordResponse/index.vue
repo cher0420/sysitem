@@ -290,6 +290,7 @@
             that.webSocket.onerror = (err) => {
             }
             that.webSocket.onclose = (info) => {
+              console.log('关闭了')
             }
       },
       alertFun (res) {
@@ -498,7 +499,11 @@
             if (that.Page !== 1) {
               that.Page--
             }
-            that.getList()
+            setTimeout(
+              () => {
+                that.getList()
+              }, 500
+            )
           }
 
         }).catch(() => {
