@@ -205,7 +205,6 @@ export const STR = {
   editAnswer: '添加关键词回复',
   repeatAnswer:'添加关键词回复',
   updateAnswer:'编辑',
-  guide:'引导'
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';

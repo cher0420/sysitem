@@ -1,12 +1,12 @@
 <template>
-  <section class="container">
+  <section class="container" :style="{width:isSpread? '35%': '0',minWidth:isSpread?'330px':'0'}">
     <section>
       <title-item title="知识库"/>
       <section class="button-group"><el-input class='searchInput middle' style="width:28%" size = 'small' v-model="keyWords" placeholder="关键词搜索"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" ></i>
       </el-input><el-button :class="total?['middle', 'margin-20', 'big-button','has-checked']:['middle', 'margin-20', 'big-button']" @click="showHasChecked">{{showTotal?'已选':'返回'}}（{{total}}/5）</el-button><el-button type="primary">添加</el-button>
       </section>
     </section>
-    <section class="hinge"><i class="el-icon-d-arrow-right"></i></section>
+    <section class="hinge" @click="spread"><i class="el-icon-d-arrow-right"></i></section>
     <section class="scroll-container" id="scroll-container" @scroll="handleScroll">
       <section v-for="(item, index) in tableData" :key="item.id" :class="index%2 !== 0?['even']:'odd'">
       <span class="checked-box-container">
@@ -14,9 +14,9 @@
       </span>
         <section class="title">{{item.name}}</section>
       </section>
-      <section class="loading-container primary-color" id="tableLoadingElement">
-        <i class="el-icon-loading"></i>
-        正在加载中...
+      <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
+        <i v-show='!hasLoadingAllData' class="el-icon-loading"></i>
+        {{hasLoadingAllData?'- 已经到底啦 -': '正在加载中...'}}
       </section>
     </section>
   </section>
@@ -40,6 +40,8 @@
         showTotal: true,
         getListLoading: false,
         originData:[],
+        hasLoadingAllData: true,
+        isSpread: true,
         tableData: [
           {
             name: '居住证',
@@ -135,6 +137,9 @@
       this.filterData(this.tableData)
     },
     methods: {
+      spread(){
+        this.isSpread = !this.isSpread
+      },
       typeBox(v){
         v?this.total ++:this.total --;
         if(this.total >= 5){
@@ -164,7 +169,6 @@
             target:element
           }
           let loadingInstance = Loading.service(options);
-
           if(this.showTotal){
             this.showTotal = false
             this.tableData = this.tableData.filter(
@@ -184,27 +188,31 @@
         }
       },
       throttle(method, context) { //函数节流
+        if(this.hasLoadingAllData){
+          return;
+        }
         clearTimeout(method.tId);
         method.tId= setTimeout(function(){
           method.call(context);
         }, 1000);
       },
       handleScroll(){
-        // if(this.getListLoading) return; //函数防抖
+        if(this.getListLoading) return; //函数防抖
         this.throttle(this.get)
       },
       get(){
+        this.getListLoading = true
         const scrollContainer = document.getElementById('scroll-container')
         const trueHeight = scrollContainer.scrollHeight
         const scrollTop = scrollContainer.scrollTop
         const height = trueHeight - scrollTop
         if(height < this.tableData.length*40){
           this.tableData = [...this.tableData,...this.newTableData]
+          this.getListLoading = false
           console.log('到底了')
         }else{
           console.log('没到底哦')
         }
-        this.getListLoading = true
       }
     },
   }
@@ -216,14 +224,15 @@
     padding:30px 40px;
     z-index: 998;
     right: 0;
-    top: -31px;
-    width: 32%;
+    top: 36px;
+    height: 100%;
     mix-width: 575px;
     min-width: 330px;
-    height: calc( 100vh - 156px);
+    min-height: calc( 100vh - 156px);
     box-sizing: border-box;
     border-top: 1px solid  #cecece;
     border-left: 1px solid  #cecece;
+    background: #fff;
     .button-group{
       padding-top: 30px;
       padding-bottom: 20px;
@@ -263,9 +272,18 @@
   .margin-20{
     margin-left: 20px;
   }
+  @media screen and (max-width: 1370px) {
+    .margin-20 {
+      margin-left: 10px;
+    }
+    .container{
+      padding: 30px;
+    }
+
+  }
   .scroll-container{
     width: 100%;
-    height: 400px;
+    max-height: 400px;
     border: 1px solid $border-color;
     overflow: scroll;
     .even{
@@ -306,4 +324,5 @@
     color: $primary-color;
     border-color: $primary-color;
   }
+
 </style>
