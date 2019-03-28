@@ -10,7 +10,7 @@
      </div>
      <div class="area">
     <textarea class="c555 anwer-area"  @input="getTextTotal" rows="8" cols="10" 
-    maxlength="500" placeholder="请输入自定义回答，最多500个字符" v-model="getAnswer" 
+ v-model="getAnswer"  placeholder="请输入自定义回答，最多500个字符"
     onkeyup="this.value=this.value.replace(/\s+/g,'')"></textarea>
       <span>{{textTotal}}/500字</span>
      </div>
@@ -80,7 +80,7 @@ import {mapGetters,mapActions} from 'vuex';
        this.$router.push(url)
      },
 
-      nextBtn(){
+    nextBtn(){
       const that = this 
       const ID = this.$route.query.ID
       const KeyWord = sessionStorage.getItem('KeyWord');
@@ -162,53 +162,7 @@ import {mapGetters,mapActions} from 'vuex';
     },
 
 
-    // reviseKAnswer(){
-    //   const that = this
-    //    //const index = this.Answer
-    //   const KeyWord = sessionStorage.getItem('KeyWord');
-    //   const TenantId = store.state.app.userInfo.TenantId;
-    //   const CreateUserId = store.state.app.userInfo.UserId;
-    //   const CreateUserName = store.state.app.userInfo.FullName;
-    //   const ID = store.state.app.userInfo.ID//?
-    //   const BotId = JSON.parse(sessionStorage.getItem('recordId'))
-    //   const TenantDomain =store.state.app.userInfo.Email
-    //   const UpdateUserId=store.state.app.userInfo.Email
-    //   const UpdateUserName=store.state.app.userInfo.Email 
-    //   const AnsWer = this.getAnswer
-
-    //   sessionStorage.setItem('AnsWer',this.getAnswer)
-    //    const params = {
-    //      headers:{
-    //        'Access-token': getCookies(TOKEN)
-    //      },
-    //      method: 'POST',
-    //      body: JSON.stringify({
-    //         TenantId,BotId,TenantDomain,AnsWer,KeyWord,CreateUserId,CreateUserName
-    //      })
-    //    }
-    //     // request(UPDATEANSWER,params).then(
-    //     //   (res)=>{
-    //     //   console.log(res.ResultValue)
-    //     //    that.$message({
-    //     //       type: 'success',
-    //     //       message: '操作成功',
-    //     //       duration: 2000
-    //     //     });
-    //     //   }
-    //     // )
-    //   request(ADDKEYWORD, params).then(res => {
-    //     console.log(123);
-    //     that.$message({
-    //       type: "success",
-    //       message: "操作成功",
-    //       duration: 2000
-    //     });
-    //    });
-    // }
-
-
-
-    },
+  },
 
     
     destroyed() {

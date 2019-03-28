@@ -48,7 +48,7 @@ export default {
       keywordList: [''],
       change:true, 
        isRed:false,
-       regIndex:''
+       regIndex:'index'
     };
   },
   computed: {
@@ -68,45 +68,51 @@ export default {
             this.change =false ;
             this.isRed=true;
             this.disabled =true
+             this.regIndex = index
         } else {
           this.keywordList = this.store.split("&"); 
-        } 
+        };
+        this.addKey()
     },
     addKey(index) { 
       this.counter = this.keywordList.length++; 
-       if (!this.keywordList[index]){
-        this.change =false ; 
-        this.isRed=true;
-        this.disabled =true
-      } else { 
-        this.change =true ;
-        this.isRed=false;
-        this.disabled =false   
-      }
+       this.emptyKey();
+       this.regIndex = index;
+           this.isRed=true;
     },
     delKeyword(index) {
       if (this.keywordList.length>=2){
         this.keywordList.splice(index,1) 
         this.counter--; 
         return;
-      } 
+      } ;
+     this.emptyKey();
     },
     emptyKey(index){
-      this.keywordList[index]=this.keywordList[index].replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');
-      var arr = this.keywordList ; 
-      var arr1 = Array.from(new Set(arr)); 
-      console.log(arr1.length)
-      if (!this.keywordList[index]||arr.length> arr1.length){
-        this.change =false ; 
+      if (this.keywordList[index]) {
+        this.keywordList[index]=this.keywordList[index].replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');
+        var arr = this.keywordList ; 
+        console.log(arr)
+        var arr1 = Array.from(new Set(arr)); 
+        if (!this.keywordList[index]||arr.length> arr1.length){
+          this.change =false ; 
+         
+          this.disabled =true
+          this.regIndex = index;
+           this.isRed=true;
+        } else { 
+          this.change =true ;
+          this.isRed=false;
+          this.disabled =false   
+          this.regIndex = ""
+        }
+      } else { 
+         this.change =false ; 
         this.isRed=true;
         this.disabled =true
         this.regIndex = index
-      } else { 
-        this.change =true ;
-        this.isRed=false;
-        this.disabled =false   
-         this.regIndex = ""
       }
+      
     },
     nextAnswer() {
       const that = this;

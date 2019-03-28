@@ -290,6 +290,7 @@
             that.webSocket.onerror = (err) => {
             }
             that.webSocket.onclose = (info) => {
+              console.log('关闭了')
             }
       },
       alertFun (res) {
