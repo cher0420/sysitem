@@ -4,26 +4,14 @@
 
 import 'babel-polyfill'
 import 'element-ui/lib/theme-chalk/index.css';
-import { Loading } from 'element-ui';
+
 import 'whatwg-fetch'
 import './style/element-variables.scss';
 
-import {store} from "./storee/store";
-import router from "./router";
-
-import App from './App';
+import {getLoginStatus} from "./permissions/permissions";
 
 Vue.config.productionTip = false
 
 //登录
-
 //vue render 函数在 getLoginStatus 内部执行，
-let loadingInstance = Loading.service({ fullscreen: true });
-new Vue({
-  el: '#app',
-  store,
-  router,
-  components: { App },
-  template: '<App/>'
-})
-loadingInstance.close();
+getLoginStatus()
