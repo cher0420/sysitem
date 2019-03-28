@@ -1,20 +1,51 @@
 import Vuex from 'vuex'
-import { REPLACE } from "./mutations";
+import { REPLACE,UPDATE } from "./mutations";
 
 const store = new Vuex.Store({
   state: {
+    isSpread: false,
     Data:{
       ID: '',
       BotConfigId: '',
       GuideDescription: '',
       Channels: '',
-      Details: [{
-        ID: '',
-        QuestionId: '',
-        Question: '',
-        QuestionType: '',
-        Sort: '',
-      }],
+      Details: [
+        {
+          ID: '1',
+          QuestionId: '',
+          Question: '居住证办理1',
+          QuestionType: '',
+          Sort: 1,
+        },
+        {
+          ID: '2',
+          QuestionId: '',
+          Question: '居住证办理2',
+          QuestionType: '',
+          Sort: 2,
+        },
+        {
+          ID: '3',
+          QuestionId: '',
+          Question: '居住证办理3',
+          QuestionType: '',
+          Sort: 3,
+        },
+        {
+          ID: '4',
+          QuestionId: '',
+          Question: '居住证办理4',
+          QuestionType: '',
+          Sort: 4,
+        },
+        {
+          ID: '5',
+          QuestionId: '',
+          Question: '居住证办理5',
+          QuestionType: '',
+          Sort: 5,
+        }
+      ],
     }
   },
   mutations: {
@@ -24,11 +55,17 @@ const store = new Vuex.Store({
         ...payload
       }
     },
+    [UPDATE] (state, payload) {
+      state.isSpread = payload.isSpread
+    },
   },
   actions: {
     [REPLACE] (context, payload) {  // replace
       context.commit(REPLACE, payload)
     },
+    [UPDATE] (context, payload){
+      context.commit(UPDATE, payload)
+    }
   }
 })
 

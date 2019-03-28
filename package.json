@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "bootstrap": "^3.3.7",
-    "clipboard": "^2.0.1",
     "element-ui": "^2.5.4",
     "jquery": "^1.12.4",
     "js-cookie": "^2.2.0",
@@ -21,6 +19,7 @@
     "sass-loader": "^7.1.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
+    "vuedraggable": "^2.20.0",
     "vuex": "^3.0.1",
     "whatwg-fetch": "^3.0.0"
   },

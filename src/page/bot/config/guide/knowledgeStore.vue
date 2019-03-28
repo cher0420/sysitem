@@ -1,22 +1,24 @@
 <template>
-  <section class="container" :style="{width:isSpread? '35%': '0',minWidth:isSpread?'330px':'0'}">
-    <section>
+  <section :class="isSpread?'container ':['container','isSpread']" >
+    <section class="padding-30">
       <title-item title="知识库"/>
       <section class="button-group"><el-input class='searchInput middle' style="width:28%" size = 'small' v-model="keyWords" placeholder="关键词搜索"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" ></i>
       </el-input><el-button :class="total?['middle', 'margin-20', 'big-button','has-checked']:['middle', 'margin-20', 'big-button']" @click="showHasChecked">{{showTotal?'已选':'返回'}}（{{total}}/5）</el-button><el-button type="primary">添加</el-button>
       </section>
     </section>
     <section class="hinge" @click="spread"><i class="el-icon-d-arrow-right"></i></section>
-    <section class="scroll-container" id="scroll-container" @scroll="handleScroll">
-      <section v-for="(item, index) in tableData" :key="item.id" :class="index%2 !== 0?['even']:'odd'">
+    <section class="padding-30">
+      <section class="scroll-container" id="scroll-container" @scroll="handleScroll">
+        <section v-for="(item, index) in tableData" :key="item.QuestionId" :class="index%2 !== 0?['even']:'odd'">
       <span class="checked-box-container">
         <el-checkbox :value="item.checked" v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox"></el-checkbox>
       </span>
-        <section class="title">{{item.name}}</section>
-      </section>
-      <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
-        <i v-show='!hasLoadingAllData' class="el-icon-loading"></i>
-        {{hasLoadingAllData?'- 已经到底啦 -': '正在加载中...'}}
+          <section class="title">{{item.Question}}</section>
+        </section>
+        <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
+          <i v-show='!hasLoadingAllData' class="el-icon-loading"></i>
+          {{hasLoadingAllData?'- 已经到底啦 -': '正在加载中...'}}
+        </section>
       </section>
     </section>
   </section>
@@ -24,6 +26,8 @@
 <script>
   import TitleItem from '../../../../components/Title'
   import { Loading } from 'element-ui';
+  import store from './store'
+  import {UPDATE} from "./store/mutations";
   // import ScrollTable from './ScrollTable'
   export default {
     name:'store',
@@ -34,6 +38,14 @@
       TitleItem,
       // ScrollTable,
     },
+    computed:{
+      isSpread(){
+        return store.state.isSpread
+      },
+      details() {
+        return store.state.Data.details
+      }
+    },
     data(){
       return{
         total: 0,
@@ -41,59 +53,44 @@
         getListLoading: false,
         originData:[],
         hasLoadingAllData: true,
-        isSpread: true,
-        tableData: [
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-        ],
+        tableData:
+          [
+            {
+              ID: '1',
+              QuestionId: '',
+              Question: '居住证办理1',
+              QuestionType: '',
+              Sort: 1,
+            },
+            {
+              ID: '2',
+              QuestionId: '',
+              Question: '居住证办理2',
+              QuestionType: '',
+              Sort: 2,
+            },
+            {
+              ID: '3',
+              QuestionId: '',
+              Question: '居住证办理3',
+              QuestionType: '',
+              Sort: 3,
+            },
+            {
+              ID: '4',
+              QuestionId: '',
+              Question: '居住证办理4',
+              QuestionType: '',
+              Sort: 4,
+            },
+            {
+              ID: '5',
+              QuestionId: '',
+              Question: '居住证办理5',
+              QuestionType: '',
+              Sort: 5,
+            }
+          ],
         newTableData:[
           {
             name: '居住证',
@@ -138,7 +135,10 @@
     },
     methods: {
       spread(){
-        this.isSpread = !this.isSpread
+        store.dispatch(
+          UPDATE,
+          {isSpread: !this.isSpread}
+        )
       },
       typeBox(v){
         v?this.total ++:this.total --;
@@ -156,11 +156,29 @@
           )
         }
 
-        this.originData = this.tableData
+        // this.originData = this.tableData
 
       },
       filterData(v){
         this.originData = this.tableData.slice(0)
+        const questionArr = this.details.values() // 详情列表数组
+        this.originData.forEach(
+          (item, index) => {
+            for(let v of questionArr){
+              if(v.QuestionId === item.QuesionId){ //
+                item.checked = true
+                break;
+              }else{
+                item.checked = false
+              }
+            }
+            if(questionArr.length>=5){
+              item.disabled = !item.checked
+            }else{
+              item.disabled = false
+            }
+          }
+        )
       },
       showHasChecked(){
         if(this.total){
@@ -178,7 +196,15 @@
             )
           }else{
             this.showTotal = true
-            this.tableData = this.originData
+            this.tableData = this.originData.slice(0)
+            if(this.total<5){
+              this.tableData.forEach(
+                (v, index) => {
+                  v.disabled = false
+                }
+              )
+            }
+
           }
           setTimeout(
             () =>{
@@ -220,19 +246,24 @@
 <style lang="scss" scoped>
   @import '../../../../style/index';
   .container{
+    box-sizing: border-box;
     position: absolute;
-    padding:30px 40px;
     z-index: 998;
     right: 0;
+    padding:30px 0;
     top: 36px;
     height: 100%;
-    mix-width: 575px;
-    min-width: 330px;
+    max-width: 575px;
     min-height: calc( 100vh - 156px);
-    box-sizing: border-box;
     border-top: 1px solid  #cecece;
     border-left: 1px solid  #cecece;
     background: #fff;
+    width:35%;
+    font-size: 14px;
+    transition: width .3s;
+    -moz-transition: width .3s; /* Firefox 4 */
+    -webkit-transition: width .3s; /* Safari 和 Chrome */
+    -o-transition: width .3s; /* Opera */
     .button-group{
       padding-top: 30px;
       padding-bottom: 20px;
@@ -266,6 +297,10 @@
   .container:hover{
 
   }
+  .isSpread{
+    width: 0;
+    overflow: hidden;
+  }
   .middle{
     vertical-align: middle;
   }
@@ -282,6 +317,7 @@
 
   }
   .scroll-container{
+    box-sizing: border-box;
     width: 100%;
     max-height: 400px;
     border: 1px solid $border-color;
@@ -303,6 +339,7 @@
       text-overflow:ellipsis;
       white-space: nowrap;
       vertical-align: top;
+      color: $f-pri-c;
     }
     .loading-container{
       width: 100%;
@@ -323,6 +360,14 @@
   .has-checked{
     color: $primary-color;
     border-color: $primary-color;
+  }
+  .padding-30{
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+  .margin-30{
+    margin-left: 30px;
+    margin-right: 30px;
   }
 
 </style>

@@ -6,7 +6,7 @@
           <section class="title f-s-16 c555 box-sizing margin-b-30px">设置回答</section>
       </div>
       <div class="area">
-        <textarea class="c555 anwer-area" v-model="getAnswer" rows="8" cols="10" 
+        <textarea class="c555 anwer-area"  v-model.trim="getAnswer" rows="8" cols="10" 
         @input="getTextTotal" maxlength="500"   placeholder="请输入自定义回答，最多500个字符"
          onkeyup="this.value=this.value.replace(/\s+/g,'')"></textarea>
         <span>{{textTotal}}/500字</span>
@@ -93,8 +93,9 @@
         if (this.getAnswer==null) {
          this.disabled =true
         } else {
-           this.getAnswer = this.getAnswer.replace(/\s/g,'')
-      
+        this.getAnswer = this.getAnswer.replace(/^[\s　]|[ ]$/gi,'');
+     
+
           if (this.getAnswer.length <=0) {
            this.disabled =true
         } else {
@@ -145,7 +146,7 @@
           sessionStorage.removeItem("AnsWer")
           })
        sessionStorage.setItem('AnsWer',this.getAnswer)
-       console.log(this.getAnswer)
+      //  console.log(this.getAnswer)
        
     },
    

@@ -51,7 +51,7 @@
       </div>
      <section class="config">选择引导问题（最多5个）</section>
         <tap-item></tap-item>
-        <el-button class="open" :disabled="!disabled">打开知识库</el-button>
+        <el-button class="open" :disabled="!disabled" @click="openKnowLedgeStore">打开知识库</el-button>
      <section class="config">选择渠道</section>
      <div class="checkbox">
         <p><el-checkbox v-model="checked1">网页</el-checkbox></p>
@@ -66,6 +66,8 @@
 <script>
   import KnowledgeStore from './knowledgeStore'
   import TapItem from './TapItem'
+  import store from './store'
+  import {UPDATE} from "./store/mutations";
 
   export default {
     data() {
@@ -117,6 +119,9 @@
       },
       save(){
         console.log('save', '')
+      },
+      openKnowLedgeStore(){
+        store.dispatch( UPDATE, {isSpread: true} )
       }
     }
   }
@@ -150,7 +155,7 @@
 .open{background: #2a8ce7;color:#fff;border:1px solid #2a8ce7;margin-left: 40px;}
 .config{background:#f9fafc;font-size:16px;margin:30px 0;height: 40px;line-height: 40px;}
 // .area{border:1px solid #eaedf1}
-.area{position: relative;width:70%;margin-left:40px;width:65%;
+.area{position: relative;width:70%;margin-left:40px;width:60%;
   span{position: absolute;bottom:15px;right: 0;color:#999;}
   textarea{width:100%;border:1px solid #eaedf1;}
  }

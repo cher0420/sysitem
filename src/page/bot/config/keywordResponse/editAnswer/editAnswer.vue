@@ -7,9 +7,9 @@
       </div>
       <div class="area">
         <textarea class="c555 anwer-area"
-        v-model="getAnswer" rows="8" cols="10" type="text" 
+        v-model.trim="getAnswer" rows="8" cols="10" type="text" 
         @input="getTextTotal" maxlength="500"  
-        onkeyup="this.value=this.value.replace(/\s+/g,'')"
+        
        placeholder="请输入自定义回答，最多500个字符" ></textarea>
         <span>{{textTotal}}/500字</span>
       </div>
@@ -68,7 +68,10 @@ import {mapGetters,mapActions} from 'vuex';
         if (this.getAnswer==null) {
          this.disabled =true
         } else {
-           this.getAnswer = this.getAnswer.replace(/\s/g,'') 
+           this.getAnswer = this.getAnswer.replace(/^[\s　]|[ ]$/gi,'');
+            //  var reg=/^[\s　]|[ ]$/gi;
+            // return !reg.test(value);
+             console.log(this.getAnswer)
           if (this.getAnswer.length <=0) {
            this.disabled =true
         } else {

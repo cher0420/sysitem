@@ -10,7 +10,7 @@
      </div>
      <div class="area">
     <textarea class="c555 anwer-area"  @input="getTextTotal" rows="8" cols="10" 
-    maxlength="500" placeholder="请输入自定义回答，最多500个字符" v-model="getAnswer" 
+  v-model.trim="getAnswer" placeholder="请输入自定义回答，最多500个字符"
     onkeyup="this.value=this.value.replace(/\s+/g,'')"></textarea>
       <span>{{textTotal}}/500字</span>
      </div>
@@ -65,7 +65,7 @@ import {mapGetters,mapActions} from 'vuex';
         if (this.getAnswer==null) {
          this.disabled =true
         } else {
-           this.getAnswer = this.getAnswer.replace(/\s/g,'') 
+          this.getAnswer = this.getAnswer.replace(/^[\s　]|[ ]$/gi,'');
             if (this.getAnswer.length <=0) {
             this.disabled =true
           } else {
@@ -80,9 +80,9 @@ import {mapGetters,mapActions} from 'vuex';
        this.$router.push(url)
      },
 
-      nextBtn(){
-      const that = this 
-      const ID = this.$route.query.ID
+    nextBtn(){
+      const that = this
+      const ID = sessionStorage.getItem('ID')
       const KeyWord = sessionStorage.getItem('KeyWord');
       const TenantId = store.state.app.userInfo.TenantId;
       const CreateUserId = store.state.app.userInfo.UserId;
@@ -91,8 +91,8 @@ import {mapGetters,mapActions} from 'vuex';
       const TenantDomain =store.state.app.userInfo.Email
       const UpdateUserId=store.state.app.userInfo.Email
       const UpdateUserName=store.state.app.userInfo.Email 
-      const AnsWer =this.getAnswer
-      
+      const AnsWer =this.getAnswer 
+
       sessionStorage.setItem('AnsWer',this.getAnswer)
        const params = {
          headers:{
@@ -106,7 +106,7 @@ import {mapGetters,mapActions} from 'vuex';
 
       request(UPDATEANSWER,params).then(
           (res)=>{
-        console.log(res.ResultValue)
+        // console.log(res.ResultValue)
          that.$message({
               type: 'success',
               message: '操作成功',
@@ -120,7 +120,7 @@ import {mapGetters,mapActions} from 'vuex';
           sessionStorage.removeItem("AnsWer")
           })
        sessionStorage.setItem('AnsWer',this.getAnswer)
-       console.log(this.getAnswer)
+      //  console.log(this.getAnswer)
      
  
        
@@ -130,24 +130,26 @@ import {mapGetters,mapActions} from 'vuex';
       const that = this
       const ID =this.$route.query.repeatId
       const TenantDomain =store.state.app.userInfo.Email
-      const BotId = JSON.parse(sessionStorage.getItem('recordId'))
-      console.log(ID)
+      const BotId = JSON.parse(sessionStorage.getItem('recordId')) 
 
-       const params = {
-      headers:{
-        'Access-token': getCookies(TOKEN)
-      },
-      method: 'get',
-    }
+      const params = {
+        headers:{
+          'Access-token': getCookies(TOKEN)
+        },
+        method: 'get',
+      }
     
     const url = '/api/admin/keyword/KQA/get/'+TenantDomain+'/'+BotId+'/'+ID
     request(url, params).then(res => { 
       const that = this;
+      // console.log(res.ResultValue.ID)
+      sessionStorage.setItem("ID", res.ResultValue.ID); 
       const getKeyValue = res.ResultValue.Keyword;
       this.getKeyValue =getKeyValue
       const getAnswer= res.ResultValue.Answer
       this.getAnswer=getAnswer 
       this.textTotal =this.getAnswer.length; 
+      
       });
 
     },
@@ -162,53 +164,7 @@ import {mapGetters,mapActions} from 'vuex';
     },
 
 
-    // reviseKAnswer(){
-    //   const that = this
-    //    //const index = this.Answer
-    //   const KeyWord = sessionStorage.getItem('KeyWord');
-    //   const TenantId = store.state.app.userInfo.TenantId;
-    //   const CreateUserId = store.state.app.userInfo.UserId;
-    //   const CreateUserName = store.state.app.userInfo.FullName;
-    //   const ID = store.state.app.userInfo.ID//?
-    //   const BotId = JSON.parse(sessionStorage.getItem('recordId'))
-    //   const TenantDomain =store.state.app.userInfo.Email
-    //   const UpdateUserId=store.state.app.userInfo.Email
-    //   const UpdateUserName=store.state.app.userInfo.Email 
-    //   const AnsWer = this.getAnswer
-
-    //   sessionStorage.setItem('AnsWer',this.getAnswer)
-    //    const params = {
-    //      headers:{
-    //        'Access-token': getCookies(TOKEN)
-    //      },
-    //      method: 'POST',
-    //      body: JSON.stringify({
-    //         TenantId,BotId,TenantDomain,AnsWer,KeyWord,CreateUserId,CreateUserName
-    //      })
-    //    }
-    //     // request(UPDATEANSWER,params).then(
-    //     //   (res)=>{
-    //     //   console.log(res.ResultValue)
-    //     //    that.$message({
-    //     //       type: 'success',
-    //     //       message: '操作成功',
-    //     //       duration: 2000
-    //     //     });
-    //     //   }
-    //     // )
-    //   request(ADDKEYWORD, params).then(res => {
-    //     console.log(123);
-    //     that.$message({
-    //       type: "success",
-    //       message: "操作成功",
-    //       duration: 2000
-    //     });
-    //    });
-    // }
-
-
-
-    },
+  },
 
     
     destroyed() {

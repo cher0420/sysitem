@@ -10,7 +10,7 @@
             onpaste="value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" 
             oncontextmenu = "value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')"
             :placeholder="keywordList[index]" v-model="keywordList[index]" 
-             @blur.prevent="emptyKey(index)"  :class="[regIndex === index?'changeColor':'']">
+             @input="emptyKey(index)"  :class="[regIndex === index?'changeColor':'']">
             </el-input>
               <!-- @input="emptyKey(index)"  -->
             <i class="el-icon-error del" @click="delKeyword(index)"></i>
@@ -23,7 +23,7 @@
         </span> 
       </div>
       <div class="tip">
-        <p v-show='!change' class="tipMessage" >请勿使用重复的关键词，且关键词不能为空</p>
+        <p v-show='!change' class="tipMessage" >请勿使用重复的关键词，且关键词不能为空也不能输入特殊字符</p>
         <i class="el-icon-warning tipIcon"></i>
         <span class="keywordTip">所添加的关键词需要同时出现机器人才会回复所设定回答哦</span>
       </div>
@@ -44,11 +44,11 @@ import vuex from "vuex";
 export default { 
   data() {
     return {
-      counter: -1,
+      counter: 0,
       keywordList: [''],
       change:true, 
        isRed:false,
-       regIndex:''
+       regIndex:'index'
     };
   },
   computed: {
@@ -65,48 +65,56 @@ export default {
     init(index) {
         this.store = sessionStorage.getItem("KeyWord");
         if (this.store==null) {  
-            this.change =false ;
-            this.isRed=true;
-            this.disabled =true
+          this.change =false ;
+          this.isRed=true;
+          this.disabled =true
+          this.regIndex = index
         } else {
           this.keywordList = this.store.split("&"); 
-        } 
+        };
+        const counter= this.keywordList.length 
     },
     addKey(index) { 
-      this.counter = this.keywordList.length++; 
-       if (!this.keywordList[index]){
-        this.change =false ; 
-        this.isRed=true;
-        this.disabled =true
-      } else { 
-        this.change =true ;
-        this.isRed=false;
-        this.disabled =false   
-      }
+      this.counter  =this.keywordList.length++;
+      console.log(this.counter)
+      this.emptyKey();
+      this.regIndex = index;
+      this.isRed=true;
     },
     delKeyword(index) {
       if (this.keywordList.length>=2){
         this.keywordList.splice(index,1) 
         this.counter--; 
+        console.log(this.counter)
         return;
-      } 
+      } ;
+     this.emptyKey();
     },
     emptyKey(index){
-      this.keywordList[index]=this.keywordList[index].replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');
-      var arr = this.keywordList ; 
-      var arr1 = Array.from(new Set(arr)); 
-      console.log(arr1.length)
-      if (!this.keywordList[index]||arr.length> arr1.length){
-        this.change =false ; 
+      if (this.keywordList[index]) {
+        this.keywordList[index]=this.keywordList[index].replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');
+        var arr = this.keywordList ; 
+        // console.log(arr)
+        var arr1 = Array.from(new Set(arr)); 
+        if (!this.keywordList[index]||arr.length> arr1.length){
+          this.change =false ; 
+         
+          this.disabled =true
+          this.regIndex = index;
+           this.isRed=true;
+        } else { 
+          this.change =true ;
+          this.isRed=false;
+          this.disabled =false   
+          this.regIndex = ""
+        }
+      } else { 
+         this.change =false ; 
         this.isRed=true;
         this.disabled =true
         this.regIndex = index
-      } else { 
-        this.change =true ;
-        this.isRed=false;
-        this.disabled =false   
-         this.regIndex = ""
       }
+      
     },
     nextAnswer() {
       const that = this;
