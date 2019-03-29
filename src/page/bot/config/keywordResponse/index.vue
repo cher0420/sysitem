@@ -491,10 +491,9 @@
             message: '删除成功',
             duration: 2000,
           })
-
+          this.loading = true
           this.tableData.splice(index, 1)
           this.total--;
-          console.log(this.total ,this.PageSize)
           if (this.total % this.PageSize === 0) {
             if (that.Page !== 1) {
               that.Page--
