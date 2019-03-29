@@ -47,8 +47,9 @@ const store = new Vuex.Store({
         }
       ],
     },
-    tableData:
-      [
+    dataAll:{
+      total: 0,
+      tableData:[
         {
           ID: '1',
           QuestionId: '1',
@@ -92,7 +93,8 @@ const store = new Vuex.Store({
           Sort: 6,
         }
       ],
-    originData:[]
+      originData:[]
+    },
   },
   mutations: {
     [REPLACE] (state, payload) {
@@ -105,8 +107,8 @@ const store = new Vuex.Store({
       state.isSpread = payload.isSpread
     },
     [FILTER] (state, payload) {
-      state = {
-        ...state,
+      state.dataAll = {
+        ...state.dataAll,
         ...payload
       }
     },

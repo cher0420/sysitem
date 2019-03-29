@@ -11,9 +11,9 @@
       <section class="scroll-container" id="scroll-container" @scroll="handleScroll">
         <section v-for="(item, index) in tableData" :key="item.QuestionId" :class="index%2 !== 0?['even']:'odd'">
       <span class="checked-box-container">
-        <el-checkbox :value="item.checked" v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox"></el-checkbox>
+        <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox"></el-checkbox>
       </span>
-          <section class="title">{{item.Question}}</section>
+          <section class="title">{{item.Question}}{{item.checked}}</section>
         </section>
         <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
           <i v-show='!hasLoadingAllData' class="el-icon-loading"></i>
@@ -24,9 +24,8 @@
   </section>
 </template>
 <script>
-  import TitleItem from '../../../../components/Title'
   import { Loading } from 'element-ui';
-  import store from './store'
+  import store from './store/index'
   import {UPDATE, REPLACE, FILTER} from "./store/mutations";
   // import ScrollTable from './ScrollTable'
   export default {
@@ -46,15 +45,17 @@
         return store.state.Data.Details
       },
       tableData() {
-        return store.state.tableData
+        return store.state.dataAll.tableData
       },
       originData() {
-        return store.state.originData
+        return store.state.dataAll.originData
+      },
+      total() {
+        return store.state.dataAll.total
       }
     },
     data(){
       return{
-        total: 0,
         showTotal: true,
         getListLoading: false,
         hasLoadingAllData: true,
@@ -127,14 +128,8 @@
 
       },
       filterData(v){
-        const originData = store.state.tableData.slice(0)
-        store.dispatch(
-          FILTER, { originData }
-        ).then(
-          () => {
-            console.log(store.state.originData);
-          }
-        )
+        const originData = v.slice(0)
+        store.dispatch(FILTER, {originData})
         this.total = this.details.length
         const ids = this.details.map(
           (item, value) => {
@@ -149,6 +144,9 @@
             }
           }
         )
+        store.dispatch(
+          FILTER, {tableData: this.tableData, total: this.total}
+        )
 
       },
       showHasChecked(){
@@ -160,22 +158,30 @@
           let loadingInstance = Loading.service(options);
           if(this.showTotal){
             this.showTotal = false
-            this.tableData = this.tableData.filter(
+            const tableData = this.tableData.filter(
               (item,index) =>{
-                return item.checked;
+                if(item.checked)
+                return item;
+              }
+            )
+            store.dispatch(FILTER, {tableData}).then(
+              () => {
+                console.log(store.state.tableData);
               }
             )
           }else{
             this.showTotal = true
-            console.log(this.originData)
-            this.tableData = this.originData.slice(0)
+            const tableData = this.originData.slice(0)
             if(this.total<5){
-              this.tableData.forEach(
+              tableData.forEach(
                 (v, index) => {
                   v.disabled = false
                 }
               )
             }
+            store.dispatch(
+              FILTER, {tableData}
+            )
 
           }
           setTimeout(

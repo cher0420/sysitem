@@ -40,6 +40,9 @@
     computed:{
       Details(){
         return store.state.Data.Details
+      },
+      tableDatd(){
+        return store.state.tableData
       }
     },
     created(){
@@ -53,6 +56,18 @@
         store.dispatch(
           REPLACE,
           { Details:this.Details }
+        )
+        const tableData = store.state.dataAll.tableData
+
+        for (let v of tableData){
+          if(v.QuestionId === id){
+            v.checked = false
+            break;
+          }
+        }
+
+        store.commit(
+          FILTER, {tableData,total: this.Details.length}
         )
       },
       showLoading(){
