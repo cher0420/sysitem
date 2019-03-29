@@ -244,7 +244,7 @@
               if(that.webSocket.readyState == 1){
                 console.log("连接状态，发送消息保持连接");
                 that.webSocket.send("ping");
-                that.heartCheck().reset().start(); // 如果获取到消息，说明连接是正常的，重置心跳检测
+                that.heartCheck().reset(); // 如果获取到消息，说明连接是正常的，重置心跳检测
               }else{
                 console.log("断开状态，尝试重连");
                 that.webSocketFun();
