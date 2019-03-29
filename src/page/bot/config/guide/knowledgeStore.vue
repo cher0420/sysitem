@@ -50,12 +50,10 @@
       originData() {
         return store.state.dataAll.originData
       },
-      total() {
-        return store.state.dataAll.total
-      }
     },
     data(){
       return{
+        total: 0 ,
         showTotal: true,
         getListLoading: false,
         hasLoadingAllData: true,
@@ -145,7 +143,7 @@
           }
         )
         store.dispatch(
-          FILTER, {tableData: this.tableData, total: this.total}
+          FILTER, {tableData: this.tableData}
         )
 
       },
