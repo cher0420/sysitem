@@ -101,7 +101,8 @@
         webSocket: null,
         uploadStatus: false,
         response:{ Message: '' },
-        uploadResponseStatus: false
+        uploadResponseStatus: false,
+        serverTimeoutObj: null,
       }
     },
     created() {
@@ -226,6 +227,32 @@
           }
         )
       },
+      heartCheck(){
+        const that = this
+        return {
+          timeout: 3000,        // 9分钟发一次心跳，比server端设置的连接时间稍微小一点，在接近断开的情况下以通信的方式去重置连接时间。
+          // serverTimeoutObj: null,
+          reset: function(){
+            console.log(that.serverTimeoutObj)
+            clearTimeout(that.serverTimeoutObj);
+            return this;
+          },
+          start: function(){
+            console.log('进入')
+            console.log(that.serverTimeoutObj)
+            that.serverTimeoutObj = setInterval(function(){
+              if(that.webSocket.readyState == 1){
+                console.log("连接状态，发送消息保持连接");
+                that.webSocket.send("ping");
+                that.heartCheck().reset().start(); // 如果获取到消息，说明连接是正常的，重置心跳检测
+              }else{
+                console.log("断开状态，尝试重连");
+                that.webSocketFun();
+              }
+            }, this.timeout)
+          }
+        }
+      },
       webSocketFun() {
         const that = this
         const id = JSON.parse(sessionStorage.getItem('recordId'))
@@ -234,7 +261,9 @@
             const url = `${agreement}://${location.host}/api/admin/keyword/ws?BotId=${BotConfigId}`
             const token = getCookies(TOKEN)
             that.webSocket = new WebSocket(url, token);
+
             that.webSocket.onopen = function (event) {
+              that.heartCheck().reset();
               switch (event.currentTarget.readyState) {
                 case 0:
                   that.$refs.upload.abort()
@@ -251,6 +280,7 @@
               }
             };
             that.webSocket.onmessage = function (res) {
+              that.heartCheck().reset();
               const response = JSON.parse(res.data)
               if (response) {
                 switch (response.Code) {
@@ -288,8 +318,10 @@
               }
             }
             that.webSocket.onerror = (err) => {
+
             }
             that.webSocket.onclose = (info) => {
+              that.heartCheck().start();
               console.log('关闭了')
             }
       },
