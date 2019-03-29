@@ -2,7 +2,7 @@
   <div v-loading="loadingEdit">
     <div class="keywordTip">
       <section class="title f-s-16 c555 box-sizing margin-b-30px" >设置关键词（至多三个）</section>
-      <div style="overflow:hidden;zoom:1;display: inline-block;">
+      <div style="height:32px;display: inline-block;">
         <div class="addContent" v-for="(item,index) in keywordList" :key="index">
           <div class="inputContent keyword">
             <el-input  type="text"
@@ -64,7 +64,7 @@ export default {
   methods: { 
     init(index) {
         this.store = sessionStorage.getItem("KeyWord");
-        if (this.store==null) {  
+        if (this.store==null||this.KeyWord==undefined) {  
           this.change =false ;
           this.isRed=true;
           this.disabled =true
@@ -72,8 +72,8 @@ export default {
         } else {
           this.keywordList = this.store.split("&"); 
         };
-        this.counter= this.keywordList.length-1
-        console.log(this.keywordList.length ,this.counter)
+        this.counter= this.keywordList.length-1;
+      
     },
     addKey(index) { 
       this.counter  =this.keywordList.length++;
@@ -113,6 +113,7 @@ export default {
           console.log(arr,'511111111555')
         }
       } else { 
+        
         this.change =true ; 
         this.isRed=true;
         this.disabled =false
@@ -144,7 +145,8 @@ export default {
           KeyWord,
         })
       };
-
+      console.log(this.KeyWord)
+        
       request(VERIFYDUPLICATED, params).then(res => { 
         if (res.ResultValue.IsRepeat == true) { 
           const repeatId = res.ResultValue.RepeatModel.ID
@@ -155,6 +157,7 @@ export default {
           this.$router.push(url);
         }
       });
+ 
     }
   },
 
@@ -217,8 +220,8 @@ export default {
 }
 .del {
   position: absolute;
-  top: 1px;
-  left: 238px;
+  top: -5px;background: #fff;
+  left: 243px;
 }
 .del:hover {
   color: #2a8ce7;

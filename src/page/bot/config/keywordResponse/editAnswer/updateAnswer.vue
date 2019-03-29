@@ -6,10 +6,10 @@
           <section class="title f-s-16 c555 box-sizing margin-b-30px">设置回答</section>
       </div>
       <div class="area">
-        <textarea class="c555 anwer-area"  v-model.trim="getAnswer" rows="8" cols="10"
+        <textarea class="c555 answer-area"  v-model.trim="getAnswer" rows="8" cols="10"
         @input="getTextTotal" maxlength="500"   placeholder="请输入自定义回答，最多500个字符"
         ></textarea>
-        <span>{{textTotal}}/500字</span>
+        <p>{{textTotal}}/500字</p>
       </div>
       <span>{{ result }}</span>
       <el-button class="nextBtn" @click="nextBtn" :disabled="disabled">保存</el-button>
@@ -164,10 +164,10 @@
 </script>
 <style lang="scss" scoped>
   @import '../../../../../style/index';
- .area{position: relative;width:70%;margin-left:40px;}
- .area span{position: absolute;bottom:15px;right: 0;color:#999;}
+ .area{position: relative;width:70%;margin-left:40px;border:1px solid #e5ebf8;}
+ .area p{color:#999;z-index: 9999;text-align: right;}
  .title{ padding-left:10px; width: 100%; height:36px; line-height: 36px; background: #f9fafc;margin-bottom:30px;}
- .anwer-area{height: 300px;outline: none;width: 100%;resize: none;padding: 10px;border:1px solid #e5ebf8;}
+ .answer-area{height: 300px;outline: none;width: 100%;resize: none; padding:10px;border:none;box-sizing:border-box;}
  .nextBtn{color:#fff;background:#2a8ce7;border:none;margin-top:40px;display: block;}
  .keyword{font-size:14px;color:#555;margin-bottom: 40px;}
  .is-disabled{background: #7abafc;color:#fff}
