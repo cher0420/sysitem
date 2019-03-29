@@ -12,7 +12,7 @@
       <transition-group>
         <div v-for="(item, index) in Details" :key="index" class="item">
           <span class="question">{{item.Question}}</span>
-          <span class="del" @click="handleDel(index)">
+          <span class="del" @click="handleDel(index, item.QuestionId)">
             <i class="el-icon-close"></i>
             <span class="text">删除</span>
           </span>
@@ -25,7 +25,7 @@
   import store from './store'
   import draggable from 'vuedraggable'
   import {Loading} from 'element-ui'
-  import {REPLACE} from "./store/mutations";
+  import {REPLACE, FILTER} from "./store/mutations";
 
   export default {
     name: 'TapItem',
@@ -48,11 +48,11 @@
       logs(v){
         console.log(this.Details)
       },
-      handleDel(v){
+      handleDel(v, id){
         this.Details.splice(v,1)
         store.dispatch(
           REPLACE,
-          {Details:this.Details}
+          { Details:this.Details }
         )
       },
       showLoading(){

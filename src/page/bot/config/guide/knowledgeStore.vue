@@ -27,7 +27,7 @@
   import TitleItem from '../../../../components/Title'
   import { Loading } from 'element-ui';
   import store from './store'
-  import {UPDATE, REPLACE} from "./store/mutations";
+  import {UPDATE, REPLACE, FILTER} from "./store/mutations";
   // import ScrollTable from './ScrollTable'
   export default {
     name:'store',
@@ -44,6 +44,12 @@
       },
       details() {
         return store.state.Data.Details
+      },
+      tableData() {
+        return store.state.tableData
+      },
+      originData() {
+        return store.state.originData
       }
     },
     data(){
@@ -51,53 +57,7 @@
         total: 0,
         showTotal: true,
         getListLoading: false,
-        originData:[],
         hasLoadingAllData: true,
-        tableData:
-          [
-            {
-              ID: '1',
-              QuestionId: '1',
-              Question: '居住证办理1',
-              QuestionType: '',
-              Sort: 1,
-            },
-            {
-              ID: '2',
-              QuestionId: '2',
-              Question: '居住证办理2',
-              QuestionType: '',
-              Sort: 2,
-            },
-            {
-              ID: '3',
-              QuestionId: '3',
-              Question: '居住证办理3',
-              QuestionType: '',
-              Sort: 3,
-            },
-            {
-              ID: '4',
-              QuestionId: '4',
-              Question: '居住证办理4',
-              QuestionType: '',
-              Sort: 4,
-            },
-            {
-              ID: '5',
-              QuestionId: '5',
-              Question: '居住证办理5',
-              QuestionType: '',
-              Sort: 5,
-            },
-            {
-              ID: '6',
-              QuestionId: '6',
-              Question: '居住证办理6',
-              QuestionType: '',
-              Sort: 6,
-            }
-          ],
         newTableData:[
           {
             name: '居住证',
@@ -167,8 +127,14 @@
 
       },
       filterData(v){
-        this.originData = this.tableData.slice(0)
-
+        const originData = store.state.tableData.slice(0)
+        store.dispatch(
+          FILTER, { originData }
+        ).then(
+          () => {
+            console.log(store.state.originData);
+          }
+        )
         this.total = this.details.length
         const ids = this.details.map(
           (item, value) => {
@@ -183,7 +149,6 @@
             }
           }
         )
-        console.log(this.tableData);
 
       },
       showHasChecked(){
@@ -202,6 +167,7 @@
             )
           }else{
             this.showTotal = true
+            console.log(this.originData)
             this.tableData = this.originData.slice(0)
             if(this.total<5){
               this.tableData.forEach(

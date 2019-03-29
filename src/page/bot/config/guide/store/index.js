@@ -1,5 +1,5 @@
 import Vuex from 'vuex'
-import { REPLACE,UPDATE } from "./mutations";
+import { REPLACE,UPDATE,FILTER } from "./mutations";
 
 const store = new Vuex.Store({
   state: {
@@ -100,10 +100,15 @@ const store = new Vuex.Store({
         ...state.Data,
         ...payload
       }
-      console.log(state)
     },
     [UPDATE] (state, payload) {
       state.isSpread = payload.isSpread
+    },
+    [FILTER] (state, payload) {
+      state = {
+        ...state,
+        ...payload
+      }
     },
   },
   actions: {
@@ -112,6 +117,9 @@ const store = new Vuex.Store({
     },
     [UPDATE] (context, payload){
       context.commit(UPDATE, payload)
+    },
+    [FILTER] (context, payload){
+      context.commit(FILTER, payload)
     }
   }
 })
