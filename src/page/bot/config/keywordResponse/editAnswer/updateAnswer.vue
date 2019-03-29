@@ -8,7 +8,7 @@
       <div class="area">
         <textarea class="c555 anwer-area"  v-model.trim="getAnswer" rows="8" cols="10"
         @input="getTextTotal" maxlength="500"   placeholder="请输入自定义回答，最多500个字符"
-         onkeyup="this.value=this.value.replace(/\s+/g,'')"></textarea>
+        ></textarea>
         <span>{{textTotal}}/500字</span>
       </div>
       <span>{{ result }}</span>

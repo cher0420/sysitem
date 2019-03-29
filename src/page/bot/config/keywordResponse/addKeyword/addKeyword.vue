@@ -6,10 +6,10 @@
         <div class="addContent" v-for="(item,index) in keywordList" :key="index">
           <div class="inputContent keyword">
             <el-input  type="text"
-            onkeyup="value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" 
-            onpaste="value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')" 
+            onkeyup="value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')"
+            onpaste="value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')"
             oncontextmenu = "value=this.value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'')"
-            :placeholder="keywordList[index]" v-model="keywordList[index]" 
+            :placeholder="keywordList[index]" v-model="keywordList[index]"
              @input="emptyKey(index)"  :class="[regIndex === index?'changeColor':'']">
             </el-input>
               <!-- @input="emptyKey(index)"  -->
@@ -20,7 +20,7 @@
         <el-button v-if="counter<2" class="keywordBtn" @click="addKey" :disabled="disabled">
           <i class="el-icon-error icon"></i>添加关键词
         </el-button>
-        </span> 
+        </span>
       </div>
       <div class="tip">
         <p v-show='!change' class="tipMessage" >请勿使用重复的关键词，且关键词不能为空也不能输入特殊字符</p>
@@ -41,40 +41,41 @@ import store from "../../../../../store/index";
 import vue from "vue";
 import vuex from "vuex";
 
-export default { 
+export default {
   data() {
     return {
       counter: 0,
       keywordList: [''],
-      change:true, 
-       isRed:false,
-       regIndex:'index'
+      change:true,
+      isRed:false,
+      regIndex:'index'
     };
   },
   computed: {
-     
+
   },
   created(){
     this.init(); // 页面初始化
   },
   mounted() {},
-  watch: { 
-    
+  watch: {
+
   },
-  methods: { 
+  methods: {
     init(index) {
         this.store = sessionStorage.getItem("KeyWord");
-        if (this.store==null) {  
+        if (this.store==null) {
           this.change =false ;
           this.isRed=true;
           this.disabled =true
           this.regIndex = index
         } else {
-          this.keywordList = this.store.split("&"); 
+          this.keywordList = this.store.split("&");
         };
-        const counter= this.keywordList.length 
+        this.counter= this.keywordList.length
+        console.log(this.keywordList.length ,this.counter)
     },
-    addKey(index) { 
+    addKey(index) {
       this.counter  =this.keywordList.length++;
       console.log(this.counter)
       this.emptyKey();
@@ -82,49 +83,49 @@ export default {
       this.isRed=true;
     },
     delKeyword(index) {
+         this.emptyKey();
       if (this.keywordList.length>=2){
-        this.keywordList.splice(index,1) 
-        this.counter--; 
+        this.keywordList.splice(index,1)
+        this.counter--;
         console.log(this.counter)
         return;
-      } ;
-     this.emptyKey();
+      };
+      console.log('this.counter', '')
+
     },
     emptyKey(index){
       if (this.keywordList[index]) {
         this.keywordList[index]=this.keywordList[index].replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');
-        var arr = this.keywordList ; 
-        // console.log(arr)
-        var arr1 = Array.from(new Set(arr)); 
+        var arr = this.keywordList;
+        var arr1 = Array.from(new Set(arr));
         if (!this.keywordList[index]||arr.length> arr1.length){
-          this.change =false ; 
-         
+          this.change =false;
           this.disabled =true
           this.regIndex = index;
            this.isRed=true;
-        } else { 
+        } else {
           this.change =true ;
           this.isRed=false;
-          this.disabled =false   
+          this.disabled =false
           this.regIndex = ""
         }
-      } else { 
-         this.change =false ; 
+      } else {
+        this.change =true ;
         this.isRed=true;
-        this.disabled =true
+        this.disabled =false
         this.regIndex = index
       }
-      
+
     },
     nextAnswer() {
       const that = this;
-      const KeyWord = this.keywordList.join("&");  
+      const KeyWord = this.keywordList.join("&");
       const TenantId = store.state.app.userInfo.TenantId;
       const BotId = JSON.parse(sessionStorage.getItem('recordId'));
       const CreateUserId = store.state.app.userInfo.UserId;
       const CreateUserName = store.state.app.userInfo.FullName;
       const TenantDomain = store.state.app.userInfo.Email;
-      sessionStorage.setItem("KeyWord", this.keywordList.join("&")); 
+      sessionStorage.setItem("KeyWord", this.keywordList.join("&"));
 
       const params = {
         headers: {
@@ -141,11 +142,11 @@ export default {
         })
       };
 
-      request(VERIFYDUPLICATED, params).then(res => { 
-        if (res.ResultValue.IsRepeat == true) { 
+      request(VERIFYDUPLICATED, params).then(res => {
+        if (res.ResultValue.IsRepeat == true) {
           const repeatId = res.ResultValue.RepeatModel.ID
           const url = { path: "/bot/config/keywordResponse/repeatAnswer", query:{repeatId}};
-          this.$router.push(url); 
+          this.$router.push(url);
         } else {
           const url = { path: "/bot/config/keywordResponse/editAnswer" };
           this.$router.push(url);

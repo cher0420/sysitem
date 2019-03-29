@@ -10,8 +10,8 @@
      </div>
      <div class="area">
     <textarea class="c555 anwer-area"  @input="getTextTotal" rows="8" cols="10"
-  v-model.trim="getAnswer" placeholder="请输入自定义回答，最多500个字符"
-    onkeyup="this.value=this.value.replace(/\s+/g,'')"></textarea>
+ v-model.trim="getAnswer"  placeholder="请输入自定义回答，最多500个字符"
+     ></textarea>
       <span>{{textTotal}}/500字</span>
      </div>
      <el-button class="nextBtnFix" @click="reviseKeyword">修改关键词</el-button>

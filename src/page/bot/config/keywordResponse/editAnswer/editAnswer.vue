@@ -9,7 +9,6 @@
         <textarea class="c555 anwer-area"
         v-model.trim="getAnswer" rows="8" cols="10" type="text"
         @input="getTextTotal" maxlength="500"
-
        placeholder="请输入自定义回答，最多500个字符" ></textarea>
         <span>{{textTotal}}/500字</span>
       </div>
@@ -110,11 +109,8 @@ import {mapGetters,mapActions} from 'vuex';
           message: "操作成功",
           duration: 2000
         });
-
-
       }).then(() => {
           const url = { path: "/bot/config/keywordResponse"};
-
           sessionStorage.removeItem("KeyWord")
           sessionStorage.removeItem("AnsWer")
           setTimeout(
