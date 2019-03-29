@@ -322,7 +322,7 @@
             }
             that.webSocket.onclose = (info) => {
               that.heartCheck().start();
-              console.log('关闭了')
+              console.log('关闭了',info)
             }
       },
       alertFun (res) {
