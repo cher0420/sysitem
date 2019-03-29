@@ -3,7 +3,7 @@
     <section class="padding-30">
       <title-item title="知识库"/>
       <section class="button-group"><el-input class='searchInput middle' style="width:28%" size = 'small' v-model="keyWords" placeholder="关键词搜索"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" ></i>
-      </el-input><el-button :class="total?['middle', 'margin-20', 'big-button','has-checked']:['middle', 'margin-20', 'big-button']" @click="showHasChecked">{{showTotal?'已选':'返回'}}（{{total}}/5）</el-button><el-button type="primary">添加</el-button>
+      </el-input><el-button :class="total?['middle', 'margin-20', 'big-button','has-checked']:['middle', 'margin-20', 'big-button']" @click="showHasChecked">{{showTotal?'已选':'返回'}}（{{total}}/5）</el-button><el-button type="primary" @click="add">添加</el-button>
       </section>
     </section>
     <section class="hinge" @click="spread"><i class="el-icon-d-arrow-right"></i></section>
@@ -27,7 +27,7 @@
   import TitleItem from '../../../../components/Title'
   import { Loading } from 'element-ui';
   import store from './store'
-  import {UPDATE} from "./store/mutations";
+  import {UPDATE, REPLACE} from "./store/mutations";
   // import ScrollTable from './ScrollTable'
   export default {
     name:'store',
@@ -35,7 +35,7 @@
 
     },
     components:{
-      TitleItem,
+      // TitleItem,
       // ScrollTable,
     },
     computed:{
@@ -43,7 +43,7 @@
         return store.state.isSpread
       },
       details() {
-        return store.state.Data.details
+        return store.state.Data.Details
       }
     },
     data(){
@@ -57,38 +57,45 @@
           [
             {
               ID: '1',
-              QuestionId: '',
+              QuestionId: '1',
               Question: '居住证办理1',
               QuestionType: '',
               Sort: 1,
             },
             {
               ID: '2',
-              QuestionId: '',
+              QuestionId: '2',
               Question: '居住证办理2',
               QuestionType: '',
               Sort: 2,
             },
             {
               ID: '3',
-              QuestionId: '',
+              QuestionId: '3',
               Question: '居住证办理3',
               QuestionType: '',
               Sort: 3,
             },
             {
               ID: '4',
-              QuestionId: '',
+              QuestionId: '4',
               Question: '居住证办理4',
               QuestionType: '',
               Sort: 4,
             },
             {
               ID: '5',
-              QuestionId: '',
+              QuestionId: '5',
               Question: '居住证办理5',
               QuestionType: '',
               Sort: 5,
+            },
+            {
+              ID: '6',
+              QuestionId: '6',
+              Question: '居住证办理6',
+              QuestionType: '',
+              Sort: 6,
             }
           ],
         newTableData:[
@@ -161,24 +168,23 @@
       },
       filterData(v){
         this.originData = this.tableData.slice(0)
-        const questionArr = this.details.values() // 详情列表数组
-        this.originData.forEach(
+
+        this.total = this.details.length
+        const ids = this.details.map(
+          (item, value) => {
+            return item.QuestionId
+          }
+        )
+        this.tableData.forEach(
           (item, index) => {
-            for(let v of questionArr){
-              if(v.QuestionId === item.QuesionId){ //
-                item.checked = true
-                break;
-              }else{
-                item.checked = false
-              }
-            }
-            if(questionArr.length>=5){
+            item.checked = ids.indexOf(item.QuestionId) > -1;
+            if(this.total >=5){
               item.disabled = !item.checked
-            }else{
-              item.disabled = false
             }
           }
         )
+        console.log(this.tableData);
+
       },
       showHasChecked(){
         if(this.total){
@@ -239,6 +245,36 @@
         }else{
           console.log('没到底哦')
         }
+      },
+      showLoading(data){
+        const target = document.getElementById('item-container')
+        let loadingInstance = Loading.service({
+          target
+        });
+        store.dispatch(
+          REPLACE, {loadingInstance}
+        ).then(
+          () => {
+            setTimeout(
+              () => {
+                loadingInstance.close()
+                store.dispatch(
+                  REPLACE, {Details:data}
+                )
+              }, 500
+            )
+          }
+        )
+      },
+      add(){
+        const data = this.tableData.filter(
+          (item, index) => {
+            if(item.checked){
+              return item
+            }
+          }
+        )
+        this.showLoading(data)
       }
     },
   }

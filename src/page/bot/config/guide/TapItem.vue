@@ -25,27 +25,45 @@
 <script>
   import store from './store/'
   import draggable from 'vuedraggable'
+  import {Loading} from 'element-ui'
+  import {REPLACE} from "./store/mutations";
+
   export default {
     name: 'TapItem',
     data(){
       return{
-        Details: [],
         DetailsIndex:[]
       }
     },
     components: {
       draggable,
     },
+    computed:{
+      Details(){
+        return store.state.Data.Details
+      }
+    },
     created(){
-      this.Details = store.state.Data.Details
     },
     methods:{
       logs(v){
         console.log(this.Details)
       },
       handleDel(v){
-
         this.Details.splice(v,1)
+        store.dispatch(
+          REPLACE,
+          {Details:this.Details}
+        )
+      },
+      showLoading(){
+        const target = document.getElementById('item-container')
+        let loadingInstance = Loading.service({
+          target
+        });
+        store.dispatch(
+          REPLACE, {loadingInstance}
+        )
       }
     }
   }

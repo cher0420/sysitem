@@ -59,7 +59,7 @@
         <p class="tip"> <i class="el-icon-warning"> </i>默认引导语与引导问题问候语一同出现</p>
      </div>
      <el-button class="open save" :disabled="!disabled" @click="save">保存</el-button>
-    <knowledge-store/>
+    <knowledge-store ref="knowledge"/>
 </div>
 
 </template>
