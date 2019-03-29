@@ -9,9 +9,9 @@
           </section>
      </div>
      <div class="area">
-    <textarea class="c555 anwer-area"  @input="getTextTotal" rows="8" cols="10"
-  v-model.trim="getAnswer" placeholder="请输入自定义回答，最多500个字符"
-    onkeyup="this.value=this.value.replace(/\s+/g,'')"></textarea>
+    <textarea class="c555 anwer-area"  @input="getTextTotal" rows="8" cols="10" 
+ v-model.trim="getAnswer"  placeholder="请输入自定义回答，最多500个字符"
+     ></textarea>
       <span>{{textTotal}}/500字</span>
      </div>
      <el-button class="nextBtnFix" @click="reviseKeyword">修改关键词</el-button>
@@ -38,13 +38,13 @@ import {mapGetters,mapActions} from 'vuex';
       }
     },
     computed: {
-
+    
     },
 
     created() {
        this.init();  // 页面初始化
       //  console.log(this.$route.query.repeatId)
-
+     
     },
     mounted() {
 
@@ -58,7 +58,7 @@ import {mapGetters,mapActions} from 'vuex';
        },
       keyList() {
       this.keywordlist = sessionStorage.getItem('KeyWord');
-      this.getAnswer = sessionStorage.getItem('AnsWer');
+      this.getAnswer = sessionStorage.getItem('AnsWer'); 
       },
 
       getTextTotal() {
@@ -86,12 +86,12 @@ import {mapGetters,mapActions} from 'vuex';
       const KeyWord = sessionStorage.getItem('KeyWord');
       const TenantId = store.state.app.userInfo.TenantId;
       const CreateUserId = store.state.app.userInfo.UserId;
-      const CreateUserName = store.state.app.userInfo.FullName;
+      const CreateUserName = store.state.app.userInfo.FullName; 
       const BotId = JSON.parse(sessionStorage.getItem('recordId'))
       const TenantDomain =store.state.app.userInfo.Email
       const UpdateUserId=store.state.app.userInfo.Email
-      const UpdateUserName=store.state.app.userInfo.Email
-      const AnsWer =this.getAnswer
+      const UpdateUserName=store.state.app.userInfo.Email 
+      const AnsWer =this.getAnswer 
 
       sessionStorage.setItem('AnsWer',this.getAnswer)
        const params = {
@@ -113,28 +113,24 @@ import {mapGetters,mapActions} from 'vuex';
               duration: 2000
          });
 
-      }).then(() => {
+      }).then(() => { 
           const url = { path: "/bot/config/keywordResponse"};
+          this.$router.push(url);
           sessionStorage.removeItem("KeyWord")
           sessionStorage.removeItem("AnsWer")
-          setTimeout(
-            () => {
-              this.$router.push(url);
-            }, 800
-          )
           })
        sessionStorage.setItem('AnsWer',this.getAnswer)
       //  console.log(this.getAnswer)
-
-
-
+     
+ 
+       
     },
 
     getRepeatAnswer(){
       const that = this
       const ID =this.$route.query.repeatId
       const TenantDomain =store.state.app.userInfo.Email
-      const BotId = JSON.parse(sessionStorage.getItem('recordId'))
+      const BotId = JSON.parse(sessionStorage.getItem('recordId')) 
 
       const params = {
         headers:{
@@ -142,35 +138,35 @@ import {mapGetters,mapActions} from 'vuex';
         },
         method: 'get',
       }
-
+    
     const url = '/api/admin/keyword/KQA/get/'+TenantDomain+'/'+BotId+'/'+ID
-    request(url, params).then(res => {
+    request(url, params).then(res => { 
       const that = this;
       // console.log(res.ResultValue.ID)
-      sessionStorage.setItem("ID", res.ResultValue.ID);
+      sessionStorage.setItem("ID", res.ResultValue.ID); 
       const getKeyValue = res.ResultValue.Keyword;
       this.getKeyValue =getKeyValue
       const getAnswer= res.ResultValue.Answer
-      this.getAnswer=getAnswer
-      this.textTotal =this.getAnswer.length;
-
+      this.getAnswer=getAnswer 
+      this.textTotal =this.getAnswer.length; 
+      
       });
 
     },
 
 
-   getkey(){
+   getkey(){ 
        const that = this;
        const TenantDomain =store.state.app.userInfo.Email
-       const ID =this.$route.query.ID
+       const ID =this.$route.query.ID 
        const BotId = JSON.parse(sessionStorage.getItem('recordId'))
-
+      
     },
 
 
   },
 
-
+    
     destroyed() {
       clearInterval(this.timer);
     }

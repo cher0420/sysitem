@@ -47,8 +47,8 @@ export default {
       counter: 0,
       keywordList: [''],
       change:true, 
-       isRed:false,
-       regIndex:'index'
+      isRed:false,
+      regIndex:'index'
     };
   },
   computed: {
@@ -72,7 +72,8 @@ export default {
         } else {
           this.keywordList = this.store.split("&"); 
         };
-        const counter= this.keywordList.length 
+        this.counter= this.keywordList.length 
+        console.log(this.keywordList.length ,this.counter)
     },
     addKey(index) { 
       this.counter  =this.keywordList.length++;
@@ -82,36 +83,39 @@ export default {
       this.isRed=true;
     },
     delKeyword(index) {
+         this.emptyKey();
       if (this.keywordList.length>=2){
         this.keywordList.splice(index,1) 
         this.counter--; 
         console.log(this.counter)
         return;
-      } ;
-     this.emptyKey();
+      };
+      console.log('this.counter', '')
+
     },
     emptyKey(index){
+      console.log('00000000');
       if (this.keywordList[index]) {
         this.keywordList[index]=this.keywordList[index].replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');
-        var arr = this.keywordList ; 
-        // console.log(arr)
+        var arr = this.keywordList;
         var arr1 = Array.from(new Set(arr)); 
         if (!this.keywordList[index]||arr.length> arr1.length){
-          this.change =false ; 
-         
+          this.change =false;
           this.disabled =true
           this.regIndex = index;
            this.isRed=true;
+            console.log(arr,'5555')
         } else { 
           this.change =true ;
           this.isRed=false;
           this.disabled =false   
           this.regIndex = ""
+          console.log(arr,'511111111555')
         }
       } else { 
-         this.change =false ; 
+        this.change =true ; 
         this.isRed=true;
-        this.disabled =true
+        this.disabled =false
         this.regIndex = index
       }
       
