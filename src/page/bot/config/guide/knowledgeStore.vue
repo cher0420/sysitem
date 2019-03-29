@@ -259,7 +259,7 @@
               () => {
                 loadingInstance.close()
                 store.dispatch(
-                  REPLACE, {Details:data}
+                  REPLACE, { Details:data }
                 )
               }, 500
             )

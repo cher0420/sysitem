@@ -96,10 +96,11 @@ const store = new Vuex.Store({
   },
   mutations: {
     [REPLACE] (state, payload) {
-      state = {
-        ...state,
+      state.Data = {
+        ...state.Data,
         ...payload
       }
+      console.log(state)
     },
     [UPDATE] (state, payload) {
       state.isSpread = payload.isSpread

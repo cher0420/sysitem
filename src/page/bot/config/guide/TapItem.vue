@@ -1,7 +1,6 @@
 <template>
   <section class="item-container" id="item-container" v-if="Details.length>0">
     <draggable
-      v-model="Details"
       :group="{ name: 'people',  put: false }"
       ghost-class="ghost"
       animation="300"
@@ -23,7 +22,7 @@
   </section>
 </template>
 <script>
-  import store from './store/'
+  import store from './store'
   import draggable from 'vuedraggable'
   import {Loading} from 'element-ui'
   import {REPLACE} from "./store/mutations";
