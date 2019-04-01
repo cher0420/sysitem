@@ -26,7 +26,7 @@
   import store from './store'
   import draggable from 'vuedraggable'
   import {Loading} from 'element-ui'
-  import {REPLACE, FILTER} from "./store/mutations";
+  import {REPLACE, FILTER, DETAILS} from "./store/mutations";
   import {request} from "../../../../serive/request";
   import {TOKEN} from "../../../../constants/constants";
   import {getCookies} from "../../../../utils/cookie";
@@ -47,7 +47,7 @@
           return store.state.app.Data.Details
         },
         set(value) {
-          // store.dispatch(REPLACE, {Data.Details: value})
+          store.dispatch(DETAILS, { Details: value})
         }
       },
       tableData(){

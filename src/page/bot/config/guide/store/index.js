@@ -1,5 +1,5 @@
 import Vuex from 'vuex'
-import { REPLACE,UPDATE,FILTER } from "./mutations";
+import { REPLACE,UPDATE,FILTER,DETAILS } from "./mutations";
 
 const store = new Vuex.Store({
   state: {
@@ -64,10 +64,17 @@ const store = new Vuex.Store({
   },
   mutations: {
     [REPLACE] (state, payload) {
+      state.app = {
+        ...state.app,
+        ...payload
+      }
+    },
+    [DETAILS] (state, payload) {
       state.app.Data = {
         ...state.app.Data,
         ...payload
       }
+      console.log(state.app)
     },
     [UPDATE] (state, payload) {
       state.isSpread = payload.isSpread
@@ -88,6 +95,10 @@ const store = new Vuex.Store({
     },
     [FILTER] (context, payload){
       context.commit(FILTER, payload)
+    },
+    [DETAILS] (context, payload){
+      debugger;
+      context.commit(DETAILS, payload)
     }
   }
 })

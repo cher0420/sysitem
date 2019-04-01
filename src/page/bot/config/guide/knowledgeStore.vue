@@ -9,11 +9,11 @@
     <section class="hinge" @click="spread"><i class="el-icon-d-arrow-right"></i></section>
     <section class="padding-30">
       <section class="scroll-container" id="scroll-container" @scroll="handleScroll">
-        <section v-for="(item, index) in tableData" :key="item.QuestionId" :class="index%2 !== 0?['even']:'odd'">
+        <section v-for="(item, index) in tableData" :key="item.ID" :class="index%2 !== 0?['even']:'odd'">
           <span class="checked-box-container">
             <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox"></el-checkbox>
           </span>
-          <section class="title">{{item.Question}}{{item.checked}}</section>
+          <section class="title">{{item.IntentName}}{{item.checked}}</section>
         </section>
         <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
         <section v-show='tableData.length>10' class="loading-container primary-color" id="tableLoadingElement">
@@ -27,7 +27,7 @@
 <script>
   import { Loading } from 'element-ui';
   import store from './store/index'
-  import {UPDATE, REPLACE, FILTER} from "./store/mutations";
+  import {UPDATE, REPLACE, FILTER, DETAILS} from "./store/mutations";
   import {request} from "../../../../serive/request";
   import {TOKEN} from "../../../../constants/constants";
   import {getCookies} from "../../../../utils/cookie";
@@ -44,9 +44,6 @@
     computed:{
       isSpread(){
         return store.state.isSpread
-      },
-      details() {
-        return store.state.Data.Details
       },
       tableData() {
         return store.state.dataAll.tableData
@@ -88,7 +85,7 @@
         request(url, params).then(
           (res) => {
             store.dispatch(
-              FILTER, { tableData: res.Data }
+              FILTER, { tableData: res.Data, originData: res.Data}
             )
           }
         ).catch(
@@ -117,6 +114,7 @@
               item.disabled = !item.checked
             }
           )
+
         } else {
           this.tableData.forEach(
             (item,index) =>{
@@ -124,7 +122,9 @@
             }
           )
         }
-
+        store.dispatch(
+          FILTER, {tableData: this.tableData}
+        )
         // this.originData = this.tableData
 
       },
@@ -166,7 +166,7 @@
             )
             store.dispatch(FILTER, {tableData}).then(
               () => {
-                console.log(store.state.tableData);
+                console.log(store.state.dataAll);
               }
             )
           }else{
@@ -223,6 +223,18 @@
         let loadingInstance = Loading.service({
           target
         });
+        data.forEach(
+          (v,index) => {
+            v.QuestionId = v.ID
+            v.Question = v.IntentName
+          }
+        )
+        let details = store.state.app.Data.Details
+        if(this.total.length < 5) {
+          details = [...details, ...data]
+        }else{
+          details = data
+        }
         store.dispatch(
           REPLACE, {loadingInstance}
         ).then(
@@ -231,7 +243,7 @@
               () => {
                 loadingInstance.close()
                 store.dispatch(
-                  REPLACE, { Details:data }
+                  DETAILS, { Details: details }
                 )
               }, 500
             )
