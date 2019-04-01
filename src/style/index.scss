@@ -1,12 +1,13 @@
 //命名空间： yoy
 //var
-$primary-color: #2a8ce7;
-$nav-b-color:#3b516f;
-$nav-height:60px;
-$fff:#fff;
-$danger: #f04b4b;
-$light-blue: #eaf6fe;
-$disabled: #c3c3c3;
+//$primary-color: #2a8ce7;
+//$nav-b-color:#3b516f;
+//$nav-height:60px;
+//$fff:#fff;
+//$danger: #f04b4b;
+//$light-blue: #eaf6fe;
+//$disabled: #c3c3c3;
+@import './var/color';
 //二级菜单
 $second-side: #eaedf1;  //背景色
 $second-side-hover: #f5f6f8;
@@ -15,9 +16,9 @@ $second-f-w:500; //菜单字体粗细
 $second-f-c-l:#777; //子菜单字体颜色
 $second-f-c-hover:#000; //鼠标划过时字体颜色
 
-
-$iconW:28px;
-$iconH:28px;
+//
+//$iconW:28px;
+//$iconH:28px;
 
 $side-font-act-color:#ffffff;
 $side-font-color: #cfd9e2;
@@ -31,7 +32,7 @@ $side-item-padding:14px;
 $side-bar-width:60px;
 $side-width:240px;
 
-$f-pri-c: #555;
+//$f-pri-c: #555;
 
 //layout
 #app{
@@ -101,30 +102,30 @@ $f-pri-c: #555;
 }
 
 //color
-.font-primary{
-  color: $f-pri-c;
-}
-.nav-b-color{
-  background: $nav-b-color;
-}
-.side-font-color{
-  color:$side-font-color;
-}
+//.font-primary{
+//  color: $f-pri-c;
+//}
+//.nav-b-color{
+//  background: $nav-b-color;
+//}
+//.side-font-color{
+//  color:$side-font-color;
+//}
 .text-a-c{
   text-align: center;
 }
 .text-a-l{
   text-align: left;
 }
-.primary-color{
-  color: $primary-color;
-}
-.danger-color{
-  color: $danger;
-}
-.c-fff{
-  color:#fff;
-}
+//.primary-color{
+//  color: $primary-color;
+//}
+//.danger-color{
+//  color: $danger;
+//}
+//.c-fff{
+//  color:#fff;
+//}
 .c333{
   color:#333;
 }

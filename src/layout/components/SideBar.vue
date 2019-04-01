@@ -188,6 +188,7 @@
 </script>
 <style lang="scss" scoped>
   @import "../../style/index";
+  @import "../../style/var/size";
 
   .sidebar-container{ //菜单默认样式
     background: $side-background;

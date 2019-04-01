@@ -4,16 +4,13 @@
     {{title}}<i class="el-icon-arrow-down el-icon--right"></i>
   </span>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item :command="key" v-for="(value, key, index) in options">{{value}}</el-dropdown-item>
+      <el-dropdown-item :command="key" v-for="(value, key, index) in options" :key="key">{{value}}</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
 
 </template>
 
 <script>
-  import {request} from "../serive/request";
-  import {getCookies} from "../utils/cookie";
-  import {TOKEN} from "../constants/constants";
   import store from '../store/index'
   import {REPLACE} from "../store/mutations";
   import {BOT} from "../constants/api";
@@ -83,7 +80,10 @@
 
 <style lang="scss" scoped>
   @import '../style/index';
-
+  @import '../style/var/color';
+  .c333{
+    color: $bold-color;
+  }
   .yoy-main .el-table .cell .yoy-dropDown {
     height: 28px;
     line-height: 28px;

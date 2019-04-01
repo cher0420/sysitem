@@ -512,11 +512,16 @@
 </script>
 <style lang="scss" scoped>
   @import '../../../../style/index';
-
+  @import '../../../../style/var/color';
+  .primary-color{
+    color: $primary-color;
+  }
   .margin-top30 {
     margin-top: 30px;
   }
-
+  .c-fff{
+    color: #fff;
+  }
   .margin-bottom-30 {
     margin-bottom: 30px;
   }
@@ -645,7 +650,7 @@
     cursor: pointer;
   }
 </style>
-<style>
+<style scoped>
   .webpage textarea {
     padding-left: 10px;
   }

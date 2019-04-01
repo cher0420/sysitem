@@ -2,7 +2,7 @@
   <section class="c999 f-s-14">
     <section class="tapList">
       <span class="firTap">选择渠道：</span>
-      <span  v-for="(data,key) in tapList"  class="text-a-c"  v-bind:class="{isChecked:key === botCheckIndex}"  @click="handleClick(key)" :index="key" >
+      <span  v-for="(data,key) in tapList"  class="text-a-c"  v-bind:class="{isChecked:key === botCheckIndex}"  @click="handleClick(key)" :index="key" :key="key">
         <i
           :style="{background: key === botCheckIndex?
         'url(' + require(`../../../../../assets/bot/${key}Checked.png`) + ')center center no-repeat':
@@ -63,7 +63,7 @@
           class="el-upload-list el-upload-list--picture-card"
           style="float: left;"
         >
-          <el-col v-for="(item,index) in uploadList" class="p-relative picItem text-a-c" >
+          <el-col v-for="(item,index) in uploadList" class="p-relative picItem text-a-c" :key="index">
             <img :src="item.KnowledgeBase" alt="图片" class="align-middle-img">
             <!--<img src="item.KnowledgeBase" alt="图片" class="align-middle-img"/>-->
             <section class="p-absolute opacity f-s-20" >
@@ -118,7 +118,7 @@
           class="el-upload-list el-upload-list--picture-card"
           style="float: left;"
         >
-          <el-col v-for="(item,index) in uploadList2" class="p-relative picItem text-a-c" >
+          <el-col v-for="(item,index) in uploadList2" class="p-relative picItem text-a-c" :key="index" >
             <img :src="item.KnowledgeBase" alt="图片" class="align-middle-img">
             <!--<img src="item.KnowledgeBase" alt="图片" class="align-middle-img"/>-->
             <section class="p-absolute opacity f-s-20">

@@ -372,7 +372,13 @@
 </script>
 <style lang="scss" scoped>
   @import '../../style/index';
-
+  @import '../../style/var/color';
+  .primary-color{
+    color: $primary-color;
+  }
+  .danger-color{
+    color: $danger;
+  }
   .search {
     width: 360px;
     height: 32px;
