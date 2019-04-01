@@ -119,6 +119,13 @@ export const MENUS=[
                   parent: 'keywordResponse',
                 }
               ]
+            },
+            {
+              id:'guide',
+              chineseName:'引导问题',
+              path:'guide',
+              parent: 'knowledgeBuild',
+               
             }
           ]
         }

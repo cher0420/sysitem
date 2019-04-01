@@ -2,7 +2,7 @@
   <section :class="isSpread?'container ':['container','isSpread']" >
     <section class="padding-30">
       <title-item title="知识库"/>
-      <section class="button-group"><el-input class='searchInput middle' style="width:28%" size = 'small' v-model="keyWords" placeholder="关键词搜索"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" ></i>
+      <section class="button-group"><el-input class='searchInput middle' style="width:28%" size = 'small' v-model="IntentName" placeholder="关键词搜索"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" ></i>
       </el-input><el-button :class="total?['middle', 'margin-20', 'big-button','has-checked']:['middle', 'margin-20', 'big-button']" @click="showHasChecked">{{showTotal?'已选':'返回'}}（{{total}}/5）</el-button><el-button type="primary" @click="add">添加</el-button>
       </section>
     </section>
@@ -10,12 +10,13 @@
     <section class="padding-30">
       <section class="scroll-container" id="scroll-container" @scroll="handleScroll">
         <section v-for="(item, index) in tableData" :key="item.QuestionId" :class="index%2 !== 0?['even']:'odd'">
-      <span class="checked-box-container">
-        <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox"></el-checkbox>
-      </span>
+          <span class="checked-box-container">
+            <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox"></el-checkbox>
+          </span>
           <section class="title">{{item.Question}}{{item.checked}}</section>
         </section>
-        <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
+        <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
+        <section v-show='tableData.length>10' class="loading-container primary-color" id="tableLoadingElement">
           <i v-show='!hasLoadingAllData' class="el-icon-loading"></i>
           {{hasLoadingAllData?'- 已经到底啦 -': '正在加载中...'}}
         </section>
@@ -27,7 +28,10 @@
   import { Loading } from 'element-ui';
   import store from './store/index'
   import {UPDATE, REPLACE, FILTER} from "./store/mutations";
-  // import ScrollTable from './ScrollTable'
+  import {request} from "../../../../serive/request";
+  import {TOKEN} from "../../../../constants/constants";
+  import {getCookies} from "../../../../utils/cookie";
+
   export default {
     name:'store',
     props:{
@@ -57,49 +61,48 @@
         showTotal: true,
         getListLoading: false,
         hasLoadingAllData: true,
-        newTableData:[
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-          {
-            name: '居住证',
-            checked: false,
-            disabled: false
-          },
-        ]
+        IntentName: '',
       }
     },
     created(){
-      this.filterData(this.tableData)
+      this.getIntentName()
+
     },
     methods: {
+      async getIntentName(){
+        const that = this
+        const url = '/api/admin/portal/guideQuestion/queryIntent'
+        const params = {
+          headers:{
+            'Access-Token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotConfigId: this.$route.query.recordId,
+            IntentName: this.IntentName,
+            PageIndex: 1,
+            PageSize: 10,
+          })
+
+        }
+        request(url, params).then(
+          (res) => {
+            store.dispatch(
+              FILTER, { tableData: res.Data }
+            )
+          }
+        ).catch(
+          () => {
+            that.$message(
+              {
+                type:'error',
+                message: '意图列表获取失败，请稍后重试',
+                duration: 2000
+              }
+            )
+          }
+        )
+      },
       spread(){
         store.dispatch(
           UPDATE,
@@ -145,7 +148,6 @@
         store.dispatch(
           FILTER, {tableData: this.tableData}
         )
-
       },
       showHasChecked(){
         if(this.total){
@@ -334,6 +336,14 @@
     section{
       height: 40px;
       line-height: 40px;
+    }
+    .null{
+      display: inline-block;
+      width: 100%;
+      height: 47px;
+      line-height: 47px;
+      text-align: center;
+      color: #909399;
     }
     .title{
       display: inline-block;

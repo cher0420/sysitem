@@ -8,14 +8,40 @@ module.exports = {
   dev: {
     // Paths
     assetsSubDirectory: 'static',
-    socket: 'ws://192.168.1.103:10036',
+    socket: 'ws://192.168.1.103:18000',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {// HT.Api.Auth API接口
-        target: 'https://192.168.1.103:18000/',// 接口的域名
+      '/api/auth': {// HT.Api.Auth API接口
+        target: 'http://192.168.1.103:18000',// 接口的域名 10001
         secure: false,// 如果是https接口，需要配置这个参数
         changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
-      '/api/admin/keyword/ws': { //webSocket 接口
+      },
+      '/api/admin/portal': {//HT.Api.Admin.Portal API 接口
+        target: 'http://192.168.1.103:18000',// 接口的域名
+        secure: false,// 如果是https接口，需要配置这个参数
+        changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
+      },
+      '/api/admin/channel': {// HT.Api.Admin.WebChat API 接口
+        target: 'http://192.168.1.103:18000',// 接口的域名
+        secure: false,// 如果是https接口，需要配置这个参数
+        changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
+      },
+      '/api/admin/bot':{
+        target: 'http://192.168.1.103:18000',// 接口的域名
+        secure: false,// 如果是https接口，需要配置这个参数
+        changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
+      },
+      '/api/admin/keyword':{
+        target: 'http://192.168.1.103:18000',// 接口的域名
+        secure: false,// 如果是https接口，需要配置这个参数
+        changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
+      },
+      '/api/aiml': {//HT.Api.Aiml.BotSupport API 接口
+        target: 'http://192.168.1.103:18000',// 接口的域名
+        secure: false,// 如果是https接口，需要配置这个参数
+        changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
+      },
+      '/api/admin/keyword/ws': {
         target:'ws://192.168.1.103:18000/',
         pathRewrite: {"^/api/admin/keyword/" : ""},
         ws: true,

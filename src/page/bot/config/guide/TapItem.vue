@@ -1,6 +1,7 @@
 <template>
-  <section class="item-container" id="item-container" v-if="Details.length>0">
+  <section class="item-container" id="item-container" v-if="Details&&Details.length>0">
     <draggable
+      v-model="Details"
       :group="{ name: 'people',  put: false }"
       ghost-class="ghost"
       animation="300"
@@ -10,7 +11,7 @@
       @onMove="logs"
     >
       <transition-group>
-        <div v-for="(item, index) in Details" :key="index" class="item">
+        <div v-for="(item, index) in Details" :key="item.QuestionId" class="item">
           <span class="question">{{item.Question}}</span>
           <span class="del" @click="handleDel(index, item.QuestionId)">
             <i class="el-icon-close"></i>
@@ -26,29 +27,76 @@
   import draggable from 'vuedraggable'
   import {Loading} from 'element-ui'
   import {REPLACE, FILTER} from "./store/mutations";
+  import {request} from "../../../../serive/request";
+  import {TOKEN} from "../../../../constants/constants";
+  import {getCookies} from "../../../../utils/cookie";
 
   export default {
     name: 'TapItem',
     data(){
       return{
-        DetailsIndex:[]
+        DetailsIndex:[],
       }
     },
     components: {
       draggable,
     },
     computed:{
-      Details(){
-        return store.state.Data.Details
+      Details: {
+        get() {
+          return store.state.app.Data.Details
+        },
+        set(value) {
+          // store.dispatch(REPLACE, {Data.Details: value})
+        }
       },
-      tableDatd(){
+      tableData(){
         return store.state.tableData
       }
     },
     created(){
+      this.getDetail()
     },
     methods:{
-      logs(v){
+      getDetail(){
+        const url = '/api/admin/portal/GuideQuestion/Query'
+        const params = {
+          headers:{
+            'Access-Token':getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotConfigId: this.$route.query.recordId
+          })
+        }
+        request( url, params ).then(
+          (res) => {
+            if(res.Data){
+              store.dispatch(
+                REPLACE, {Data:res.Data}
+              )
+            }
+          }
+        )
+      },
+      updateDetail(){
+        const url = '/api/admin/portal/GuideQuestion/Update'
+        const params = {
+          headers:{
+            'Access-Token':getCookies(TOKEN)
+          },
+          method: "POST",
+          body: JSON.stringify({
+
+          })
+        }
+        request(url, params).then(
+          () => {
+
+          }
+        )
+      },
+      logs(v,all){
         console.log(this.Details)
       },
       handleDel(v, id){
