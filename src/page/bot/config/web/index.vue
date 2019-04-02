@@ -288,8 +288,9 @@
 
       },
       preview() {
-        const id = this.$route.query.recordId
-        const url = `/WebTalk/preview.html?id=${id}`
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const recordId = id?id:this.$route.query.recordId
+        const url = `/WebTalk/preview.html?id=${recordId}`
         window.open(url)
       },
       initData(res) {
