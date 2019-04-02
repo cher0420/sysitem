@@ -244,7 +244,7 @@
               if(that.webSocket.readyState == 1){
                 console.log("连接状态，发送消息保持连接");
                 that.webSocket.send("ping");
-                that.heartCheck().reset(); // 如果获取到消息，说明连接是正常的，重置心跳检测
+                // that.heartCheck().reset(); // 如果获取到消息，说明连接是正常的，重置心跳检测
               }else{
                 console.log("断开状态，尝试重连");
                 that.webSocketFun();
@@ -263,7 +263,7 @@
             that.webSocket = new WebSocket(url, token);
 
             that.webSocket.onopen = function (event) {
-              that.heartCheck().reset();
+              // that.heartCheck().reset();
               switch (event.currentTarget.readyState) {
                 case 0:
                   that.$refs.upload.abort()
@@ -280,7 +280,7 @@
               }
             };
             that.webSocket.onmessage = function (res) {
-              that.heartCheck().reset();
+              // that.heartCheck().reset();
               const response = JSON.parse(res.data)
               if (response) {
                 switch (response.Code) {
@@ -321,7 +321,7 @@
 
             }
             that.webSocket.onclose = (info) => {
-              that.heartCheck().start();
+              // that.heartCheck().start();
               console.log('关闭了',info)
             }
       },
