@@ -120,7 +120,8 @@
           TenantId: store.state.app.userInfo.TenantId
         }
       }
-      this.webSocketFun()
+      this.reLoad()
+      // this.webSocketFun()
     },
     destroyed(){
       this.webSocket.close()
@@ -227,19 +228,27 @@
           }
         )
       },
+      reLoad(){
+        const that = this
+        setTimeout(
+          () => {
+            that.webSocketFun()
+          }
+        ), 9000
+      },
       heartCheck(){
         const that = this
         return {
           timeout: 3000,        // 9分钟发一次心跳，比server端设置的连接时间稍微小一点，在接近断开的情况下以通信的方式去重置连接时间。
           // serverTimeoutObj: null,
           reset: function(){
-            console.log(that.serverTimeoutObj)
+            // console.log(that.serverTimeoutObj)
             clearTimeout(that.serverTimeoutObj);
             return this;
           },
           start: function(){
             console.log('进入')
-            console.log(that.serverTimeoutObj)
+            // console.log(that.serverTimeoutObj)
             that.serverTimeoutObj = setInterval(function(){
               if(that.webSocket.readyState == 1){
                 console.log("连接状态，发送消息保持连接");

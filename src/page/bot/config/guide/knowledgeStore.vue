@@ -29,7 +29,7 @@
 <script>
   import { Loading } from 'element-ui';
   import store from './store/index'
-  import {UPDATE, REPLACE, FILTER, DETAILS} from "./store/mutations";
+  import {UPDATE, APP, FILTER, DETAILS} from "./store/mutations";
   import {request} from "../../../../serive/request";
   import {TOKEN} from "../../../../constants/constants";
   import {getCookies} from "../../../../utils/cookie";
@@ -72,6 +72,14 @@
     destroyed(){
       store.dispatch(FILTER, {total:0, tableData: [], originData: []})
       store.dispatch(UPDATE, {isSpread: false})
+      store.dispatch(APP, {Data: {
+        ID: '',//
+          Enable: false,
+          BotConfigId: '',
+          GuideDescription: '',
+          Channels: '',
+          Details: [],
+      },})
     },
     methods: {
       search(){
