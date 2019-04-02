@@ -369,9 +369,9 @@
             }
           }
         )
-
+        console.log(tableData)
         store.dispatch( UPDATE, {isSpread: true} )
-        store.dispatch( FILTER, {total: details.length,tableData } )
+        store.dispatch( FILTER, {total: details.length,tableData, originData:  tableData} )
       }
     }
   }

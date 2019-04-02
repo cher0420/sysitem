@@ -217,6 +217,12 @@
           }else{
             this.showTotal = true
             const tableData = this.originData.slice(0)
+
+            tableData.forEach(
+              (v,index) => {
+
+              }
+            )
             if(this.total<5){
               tableData.forEach(
                 (v, index) => {
