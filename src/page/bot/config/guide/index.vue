@@ -29,36 +29,40 @@
     </section>
     <section class="startIt">
     </section>
-    <section class="title">
-      <div class="line"></div>
-      引导问题 <span><i class="el-icon-question"></i>什么是引导问题？</span>
-      <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
-      <span class="stopBtn" v-show='!stopIt' >
+    <section style="background: #fff;margin-top: -67px;">
+      <section class="title">
+        <div class="line"></div>
+        引导问题 <span><i class="el-icon-question"></i>什么是引导问题？</span>
+        <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
+        <span class="stopBtn" v-show='!stopIt' >
         <el-button class="off"  @click="stop">停用</el-button>
         <el-button class="on"  @click="clearAll">清空数据</el-button>
     </span>
 
-    </section>
-    <section class="config">引导语设置</section>
-    <!-- <textarea name="" id="" cols="90" rows="5" class="area" placeholder="例如：您可以尝试这样问我："></textarea> -->
-    <div class="area">
+      </section>
+      <section class="config">引导语设置</section>
+      <!-- <textarea name="" id="" cols="90" rows="5" class="area" placeholder="例如：您可以尝试这样问我："></textarea> -->
+      <div class="area">
         <textarea class="c555  "
-                  v-model="getAnswer" rows="8" type="text"
+                  v-model.trim="getAnswer" rows="8" type="text"
                   @input="getTextTotal" maxlength="50"
                   placeholder="例如：你可以这样问我" ></textarea>
-      <span>{{textTotal}}/50字</span>
-    </div>
-    <section class="config">选择引导问题（最多5个）</section>
-    <tap-item></tap-item>
-    <el-button class="open" :disabled="!disabled" @click="openKnowLedgeStore">打开知识库</el-button>
-    <section class="config">选择渠道</section>
-    <div class="checkbox">
-      <p><el-checkbox v-model="checked1">网页</el-checkbox></p>
-      <p><el-checkbox v-model="checked2">微信</el-checkbox></p>
-      <p class="tip"> <i class="el-icon-warning"> </i>默认引导语与引导问题问候语一同出现</p>
-    </div>
-    <el-button class="open save" :disabled="!disabled" @click="save">保存</el-button>
-    <knowledge-store ref="knowledge"/>
+        <span>{{textTotal}}/50字</span>
+      </div>
+      <section class="config">选择引导问题（最多5个）</section>
+      <tap-item></tap-item>
+      <el-button class="open" :disabled="!disabled" @click="openKnowLedgeStore">打开知识库</el-button>
+      <section class="config">选择渠道</section>
+      <div class="checkbox">
+        <p><el-checkbox v-model="checked1">网页</el-checkbox></p>
+        <p><el-checkbox v-model="checked2">微信</el-checkbox></p>
+        <p class="tip"> <i class="el-icon-warning"> </i>默认引导语与引导问题问候语一同出现</p>
+      </div>
+      <el-button class="open save" :disabled="!disabled" @click="save">保存</el-button>
+      <knowledge-store ref="knowledge"/>
+    </section>
+
+      <section style="height: 67px;"></section>
   </div>
 
 </template>
@@ -153,6 +157,33 @@
         this.stopIt=false
       },
       stop(){
+        const that =this
+        const ID = store.state.app.Data.Data.ID
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        const Enable = true
+
+        const params = {
+          headers:{
+            'Access-token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotConfigId,ID,Enable
+          })
+        }
+
+
+        request(UPDATESERVICE, params).then(res => {
+          console.log(res.Data, 'stop')
+          //修改enable状态 为true
+           store.dispatch(DETAILS,{Enable:false}).then(
+            () =>{
+               console.log(store.state.app.Data)
+            }
+          )
+
+        });
+
         this.disabled =false
         this.changeIt=false
         this.stopIt=true
@@ -244,6 +275,11 @@
       },
       getTextTotal() {
         this.textTotal =this.getAnswer.length;
+        if (this.textTotal==0) {
+
+        } else {
+
+        }
 
       },
       save(){

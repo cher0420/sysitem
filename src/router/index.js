@@ -200,7 +200,7 @@ const arr = [
         path:'config/guide',   //  引导问题
         component: resolve =>
           require(["../page/bot/config/guide/index"], resolve),
-        name: 'guide',
+        name: 'config',
       },
     ]
   }

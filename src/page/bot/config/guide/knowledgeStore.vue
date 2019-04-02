@@ -13,7 +13,9 @@
           <span class="checked-box-container">
             <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox"></el-checkbox>
           </span>
-          <section class="title">{{item.IntentName}}{{item.checked}}</section>
+          <!--<el-tooltip class="item" effect="dark" :content="item.IntentName" placement="top-start">-->
+            <section class="title">{{item.IntentName}}</section>
+          <!--</el-tooltip>-->
         </section>
         <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
         <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
@@ -293,63 +295,56 @@
         }
       },
       showLoading(data){
-        // const target = document.getElementById('item-container')
-        // let loadingInstance = Loading.service({
-        //   target
-        // });
+
         data.forEach(
           (v,index) => {
-            v.QuestionId = v.ID
-            v.Question = v.IntentName
-          }
-        )
-        // let details = store.state.app.Data.Details
-        // let total = store.state.dataAll.total
-
-        // const newArr = details.slice(0)
-        // let temporary = []
-        // for(let v of newArr){
-        //   temporary.push(v.QuestionId)
-        // }
-        // const arr = data.filter(
-        //   (v) => {
-        //     if( !temporary.includes(v.QuestionId)){
-        //       return v
-        //     }
-        //   }
-        // )
-
-        // if(total <= 5) {
-        //   details = [...details, ...arr]
-        // }else{
-        //   details = data
-        // }
-
-
-        // store.dispatch(
-        //   REPLACE, {loadingInstance}
-        // ).then(
-        //   () => {
-        //     setTimeout(
-        //       () => {
-                // loadingInstance.close()
-                store.dispatch(
-                  DETAILS, { Details: data }
-                )
-            //   }, 500
-            // )
-        //   }
-        // )
-      },
-      add(){
-        const data = this.tableData.filter(
-          (item, index) => {
-            if(item.checked){
-              return item
+            if(v.IntentName){
+              v.QuestionId = v.ID
+              v.Question = v.IntentName
+            }else{
+              v.IntentName = v.Question
+              v.ID = v.QuestionId
             }
           }
         )
-        this.showLoading(data)
+
+                store.dispatch(
+                  DETAILS, { Details: data }
+                ).then(
+                  () => {
+                    console.log(store.state.app.Data.Details)
+                  }
+                )
+      },
+      add(){
+        const details = store.state.app.Data.Details
+
+        details.forEach(
+          (item,index) => {
+            item.checked = true
+            item.IntentName = item.Question
+          }
+        )
+
+        let templateTableData = this.tableData.filter(
+          (item,index) =>{
+            if(item.checked)
+              return item;
+          }
+        )
+        let arr = []
+        for(let v of details.values()) {
+          arr.push(v.QuestionId)
+        }
+        const someData = templateTableData.filter(
+          (v,index) => {
+            if(!arr.includes(v.QuestionId)){
+              return v
+            }
+          }
+        )
+        templateTableData = [...someData, ...details]
+        this.showLoading(templateTableData)
       }
     },
   }
@@ -448,10 +443,13 @@
       text-align: center;
       color: #909399;
     }
+    /*.item{*/
+      /*width: 300px;*/
+    /*}*/
     .title{
       display: inline-block;
       padding-left: 18px;
-      width: 60%;
+      width: 80%;
       height: 40px;
       line-height: 40px;
       overflow-x: hidden;
@@ -459,6 +457,7 @@
       white-space: nowrap;
       vertical-align: top;
       color: $f-pri-c;
+      cursor: default;
     }
     .loading-container{
       width: 100%;

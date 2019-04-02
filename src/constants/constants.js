@@ -125,7 +125,7 @@ export const MENUS=[
               chineseName:'引导问题',
               path:'guide',
               parent: 'knowledgeBuild',
-               
+
             }
           ]
         }
@@ -212,6 +212,7 @@ export const STR = {
   editAnswer: '添加关键词回复',
   repeatAnswer:'添加关键词回复',
   updateAnswer:'编辑',
+  guide:'引导问题'
 }
 export const USERNAME = 'userName';
 export const TOKEN = 'token';
