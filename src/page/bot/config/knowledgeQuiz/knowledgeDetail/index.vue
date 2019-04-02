@@ -289,7 +289,8 @@
         });
 
         that.DeleteIds = [textId,imageId, ...that.DeleteIds].filter (d => d)
-        const BotConfigRecordId = this.$route.query.recordId;
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigRecordId = id?id:this.$route.query.recordId
         const body = {
           BotConfigRecordId,
           Data: {
@@ -326,10 +327,12 @@
             : this.basicAnswer.length;
       },
       get_knowledge_detail(channel) {
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const recordId = id?id:this.$route.query.recordId
         this.loading = true;
         const query = this.$route.query;
         const body = {
-          BotConfigRecordId: query.recordId,
+          BotConfigRecordId: recordId,
           Data: {
             IntentName: query.IntentName, // 意图
             Channels: channel //渠道
@@ -472,7 +475,8 @@
       },
 
       upload_img() {
-        const Id = this.$route.query.recordId;
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const Id = id?id:this.$route.query.recordId
         const Files = [];
         let imageArr = this.defaultState ==='first'?this.uploadList.slice(0):this.uploadList2.slice(0)//需要根据不同的类型增加图片
         // console.log(1)
@@ -524,7 +528,8 @@
 
         const CreateUserId = getCookies(TENANTID);
         const CreateUserName = getCookies(USERNAME);
-        const BotConfigRecordId = this.$route.query.recordId;
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigRecordId = id?id:this.$route.query.recordId
         const IntentID = this.$route.query.IntentID;
         const Channels = this.botCheckIndex;
         const KnowledgeBase =
@@ -605,7 +610,8 @@
       },
       deleteRequest() {
         const that = this;
-        const Id = this.$route.query.recordId;
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const Id = id?id:this.$route.query.recordId
         const Files = [];
 
         this.deleteImgArr.forEach((v, index) => {
