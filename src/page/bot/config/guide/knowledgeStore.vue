@@ -186,11 +186,7 @@
                 return item;
               }
             )
-            store.dispatch(FILTER, {tableData}).then(
-              () => {
-                console.log(store.state.dataAll);
-              }
-            )
+            store.dispatch(FILTER, {tableData})
           }else{
             this.showTotal = true
             const tableData = this.originData.slice(0)
@@ -296,20 +292,26 @@
         let details = store.state.app.Data.Details
         let total = store.state.dataAll.total
 
+        const newArr = details.slice(0)
+        let temporary = []
+        for(let v of newArr){
+          temporary.push(v.QuestionId)
+        }
+        const arr = data.filter(
+          (v) => {
+            if( !temporary.includes(v.QuestionId)){
+              return v
+            }
+          }
+        )
+
         if(total <= 5) {
-          details = [...details, ...data]
+          details = [...details, ...arr]
         }else{
           details = data
         }
 
-        const newArr = details.slice(0)
-        const arr = newArr.filter(
-          item => item.QuestionId
-        )
-        for (let v of details ){
-          arr.includes(v.QuestionId)
-        }
-        console.log(arr)
+
         // store.dispatch(
         //   REPLACE, {loadingInstance}
         // ).then(
