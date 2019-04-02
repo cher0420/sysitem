@@ -2,7 +2,7 @@
   <section :class="isSpread?'container ':['container','isSpread']" >
     <section class="padding-30">
       <title-item title="知识库"/>
-      <section class="button-group"><el-input class='searchInput middle' style="width:28%" size = 'small' v-model="IntentName" placeholder="关键词搜索"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" ></i>
+      <section class="button-group"><el-input class='searchInput middle' style="width:28%" size = 'small' v-model="IntentName" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input><el-button :class="total?['middle', 'margin-20', 'big-button','has-checked']:['middle', 'margin-20', 'big-button']" @click="showHasChecked">{{showTotal?'已选':'返回'}}（{{total}}/5）</el-button><el-button type="primary" @click="add">添加</el-button>
       </section>
     </section>
@@ -16,7 +16,7 @@
           <section class="title">{{item.IntentName}}{{item.checked}}</section>
         </section>
         <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
-        <section v-show='tableData.length>10' class="loading-container primary-color" id="tableLoadingElement">
+        <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
           <i v-show='!hasLoadingAllData' class="el-icon-loading"></i>
           {{hasLoadingAllData?'- 已经到底啦 -': '正在加载中...'}}
         </section>
@@ -45,6 +45,9 @@
       isSpread(){
         return store.state.isSpread
       },
+      total(){
+        return store.state.dataAll.total
+      },
       tableData() {
         return store.state.dataAll.tableData
       },
@@ -54,7 +57,7 @@
     },
     data(){
       return{
-        total: 0 ,
+        PageIndex:1,
         showTotal: true,
         getListLoading: false,
         hasLoadingAllData: true,
@@ -66,7 +69,11 @@
 
     },
     methods: {
-      async getIntentName(){
+      search(){
+        this.PageIndex = 1
+        this.getIntentName()
+      },
+       getIntentName(){
         const that = this
         const url = '/api/admin/portal/guideQuestion/queryIntent'
         const params = {
@@ -77,13 +84,24 @@
           body: JSON.stringify({
             BotConfigId: this.$route.query.recordId,
             IntentName: this.IntentName,
-            PageIndex: 1,
+            PageIndex: this.PageIndex,
             PageSize: 10,
           })
 
         }
         request(url, params).then(
           (res) => {
+            res.Data.forEach(
+              ( item, index ) => {
+                item.QuestionId = item.ID
+                item.Question = item.IntentName
+              }
+            )
+            if(res.Data.length<10){
+              that.hasLoadingAllData = true
+            }else{
+              that.hasLoadingAllData = false
+            }
             store.dispatch(
               FILTER, { tableData: res.Data, originData: res.Data}
             )
@@ -107,26 +125,30 @@
         )
       },
       typeBox(v){
-        v?this.total ++:this.total --;
-        if(this.total >= 5){
-          this.tableData.forEach(
-            (item,index) =>{
-              item.disabled = !item.checked
-            }
-          )
+        let total = store.state.dataAll.total
+        const tableData = store.state.dataAll.tableData
+        const totalNew = v? total ++:total --;
 
-        } else {
-          this.tableData.forEach(
-            (item,index) =>{
-              item.disabled = false
+        store.dispatch(FILTER,{total}).then(
+          () => {
+            if(total >= 5){
+              tableData.forEach(
+                (item,index) =>{
+                  item.disabled = !item.checked
+                }
+              )
+            } else {
+              tableData.forEach(
+                (item,index) =>{
+                  item.disabled = false
+                }
+              )
             }
-          )
-        }
-        store.dispatch(
-          FILTER, {tableData: this.tableData}
+            store.dispatch(
+              FILTER, {tableData: tableData}
+            )
+          }
         )
-        // this.originData = this.tableData
-
       },
       filterData(v){
         const originData = v.slice(0)
@@ -155,7 +177,7 @@
           const options = {
             target:element
           }
-          let loadingInstance = Loading.service(options);
+          // let loadingInstance = Loading.service(options);
           if(this.showTotal){
             this.showTotal = false
             const tableData = this.tableData.filter(
@@ -186,7 +208,7 @@
           }
           setTimeout(
             () =>{
-              loadingInstance.close()
+              // loadingInstance.close()
             }, 300
           )
         }
@@ -201,17 +223,59 @@
         }, 1000);
       },
       handleScroll(){
+
         if(this.getListLoading) return; //函数防抖
         this.throttle(this.get)
       },
-      get(){
+      async get(){
         this.getListLoading = true
         const scrollContainer = document.getElementById('scroll-container')
         const trueHeight = scrollContainer.scrollHeight
         const scrollTop = scrollContainer.scrollTop
         const height = trueHeight - scrollTop
+        this.PageIndex++
+        const that = this
+        const url = '/api/admin/portal/guideQuestion/queryIntent'
+        const params = {
+          headers:{
+            'Access-Token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotConfigId: that.$route.query.recordId,
+            IntentName: that.IntentName,
+            PageIndex: that.PageIndex,
+            PageSize: 10,
+          })
+        }
+        request(url, params).then(
+          (res) => {
+            if(res.Data.length<10){
+              that.hasLoadingAllData = true
+            }else{
+              that.hasLoadingAllData = false
+            }
+            const originData = store.state.dataAll.originData.push(res.Data)
+            const tableData = store.state.dataAll.tableData.push(res.Data)
+            store.dispatch(
+              FILTER, { tableData, originData}
+            )
+          }
+        ).catch(
+          () => {
+            that.$message(
+              {
+                type:'error',
+                message: '意图列表获取失败，请稍后重试',
+                duration: 2000
+              }
+            )
+          }
+        )
+        const res = await this.getIntentName()
+        console.log(res)
         if(height < this.tableData.length*40){
-          this.tableData = [...this.tableData,...this.newTableData]
+          this.tableData = [...this.tableData]
           this.getListLoading = false
           console.log('到底了')
         }else{
@@ -219,10 +283,10 @@
         }
       },
       showLoading(data){
-        const target = document.getElementById('item-container')
-        let loadingInstance = Loading.service({
-          target
-        });
+        // const target = document.getElementById('item-container')
+        // let loadingInstance = Loading.service({
+        //   target
+        // });
         data.forEach(
           (v,index) => {
             v.QuestionId = v.ID
@@ -230,25 +294,36 @@
           }
         )
         let details = store.state.app.Data.Details
-        if(this.total.length < 5) {
+        let total = store.state.dataAll.total
+
+        if(total <= 5) {
           details = [...details, ...data]
         }else{
           details = data
         }
-        store.dispatch(
-          REPLACE, {loadingInstance}
-        ).then(
-          () => {
+
+        const newArr = details.slice(0)
+        const arr = newArr.filter(
+          item => item.QuestionId
+        )
+        for (let v of details ){
+          arr.includes(v.QuestionId)
+        }
+        console.log(arr)
+        // store.dispatch(
+        //   REPLACE, {loadingInstance}
+        // ).then(
+        //   () => {
             setTimeout(
               () => {
-                loadingInstance.close()
+                // loadingInstance.close()
                 store.dispatch(
                   DETAILS, { Details: details }
                 )
               }, 500
             )
-          }
-        )
+        //   }
+        // )
       },
       add(){
         const data = this.tableData.filter(

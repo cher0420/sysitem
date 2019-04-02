@@ -4,6 +4,7 @@ import { REPLACE,UPDATE,FILTER,DETAILS } from "./mutations";
 const store = new Vuex.Store({
   state: {
     isSpread: false,
+    Enable: false,
     app:{
       Data:{
         ID: '',
@@ -16,65 +17,22 @@ const store = new Vuex.Store({
     dataAll:{
       total: 0,
       tableData:[
-        // {
-        //   ID: '1',
-        //   QuestionId: '1',
-        //   Question: '居住证办理1',
-        //   QuestionType: '',
-        //   Sort: 1,
-        // },
-        // {
-        //   ID: '2',
-        //   QuestionId: '2',
-        //   Question: '居住证办理2',
-        //   QuestionType: '',
-        //   Sort: 2,
-        // },
-        // {
-        //   ID: '3',
-        //   QuestionId: '3',
-        //   Question: '居住证办理3',
-        //   QuestionType: '',
-        //   Sort: 3,
-        // },
-        // {
-        //   ID: '4',
-        //   QuestionId: '4',
-        //   Question: '居住证办理4',
-        //   QuestionType: '',
-        //   Sort: 4,
-        // },
-        // {
-        //   ID: '5',
-        //   QuestionId: '5',
-        //   Question: '居住证办理5',
-        //   QuestionType: '',
-        //   Sort: 5,
-        // },
-        // {
-        //   ID: '6',
-        //   QuestionId: '6',
-        //   Question: '居住证办理6',
-        //   QuestionType: '',
-        //   Sort: 6,
-        // }
       ],
       originData:[]
     },
   },
   mutations: {
-    [REPLACE] (state, payload) {
+    [REPLACE] (state, payload) { //更新所有一层数据
       state.app = {
         ...state.app,
         ...payload
       }
     },
-    [DETAILS] (state, payload) {
+    [DETAILS] (state, payload) { //更新详情
       state.app.Data = {
         ...state.app.Data,
         ...payload
       }
-      console.log(state.app)
     },
     [UPDATE] (state, payload) {
       state.isSpread = payload.isSpread
@@ -96,8 +54,7 @@ const store = new Vuex.Store({
     [FILTER] (context, payload){
       context.commit(FILTER, payload)
     },
-    [DETAILS] (context, payload){
-      debugger;
+    [DETAILS] (context, payload){ //更新详情
       context.commit(DETAILS, payload)
     }
   }

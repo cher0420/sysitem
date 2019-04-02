@@ -51,3 +51,12 @@ export const ADDKEYWORD = '/api/admin/keyword/KQA/add';// 添加关键词
 export const VERIFYDUPLICATED = '/api/admin/keyword/KQA/verifyDuplicated';//重复校验
 export const UPDATEANSWER = '/api/admin/keyword/KQA/update';//更新答案
 export const SEARCHKERWORD = '/api/admin/keyword/KQA/search';//查询关键字(加载数据)
+//问题引导
+export const GETSERVICE = '/api/admin/portal/GuideQuestion/GetService';//获取服务状态
+export const UPDATESERVICE= '/api/admin/portal/GuideQuestion/UpdateService';//更新服务状态
+export const ADDQUESTION = '/api/admin/portal/GuideQuestion/Add';//添加引导问题
+export const CHECKQUERY = '/api/admin/portal/GuideQuestion/Query';//查询引导问题
+export const UPDATEQUESTION = '/api/admin/portal/GuideQuestion/Update';//更新引导问题
+export const DELETEALL= '/api/admin/portal/GuideQuestion/Delete';//删除引导问题
+
+

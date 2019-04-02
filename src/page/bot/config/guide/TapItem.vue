@@ -106,16 +106,18 @@
           { Details:this.Details }
         )
         const tableData = store.state.dataAll.tableData
-
-        for (let v of tableData){
-          if(v.QuestionId === id){
-            v.checked = false
-            break;
+        tableData.forEach(
+          (v,index) => {
+            if(v.QuestionId === id){
+              v.checked = false
+            }
+            v.disabled = false
           }
-        }
-
+        )
+        let total =  store.state.dataAll.total
+        console.log(total--)
         store.commit(
-          FILTER, {tableData,total: this.Details.length}
+          FILTER, { tableData,total }
         )
       },
       showLoading(){
