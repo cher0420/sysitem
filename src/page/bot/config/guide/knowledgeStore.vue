@@ -11,7 +11,7 @@
       <section class="scroll-container" id="scroll-container" @scroll="handleScroll">
         <section v-for="(item, index) in tableData" :key="item.ID" :class="index%2 !== 0?['even']:'odd'">
           <span class="checked-box-container">
-            <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox"></el-checkbox>
+            <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox(index,item.checked)"></el-checkbox>
           </span>
           <!--<el-tooltip class="item" effect="dark" :content="item.IntentName" placement="top-start">-->
             <section class="title">{{item.IntentName}}</section>
@@ -68,7 +68,10 @@
     },
     created(){
       this.getIntentName()
-
+    },
+    destroyed(){
+      store.dispatch(FILTER, {total:0, tableData: [], originData: []})
+      store.dispatch(UPDATE, {isSpread: false})
     },
     methods: {
       search(){
@@ -126,7 +129,8 @@
           {isSpread: !this.isSpread}
         )
       },
-      typeBox(v){
+      typeBox(index,v){
+
         let total = store.state.dataAll.total
         const tableData = store.state.dataAll.tableData
         const totalNew = v? total ++:total --;
@@ -146,6 +150,8 @@
                 }
               )
             }
+
+            tableData[index].checked = v
             store.dispatch(
               FILTER, {tableData: tableData}
             )
@@ -174,12 +180,6 @@
         )
       },
       showHasChecked(){
-        // if(this.total){
-          // const element = document.getElementById('scroll-container')
-          // const options = {
-          //   target:element
-          // }
-          // let loadingInstance = Loading.service(options);
           if(this.showTotal){
             if(this.total){
               this.showTotal = false
@@ -190,8 +190,21 @@
                   item.IntentName = item.Question
                 }
               )
-              const templateTableData = [...this.tableData, ...details]
 
+              const templateData = store.state.dataAll.tableData
+              let template = []
+              for(let v of details.values()){
+                template.push(v.QuestionId)
+              }
+              const table = templateData.filter(
+                (v,index) => {
+                  if(v.checked && !template.includes(v.QuestionId)){
+                    return v
+                  }
+                }
+              )
+
+              const templateTableData = [...table, ...details]
               const tableData = templateTableData.filter(
                 (item,index) =>{
                   if(item.checked)
@@ -310,40 +323,38 @@
 
                 store.dispatch(
                   DETAILS, { Details: data }
-                ).then(
-                  () => {
-                    console.log(store.state.app.Data.Details)
-                  }
                 )
       },
       add(){
         const details = store.state.app.Data.Details
+        const tableData = store.state.dataAll.tableData
 
-        details.forEach(
-          (item,index) => {
-            item.checked = true
-            item.IntentName = item.Question
-          }
-        )
+        // details.forEach(
+        //   (item,index) => {
+        //     item.checked = true
+        //     item.IntentName = item.Question
+        //   }
+        // )
 
-        let templateTableData = this.tableData.filter(
+        let templateTableData = tableData.filter(
           (item,index) =>{
             if(item.checked)
               return item;
           }
         )
-        let arr = []
-        for(let v of details.values()) {
-          arr.push(v.QuestionId)
-        }
-        const someData = templateTableData.filter(
-          (v,index) => {
-            if(!arr.includes(v.QuestionId)){
-              return v
-            }
-          }
-        )
-        templateTableData = [...someData, ...details]
+
+        // let arr = []
+        // for(let v of details.values()) {
+        //   arr.push(v.QuestionId)
+        // }
+        // const someData = templateTableData.filter(
+        //   (v,index) => {
+        //     if(!arr.includes(v.QuestionId)){
+        //       return v
+        //     }
+        //   }
+        // )
+        // templateTableData = [...someData, ...details]
         this.showLoading(templateTableData)
       }
     },

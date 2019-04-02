@@ -24,29 +24,31 @@
             <p class="center">网页端</p>
           </div>
         </section>
-        <div style="text-align:center;width:60%;"><el-button  class="open" @click="mask">我知道了</el-button></div>
+        <div style="text-align:center;"><el-button  class="open" @click="mask">我知道了</el-button></div>
       </div>
     </section>
     <section class="startIt">
     </section>
-    <section style="background: #fff;margin-top: -67px;">
+    <section style="margin-top: -67px;">
+
+
       <section class="title">
         <div class="line"></div>
-        引导问题 <span><i class="el-icon-question"></i>什么是引导问题？</span>
+        引导问题 <span @click="why" class="state"><i class="el-icon-question"></i>什么是引导问题？</span>
         <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
         <span class="stopBtn" v-show='!stopIt' >
-        <el-button class="off"  @click="stop">停用</el-button>
-        <el-button class="on"  @click="clearAll">清空数据</el-button>
-    </span>
+          <el-button class="off"  @click="stop">停用</el-button>
+          <el-button class="on"  @click="clearAll">清空数据</el-button>
+      </span>
 
       </section>
       <section class="config">引导语设置</section>
       <!-- <textarea name="" id="" cols="90" rows="5" class="area" placeholder="例如：您可以尝试这样问我："></textarea> -->
       <div class="area">
-        <textarea class="c555  "
-                  v-model.trim="getAnswer" rows="8" type="text"
-                  @input="getTextTotal" maxlength="50"
-                  placeholder="例如：你可以这样问我" ></textarea>
+          <textarea class="c555" :disabled="disable"
+                    v-model.trim="Guidetext" rows="8" type="text"
+                    @input="getTextTotal" maxlength="50"
+                    placeholder="例如：你可以这样问我" ></textarea>
         <span>{{textTotal}}/50字</span>
       </div>
       <section class="config">选择引导问题（最多5个）</section>
@@ -54,15 +56,18 @@
       <el-button class="open" :disabled="!disabled" @click="openKnowLedgeStore">打开知识库</el-button>
       <section class="config">选择渠道</section>
       <div class="checkbox">
-        <p><el-checkbox v-model="checked1">网页</el-checkbox></p>
-        <p><el-checkbox v-model="checked2">微信</el-checkbox></p>
+        <template>
+          <el-checkbox-group v-model="checkList">
+            <el-checkbox class='checkbox' label="webchat">网页</el-checkbox><br>
+            <el-checkbox class='checkbox' label="wechat">微信</el-checkbox>
+          </el-checkbox-group>
+        </template>
         <p class="tip"> <i class="el-icon-warning"> </i>默认引导语与引导问题问候语一同出现</p>
       </div>
-      <el-button class="open save" :disabled="!disabled" @click="save">保存</el-button>
+      <el-button class="open save" :disabled="!disabled || !textTotal" @click="save">保存 </el-button>
+      <section style="height: 67px;"></section>
       <knowledge-store ref="knowledge"/>
     </section>
-
-      <section style="height: 67px;"></section>
   </div>
 
 </template>
@@ -83,11 +88,9 @@
         change:false,
         changeIt:false,
         stopIt:true,
-        getAnswer:'',
+        Guidetext:'',
         textTotal:0,
-        checked1: true, //webchat
-        checked2: true, //wechat
-        Channels :['wechat','webchat'],
+        checkList: ['wechat','webchat']
       }
     },
     created() {
@@ -106,6 +109,9 @@
         this.tableData = []
         this.total = 0
         // const ID= '254b7095-0281-4fab-b27f-9f080f063684'
+      },
+      why(){
+        this.change=false
       },
       getStatue(){
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
@@ -145,9 +151,9 @@
         request(UPDATESERVICE, params).then(res => {
           console.log(res.Data, '11111')
           //修改enable状态 为true
-           store.dispatch(DETAILS,{Enable:res.Data}).then(
+          store.dispatch(DETAILS,{Enable:res.Data}).then(
             () =>{
-               console.log(store.state.app.Data)
+              console.log(store.state.app.Data)
             }
           )
 
@@ -172,13 +178,12 @@
           })
         }
 
-
         request(UPDATESERVICE, params).then(res => {
           console.log(res.Data, 'stop')
-          //修改enable状态 为true
-           store.dispatch(DETAILS,{Enable:false}).then(
+          //修改enable状态 为false
+          store.dispatch(DETAILS,{Enable:false}).then(
             () =>{
-               console.log(store.state.app.Data)
+              console.log(store.state.app.Data)
             }
           )
 
@@ -205,23 +210,21 @@
         }
 
         request(CHECKQUERY, params).then(res => {
+          //取数据
+          console.log(res)
+          const Guidetext=res.Data.GuideDescription
+          this.Guidetext=Guidetext
+          const checkList=res.Data.Channels
+          console.log(checkList,'chushihua')
 
           store.dispatch(APP,{Data:res.Data}).then(
             () =>{
               console.log('=====',store.state.app)
             }
           )
-          // if (res.data==null) {
-          //   console.log('null', '')
-          // } else {
-          //   //保存Id 读取数据
-          //   const ID =  sessionStorage.getItem('ID')
 
-          // }
 
         });
-
-
       },
       mask(){
         this.change=true
@@ -229,8 +232,6 @@
         const that = this;
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-
-
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
@@ -270,20 +271,14 @@
         request(DELETEALL, params).then(res => {
           console.log(res, '11111')
         });
-
-
       },
       getTextTotal() {
-        this.textTotal =this.getAnswer.length;
-        if (this.textTotal==0) {
-
-        } else {
-
-        }
-
+        this.textTotal =this.Guidetext.length;
       },
       save(){
         const ID = store.state.app.Data.ID
+
+        console.log(this.Guidetext)
         if (ID === "") {
           //add
           this.addQuestion()
@@ -291,15 +286,20 @@
           //updata
           this.updateQuestion();
         }
-        console.log('save', '')
+        store.dispatch(DETAILS,{GuideDescription:this.Guidetext}).then(
+          () =>{
+            console.log('=123434',store.state.app)
+          }
+        )
+
       },
       addQuestion(){
         console.log('add')
         const that = this
         const  ID = store.state.app.Data.ID
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const GuideDescription= this.getAnswer
-        const Channels=[]
+        const GuideDescription= this.Guidetext
+        const Channels=this.checkList
         const QuestionDetails = store.state.dataAll.tableData
 
         const params = {
@@ -321,17 +321,12 @@
       updateQuestion(){
         console.log('update')
         const  ID = store.state.app.Data.ID
-        console.log(ID)
+
         const id = JSON.parse(sessionStorage.getItem('recordId'))
-        const BotConfigId = id?id:this.$route.query.recordId
-        const GuideDescription= this.getAnswer
-        let Channels=[]
-        if(this.checked1){
-          Channels.push('webchat')
-        }
-        if(this.checked2){
-          Channels.push('wechat')
-        }
+        const BotConfigId = id?this.$route.query.recordId:id
+        const GuideDescription= this.Guidetext
+        let Channels=this.checkList
+
         const QuestionDetails = store.state.app.Data.Details
 
         const params = {
@@ -345,7 +340,12 @@
         }
         request(UPDATEQUESTION, params).then(res => {
           const ID=res.Data.ID
-          // console.log(ID)
+
+          this.$message({
+            type: 'success',
+            message: '保存成功',
+            duration: 2000
+          })
 
         })
       },
@@ -353,17 +353,23 @@
       openKnowLedgeStore(){
         const details = store.state.app.Data.Details
         const tableData = store.state.dataAll.tableData
+        let template = []
+        for(let v of details.values()){
+          template.push(v.QuestionId)
+        }
         tableData.forEach(
           (item, index) => {
-            details.forEach(
-              (v, i) => {
-                if(v.QuestionId === item.ID){
-                  item.checked = true
-                }
-              }
-            )
+            if(template.includes(item.QuestionId)){
+              item.checked = true
+            }else{
+              item.checked = false
+            }
+            if(details.length>=5){
+              item.disabled = !item.checked
+            }
           }
         )
+
         store.dispatch( UPDATE, {isSpread: true} )
         store.dispatch( FILTER, {total: details.length,tableData } )
       }
@@ -372,17 +378,16 @@
 </script>
 <style scoped lang="scss">
   @import "../../../../style/index.scss";
-
+  .state{ cursor:pointer;}
   .pop{position:fixed;top:60px;left:260px;background: rgba($color: #000000, $alpha: .5);  width:100%;height: 100%;z-index:999;
-    .location{margin-top:150px;margin-left:150px;
-      .way{margin-top:40px;margin-bottom: 30px;
-        display: flex;
-        .text{height: 250px;}
+    .location{position:absolute; top:50%; left:40%;  transform:translate(-50%,-50%);
+      .guide{background:#eaedf1;border-radius: 10px;display: inline-block;padding:30px;width:100%;box-sizing:border-box;}
+      .way{margin-top:40px;margin-bottom: 30px; display: flex;box-sizing:border-box;
+        .text{height: 300px;}
+        img{height: 90%;}
       }
       .center{text-align: center;color: #fff}
     }
-
-    .guide{background:#eaedf1;border-radius: 10px;display: inline-block;padding:30px;}
   }
   .startIt{width:3000px;height: 300px;background:rgba($color: #928e8e, $alpha: .5);position:fixed;z-index: 99;display: none;}
   .line{
@@ -403,12 +408,13 @@
     span{position: absolute;bottom:15px;right: 0;color:#999;}
     textarea{width:100%;border:1px solid #eaedf1; }
   }
-  .checkbox{margin-left:40px;
-    p{margin-bottom:30px;}
+  .checkbox{ margin-bottom:30px;padding-left:40px;
+    .el-checkbox{padding:0;margin:10;}
     .tip{color:#999;}
   }
   .stopBtn{display: inline-block;float: right;}
   .save{margin-left:0px;}
   .is-disabled{background: #7abafc;color:#fff;border:1px solid #fff;}
   .is-disabled:hover{background: #7abafc;color:#fff;border:1px solid #fff;}
+  textarea:focus{outline: none !important; border: #2a8ce7 1px solid; box-shadow: none; }
 </style>

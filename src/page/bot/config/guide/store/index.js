@@ -65,8 +65,8 @@ const store = new Vuex.Store({
   },
   mutations: {
     [REPLACE] (state, payload) { //更新所有一层数据
-      state.app = {
-        ...state.app,
+      state = {
+        ...state,
         ...payload
       }
     },
