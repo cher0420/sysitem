@@ -13,7 +13,7 @@
             <img src="../../../../assets/guide/微信端.png" alt="">
             <p class="center">微信端</p>
           </div>
-          <p class="guide text">您好，请问有什么能帮助您？ <br>
+          <p class="guide text">您好，请问有什么能帮助您?<br>
             您可以尝试这样问我： <br>
             引导问题1<br>
             引导问题2<br>
@@ -66,7 +66,7 @@
   import KnowledgeStore from './knowledgeStore'
   import TapItem from './TapItem'
   import store from './store'
-  import {UPDATE, FILTER} from "./store/mutations";
+  import {UPDATE, FILTER, DETAILS,APP} from "./store/mutations";
   import { GETSERVICE ,UPDATESERVICE,ADDQUESTION,CHECKQUERY,UPDATEQUESTION,DELETEALL} from "../../../../constants/api.js";
   import { mapGetters, mapActions } from "vuex";
   import { request } from "../../../../serive/request";
@@ -81,8 +81,9 @@
         stopIt:true,
         getAnswer:'',
         textTotal:0,
-        checked1: true,
-        checked2: true,
+        checked1: true, //webchat
+        checked2: true, //wechat
+        Channels :['wechat','webchat'],
       }
     },
     created() {
@@ -100,8 +101,8 @@
       init() {
         this.tableData = []
         this.total = 0
+        // const ID= '254b7095-0281-4fab-b27f-9f080f063684'
       },
-
       getStatue(){
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const params = {
@@ -123,12 +124,9 @@
       },
       start(){
         const that =this
-        //id从哪里来 sessionStorage.getItem('ID')
-        const ID = this.$route.query.recordId
-        console.log(ID)
+        const ID = store.state.app.Data.Data.ID
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const Enable = true
-        console.log(BotConfigId)
+        const Enable = false
 
         const params = {
           headers:{
@@ -141,12 +139,15 @@
         }
 
         request(UPDATESERVICE, params).then(res => {
-          // console.log(res, '11111')
+          console.log(res.Data, '11111')
+          //修改enable状态 为true
+           store.dispatch(DETAILS,{Enable:res.Data}).then(
+            () =>{
+               console.log(store.state.app.Data)
+            }
+          )
 
         });
-
-
-
         this.disabled =true
         this.changeIt=true
         this.stopIt=false
@@ -156,12 +157,12 @@
         this.changeIt=false
         this.stopIt=true
       },
+      //查询
       checkData(){
         const that = this;
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-
-        console.log('1', '')
+        //'254b7095-0281-4fab-b27f-9f080f063684'
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
@@ -173,14 +174,19 @@
         }
 
         request(CHECKQUERY, params).then(res => {
-          console.log(res)
-          if (res.data==null) {
-            console.log('null', '')
-          } else {
-            console.log(res, '')
-            //保存Id 读取数据
-            const ID =  sessionStorage.getItem('ID')
-          }
+
+          store.dispatch(APP,{Data:res.Data}).then(
+            () =>{
+              console.log('=====',store.state.app)
+            }
+          )
+          // if (res.data==null) {
+          //   console.log('null', '')
+          // } else {
+          //   //保存Id 读取数据
+          //   const ID =  sessionStorage.getItem('ID')
+
+          // }
 
         });
 
@@ -206,14 +212,20 @@
         request(GETSERVICE, params).then(res => {
           const ID=res.Data.ID
           console.log(ID)
+          console.log(res)
+          //存ID和enable
+          store.dispatch(DETAILS,{Data:res.Data}).then(
+            () =>{
+              console.log('=====',store.state.app)
+            }
+          )
 
         })
 
       },
       clearAll(){
         console.log('clear', '')
-        const ID=sessionStorage.getItem('ID')
-
+        const ID = '305a1539-dd6b-4b92-bc15-72b6a23f572a'//store.state.app.Data.Data.ID
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
@@ -235,9 +247,8 @@
 
       },
       save(){
-        console.log('laile', '')
-        const Id=sessionStorage.getItem('ID')
-        if (Id === "") {
+        const ID = store.state.app.Data.ID
+        if (ID === "") {
           //add
           this.addQuestion()
         } else {
@@ -249,10 +260,11 @@
       addQuestion(){
         console.log('add')
         const that = this
-        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const  ID = store.state.app.Data.ID
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const GuideDescription= this.getAnswer
-        const QuestionDetails =''
+        const Channels=[]
+        const QuestionDetails = store.state.dataAll.tableData
 
         const params = {
           headers:{
@@ -272,10 +284,19 @@
 
       updateQuestion(){
         console.log('update')
+        const  ID = store.state.app.Data.ID
+        console.log(ID)
         const id = JSON.parse(sessionStorage.getItem('recordId'))
-        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        const BotConfigId = id?id:this.$route.query.recordId
         const GuideDescription= this.getAnswer
-        const QuestionDetails =''
+        let Channels=[]
+        if(this.checked1){
+          Channels.push('webchat')
+        }
+        if(this.checked2){
+          Channels.push('wechat')
+        }
+        const QuestionDetails = store.state.app.Data.Details
 
         const params = {
           headers:{
@@ -283,20 +304,32 @@
           },
           method: 'POST',
           body: JSON.stringify({
-            BotConfigId
+            BotConfigId,GuideDescription,Channels,QuestionDetails,ID
           })
         }
         request(UPDATEQUESTION, params).then(res => {
           const ID=res.Data.ID
-          console.log(ID)
+          // console.log(ID)
 
         })
       },
 
       openKnowLedgeStore(){
-        const length = store.state.app.Data.Details.length
+        const details = store.state.app.Data.Details
+        const tableData = store.state.dataAll.tableData
+        tableData.forEach(
+          (item, index) => {
+            details.forEach(
+              (v, i) => {
+                if(v.QuestionId === item.ID){
+                  item.checked = true
+                }
+              }
+            )
+          }
+        )
         store.dispatch( UPDATE, {isSpread: true} )
-        store.dispatch( FILTER, {total: length} )
+        store.dispatch( FILTER, {total: details.length,tableData } )
       }
     }
   }

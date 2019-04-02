@@ -172,21 +172,33 @@
         )
       },
       showHasChecked(){
-        if(this.total){
-          const element = document.getElementById('scroll-container')
-          const options = {
-            target:element
-          }
+        // if(this.total){
+          // const element = document.getElementById('scroll-container')
+          // const options = {
+          //   target:element
+          // }
           // let loadingInstance = Loading.service(options);
           if(this.showTotal){
-            this.showTotal = false
-            const tableData = this.tableData.filter(
-              (item,index) =>{
-                if(item.checked)
-                return item;
-              }
-            )
-            store.dispatch(FILTER, {tableData})
+            if(this.total){
+              this.showTotal = false
+              const details = store.state.app.Data.Details
+              details.forEach(
+                (item,index) => {
+                  item.checked = true
+                  item.IntentName = item.Question
+                }
+              )
+              const templateTableData = [...this.tableData, ...details]
+
+              const tableData = templateTableData.filter(
+                (item,index) =>{
+                  if(item.checked)
+                    return item;
+                }
+              )
+              store.dispatch(FILTER, {tableData})
+            }
+
           }else{
             this.showTotal = true
             const tableData = this.originData.slice(0)
@@ -202,12 +214,12 @@
             )
 
           }
-          setTimeout(
-            () =>{
-              // loadingInstance.close()
-            }, 300
-          )
-        }
+          // setTimeout(
+          //   () =>{
+          //     // loadingInstance.close()
+          //   }, 300
+          // )
+        // }
       },
       throttle(method, context) { //函数节流
         if(this.hasLoadingAllData){
@@ -219,11 +231,10 @@
         }, 1000);
       },
       handleScroll(){
-
         if(this.getListLoading) return; //函数防抖
         this.throttle(this.get)
       },
-      async get(){
+      get(){
         this.getListLoading = true
         const scrollContainer = document.getElementById('scroll-container')
         const trueHeight = scrollContainer.scrollHeight
@@ -251,10 +262,15 @@
             }else{
               that.hasLoadingAllData = false
             }
-            const originData = store.state.dataAll.originData.push(res.Data)
-            const tableData = store.state.dataAll.tableData.push(res.Data)
+            const originData = store.state.dataAll.originData
+            const tableData = store.state.dataAll.tableData
+
             store.dispatch(
-              FILTER, { tableData, originData}
+              FILTER, { tableData:[...tableData,...res.Data], originData:[...originData,...res.Data]}
+            ).then(
+              () => {
+
+              }
             )
           }
         ).catch(
@@ -268,10 +284,8 @@
             )
           }
         )
-        const res = await this.getIntentName()
-        console.log(res)
+
         if(height < this.tableData.length*40){
-          this.tableData = [...this.tableData]
           this.getListLoading = false
           console.log('到底了')
         }else{
@@ -289,41 +303,41 @@
             v.Question = v.IntentName
           }
         )
-        let details = store.state.app.Data.Details
-        let total = store.state.dataAll.total
+        // let details = store.state.app.Data.Details
+        // let total = store.state.dataAll.total
 
-        const newArr = details.slice(0)
-        let temporary = []
-        for(let v of newArr){
-          temporary.push(v.QuestionId)
-        }
-        const arr = data.filter(
-          (v) => {
-            if( !temporary.includes(v.QuestionId)){
-              return v
-            }
-          }
-        )
+        // const newArr = details.slice(0)
+        // let temporary = []
+        // for(let v of newArr){
+        //   temporary.push(v.QuestionId)
+        // }
+        // const arr = data.filter(
+        //   (v) => {
+        //     if( !temporary.includes(v.QuestionId)){
+        //       return v
+        //     }
+        //   }
+        // )
 
-        if(total <= 5) {
-          details = [...details, ...arr]
-        }else{
-          details = data
-        }
+        // if(total <= 5) {
+        //   details = [...details, ...arr]
+        // }else{
+        //   details = data
+        // }
 
 
         // store.dispatch(
         //   REPLACE, {loadingInstance}
         // ).then(
         //   () => {
-            setTimeout(
-              () => {
+        //     setTimeout(
+        //       () => {
                 // loadingInstance.close()
                 store.dispatch(
-                  DETAILS, { Details: details }
+                  DETAILS, { Details: data }
                 )
-              }, 500
-            )
+            //   }, 500
+            // )
         //   }
         // )
       },

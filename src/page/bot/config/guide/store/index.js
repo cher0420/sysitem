@@ -1,13 +1,13 @@
 import Vuex from 'vuex'
-import { REPLACE,UPDATE,FILTER,DETAILS } from "./mutations";
+import { REPLACE,UPDATE,FILTER,DETAILS,APP } from "./mutations";
 
 const store = new Vuex.Store({
   state: {
     isSpread: false,
-    Enable: false,
     app:{
       Data:{
-        ID: '',
+        ID: '',//
+        Enable: false,
         BotConfigId: '',
         GuideDescription: '',
         Channels: '',
@@ -17,6 +17,48 @@ const store = new Vuex.Store({
     dataAll:{
       total: 0,
       tableData:[
+        // {
+        //   ID: '1',
+        //   QuestionId: '1',
+        //   Question: '居住证办理1',
+        //   QuestionType: '',
+        //   Sort: 1,
+        // },
+        // {
+        //   ID: '2',
+        //   QuestionId: '2',
+        //   Question: '居住证办理2',
+        //   QuestionType: '',
+        //   Sort: 2,
+        // },
+        // {
+        //   ID: '3',
+        //   QuestionId: '3',
+        //   Question: '居住证办理3',
+        //   QuestionType: '',
+        //   Sort: 3,
+        // },
+        // {
+        //   ID: '4',
+        //   QuestionId: '4',
+        //   Question: '居住证办理4',
+        //   QuestionType: '',
+        //   Sort: 4,
+        // },
+        // {
+        //   ID: '5',
+        //   QuestionId: '5',
+        //   Question: '居住证办理5',
+        //   QuestionType: '',
+        //   Sort: 5,
+        // },
+        // {
+        //   ID: '6',
+        //   QuestionId: '6',
+        //   Question: '居住证办理6',
+        //   QuestionType: '',
+        //   Sort: 6,
+        // }
       ],
       originData:[]
     },
@@ -31,6 +73,12 @@ const store = new Vuex.Store({
     [DETAILS] (state, payload) { //更新详情
       state.app.Data = {
         ...state.app.Data,
+        ...payload
+      }
+    },
+    [APP] (state, payload) { //更新详情
+      state.app = {
+        ...state.app,
         ...payload
       }
     },
@@ -56,6 +104,9 @@ const store = new Vuex.Store({
     },
     [DETAILS] (context, payload){ //更新详情
       context.commit(DETAILS, payload)
+    },
+    [APP] (context, payload){ //更新详情
+      context.commit(APP, payload)
     }
   }
 })

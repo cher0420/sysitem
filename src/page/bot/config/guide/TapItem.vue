@@ -13,7 +13,7 @@
       <transition-group>
         <div v-for="(item, index) in Details" :key="item.QuestionId" class="item">
           <span class="question">{{item.Question}}</span>
-          <span class="del" @click="handleDel(index, item.QuestionId)">
+          <span :class="Enable?['del']:['del','disabled']" @click="handleDel(index, item.QuestionId)">
             <i class="el-icon-close"></i>
             <span class="text">删除</span>
           </span>
@@ -50,35 +50,41 @@
           store.dispatch(DETAILS, { Details: value})
         }
       },
+      /**
+       * @return {boolean}
+       */
+      Enable(){
+        return store.state.app.Data.Enable
+      },
       tableData(){
         return store.state.tableData
       }
     },
     created(){
-      this.getDetail()
+      // this.getDetail()
     },
     methods:{
-      getDetail(){
-        const url = '/api/admin/portal/GuideQuestion/Query'
-        const params = {
-          headers:{
-            'Access-Token':getCookies(TOKEN)
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            BotConfigId: this.$route.query.recordId
-          })
-        }
-        request( url, params ).then(
-          (res) => {
-            if(res.Data){
-              store.dispatch(
-                REPLACE, {Data:res.Data}
-              )
-            }
-          }
-        )
-      },
+      // getDetail(){
+      //   const url = '/api/admin/portal/GuideQuestion/Query'
+      //   const params = {
+      //     headers:{
+      //       'Access-Token':getCookies(TOKEN)
+      //     },
+      //     method: 'POST',
+      //     body: JSON.stringify({
+      //       BotConfigId: this.$route.query.recordId
+      //     })
+      //   }
+      //   request( url, params ).then(
+      //     (res) => {
+      //       if(res.Data){
+      //         store.dispatch(
+      //           REPLACE, {Data:res.Data}
+      //         )
+      //       }
+      //     }
+      //   )
+      // },
       updateDetail(){
         const url = '/api/admin/portal/GuideQuestion/Update'
         const params = {
@@ -97,28 +103,41 @@
         )
       },
       logs(v,all){
-        console.log(this.Details)
-      },
-      handleDel(v, id){
-        this.Details.splice(v,1)
-        store.dispatch(
-          REPLACE,
-          { Details:this.Details }
-        )
-        const tableData = store.state.dataAll.tableData
-        tableData.forEach(
-          (v,index) => {
-            if(v.QuestionId === id){
-              v.checked = false
-            }
-            v.disabled = false
+        const Details = store.state.app.Data.Details
+        Details.forEach(
+          (item,index) =>{
+            item.Sort = index
           }
         )
-        let total =  store.state.dataAll.total
-        console.log(total--)
-        store.commit(
-          FILTER, { tableData,total }
+        store.dispatch(
+          DETAILS, {Details:Details}
         )
+      },
+      handleDel(v, id){
+        if(this.Enable){
+          this.Details.splice(v,1)
+          store.dispatch(
+            REPLACE,
+            { Details: this.Details }
+          )
+          const tableData = store.state.dataAll.tableData
+          tableData.forEach(
+            (v,index) => {
+              if(v.QuestionId === id){
+                v.checked = false
+              }
+              v.disabled = false
+            }
+          )
+          let total =  store.state.dataAll.total
+          total--
+          store.dispatch(
+            FILTER, { tableData,total }
+          )
+        }else{
+          return
+        }
+
       },
       showLoading(){
         const target = document.getElementById('item-container')
