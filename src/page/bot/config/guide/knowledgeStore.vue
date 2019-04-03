@@ -317,11 +317,7 @@
                 }
               )
 
-              store.dispatch(FILTER, {tableData}).then(
-                () => {
-                 console.log(store.state.dataAll.tableData)
-                }
-              )
+              store.dispatch(FILTER, {tableData})
             }
 
           }else{
@@ -435,9 +431,6 @@
 
         if(height < this.tableData.length*40){
           this.getListLoading = false
-          console.log('到底了')
-        }else{
-          console.log('没到底哦')
         }
       },
       showLoading(data){
