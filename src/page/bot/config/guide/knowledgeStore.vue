@@ -74,7 +74,7 @@
       store.dispatch(UPDATE, {isSpread: false})
       store.dispatch(APP, {Data: {
         ID: '',//
-          Enable: false,
+
           BotConfigId: '',
           GuideDescription: '',
           Channels: '',
@@ -303,6 +303,7 @@
         const total = store.state.dataAll.total
 
         if(this.showTotal){
+          this.hasLoadingAllData = true
             if(this.total){
               this.showTotal = false
               const details = store.state.app.Data.Details
@@ -315,17 +316,19 @@
                     return item;
                 }
               )
-              store.dispatch(FILTER, {tableData})
+
+              store.dispatch(FILTER, {tableData}).then(
+                () => {
+                 console.log(store.state.dataAll.tableData)
+                }
+              )
             }
 
           }else{
+            this.hasLoadingAllData = false
             this.showTotal = true
             const tableData = store.state.dataAll.originData.slice(0)
-            tableData.forEach(
-              (v,index) => {
 
-              }
-            )
             if(total<5){
               tableData.forEach(
                 (v, index) => {
@@ -414,7 +417,7 @@
               FILTER, { tableData:newTable, originData:newOrigin}
             ).then(
               () => {
-
+                that.getListLoading = false
               }
             )
           }

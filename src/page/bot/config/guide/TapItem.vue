@@ -60,31 +60,7 @@
         return store.state.tableData
       }
     },
-    created(){
-      // this.getDetail()
-    },
     methods:{
-      // getDetail(){
-      //   const url = '/api/admin/portal/GuideQuestion/Query'
-      //   const params = {
-      //     headers:{
-      //       'Access-Token':getCookies(TOKEN)
-      //     },
-      //     method: 'POST',
-      //     body: JSON.stringify({
-      //       BotConfigId: this.$route.query.recordId
-      //     })
-      //   }
-      //   request( url, params ).then(
-      //     (res) => {
-      //       if(res.Data){
-      //         store.dispatch(
-      //           REPLACE, {Data:res.Data}
-      //         )
-      //       }
-      //     }
-      //   )
-      // },
       updateDetail(){
         const url = '/api/admin/portal/GuideQuestion/Update'
         const params = {
