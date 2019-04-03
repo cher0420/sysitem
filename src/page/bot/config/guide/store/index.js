@@ -16,6 +16,7 @@ const store = new Vuex.Store({
     },
     dataAll:{
       total: 0,
+      totalTable:[],
       tableData:[
         // {
         //   ID: '1',

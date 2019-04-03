@@ -3,13 +3,13 @@
     <section class="padding-30">
       <title-item title="知识库"/>
       <section class="button-group"><el-input class='searchInput middle' style="width:28%" size = 'small' v-model="IntentName" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
-      </el-input><el-button :class="total?['middle', 'margin-20', 'big-button','has-checked']:['middle', 'margin-20', 'big-button']" @click="showHasChecked">{{showTotal?'已选':'返回'}}（{{total}}/5）</el-button><el-button type="primary" @click="add">添加</el-button>
+      </el-input><el-button v-model='showTotal' :class="total?['middle', 'margin-20', 'big-button','has-checked']:['middle', 'margin-20', 'big-button']" @click="showHasChecked">{{showTotal?'已选':'返回'}}（{{total}}/5）</el-button><el-button type="primary" @click="add">添加</el-button>
       </section>
     </section>
     <section class="hinge" @click="spread"><i class="el-icon-d-arrow-right"></i></section>
     <section class="padding-30">
       <section class="scroll-container" id="scroll-container" @scroll="handleScroll">
-        <section v-for="(item, index) in tableData" :key="item.ID" :class="index%2 !== 0?['even']:'odd'">
+        <section v-for="(item, index) in tableData" :key="index" :class="index%2 !== 0?['even']:'odd'">
           <span class="checked-box-container">
             <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox(index,item.checked)"></el-checkbox>
           </span>
@@ -84,10 +84,10 @@
     methods: {
       search(){
         this.PageIndex = 1
-        this.getIntentName()
-      },
-       getIntentName(){
+        this.showTotal = true
         const that = this
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
         const url = '/api/admin/portal/guideQuestion/queryIntent'
         const params = {
           headers:{
@@ -95,7 +95,7 @@
           },
           method: 'POST',
           body: JSON.stringify({
-            BotConfigId: this.$route.query.recordId,
+            BotConfigId: recordId,
             IntentName: this.IntentName,
             PageIndex: this.PageIndex,
             PageSize: 10,
@@ -104,10 +104,121 @@
         }
         request(url, params).then(
           (res) => {
+            const details = store.state.app.Data.Details
+            const total = details.length
+
+            let template = []
+            for(let v of details.values()){
+              template.push(v.QuestionId)
+            }
+            if(!that.IntentName){
+              let templateArr = []
+              for(let v of res.Data.values()){
+                templateArr.push(v.QuestionId)
+              }
+              details.forEach(
+                (v,index) => {
+                  if(!templateArr.includes(v.QuestionId)){
+                    v.ID = v.QuestionId
+                    v.IntentName = v.Question
+                    v.checked = true
+                    res.Data.unshift(v)
+                  }
+                }
+              )
+            }
+
+            const resArr = res.Data.filter(
+              ( item, index ) => {
+                item.QuestionId = item.ID
+                item.Question = item.IntentName
+                item.checked = template.includes(item.QuestionId);
+                // if(that.showTotal){
+                  if(total>=5){
+                    item.disabled = !item.checked
+                  }else{
+                    item.disabled = false
+                  }
+                  return item
+              }
+            )
+
+
+            if(res.Data.length<10){
+              that.hasLoadingAllData = true
+            }else{
+              that.hasLoadingAllData = false
+            }
+
+            const templateData = store.state.dataAll.originData
+            let values = []
+            for(let v of templateData.values()){
+              values.push(v.QuestionId)
+            }
+            const newArr = res.Data.filter(
+              (v,index) => {
+                if(!values.includes(v.QuestionId)){
+                  return v
+                }
+              }
+            )
+            let  originData = [...templateData,...newArr]
+
+            store.dispatch(
+              FILTER, { tableData: resArr, originData: originData, total}
+            )
+          }
+        ).catch(
+          () => {
+            that.$message(
+              {
+                type:'error',
+                message: '意图列表获取失败，请稍后重试',
+                duration: 2000
+              }
+            )
+          }
+        )
+      },
+      getIntentName(){
+        const that = this
+         const id = JSON.parse(sessionStorage.getItem('recordId'))
+         const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
+        const url = '/api/admin/portal/guideQuestion/queryIntent'
+        const params = {
+          headers:{
+            'Access-Token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotConfigId: recordId,
+            IntentName: this.IntentName,
+            PageIndex: this.PageIndex,
+            PageSize: 10,
+          })
+
+        }
+        request(url, params).then(
+          (res) => {
+            const details = store.state.app.Data.Details
+            const total = details.length
+
+            let template = []
+            for(let v of details.values()){
+              template.push(v.QuestionId)
+            }
             res.Data.forEach(
               ( item, index ) => {
                 item.QuestionId = item.ID
                 item.Question = item.IntentName
+                item.checked = template.includes(item.QuestionId);
+
+                if(total>=5){
+                  item.disabled = !item.checked
+                }else{
+                  item.disabled = false
+                }
+
               }
             )
             if(res.Data.length<10){
@@ -115,8 +226,9 @@
             }else{
               that.hasLoadingAllData = false
             }
+
             store.dispatch(
-              FILTER, { tableData: res.Data, originData: res.Data}
+              FILTER, { tableData: res.Data, originData: res.Data, total}
             )
           }
         ).catch(
@@ -188,32 +300,16 @@
         )
       },
       showHasChecked(){
-          if(this.showTotal){
+        const total = store.state.dataAll.total
+
+        if(this.showTotal){
             if(this.total){
               this.showTotal = false
               const details = store.state.app.Data.Details
-              details.forEach(
-                (item,index) => {
-                  item.checked = true
-                  item.IntentName = item.Question
-                }
-              )
 
-              const templateData = store.state.dataAll.tableData
-              let template = []
-              for(let v of details.values()){
-                template.push(v.QuestionId)
-              }
-              const table = templateData.filter(
-                (v,index) => {
-                  if(v.checked && !template.includes(v.QuestionId)){
-                    return v
-                  }
-                }
-              )
+              const templateData = store.state.dataAll.originData
 
-              const templateTableData = [...table, ...details]
-              const tableData = templateTableData.filter(
+              const tableData = templateData.filter(
                 (item,index) =>{
                   if(item.checked)
                     return item;
@@ -224,14 +320,13 @@
 
           }else{
             this.showTotal = true
-            const tableData = this.originData.slice(0)
-
+            const tableData = store.state.dataAll.originData.slice(0)
             tableData.forEach(
               (v,index) => {
 
               }
             )
-            if(this.total<5){
+            if(total<5){
               tableData.forEach(
                 (v, index) => {
                   v.disabled = false
@@ -243,12 +338,7 @@
             )
 
           }
-          // setTimeout(
-          //   () =>{
-          //     // loadingInstance.close()
-          //   }, 300
-          // )
-        // }
+
       },
       throttle(method, context) { //函数节流
         if(this.hasLoadingAllData){
@@ -272,13 +362,15 @@
         this.PageIndex++
         const that = this
         const url = '/api/admin/portal/guideQuestion/queryIntent'
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
         const params = {
           headers:{
             'Access-Token': getCookies(TOKEN)
           },
           method: 'POST',
           body: JSON.stringify({
-            BotConfigId: that.$route.query.recordId,
+            BotConfigId: recordId,
             IntentName: that.IntentName,
             PageIndex: that.PageIndex,
             PageSize: 10,
@@ -286,16 +378,40 @@
         }
         request(url, params).then(
           (res) => {
-            if(res.Data.length<10){
-              that.hasLoadingAllData = true
-            }else{
-              that.hasLoadingAllData = false
-            }
+
+            that.hasLoadingAllData = res.Data.length < 10;
+            const total = store.state.dataAll.total
+
+              res.Data.forEach(
+                (v,index) => {
+                  v.QuestionId = v.ID
+                  v.Question = v.IntentName
+                  if(total>=5){
+                    v.disabled = true
+                  }
+                }
+              )
+
+
+            const table = store.state.dataAll.tableData
             const originData = store.state.dataAll.originData
-            const tableData = store.state.dataAll.tableData
+
+            let values = []
+            for(let v of table.values()){
+              values.push(v.QuestionId)
+            }
+            const someData = res.Data.filter(
+              (v,index) => {
+                if(!values.includes(v.QuestionId)){
+                  return v
+                }
+              }
+            )
+            const newTable = [...table,...someData]
+            const newOrigin = [...originData,...someData]
 
             store.dispatch(
-              FILTER, { tableData:[...tableData,...res.Data], originData:[...originData,...res.Data]}
+              FILTER, { tableData:newTable, originData:newOrigin}
             ).then(
               () => {
 

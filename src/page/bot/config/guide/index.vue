@@ -10,7 +10,7 @@
         </div>
         <section class="way">
           <div style="margin-right:60px">
-            <img src="../../../../assets/guide/微信端.png" alt="">
+            <img src="../../../../assets/guide/weChat.png" alt="">
             <p class="center">微信端</p>
           </div>
           <p class="guide text">您好，请问有什么能帮助您?<br>
@@ -20,7 +20,7 @@
             引导问题3<br>
             ...</p>
           <div style="margin-left:60px">
-            <img src="../../../../assets/guide/网页端.png" alt="">
+            <img src="../../../../assets/guide/webChat.png" alt="">
             <p class="center">网页端</p>
           </div>
         </section>
@@ -30,7 +30,6 @@
     <section class="startIt">
     </section>
     <section style="margin-top: -67px;">
-
 
       <section class="title">
         <div class="line"></div>
@@ -349,29 +348,111 @@
 
         })
       },
+      getIntentName(){
+        const that = this
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
+        const url = '/api/admin/portal/guideQuestion/queryIntent'
+        const params = {
+          headers:{
+            'Access-Token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotConfigId: recordId,
+            IntentName: '',
+            PageIndex: 1,
+            PageSize: 10,
+          })
 
-      openKnowLedgeStore(){
-        const details = store.state.app.Data.Details
-        const tableData = store.state.dataAll.tableData
-        let template = []
-        for(let v of details.values()){
-          template.push(v.QuestionId)
         }
-        tableData.forEach(
-          (item, index) => {
-            if(template.includes(item.QuestionId)){
-              item.checked = true
-            }else{
-              item.checked = false
+        request(url, params).then(
+          (res) => {
+            const details = store.state.app.Data.Details
+            const tableData = res.Data
+            let template = []
+            for(let v of details.values()){
+              template.push(v.QuestionId)
             }
-            if(details.length>=5){
-              item.disabled = !item.checked
+            tableData.forEach(
+              (item, index, arr) => {
+                item.QuestionId = item.ID
+                item.Question = item.IntentName
+                if(template.includes(item.QuestionId)){
+                  item.checked = true
+                }else{
+                  item.checked = false
+                }
+                if(details.length>=5){
+                  item.disabled = !item.checked
+                }
+              }
+            )
+            const tableArr = []
+            for(let v of tableData.values()){
+              tableArr.push(v.QuestionId)
             }
+            details.forEach(
+              (v,index) => {
+                if(!tableArr.includes(v.QuestionId)){
+                  v.ID = v.QuestionId
+                  v.IntentName = v.Question
+                  v.checked = true
+                  tableData.unshift(v)
+                }
+              }
+            )
+            store.dispatch( UPDATE, {isSpread: true} )
+            store.dispatch( FILTER, {total: details.length,tableData, originData:  tableData} )
+          }
+        ).catch(
+          () => {
+            that.$message(
+              {
+                type:'error',
+                message: '意图列表获取失败，请稍后重试',
+                duration: 2000
+              }
+            )
           }
         )
-        console.log(tableData)
-        store.dispatch( UPDATE, {isSpread: true} )
-        store.dispatch( FILTER, {total: details.length,tableData, originData:  tableData} )
+      },
+      openKnowLedgeStore(){
+        this.getIntentName()
+        // const details = store.state.app.Data.Details
+        // const tableData = store.state.dataAll.tableData
+        // let template = []
+        // for(let v of details.values()){
+        //   template.push(v.QuestionId)
+        // }
+        // tableData.forEach(
+        //   (item, index, arr) => {
+        //     if(template.includes(item.QuestionId)){
+        //       item.checked = true
+        //     }else{
+        //       item.checked = false
+        //     }
+        //     if(details.length>=5){
+        //       item.disabled = !item.checked
+        //     }
+        //   }
+        // )
+        // const tableArr = []
+        // for(let v of tableData.values()){
+        //   tableArr.push(v.QuestionId)
+        // }
+        // details.forEach(
+        //   (v,index) => {
+        //     if(!tableArr.includes(v.QuestionId)){
+        //       v.ID = v.QuestionId
+        //       v.IntentName = v.Question
+        //       v.checked = true
+        //       tableData.unshift(v)
+        //     }
+        //   }
+        // )
+        // store.dispatch( UPDATE, {isSpread: true} )
+        // store.dispatch( FILTER, {total: details.length,tableData, originData:  tableData} )
       }
     }
   }
