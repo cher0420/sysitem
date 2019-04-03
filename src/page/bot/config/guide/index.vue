@@ -24,49 +24,45 @@
             <p class="center">网页端</p>
           </div>
         </section>
-        <div style="text-align:center;"><el-button  class="open" @click="mask">我知道了</el-button></div>
+        <div style="text-align:center;"><el-button  class="open" @click="checkService">我知道了</el-button></div>
       </div>
     </section>
     <section class="startIt">
     </section>
-    <section style="margin-top: -67px;">
+    <section class="title">
+      <div class="line"></div>
+      引导问题 <span @click="why" class="state"><i class="el-icon-question"></i>什么是引导问题？</span>
+      <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
+      <span class="stopBtn" v-show='!stopIt' >
+        <el-button class="off"  @click="stop">停用</el-button>
+        <el-button class="on"  @click="clearAll" :disabled="disable||!clearBtn">清空数据</el-button>
+    </span>
 
-      <section class="title">
-        <div class="line"></div>
-        引导问题 <span @click="why" class="state"><i class="el-icon-question"></i>什么是引导问题？</span>
-        <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
-        <span class="stopBtn" v-show='!stopIt' >
-          <el-button class="off"  @click="stop">停用</el-button>
-          <el-button class="on"  @click="clearAll">清空数据</el-button>
-      </span>
-
-      </section>
-      <section class="config">引导语设置</section>
-      <!-- <textarea name="" id="" cols="90" rows="5" class="area" placeholder="例如：您可以尝试这样问我："></textarea> -->
-      <div class="area">
-          <textarea class="c555" :disabled="disable"
-                    v-model.trim="Guidetext" rows="8" type="text"
-                    @input="getTextTotal" maxlength="50"
-                    placeholder="例如：你可以这样问我" ></textarea>
-        <span>{{textTotal}}/50字</span>
-      </div>
-      <section class="config">选择引导问题（最多5个）</section>
-      <tap-item></tap-item>
-      <el-button class="open" :disabled="!disabled" @click="openKnowLedgeStore">打开知识库</el-button>
-      <section class="config">选择渠道</section>
-      <div class="checkbox">
-        <template>
-          <el-checkbox-group v-model="checkList">
-            <el-checkbox class='checkbox' label="webchat">网页</el-checkbox><br>
-            <el-checkbox class='checkbox' label="wechat">微信</el-checkbox>
-          </el-checkbox-group>
-        </template>
-        <p class="tip"> <i class="el-icon-warning"> </i>默认引导语与引导问题问候语一同出现</p>
-      </div>
-      <el-button class="open save" :disabled="!disabled || !textTotal" @click="save">保存 </el-button>
-      <section style="height: 67px;"></section>
-      <knowledge-store ref="knowledge"/>
     </section>
+    <section class="config">引导语设置</section>
+    <!-- <textarea name="" id="" cols="90" rows="5" class="area" placeholder="例如：您可以尝试这样问我："></textarea> -->
+    <div class="area">
+        <textarea class="c555" :disabled="disable"
+                  v-model.trim="Guidetext" rows="8" type="text"
+                  @input="getTextTotal" maxlength="50"
+                  placeholder="例如：你可以这样问我" ></textarea>
+      <span>{{textTotal}}/50字</span>
+    </div>
+    <section class="config">选择引导问题（最多5个）</section>
+    <tap-item></tap-item>
+    <el-button class="open" :disabled="!disabled" @click="openKnowLedgeStore">打开知识库</el-button>
+    <section class="config">选择渠道</section>
+    <div class="checkbox">
+      <template>
+        <el-checkbox-group v-model="checkList">
+          <el-checkbox class='checkbox' label="webchat" >网页</el-checkbox><br>
+          <el-checkbox class='checkbox' label="wechat" >微信</el-checkbox>
+        </el-checkbox-group>
+      </template>
+      <p class="tip"> <i class="el-icon-warning"> </i>默认引导语与引导问题问候语一同出现</p>
+    </div>
+    <el-button class="open save" :disabled="!disabled || !textTotal || details.length === 0||checkList.length===0" @click="save">保存 </el-button>
+    <knowledge-store ref="knowledge"/>
   </div>
 
 </template>
@@ -74,7 +70,7 @@
   import KnowledgeStore from './knowledgeStore'
   import TapItem from './TapItem'
   import store from './store'
-  import {UPDATE, FILTER, DETAILS,APP} from "./store/mutations";
+  import {UPDATE, FILTER, DETAILS,APP,REPLACE,RESTART} from "./store/mutations";
   import { GETSERVICE ,UPDATESERVICE,ADDQUESTION,CHECKQUERY,UPDATEQUESTION,DELETEALL} from "../../../../constants/api.js";
   import { mapGetters, mapActions } from "vuex";
   import { request } from "../../../../serive/request";
@@ -84,17 +80,22 @@
   export default {
     data() {
       return {
-        change:false,
+        change:true,
         changeIt:false,
         stopIt:true,
         Guidetext:'',
         textTotal:0,
-        checkList: ['wechat','webchat']
+        checkList: ['wechat','webchat'],
+        clearBtn:true
+      }
+    },
+    computed:{
+      details(){
+        return store.state.app.Data.Details
       }
     },
     created() {
       this.checkData()
-      // this.getStatue()
     },
     components:{
       KnowledgeStore,
@@ -107,11 +108,13 @@
       init() {
         this.tableData = []
         this.total = 0
-        // const ID= '254b7095-0281-4fab-b27f-9f080f063684'
+
+
       },
       why(){
         this.change=false
       },
+
       getStatue(){
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const params = {
@@ -133,9 +136,9 @@
       },
       start(){
         const that =this
-        const ID = store.state.app.Data.Data.ID
+        const ID = store.state.app.Data.serviceId
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const Enable = false
+        const Enable = true//store.state.app.Data.Enable
 
         const params = {
           headers:{
@@ -148,11 +151,10 @@
         }
 
         request(UPDATESERVICE, params).then(res => {
-          console.log(res.Data, '11111')
           //修改enable状态 为true
           store.dispatch(DETAILS,{Enable:res.Data}).then(
             () =>{
-              console.log(store.state.app.Data)
+              console.log(store.state.app.Data.Enable)
             }
           )
 
@@ -163,9 +165,10 @@
       },
       stop(){
         const that =this
-        const ID = store.state.app.Data.Data.ID
+        const ID = store.state.app.Data.serviceId
+        console.log(ID)
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const Enable = true
+        const Enable = false //store.state.app.Data.Enable
 
         const params = {
           headers:{
@@ -182,7 +185,8 @@
           //修改enable状态 为false
           store.dispatch(DETAILS,{Enable:false}).then(
             () =>{
-              console.log(store.state.app.Data)
+              console.log(store.state.app.Data.Enable)
+
             }
           )
 
@@ -192,12 +196,35 @@
         this.changeIt=false
         this.stopIt=true
       },
-      //查询
+      onOff(){
+        const that =this
+        const ID = store.state.app.Data.serviceId
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        const Enable = !store.state.app.Data.Enable
+        console.log(this.Enable)
+
+        const params = {
+          headers:{
+            'Access-token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotConfigId,ID,Enable
+          })
+        }
+        request(UPDATESERVICE, params).then(res => {
+          store.dispatch(DETAILS,{Enable:res.Data}).then(
+            () =>{
+              console.log(store.state.app.Data.Enable)
+            }
+          )
+
+        });
+      },
       checkData(){
         const that = this;
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        //'254b7095-0281-4fab-b27f-9f080f063684'
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
@@ -209,142 +236,168 @@
         }
 
         request(CHECKQUERY, params).then(res => {
-          //取数据
-          console.log(res)
           const Guidetext=res.Data.GuideDescription
           this.Guidetext=Guidetext
-          const checkList=res.Data.Channels
-          console.log(checkList,'chushihua')
-
+          const checkList=res.Data.Channels.split("|")
+          this.checkList=checkList
           store.dispatch(APP,{Data:res.Data}).then(
             () =>{
-              console.log('=====',store.state.app)
+              console.log('查询接口取数据',store.state.app)
             }
           )
-
+          this.getTextTotal()
+          if (res.Data==='') {
+            console.log('meishuju')
+            this.change=false
+          } else {
+            this.change=true//不显示遮罩
+            this.disabled =true  //保存不可点  enable为true
+            this.changeIt=true  //开启按钮隐藏
+            this.checkService()
+          }
 
         });
       },
-      mask(){
-        this.change=true
-        // 调用服务状态数据
-        const that = this;
-        const id = JSON.parse(sessionStorage.getItem('recordId'))
-        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const params = {
-          headers:{
-            'Access-token': getCookies(TOKEN)
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            BotConfigId
-          })
+      checkService(){
+    const that = this;
+    const id = JSON.parse(sessionStorage.getItem('recordId'))
+    const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+    const params = {
+      headers:{
+        'Access-token': getCookies(TOKEN)
+      },
+      method: 'POST',
+      body: JSON.stringify({
+        BotConfigId
+      })
+    }
+    request(GETSERVICE, params).then(res => {
+      const ID=res.Data.ID
+      this.Enable=res.Data.Enable
+      console.log(this.Enable,'getserivce')
+      if (this.Enable==true) {
+        this.stopIt=false   //停用和清空按钮
+        this.changeIt=true
+      } else {
+        this.stopIt=true   //停用和清空按钮显示
+        this.changeIt=false  //开启按钮隐藏
+      }
+      store.dispatch(DETAILS,{serviceId:ID,Enable:res.Data.Enable}).then(
+        () =>{
+          //cunzhi
         }
-        request(GETSERVICE, params).then(res => {
-          const ID=res.Data.ID
-          console.log(ID)
-          console.log(res)
-          //存ID和enable
-          store.dispatch(DETAILS,{Data:res.Data}).then(
-            () =>{
-              console.log('=====',store.state.app)
-            }
-          )
+      )
+    })
 
+  },
+  clearAll(){
+    const ID = store.state.app.Data.ID
+    if (store.state.app.Data.ID==='') {
+      this.clearBtn=false
+    } else {
+      const params = {
+        headers:{
+          'Access-token': getCookies(TOKEN)
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          ID
         })
 
-      },
-      clearAll(){
-        console.log('clear', '')
-        const ID = '305a1539-dd6b-4b92-bc15-72b6a23f572a'//store.state.app.Data.Data.ID
-        const params = {
-          headers:{
-            'Access-token': getCookies(TOKEN)
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            ID
-          })
-        }
+      }
 
-        request(DELETEALL, params).then(res => {
-          console.log(res, '11111')
-        });
-      },
-      getTextTotal() {
-        this.textTotal =this.Guidetext.length;
-      },
-      save(){
-        const ID = store.state.app.Data.ID
-
-        console.log(this.Guidetext)
-        if (ID === "") {
-          //add
-          this.addQuestion()
-        } else {
-          //updata
-          this.updateQuestion();
-        }
-        store.dispatch(DETAILS,{GuideDescription:this.Guidetext}).then(
+      request(DELETEALL, params).then(res => {
+        console.log(res, '11111')
+        store.dispatch(RESTART,{Data:null}).then(
           () =>{
-            console.log('=123434',store.state.app)
+            console.log('1111111',store.state.app)
+            this.Guidetext=store.state.app.Data.GuideDescription
           }
         )
+      });
+      this.clearBtn=false
+    }
 
+  },
+  getTextTotal(){
+    this.textTotal =this.Guidetext.length;
+  },
+  save(){
+    const ID = store.state.app.Data.ID
+    console.log(this.Guidetext)
+    if (ID === "") {
+      //add
+      this.addQuestion()
+    } else {
+      //updata
+      this.updateQuestion();
+    }
+    store.dispatch(DETAILS,{GuideDescription:this.Guidetext}).then(
+      () =>{
+        console.log('=123434',store.state.app)
+      }
+    )
+
+  },
+  addQuestion(){
+    console.log('add')
+    const that = this
+    const  ID = store.state.app.Data.ID
+    const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+    const GuideDescription= this.Guidetext
+    const Channels=this.checkList
+    const QuestionDetails = store.state.dataAll.tableData
+
+    const params = {
+      headers:{
+        'Access-token': getCookies(TOKEN)
       },
-      addQuestion(){
-        console.log('add')
-        const that = this
-        const  ID = store.state.app.Data.ID
-        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const GuideDescription= this.Guidetext
-        const Channels=this.checkList
-        const QuestionDetails = store.state.dataAll.tableData
+      method: 'POST',
+      body: JSON.stringify({
+        BotConfigId,GuideDescription,QuestionDetails
+      })
+    }
+    request(GETSERVICE, params).then(res => {
+      const ID=res.Data.ID
+      console.log(Id)
+      sessionStorage.setItem("ID");
 
-        const params = {
-          headers:{
-            'Access-token': getCookies(TOKEN)
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            BotConfigId,GuideDescription,QuestionDetails
-          })
-        }
-        request(GETSERVICE, params).then(res => {
-          const ID=res.Data.ID
-          console.log(Id)
-          sessionStorage.setItem("ID");
-        })
+    })
+  },
+  updateQuestion(){
+
+    const  ID = store.state.app.Data.ID
+    const id = JSON.parse(sessionStorage.getItem('recordId'))
+    const BotConfigId = id?this.$route.query.recordId:id
+    const GuideDescription= this.Guidetext
+    let Channels=this.checkList
+
+    const QuestionDetails = store.state.app.Data.Details
+    QuestionDetails.forEach(
+      (v,index) => {
+        v.Sort = index
+      }
+    )
+
+
+    const params = {
+      headers:{
+        'Access-token': getCookies(TOKEN)
       },
+      method: 'POST',
+      body: JSON.stringify({
+        BotConfigId,GuideDescription,Channels,QuestionDetails,ID
+      })
+    }
+    request(UPDATEQUESTION, params).then(res => {
 
-      updateQuestion(){
-        console.log('update')
-        const  ID = store.state.app.Data.ID
-
-        const id = JSON.parse(sessionStorage.getItem('recordId'))
-        const BotConfigId = id?this.$route.query.recordId:id
-        const GuideDescription= this.Guidetext
-        let Channels=this.checkList
-
-        const QuestionDetails = store.state.app.Data.Details
-
-        const params = {
-          headers:{
-            'Access-token': getCookies(TOKEN)
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            BotConfigId,GuideDescription,Channels,QuestionDetails,ID
-          })
-        }
-        request(UPDATEQUESTION, params).then(res => {
-          const ID=res.Data.ID
-
-          this.$message({
-            type: 'success',
-            message: '保存成功',
-            duration: 2000
-          })
+          this.$message(
+            {
+              type: 'success',
+              message: '保存成功',
+              duration: 2000
+            }
+          )
 
         })
       },
@@ -480,7 +533,7 @@
   .title{border-bottom:1px solid #eaedf1;color: #555;font-size: 24px;  font-family: "Microsoft YaHei";
     span{font-size: 12px;color:#2a8ce7;margin-left:15px;display: inline-block;}
     .on{float: right;background: #2a8ce7;color:#fff;z-index:990;}
-    .off{background: red;color:#fff;float: right;z-index: 888;}
+    .off{background: red;color:#fff;float: right;z-index: 888;margin-left:20px;}
   }
   .open{background: #2a8ce7;color:#fff;border:1px solid #2a8ce7;margin-left: 40px;}
   .config{background:#f9fafc;font-size:16px;margin:30px 0;height: 40px;line-height: 40px;}
@@ -495,7 +548,7 @@
   }
   .stopBtn{display: inline-block;float: right;}
   .save{margin-left:0px;}
-  .is-disabled{background: #7abafc;color:#fff;border:1px solid #fff;}
+  .is-disabled{background: #7abafc!important;color:#fff;border:1px solid #fff;}
   .is-disabled:hover{background: #7abafc;color:#fff;border:1px solid #fff;}
   textarea:focus{outline: none !important; border: #2a8ce7 1px solid; box-shadow: none; }
 </style>

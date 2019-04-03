@@ -230,11 +230,11 @@
       },
       reLoad(){
         const that = this
-        setTimeout(
-          () => {
-            that.webSocketFun()
-          }
-        ), 9000
+        // setTimeout(
+        //   () => {
+        //     that.webSocketFun()
+        //   }
+        // ), 90000
       },
       heartCheck(){
         const that = this
