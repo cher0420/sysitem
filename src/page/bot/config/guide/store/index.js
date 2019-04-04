@@ -1,11 +1,13 @@
 import Vuex from 'vuex'
-import { REPLACE,UPDATE,FILTER,DETAILS,APP } from "./mutations";
+import { RESTART,REPLACE,UPDATE,FILTER,DETAILS,APP } from "./mutations";
 
 const store = new Vuex.Store({
   state: {
     isSpread: false,
+
     app:{
       Data:{
+        serviceId:'',
         ID: '',//
         Enable: false,
         BotConfigId: '',
@@ -65,9 +67,22 @@ const store = new Vuex.Store({
   },
   mutations: {
     [REPLACE] (state, payload) { //更新所有一层数据
-      state = {
-        ...state,
+      state.app = {
+        ...state.app,
         ...payload
+      }
+    },
+    [RESTART] (state, payload) { //RESTART
+      state.app = {
+        Data:{
+          serviceId:'',
+          ID: '',//
+          Enable: false,
+          BotConfigId: '',
+          GuideDescription: '',
+          Channels: '',
+          Details: [],
+        },
       }
     },
     [DETAILS] (state, payload) { //更新详情
@@ -95,6 +110,9 @@ const store = new Vuex.Store({
   actions: {
     [REPLACE] (context, payload) {  // replace
       context.commit(REPLACE, payload)
+    },
+    [RESTART] (context, payload) {  // RESTART
+      context.commit(RESTART, payload)
     },
     [UPDATE] (context, payload){
       context.commit(UPDATE, payload)

@@ -4,7 +4,7 @@
     {{title}}<i class="el-icon-arrow-down el-icon--right"></i>
   </span>
     <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item :command="key" v-for="(value, key, index) in options">{{value}}</el-dropdown-item>
+      <el-dropdown-item :command="key" v-for="(value, key, index) in options" :key="index">{{value}}</el-dropdown-item>
     </el-dropdown-menu>
   </el-dropdown>
 

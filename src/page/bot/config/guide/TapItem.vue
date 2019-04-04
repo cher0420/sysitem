@@ -44,7 +44,7 @@
     computed:{
       Details: {
         get() {
-          return store.state.app.Data.Details
+          return store.state.app.Data&&store.state.app.Data.Details
         },
         set(value) {
           store.dispatch(DETAILS, { Details: value})
@@ -61,23 +61,6 @@
       }
     },
     methods:{
-      updateDetail(){
-        const url = '/api/admin/portal/GuideQuestion/Update'
-        const params = {
-          headers:{
-            'Access-Token':getCookies(TOKEN)
-          },
-          method: "POST",
-          body: JSON.stringify({
-
-          })
-        }
-        request(url, params).then(
-          () => {
-
-          }
-        )
-      },
       logs(v,all){
         const Details = store.state.app.Data.Details
         Details.forEach(

@@ -103,6 +103,8 @@
         response:{ Message: '' },
         uploadResponseStatus: false,
         serverTimeoutObj: null,
+        setInterval: null,
+        reloadNum: 0,
       }
     },
     created() {
@@ -126,6 +128,7 @@
     destroyed(){
       this.webSocket.close()
       store.dispatch( REPLACE, { mainLoading: false } )
+      clearInterval(this.setInterval)
     },
     methods: {
       init() {
@@ -189,9 +192,6 @@
             }
           )
         }
-        else{
-          return
-        }
 
       },
       async getList() {
@@ -230,11 +230,14 @@
       },
       reLoad(){
         const that = this
-        // setTimeout(
-        //   () => {
-        //     that.webSocketFun()
-        //   }
-        // ), 90000
+        that.webSocketFun()
+        this.setInterval = setInterval(
+          () => {
+            that.webSocket.close()
+            that.webSocketFun()
+          }, 1740000
+          // }, 3000
+        )
       },
       heartCheck(){
         const that = this
@@ -264,10 +267,21 @@
       },
       webSocketFun() {
         const that = this
+        if(this.reloadNum >= 10){
+          that.$notify({
+            title: '提示',
+            message: '与服务器连接已安全断开，如需上传文件，请刷新页面',
+            duration: 0,
+          });
+          clearInterval(that.setInterval)
+          return
+        }
+        this.reloadNum++
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
             const agreement = location.host.indexOf('localhost')> -1? 'ws':'wss'
             const url = `${agreement}://${location.host}/api/admin/keyword/ws?BotId=${BotConfigId}`
+            // const url = `ws://192.168.50.198/ws?BotId=${BotConfigId}`
             const token = getCookies(TOKEN)
             that.webSocket = new WebSocket(url, token);
 
