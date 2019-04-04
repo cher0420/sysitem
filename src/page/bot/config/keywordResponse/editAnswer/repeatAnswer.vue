@@ -58,6 +58,7 @@ import {mapGetters,mapActions} from 'vuex';
        },
       keyList() {
       this.keywordlist = sessionStorage.getItem('KeyWord');
+      console.log(this.keywordlist)
       this.getAnswer = sessionStorage.getItem('AnsWer');
       },
 
@@ -78,6 +79,7 @@ import {mapGetters,mapActions} from 'vuex';
      reviseKeyword(){
        const url={path:'/bot/config/keywordResponse/addKeyword',}
        this.$router.push(url)
+       console.log(this.keywordlist)
      },
 
     nextBtn(){
@@ -180,7 +182,7 @@ import {mapGetters,mapActions} from 'vuex';
 <style lang="scss" scoped>
   @import '../../../../../style/index';
  .area{position: relative;width:70%;margin-left:40px;border:1px solid #e5ebf8;}
- .area p{color:#999;z-index: 9999;text-align: right;}
+ .area p{color:#999;z-index: 9999;text-align: right;padding-right: 10px;padding-bottom: 5px;}
  .title{ padding-left:10px; width: 100%; height:36px; line-height: 36px; background: #f9fafc;margin-bottom:30px;}
  .answer-area{height: 300px;outline: none;width: 100%;resize: none; padding:10px;border:none;box-sizing:border-box;}
  .nextBtn{color:#fff;background:#2a8ce7;border:none;margin-top:40px;display: inline-block;}

@@ -75,7 +75,7 @@ const store = new Vuex.Store({
     [RESTART] (state, payload) { //RESTART
       state.app = {
         Data:{
-          serviceId:'',
+          ...state.app.Data,
           ID: '',//
           Enable: false,
           BotConfigId: '',

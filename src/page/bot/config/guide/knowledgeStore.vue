@@ -11,7 +11,7 @@
       <section class="scroll-container" id="scroll-container" @scroll="handleScroll">
         <section v-for="(item, index) in tableData" :key="index" :class="index%2 !== 0?['even']:'odd'">
           <span class="checked-box-container">
-            <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" class="checked-box-container" @change="typeBox(index,item.checked)"></el-checkbox>
+            <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" @change="typeBox(index,item.checked)"></el-checkbox>
           </span>
           <!--<el-tooltip class="item" effect="dark" :content="item.IntentName" placement="top-start">-->
             <section class="title">{{item.IntentName}}</section>
@@ -430,7 +430,6 @@
     position: absolute;
     z-index: 998;
     right: 0;
-    padding:30px 0;
     top: 36px;
     height: 100%;
     max-width: 575px;
@@ -491,10 +490,6 @@
     .margin-20 {
       margin-left: 10px;
     }
-    .container{
-      padding: 30px;
-    }
-
   }
   .scroll-container{
     box-sizing: border-box;
@@ -523,7 +518,7 @@
     .title{
       display: inline-block;
       padding-left: 18px;
-      width: 80%;
+      width: 75%;
       height: 40px;
       line-height: 40px;
       overflow-x: hidden;
