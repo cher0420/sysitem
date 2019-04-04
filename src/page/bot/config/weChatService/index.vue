@@ -165,8 +165,11 @@
   }
 </script>
 <style lang="scss" scoped>
+  @import '../../../../style/var/color';
   $titleBackground: #f9fafc;
-
+  .primary-color{
+    color: $primary-color;
+  }
   .title{
     padding-left:10px;
     width: 100%;

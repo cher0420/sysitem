@@ -828,6 +828,10 @@
 </script>
 <style scoped lang="scss">
   @import '../../../../style/index';
+  @import '../../../../style/var/color';
+  .c333{
+    color: $bold-color;
+  }
   .createAnswer{
     position: absolute;
     width: 100px;

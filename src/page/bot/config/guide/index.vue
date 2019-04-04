@@ -54,7 +54,8 @@
       <el-button class="open" :disabled="!disabled" @click="openKnowLedgeStore">打开知识库</el-button>
       <section class="config">选择渠道</section>
       <div class="checkbox">
-        <template>
+        <template  class="checkbox">
+          <div class="check" v-show="!over"></div>
           <el-checkbox-group v-model="checkList">
             <el-checkbox class='checkbox' label="webchat" >网页</el-checkbox><br>
             <el-checkbox class='checkbox' label="wechat" >微信</el-checkbox>
@@ -84,17 +85,19 @@
     data() {
       return {
         change:true,
+        over:true,
         changeIt:false,
         stopIt:true,
         Guidetext:'',
         textTotal:0,
         checkList: ['wechat','webchat'],
-        clearBtn:true
+        clearBtn:false,
+        loading:true
       }
     },
     computed:{
       details(){
-        return store.state.app.Data.Details
+        return store.state.app.Data.Details&&store.state.app.Data.Details||[]
       }
     },
     created() {
@@ -122,9 +125,8 @@
       },
       start(){
         const ID = store.state.app.Data.serviceId
-        const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const Enable = true //store.state.app.Data.Enable
+        const Enable = true
 
         const params = {
           headers:{
@@ -138,12 +140,7 @@
 
         request(UPDATESERVICE, params).then(res => {
           //修改enable状态 为true
-          store.dispatch(DETAILS,{Enable:res.Data}).then(
-            () =>{
-              console.log(store.state.app.Data.Enable)
-            }
-          )
-
+          store.dispatch(DETAILS,{Enable:res.Data})
         });
         this.disabled =true
         this.changeIt=true
@@ -151,9 +148,8 @@
       },
       stop(){
         const ID = store.state.app.Data.serviceId
-        console.log(ID)
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const Enable = false //store.state.app.Data.Enable
+        const Enable = false
 
         const params = {
           headers:{
@@ -164,9 +160,7 @@
             BotConfigId,ID,Enable
           })
         }
-
         request(UPDATESERVICE, params).then(res => {
-          //修改enable状态 为false
           store.dispatch(DETAILS,{Enable:false})
 
         });
@@ -174,6 +168,7 @@
         this.disabled =false
         this.changeIt=false
         this.stopIt=true
+        this.over=false
       },
       checkData(){
         const id = JSON.parse(sessionStorage.getItem('recordId'))
@@ -191,17 +186,22 @@
         request(CHECKQUERY, params).then(res => {
           const Guidetext=res.Data&&res.Data.GuideDescription
           this.Guidetext=Guidetext
-          const checkList=res.Data&&res.Data.Channels.split("|")
+          const checkList=res.Data?res.Data.Channels.split("|"):[]
           this.checkList=checkList
+          console.log(this.checkList)
           store.dispatch(APP,{Data:res.Data})
           this.checkService()
           this.getTextTotal()
           if (!res.Data) {
             this.change=false
+            this.loading=false
+            this.clearBtn=false
           } else {
             this.change=true//不显示遮罩
             this.disabled =true  //保存不可点  enable为true
             this.changeIt=true  //开启按钮隐藏
+            this.loading=false
+            this.clearBtn=true
           }
 
         });
@@ -225,9 +225,13 @@
           if (this.Enable) {
             this.stopIt=false   //停用和清空按钮
             this.changeIt=true
+            this.disabled =true
+            this.over=true
           } else {
             this.stopIt=true   //停用和清空按钮显示
             this.changeIt=false  //开启按钮隐藏
+            this.disabled =false
+            this.over=false
           }
           store.dispatch(DETAILS,{serviceId:ID,Enable:res.Data.Enable})
         })
@@ -257,19 +261,25 @@
             )
           });
           this.clearBtn=false
+          this.textTotal=0
         }
 
       },
       getTextTotal(){
-        this.textTotal = this.Guidetext&&this.Guidetext.length;
+        if (this.Guidetext==null) {
+          console.log(null)
+
+        } else {
+          console.log('you')
+          console.log(this.Guidetext.length,'total')
+          this.textTotal =this.Guidetext.length;
+        }
       },
       save(){
         const ID = store.state.app.Data.ID
         if (ID === "") {
-          //add
           this.addQuestion()
         } else {
-          //updata
           this.updateQuestion();
         }
         store.dispatch(DETAILS,{GuideDescription:this.Guidetext})
@@ -282,6 +292,13 @@
         const GuideDescription= this.Guidetext
         const QuestionDetails = store.state.dataAll.tableData
 
+        QuestionDetails.forEach(
+          (v,index) => {
+            v.Sort = index
+            delete v.disabled
+            delete v.checked
+          }
+        )
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
@@ -313,6 +330,8 @@
         QuestionDetails.forEach(
           (v,index) => {
             v.Sort = index
+            delete v.disabled
+            delete v.checked
           }
         )
 
@@ -362,40 +381,40 @@
             const tableData = res.Data
             let template = []
 
-              // if(details.length>0){
-                for(let v of details.values()){
-                  template.push(v.QuestionId)
-                }
-              // }
-            // if(res.Data.length>0) {
-              tableData.forEach(
-                (item, index, arr) => {
-                  item.QuestionId = item.ID
-                  item.Question = item.IntentName
-                  item.checked = template.includes(item.QuestionId);
-                  if (details.length >= 5) {
-                    item.disabled = !item.checked
-                  }
-                }
-              )
-              const tableArr = []
-              // if(tableData.length>0){
-                for (let v of tableData.values()) {
-                  tableArr.push(v.QuestionId)
-                }
-              // }
-              details.forEach(
-                (v, index) => {
-                  if (!tableArr.includes(v.QuestionId)) {
-                    v.ID = v.QuestionId
-                    v.IntentName = v.Question
-                    v.checked = true
-                    tableData.unshift(v)
-                  }
-                }
-              )
+            // if(details.length>0){
+            for(let v of details.values()){
+              template.push(v.QuestionId)
+            }
             // }
-              store.dispatch( FILTER, {total: details.length,tableData, originData:  tableData} )
+            // if(res.Data.length>0) {
+            tableData.forEach(
+              (item, index, arr) => {
+                item.QuestionId = item.ID
+                item.Question = item.IntentName
+                item.checked = template.includes(item.QuestionId);
+                if (details.length >= 5) {
+                  item.disabled = !item.checked
+                }
+              }
+            )
+            const tableArr = []
+            // if(tableData.length>0){
+            for (let v of tableData.values()) {
+              tableArr.push(v.QuestionId)
+            }
+            // }
+            details.forEach(
+              (v, index) => {
+                if (!tableArr.includes(v.QuestionId)) {
+                  v.ID = v.QuestionId
+                  v.IntentName = v.Question
+                  v.checked = true
+                  tableData.unshift(v)
+                }
+              }
+            )
+            // }
+            store.dispatch( FILTER, {total: details.length,tableData, originData:  tableData} )
           }
         ).catch(
           () => {

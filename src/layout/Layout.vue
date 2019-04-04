@@ -79,7 +79,11 @@
   }
 </script>
 <style lang="scss" scoped>
-
+  @import '../style/var/color';
+  @import '../style/var/size';
+  .nav-b-color{
+    background: $nav-b-color;
+  }
   .robotDisplayArea {
     float:left;
   }
@@ -96,11 +100,6 @@
     top: 0;
     z-index: 0;
   }
-
-</style>
-<style lang="scss">
-  @import '../style/index';
-
   .nav-height {
     line-height: $nav-height;
   }
@@ -110,11 +109,6 @@
     min-height: 560px;
   }
 
-  .el-main {
-    /*padding-bottom: 130px;*/
-    /*box-sizing: border-box;*/
-  }
-
   .yoy-footer {
     width: 100%;
     bottom: 0;
@@ -122,9 +116,5 @@
     transform: translateX(-50%);
     background: #fff;
   }
-
-  /*
-  二级菜单
-   */
 
 </style>

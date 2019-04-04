@@ -43,9 +43,13 @@
 </script>
 <style lang="scss" scoped>
   @import '../../style/index';
+  @import '../../style/var/color';
+  @import '../../style/var/size';
   $rightEH:60px;
   $rightEW:155px;
-
+  .font-primary{
+    color: $primary-color;
+  }
   .left-0{
     left:0;
   }

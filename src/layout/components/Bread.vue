@@ -71,10 +71,13 @@
 </script>
 <style lang="scss">
   @import '../../style/index';
+  @import '../../style/var/color';
   $bread-background: #2a8ce7;
   $bread-height: 48px;
   $title-height: 65px;
-
+  .primary-color{
+    color: $primary-color;
+  }
   .backHover{
     cursor: pointer;
   }
