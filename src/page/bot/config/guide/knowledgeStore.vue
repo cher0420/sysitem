@@ -32,6 +32,7 @@
   import {UPDATE, APP, FILTER, DETAILS} from "./store/mutations";
   import {request} from "../../../../serive/request";
   import {TOKEN} from "../../../../constants/constants";
+  import {QUERYINTENT, } from "../../../../constants/api";
   import {getCookies} from "../../../../utils/cookie";
 
   export default {
@@ -74,7 +75,6 @@
       store.dispatch(UPDATE, {isSpread: false})
       store.dispatch(APP, {Data: {
         ID: '',//
-
           BotConfigId: '',
           GuideDescription: '',
           Channels: '',
@@ -88,7 +88,7 @@
         const that = this
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
-        const url = '/api/admin/portal/guideQuestion/queryIntent'
+        const url = QUERYINTENT
         const params = {
           headers:{
             'Access-Token': getCookies(TOKEN)
@@ -180,69 +180,6 @@
           }
         )
       },
-      // getIntentName(){
-      //   const that = this
-      //    const id = JSON.parse(sessionStorage.getItem('recordId'))
-      //    const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
-      //   const url = '/api/admin/portal/guideQuestion/queryIntent'
-      //   const params = {
-      //     headers:{
-      //       'Access-Token': getCookies(TOKEN)
-      //     },
-      //     method: 'POST',
-      //     body: JSON.stringify({
-      //       BotConfigId: recordId,
-      //       IntentName: this.IntentName,
-      //       PageIndex: this.PageIndex,
-      //       PageSize: 10,
-      //     })
-      //
-      //   }
-      //   request(url, params).then(
-      //     (res) => {
-      //       const details = store.state.app.Data.Details
-      //       const total = details.length
-      //
-      //       let template = []
-      //       for(let v of details.values()){
-      //         template.push(v.QuestionId)
-      //       }
-      //       res.Data.forEach(
-      //         ( item, index ) => {
-      //           item.QuestionId = item.ID
-      //           item.Question = item.IntentName
-      //           item.checked = template.includes(item.QuestionId);
-      //
-      //           if(total>=5){
-      //             item.disabled = !item.checked
-      //           }else{
-      //             item.disabled = false
-      //           }
-      //
-      //         }
-      //       )
-      //       if(res.Data.length<10){
-      //         that.hasLoadingAllData = true
-      //       }else{
-      //         that.hasLoadingAllData = false
-      //       }
-      //
-      //       store.dispatch(
-      //         FILTER, { tableData: res.Data, originData: res.Data, total}
-      //       )
-      //     }
-      //   ).catch(
-      //     () => {
-      //       that.$message(
-      //         {
-      //           type:'error',
-      //           message: '意图列表获取失败，请稍后重试',
-      //           duration: 2000
-      //         }
-      //       )
-      //     }
-      //   )
-      // },
       spread(){
         store.dispatch(
           UPDATE,

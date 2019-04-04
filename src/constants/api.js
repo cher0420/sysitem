@@ -58,5 +58,6 @@ export const ADDQUESTION = '/api/admin/portal/GuideQuestion/Add';//添加引导�
 export const CHECKQUERY = '/api/admin/portal/GuideQuestion/Query';//查询引导问题
 export const UPDATEQUESTION = '/api/admin/portal/GuideQuestion/Update';//更新引导问题
 export const DELETEALL= '/api/admin/portal/GuideQuestion/Delete';//删除引导问题
+export const QUERYINTENT = '/api/admin/portal/guideQuestion/queryIntent'; //获取意图列表
 
 
