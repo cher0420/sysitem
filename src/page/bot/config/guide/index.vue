@@ -74,7 +74,7 @@
   import KnowledgeStore from './knowledgeStore'
   import TapItem from './TapItem'
   import store from './store'
-  import {UPDATE, FILTER, DETAILS,APP,RESTART} from "./store/mutations";
+  import {UPDATE, FILTER, DETAILS, APP, RESTART} from "./store/mutations";
   import { GETSERVICE ,UPDATESERVICE,CHECKQUERY,UPDATEQUESTION,DELETEALL} from "../../../../constants/api.js";
   import { mapGetters, mapActions } from "vuex";
   import { request } from "../../../../serive/request";
@@ -147,6 +147,7 @@
         this.stopIt=false
       },
       stop(){
+        store.dispatch(UPDATE, {isSpread: false})
         const ID = store.state.app.Data.serviceId
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const Enable = false

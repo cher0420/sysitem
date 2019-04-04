@@ -1,5 +1,6 @@
 <template>
   <el-form ref="ruleForm" :model="ruleForm" :rules="rules"  label-width="200px" v-loading="loading">
+    <nav-title title="基本资料"/>
     <el-form-item label="机器人姓名" prop='Bot_Name'>
       <el-col :span="13">
         <el-input v-model="ruleForm.Bot_Name" maxlength="15" placeholder="请输入2-15个字符以内"></el-input>
@@ -94,6 +95,7 @@
   import moment from 'moment'
   import {REPLACE} from "../../../../store/mutations";
   import store from '../../../../store/index'
+  import NavTitle from '../../../../components/NavTitle'
 
   export default {
     data() {
@@ -164,6 +166,9 @@
           store.dispatch(REPLACE, {mainLoading: false})
         }
       )
+    },
+    components:{
+      NavTitle
     },
     methods: {
       submit(formName) {

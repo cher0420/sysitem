@@ -1,5 +1,6 @@
 <template>
   <div>
+    <nav-title title="网页"/>
     <el-form ref="formData" :rules="rules" label-width="38px" :model="formData" class=" full-height c555 webpage">
       <title-item title="网站中嵌入代码"></title-item>
       <el-form-item label="" class="margin-top30 margin-bottom-30">
@@ -182,6 +183,7 @@
   import store from '../../../../store/index'
   import {REPLACE} from "../../../../store/mutations";
   import Title from '../../../../components/Title'
+  import NavTitle from '../../../../components/NavTitle'
 
   export default {
     data() {
@@ -221,6 +223,7 @@
     computed: {},
     components: {
       Title,
+      NavTitle
     },
     created() {
       store.dispatch(REPLACE, {mainLoading: true, loadingText: null})

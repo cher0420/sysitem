@@ -1,5 +1,6 @@
 <template>
   <section>
+    <nav-title title="机器人列表" />
     <section class="search box-sizing">
       <el-input class='searchInput' size='small' v-model="keyWords" placeholder="搜索机器人名称或描述" @keyup.enter.native="search"><i
         slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
@@ -116,7 +117,8 @@
   import {getCookies} from "../../utils/cookie";
   import {TOKEN} from "../../constants/constants";
   import {getList, reload} from "./service/requestMethod";
-  import DrapDown from '../../components/DrapDown'
+  import DrapDown from '../../components/DrapDown';
+  import NavTitle from '../../components/NavTitle'
 
   export default {
     data() {
@@ -125,6 +127,9 @@
         resizable: false,
         keyWords: null,
       }
+    },
+    components:{
+      NavTitle,
     },
     computed: {
       tableData() {
@@ -136,6 +141,9 @@
       total() {
         return store.state.app.total
       },
+      /**
+       * @return {number}
+       */
       PageIndex() {
         return store.state.app.PageIndex
       }

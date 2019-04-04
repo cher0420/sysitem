@@ -18,14 +18,6 @@
       </el-breadcrumb-item>
 
     </el-breadcrumb>
-
-    {{/* title部分 */}}
-    <section v-if='navIndex' class="yoy-title box-sizing border-bottom text-title">
-      <span class="align-middle dis-i-b line"></span>
-      <span class="align-middle dis-i-b" style="width: 98%;line-height: 1.5">
-        {{navIndex}}
-      </span>
-    </section>
   </section>
 </template>
 <script>
@@ -94,9 +86,6 @@
     background-color: $primary-color;
     margin-right: 6px;
   }
-  .yoy-bread{
-    margin-bottom: 30px;
-  }
   .yoy-bread .el-breadcrumb.single{
     font-size: 14px;
     color: #777;
@@ -126,13 +115,6 @@
         cursor: default;
       }
     }
-  }
-  .yoy-title{
-    padding-top: 7px;
-    margin-left: 40px;
-    margin-right: 40px;
-    height: 100%;
-    word-break: break-all;word-wrap: break-word;
   }
   .yoy-bread {
     .el-breadcrumb.yoy-title{

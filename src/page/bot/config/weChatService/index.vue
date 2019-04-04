@@ -1,5 +1,6 @@
 <template>
   <el-form ref="formData" label-width="120px" :model="formData" class="full-height c555" v-loading="loading">
+    <nav-title title="微信服务号"/>
     <section class="title f-s-16 c555 box-sizing margin-b-30px">
       基础设置
     </section>
@@ -77,6 +78,7 @@
   import {WECHATDETAil,UPDATDETAIL} from "../../../../constants/api";
   import {getCookies} from "../../../../utils/cookie";
   import {TOKEN} from "../../../../constants/constants";
+  import NavTitle from '../../../../components/NavTitle'
 
   const token=getCookies(TOKEN)
 
@@ -94,6 +96,7 @@
       }
     },
     components:{
+      NavTitle
     },
     methods:{
       onSubmit(formName) {

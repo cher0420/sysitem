@@ -1,19 +1,19 @@
 <template>
   <section>
     <section class="full-width text-a-c margin-b-18">
-      <img src="../../assets/wait-logo.png" alt="">
+      <img src="../assets/wait-logo.png" alt="">
     </section>
     <section class="full-width text-a-c c999">
       页面正在搭建中，敬请期待！
     </section>
 
     <section class="full-width text-a-c margin-top-70">
-      <img src="../../assets/wait.png" alt="">
+      <img src="../assets/wait.png" alt="">
     </section>
   </section>
 </template>
-<style lang="scss">
-  @import '../../style/index.scss';
+<style lang="scss" scoped>
+  @import '../style/index.scss';
   .full-width{
     width:100%;
   }
