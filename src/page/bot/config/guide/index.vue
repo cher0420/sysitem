@@ -338,6 +338,8 @@
         })
       },
       getIntentName(){
+        store.dispatch( UPDATE, {isSpread: true} )
+
         const that = this
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
@@ -353,42 +355,47 @@
             PageIndex: 1,
             PageSize: 10,
           })
-
         }
         request(url, params).then(
           (res) => {
-            const details = store.state.app.Data && store.state.app.Data.Details
+            const details = store.state.app.Data.Details?store.state.app.Data.Details:[]
             const tableData = res.Data
             let template = []
-            for(let v of details.values()){
-              template.push(v.QuestionId)
-            }
-            tableData.forEach(
-              (item, index, arr) => {
-                item.QuestionId = item.ID
-                item.Question = item.IntentName
-                item.checked = template.includes(item.QuestionId);
-                if(details.length>=5){
-                  item.disabled = !item.checked
+
+              // if(details.length>0){
+                for(let v of details.values()){
+                  template.push(v.QuestionId)
                 }
-              }
-            )
-            const tableArr = []
-            for(let v of tableData.values()){
-              tableArr.push(v.QuestionId)
-            }
-            details.forEach(
-              (v,index) => {
-                if(!tableArr.includes(v.QuestionId)){
-                  v.ID = v.QuestionId
-                  v.IntentName = v.Question
-                  v.checked = true
-                  tableData.unshift(v)
+              // }
+            // if(res.Data.length>0) {
+              tableData.forEach(
+                (item, index, arr) => {
+                  item.QuestionId = item.ID
+                  item.Question = item.IntentName
+                  item.checked = template.includes(item.QuestionId);
+                  if (details.length >= 5) {
+                    item.disabled = !item.checked
+                  }
                 }
-              }
-            )
-            store.dispatch( UPDATE, {isSpread: true} )
-            store.dispatch( FILTER, {total: details.length,tableData, originData:  tableData} )
+              )
+              const tableArr = []
+              // if(tableData.length>0){
+                for (let v of tableData.values()) {
+                  tableArr.push(v.QuestionId)
+                }
+              // }
+              details.forEach(
+                (v, index) => {
+                  if (!tableArr.includes(v.QuestionId)) {
+                    v.ID = v.QuestionId
+                    v.IntentName = v.Question
+                    v.checked = true
+                    tableData.unshift(v)
+                  }
+                }
+              )
+            // }
+              store.dispatch( FILTER, {total: details.length,tableData, originData:  tableData} )
           }
         ).catch(
           () => {

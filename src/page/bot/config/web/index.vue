@@ -150,7 +150,8 @@
           <span class="p-absolute " style="bottom: 0;color:#c0c4cc;right: -20px;">最多50个字符 &nbsp;</span>
         </section>
       </el-form-item>
-      <title-item title="添加授信域名"></title-item>
+      <title-item title="添加授信域名">
+      </title-item>
       <el-form-item label="" prop="AuthorizedAddress" style="margin-bottom:56px">
         <section style="margin-top: 20px;line-height: 36px;">请添加授信的来访IP地址或需要嵌入的网站域名 <span class="c999">( 当前IP地址：{{ip}} )</span></section>
         <el-row>

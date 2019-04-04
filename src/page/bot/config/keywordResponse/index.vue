@@ -236,7 +236,6 @@
             that.webSocket.close()
             that.webSocketFun()
           }, 1740000
-          // }, 3000
         )
       },
       heartCheck(){
