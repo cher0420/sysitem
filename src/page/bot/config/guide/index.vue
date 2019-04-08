@@ -297,89 +297,121 @@
       },
       addQuestion(){
         const that = this
-        const id = JSON.parse(sessionStorage.getItem('recordId'))
-        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const GuideDescription= this.Guidetext
-        const QuestionDetails = store.state.app.Data.Details
-        const Channels = this.checkList
-        QuestionDetails.forEach(
-          (v,index) => {
-            v.Sort = index
-            delete v.disabled
-            delete v.checked
+        this.$confirm('确定保存以上信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(
+          () => {
+            const id = JSON.parse(sessionStorage.getItem('recordId'))
+            const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+            const GuideDescription= this.Guidetext
+            const Channels = this.checkList
+
+            let QuestionDetails = JSON.parse(JSON.stringify(store.state.app.Data.Details))
+
+            QuestionDetails.forEach(
+              (v,index) => {
+                v.Sort = index
+                delete v.disabled
+                delete v.checked
+              }
+            )
+            const params = {
+              headers:{
+                'Access-token': getCookies(TOKEN)
+              },
+              method: 'POST',
+              body: JSON.stringify({
+                BotConfigId,GuideDescription,QuestionDetails,Channels
+              })
+            }
+            request(ADDQUESTION, params).then(res => {
+              console.log(res.Data)
+
+              store.dispatch(DETAILS,{ID:res.Data})
+
+              that.clearBtn=true
+              that.$message(
+                {
+                  type: 'success',
+                  message: '添加成功',
+                  duration: 2000
+                }
+              )
+            })
+          }
+        ).catch(
+          () => {
+            that.$message(
+              {
+                type: 'success',
+                message: '已取消保存'
+              }
+            )
           }
         )
-        const params = {
-          headers:{
-            'Access-token': getCookies(TOKEN)
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            BotConfigId,GuideDescription,QuestionDetails,Channels
-          })
-        }
-        request(ADDQUESTION, params).then(res => {
-          console.log(res.Data)
 
-          store.dispatch(DETAILS,{ID:res.Data}).then(
-            () =>{
-              console.log('=====',store.state.app)
-            }
-          )
-
-
-          this.clearBtn=true
-          that.$message(
-            {
-              type: 'success',
-              message: '添加成功',
-              duration: 2000
-            }
-          )
-        })
 
       },
       updateQuestion(){
+        const that = this
+        this.$confirm('确定保存以上信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(
+          () => {
+            const  ID = store.state.app.Data.ID
+            const id = JSON.parse(sessionStorage.getItem('recordId'))
+            const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+            const GuideDescription= this.Guidetext
+            let Channels=this.checkList
 
-        const  ID = store.state.app.Data.ID
-        const id = JSON.parse(sessionStorage.getItem('recordId'))
-        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const GuideDescription= this.Guidetext
-        let Channels=this.checkList
+            let QuestionDetails = JSON.parse(JSON.stringify(store.state.app.Data.Details))
 
-        const QuestionDetails = store.state.app.Data.Details
-        QuestionDetails.forEach(
-          (v,index) => {
-            v.Sort = index
-            delete v.disabled
-            delete v.checked
+            QuestionDetails.forEach(
+              (v,index) => {
+                v.Sort = index
+                delete v.disabled
+                delete v.checked
+              }
+            )
+            const params = {
+              headers:{
+                'Access-token': getCookies(TOKEN)
+              },
+              method: 'POST',
+              body: JSON.stringify({
+                BotConfigId,GuideDescription,Channels,QuestionDetails,ID
+              })
+            }
+            request(UPDATEQUESTION, params).then(res => {
+              console.log(store.state.app.Data.Details)
+              that.$message(
+                {
+                  type: 'success',
+                  message: '保存成功',
+                  duration: 2000
+                }
+              )
+
+            })
+          }
+        ).catch(
+          () => {
+            that.$message(
+              {
+                type: 'info',
+                message: '已取消保存',
+                duration: 2000
+              }
+            )
           }
         )
 
-        const params = {
-          headers:{
-            'Access-token': getCookies(TOKEN)
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            BotConfigId,GuideDescription,Channels,QuestionDetails,ID
-          })
-        }
-        request(UPDATEQUESTION, params).then(res => {
-
-          this.$message(
-            {
-              type: 'success',
-              message: '保存成功',
-              duration: 2000
-            }
-          )
-
-        })
       },
       getIntentName(){
-        store.dispatch( UPDATE, {isSpread: true} )
-
         const that = this
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
@@ -399,6 +431,11 @@
         request(url, params).then(
           (res) => {
             const details = store.state.app.Data.Details?store.state.app.Data.Details:[]
+            store.dispatch( FILTER, {total: details.length} ).then(
+              () => {
+                store.dispatch( UPDATE, {isSpread: true} )
+              }
+            )
             const tableData = res.Data
             let template = []
 
@@ -412,12 +449,28 @@
               (item, index, arr) => {
                 item.QuestionId = item.ID
                 item.Question = item.IntentName
+                delete item.Sort
                 item.checked = template.includes(item.QuestionId);
                 if (details.length >= 5) {
                   item.disabled = !item.checked
                 }
               }
             )
+
+            //
+            const hasChecked = store.state.app.Data.Details.filter(
+              (v) => {
+                v.checked = true
+                v.ID = v.QuestionId
+                v.IntentName = v.Question
+                delete v.Sort
+                return v
+              }
+            )
+
+            store.dispatch(FILTER, {hasChecked})
+            //
+
             const tableArr = []
             // if(tableData.length>0){
             for (let v of tableData.values()) {
@@ -430,12 +483,12 @@
                   v.ID = v.QuestionId
                   v.IntentName = v.Question
                   v.checked = true
-                  tableData.unshift(v)
+                  // tableData.unshift(v)
                 }
               }
             )
             // }
-            store.dispatch( FILTER, {total: details.length,tableData, originData:  tableData} )
+            store.dispatch( FILTER, {tableData, originData:  tableData} )
           }
         ).catch(
           () => {
