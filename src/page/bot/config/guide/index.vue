@@ -1,9 +1,9 @@
 <template>
-  <div v-loading="loadingEdit"  class="p-relative">
+  <div v-loading="loading"  class="p-relative">
     <section class="pop" v-show='!change'>
       <div class="location">
         <div class="guide">
-          通过设置引导问题，用户可自定义机器人展示问候语时附加“引导问题”， <br>回复形式为：问候语+引导语+引导问题
+          通过设置引导问题，用户可自定义机器人展示问候语时附加“引导问题”，回复形式为：问候语+引导语+引导问题 <br>
           - 问候语设置：可在“渠道配置”中进行自定义设置 <br>
           - 引导语设置：自定义引导语，设置完成后出现形式如下图<br>
           - 引导问题设置：选择添加右侧知识库中的知识，设置完成后出现形式如下图
@@ -13,8 +13,8 @@
             <img src="../../../../assets/guide/weChat.png" alt="">
             <p class="center">微信端</p>
           </div>
-          <p class="guide text">您好，请问有什么能帮助您?<br>
-            您可以尝试这样问我： <br>
+          <p class="guide text">您好，请问有什么能帮助您?<br><br>
+            您可以尝试这样问我： <br><br>
             引导问题1<br>
             引导问题2<br>
             引导问题3<br>
@@ -43,7 +43,7 @@
       <section class="config">引导语设置</section>
       <!-- <textarea name="" id="" cols="90" rows="5" class="area" placeholder="例如：您可以尝试这样问我："></textarea> -->
       <div class="area">
-        <textarea class="c555" :disabled="disable"
+        <textarea class="c555" :disabled="!disabled"
                   v-model.trim="Guidetext" rows="8" type="text"
                   @input="getTextTotal" maxlength="50"
                   placeholder="例如：你可以这样问我" ></textarea>
@@ -74,8 +74,8 @@
   import KnowledgeStore from './knowledgeStore'
   import TapItem from './TapItem'
   import store from './store'
-  import {UPDATE, FILTER, DETAILS, APP, RESTART} from "./store/mutations";
-  import { GETSERVICE ,UPDATESERVICE,CHECKQUERY,UPDATEQUESTION,DELETEALL} from "../../../../constants/api.js";
+  import {UPDATE, FILTER, DETAILS,APP,RESTART} from "./store/mutations";
+  import { GETSERVICE ,UPDATESERVICE,CHECKQUERY,UPDATEQUESTION,DELETEALL,ADDQUESTION} from "../../../../constants/api.js";
   import { mapGetters, mapActions } from "vuex";
   import { request } from "../../../../serive/request";
   import { getCookies } from "../../../../utils/cookie";
@@ -125,9 +125,9 @@
       },
       start(){
         const ID = store.state.app.Data.serviceId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const Enable = true
-
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
@@ -137,7 +137,6 @@
             BotConfigId,ID,Enable
           })
         }
-
         request(UPDATESERVICE, params).then(res => {
           //修改enable状态 为true
           store.dispatch(DETAILS,{Enable:res.Data})
@@ -145,13 +144,14 @@
         this.disabled =true
         this.changeIt=true
         this.stopIt=false
+        this.over=true  // check可以点击
       },
       stop(){
         store.dispatch(UPDATE, {isSpread: false})
         const ID = store.state.app.Data.serviceId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const Enable = false
-
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
@@ -163,9 +163,7 @@
         }
         request(UPDATESERVICE, params).then(res => {
           store.dispatch(DETAILS,{Enable:false})
-
         });
-
         this.disabled =false
         this.changeIt=false
         this.stopIt=true
@@ -221,9 +219,8 @@
         }
         request(GETSERVICE, params).then(res => {
           const ID=res.Data.ID
-          this.Enable=res.Data.Enable
-          console.log(this.Enable,'getserivce')
-          if (this.Enable) {
+          if (res.Data.Enable) {
+
             this.stopIt=false   //停用和清空按钮
             this.changeIt=true
             this.disabled =true
@@ -232,7 +229,7 @@
             this.stopIt=true   //停用和清空按钮显示
             this.changeIt=false  //开启按钮隐藏
             this.disabled =false
-            this.over=false
+            this.over=false  // check可以点击
           }
           store.dispatch(DETAILS,{serviceId:ID,Enable:res.Data.Enable})
         })
@@ -240,9 +237,12 @@
       },
       clearAll(){
         const ID = store.state.app.Data.ID
+        console.log(ID)
         if (!store.state.app.Data.ID) {
+          console.log('buclear')
           this.clearBtn=false
         } else {
+          console.log('clear')
           const params = {
             headers:{
               'Access-token': getCookies(TOKEN)
@@ -253,11 +253,23 @@
             })
 
           }
-
           request(DELETEALL, params).then(res => {
             store.dispatch(RESTART,{Data:null}).then(
               () =>{
+                console.log(store.state.app.Data)
+                this.checkList=store.state.app.Data.Channels
                 this.Guidetext=store.state.app.Data&&store.state.app.Data.GuideDescription||''
+                const dataAll = store.state.dataAll
+                const tableData = dataAll.tableData.map(
+                  (v, index) => {
+                    v.checked = false
+                    v.disabled = false
+                    return v
+                  }
+                )
+                store.dispatch(
+                  FILTER, {tableData,originData: tableData,total: 0}
+                )
               }
             )
           });
@@ -267,20 +279,17 @@
 
       },
       getTextTotal(){
-        if (this.Guidetext==null) {
-          console.log(null)
-
-        } else {
-          console.log('you')
-          console.log(this.Guidetext.length,'total')
+        if (this.Guidetext!=null) {
           this.textTotal =this.Guidetext.length;
         }
       },
       save(){
         const ID = store.state.app.Data.ID
-        if (ID === "") {
+        if (!ID ) {
+          console.log('add', '')
           this.addQuestion()
         } else {
+          console.log('update', '')
           this.updateQuestion();
         }
         store.dispatch(DETAILS,{GuideDescription:this.Guidetext})
@@ -291,8 +300,8 @@
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const GuideDescription= this.Guidetext
-        const QuestionDetails = store.state.dataAll.tableData
-
+        const QuestionDetails = store.state.app.Data.Details
+        const Channels = this.checkList
         QuestionDetails.forEach(
           (v,index) => {
             v.Sort = index
@@ -306,10 +315,20 @@
           },
           method: 'POST',
           body: JSON.stringify({
-            BotConfigId,GuideDescription,QuestionDetails
+            BotConfigId,GuideDescription,QuestionDetails,Channels
           })
         }
-        request(GETSERVICE, params).then(res => {
+        request(ADDQUESTION, params).then(res => {
+          console.log(res.Data)
+
+          store.dispatch(DETAILS,{ID:res.Data}).then(
+            () =>{
+              console.log('=====',store.state.app)
+            }
+          )
+
+
+          this.clearBtn=true
           that.$message(
             {
               type: 'success',
@@ -318,6 +337,7 @@
             }
           )
         })
+
       },
       updateQuestion(){
 
@@ -442,7 +462,7 @@
     .location{position:absolute; top:50%; left:40%;  transform:translate(-50%,-50%);
       .guide{background:#eaedf1;border-radius: 10px;display: inline-block;padding:30px;width:100%;box-sizing:border-box;}
       .way{margin-top:40px;margin-bottom: 30px; display: flex;box-sizing:border-box;
-        .text{height: 300px;}
+        .text{height: 300px;width:220px;}
         img{height: 90%;}
       }
       .center{text-align: center;color: #fff}
@@ -462,7 +482,6 @@
   }
   .open{background: #2a8ce7;color:#fff;border:1px solid #2a8ce7;margin-left: 40px;}
   .config{background:#f9fafc;font-size:16px;margin:30px 0;height: 40px;line-height: 40px;}
-  // .area{border:1px solid #eaedf1}
   .area{position: relative;margin-left:40px;width:60%;
     span{position: absolute;bottom:15px;right: 0;color:#999;}
     textarea{width:100%;border:1px solid #eaedf1; }
@@ -476,4 +495,8 @@
   .is-disabled{background: #7abafc!important;color:#fff;border:1px solid #fff;}
   .is-disabled:hover{background: #7abafc;color:#fff;border:1px solid #fff;}
   textarea:focus{outline: none !important; border: #2a8ce7 1px solid; box-shadow: none; }
+  .checkbox{position: relative;overflow: hidden;zoom: 1;z-index: 99;
+    .check{position: absolute;z-index: 999;background: rgba(255,255,255,.6);width:40%;height: 80%;;}
+
+  }
 </style>
