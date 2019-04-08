@@ -18,6 +18,7 @@ const store = new Vuex.Store({
     },
     dataAll:{
       total: 0,
+      hasChecked:[],
       tableData:[
         // {
         //   ID: '1',

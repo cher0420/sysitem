@@ -221,6 +221,7 @@
         ).then(
           (res) => {
             that.clearData(res)
+            that.loading = false
           }
         ).catch(
           () => {
@@ -237,32 +238,6 @@
             that.webSocketFun()
           }, 1740000
         )
-      },
-      heartCheck(){
-        const that = this
-        return {
-          timeout: 3000,        // 9分钟发一次心跳，比server端设置的连接时间稍微小一点，在接近断开的情况下以通信的方式去重置连接时间。
-          // serverTimeoutObj: null,
-          reset: function(){
-            // console.log(that.serverTimeoutObj)
-            clearTimeout(that.serverTimeoutObj);
-            return this;
-          },
-          start: function(){
-            console.log('进入')
-            // console.log(that.serverTimeoutObj)
-            that.serverTimeoutObj = setInterval(function(){
-              if(that.webSocket.readyState == 1){
-                console.log("连接状态，发送消息保持连接");
-                that.webSocket.send("ping");
-                // that.heartCheck().reset(); // 如果获取到消息，说明连接是正常的，重置心跳检测
-              }else{
-                console.log("断开状态，尝试重连");
-                that.webSocketFun();
-              }
-            }, this.timeout)
-          }
-        }
       },
       webSocketFun() {
         const that = this
@@ -548,6 +523,7 @@
           })
           this.tableData.splice(index, 1)
           this.total--;
+          this.loading = false
           if (this.total % this.PageSize === 0) {
             if (that.Page !== 1) {
               that.Page--
@@ -555,7 +531,6 @@
             setTimeout(
               () => {
                 that.getList()
-                that.loading = false
               }, 800
             )
           }

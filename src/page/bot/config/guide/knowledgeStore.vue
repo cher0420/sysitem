@@ -1,9 +1,12 @@
 <template>
-  <section :class="isSpread?'container ':['container','isSpread']" >
+  <section :class="isSpread?'container ':['container','isSpread']" id="knowledgeStore">
     <section class="padding-30">
       <title-item title="知识库"/>
-      <section class="button-group"><el-input class='searchInput middle' style="width:28%" size = 'small' v-model="IntentName" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
-      </el-input><el-button v-model='showTotal' :class="total?['middle', 'margin-20', 'big-button','has-checked']:['middle', 'margin-20', 'big-button']" @click="showHasChecked">{{showTotal?'已选':'返回'}}（{{total}}/5）</el-button><el-button type="primary" @click="add">添加</el-button>
+      <section class="button-group">
+        <el-input class='searchInput middle' size = 'small' v-model="IntentName" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      </el-input>
+        <el-button v-model='showTotal' :class="total?['middle', 'margin-20', 'big-button','has-checked']:['middle', 'margin-20', 'big-button']" @click="showHasChecked">{{showTotal?'已选':'返回'}}（{{total}}/5）</el-button>
+        <el-button class='add' type="primary" @click="add">添加</el-button>
       </section>
     </section>
     <section class="hinge" @click="spread"><i class="el-icon-d-arrow-right"></i></section>
@@ -11,12 +14,12 @@
       <section class="scroll-container" id="scroll-container" @scroll="handleScroll">
         <section v-for="(item, index) in tableData" :key="index" :class="index%2 !== 0?['even']:'odd'">
           <span class="checked-box-container">
-            <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" @change="typeBox(index,item.checked)"></el-checkbox>
+            <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" @change="typeBox(index,item.checked,item)"></el-checkbox>
           </span>
-          <el-tooltip v-if='item.IntentName.length>14' class="item" effect="dark" :content="item.IntentName" placement="top-start">
-            <section class="title">{{item.IntentName}}</section>
-          </el-tooltip>
-          <section v-else class="title">{{item.IntentName}}</section>
+          <!--<el-tooltip v-if='item.IntentName.length>14' class="item" effect="dark" :content="item.IntentName" placement="top-start">-->
+            <!--<section class="title">{{item.IntentName}}</section>-->
+          <!--</el-tooltip>-->
+          <section class="title">{{item.IntentName}}</section>
         </section>
         <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
         <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
@@ -107,33 +110,35 @@
         request(url, params).then(
           (res) => {
             //节流
+            const originData = JSON.parse(JSON.stringify(res.Data))
             that.hasLoadingAllData = res.Data.length < 10;
 
-            const details = store.state.app.Data.Details?store.state.app.Data.Details:[]
+            // const details = store.state.app.Data.Details?store.state.app.Data.Details:[]
+            const details = store.state.dataAll.hasChecked
             //左侧列表详情
-            const total = details.length
+            const total = store.state.dataAll.total
             //判断列表中的questionId是否为勾选
             let template = []
             for(let v of details.values()){
               template.push(v.QuestionId)
             }
             //当不为搜索情况下
-            if(!that.IntentName){
-              let templateArr = []
-              for(let v of res.Data.values()){
-                templateArr.push(v.QuestionId)
-              }
-              details.forEach(
-                (v,index) => {
-                  if(!templateArr.includes(v.QuestionId)){
-                    v.ID = v.QuestionId
-                    v.IntentName = v.Question
-                    v.checked = true
-                    res.Data.unshift(v)
-                  }
-                }
-              )
-            }
+            // if(!that.IntentName){
+            //   let templateArr = []
+            //   for(let v of res.Data.values()){
+            //     templateArr.push(v.QuestionId)
+            //   }
+            // res.Data.forEach(
+            //     (v,index) => {
+            //       v.ID = v.QuestionId
+            //       v.IntentName = v.Question
+            //       if(template.includes(v.QuestionId)){
+            //         v.checked = true
+            //         // res.Data.unshift(v)
+            //       }
+            //     }
+            //   )
+            // }
 
             const resArr = res.Data.filter(
               ( item, index ) => {
@@ -149,19 +154,19 @@
               }
             )
 
-            const templateData = store.state.dataAll.originData
-            let values = []
-            for(let v of templateData.values()){
-              values.push(v.QuestionId)
-            }
-            const newArr = res.Data.filter(
-              (v,index) => {
-                if(!values.includes(v.QuestionId)){
-                  return v
-                }
-              }
-            )
-            let  originData = [...templateData,...newArr]
+            // const templateData = store.state.dataAll.originData
+            // let values = []
+            // for(let v of templateData.values()){
+            //   values.push(v.QuestionId)
+            // }
+            // const newArr = res.Data.filter(
+            //   (v,index) => {
+            //     if(!values.includes(v.QuestionId)){
+            //       return v
+            //     }
+            //   }
+            // )
+            // let  originData = [...templateData,...newArr]
 
             store.dispatch(
               FILTER, { tableData: resArr, originData: originData, total}
@@ -185,12 +190,13 @@
           {isSpread: !this.isSpread}
         )
       },
-      typeBox(index,v){
+      typeBox(index,v, item){
 
         let total = store.state.dataAll.total
+        v?total++:total--
         const tableData = store.state.dataAll.tableData
-        const totalNew = v? total ++:total --;
-
+        let hasChecked = JSON.parse(JSON.stringify(store.state.dataAll.hasChecked))
+        //
         store.dispatch(FILTER,{total}).then(
           () => {
             if(total >= 5){
@@ -208,8 +214,20 @@
             }
 
             tableData[index].checked = v
+            let arr = []
+              if(v){
+                hasChecked.push(item)
+              }else{
+                arr = hasChecked.filter(
+                  (value) => {
+                    if( item.ID !== value.ID){
+                      return value
+                    }
+                  }
+                )
+              }
             store.dispatch(
-              FILTER, {tableData: tableData}
+              FILTER, {tableData: tableData,hasChecked:v?hasChecked:arr}
             )
           }
         )
@@ -218,14 +236,21 @@
         const originData = v.slice(0)
         store.dispatch(FILTER, {originData})
         this.total = this.details.length
-        const ids = this.details.map(
-          (item, value) => {
-            return item.QuestionId
-          }
-        )
+        // const ids = this.details.map(
+        //   (item, value) => {
+        //     return item.QuestionId
+        //   }
+        // )
+
+        let hasChecked = []
+
+        for(let v of store.state.dataAll.values()){
+          hasChecked.push(v.ID)
+        }
+
         this.tableData.forEach(
           (item, index) => {
-            item.checked = ids.indexOf(item.QuestionId) > -1;
+            item.checked = hasChecked.indexOf(item.QuestionId) > -1;
             if(this.total >=5){
               item.disabled = !item.checked
             }
@@ -237,41 +262,63 @@
       },
       showHasChecked(){
         const total = store.state.dataAll.total
-
         if(this.showTotal){
           this.hasLoadingAllData = true
             if(this.total){
               this.showTotal = false
-              const details = store.state.app.Data.Details
 
-              const templateData = store.state.dataAll.originData
+              // const tableData = store.state.dataAll.tableData.filter(
+              //   (item) => {
+              //     if(item.checked)
+              //       return item;
+              //   }
+              // )
 
-              const tableData = templateData.filter(
-                (item,index) =>{
-                  if(item.checked)
-                    return item;
-                }
-              )
+              // let arr = []
+              // for(let v of tableData.values()){
+              //   arr.push(v.ID)
+              // }
+              //
+              // const templateData = store.state.dataAll.originData
+              // const filterTableData = templateData.filter(
+              //   (item,index) =>{
+              //     if(item.checked && !arr.includes(item.ID) )
+              //       return item;
+              //   }
+              // )
+              //
+              // let data = [...tableData,...filterTableData]
 
-              store.dispatch(FILTER, {tableData})
+              const hasChecked = JSON.parse(JSON.stringify(store.state.dataAll.hasChecked))
+              store.dispatch(FILTER, {tableData:hasChecked})
             }
 
           }else{
             this.hasLoadingAllData = false
             this.showTotal = true
             const tableData = store.state.dataAll.originData.slice(0)
-
-            if(total<5){
+            const hasChecked = store.state.dataAll.hasChecked
+            let arr = []
+            for(let v of hasChecked) {
+              arr.push(v.ID)
+            }
+          tableData.forEach(
+            (v) => {
+              v.checked = arr.includes(v.ID);
+            }
+          )
               tableData.forEach(
                 (v, index) => {
-                  v.disabled = false
+                  if (total < 5) {
+                    v.disabled = false
+                  }else{
+                    v.disabled = !v.checked
+                  }
                 }
               )
-            }
             store.dispatch(
               FILTER, {tableData}
             )
-
           }
 
       },
@@ -314,36 +361,47 @@
         request(url, params).then(
           (res) => {
 
+            const table = store.state.dataAll.tableData
+            const originData = store.state.dataAll.originData
+            const hasChecked = store.state.dataAll.hasChecked
+
             that.hasLoadingAllData = res.Data.length < 10;
             const total = store.state.dataAll.total
+
+            let values = []
+            for(let v of hasChecked.values()){
+              values.push(v.QuestionId)
+            }
 
               res.Data.forEach(
                 (v,index) => {
                   v.QuestionId = v.ID
                   v.Question = v.IntentName
-                  if(total>=5){
-                    v.disabled = true
+                  if(values.includes(v.QuestionId)){
+                    v.checked = true
+                  }
+                  if (total < 5) {
+                    v.disabled = false
+                  }else{
+                    v.disabled = !v.checked
                   }
                 }
               )
+            const newTable = [...table,...res.Data]
+            const newOrigin = [...originData,...res.Data]
 
+            // let values = []
+            // for(let v of hasChecked.values()){
+            //   values.push(v.QuestionId)
+            // }
+            // const someData = res.Data.filter(
+            //   (v,index) => {
+            //     if(values.includes(v.QuestionId)){
+            //       v.checked = true
+            //     }
+            //   }
+            // )
 
-            const table = store.state.dataAll.tableData
-            const originData = store.state.dataAll.originData
-
-            let values = []
-            for(let v of table.values()){
-              values.push(v.QuestionId)
-            }
-            const someData = res.Data.filter(
-              (v,index) => {
-                if(!values.includes(v.QuestionId)){
-                  return v
-                }
-              }
-            )
-            const newTable = [...table,...someData]
-            const newOrigin = [...originData,...someData]
 
             store.dispatch(
               FILTER, { tableData:newTable, originData:newOrigin}
@@ -425,6 +483,9 @@
     .button-group{
       padding-top: 30px;
       padding-bottom: 20px;
+      .searchInput{
+        width: 50%;
+      }
     }
     .hinge{
       position: absolute;
@@ -452,9 +513,6 @@
       }
     }
   }
-  .container:hover{
-
-  }
   .isSpread{
     width: 0;
     overflow: hidden;
@@ -465,9 +523,17 @@
   .margin-20{
     margin-left: 20px;
   }
-  @media screen and (max-width: 1370px) {
-    .margin-20 {
-      margin-left: 10px;
+  @media screen and (max-width: 1748px) {
+    .container{
+      .button-group{
+        .searchInput{
+          width: 100%;
+          margin-bottom: 15px;
+        }
+        .margin-20{
+          margin-left: 0;
+        }
+      }
     }
   }
   .scroll-container{
