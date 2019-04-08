@@ -5,7 +5,7 @@ import URL from '../host/baseUrl'
 import { request, isIE9 } from "../serive/request";
 import yoyStore from '../store/index'; // 命名为yoy空间的store
 import { REPLACE } from "../store/mutations";
-import { Loading } from 'element-ui';
+import { Loading, Message } from 'element-ui';
 import { store } from '../storee/store';
 import Router from '../router/index';
 import router from "../router";
@@ -51,7 +51,7 @@ export function getLoginStatus() {
             // url上的sid不空且与cookie的sid一致移除cookie的SID
           if (tokenUrl !== token) {
             //验证url上的token是否存在并且与cookie的token一致
-            voildToken(tokenUrl).then()
+            voildToken(tokenUrl)
           } else {
             voildToken(token)
           }
@@ -89,7 +89,7 @@ export const voildId = (sid) => {
         removeCookies(SID).then(
             () => {
                 //验证url上的token是否存在并且与cookie的token一致
-                voildToken(tokenUrl).then()
+                voildToken(tokenUrl)
             }
         )
     } else {
@@ -101,7 +101,7 @@ export const voildId = (sid) => {
  * 验证token
  * @param tokens
  */
-export async function voildToken(tokens) {
+export function voildToken(tokens) {
     const url = VOILD_TOKEN_URL
     const options = {
         method: 'POST',
@@ -172,7 +172,16 @@ export async function fetchUserInfo(token = null) {
             }
         )
     }).catch((error) => {
-        console.log('请求失败', error)
+      Message(
+        {
+          type: 'error',
+          message: '获取当前用户信息失败，正在为您跳转至登录页...',
+          duration: 2000,
+          onClose(){
+            logOut()
+          }
+        }
+      )
     });
 }
 

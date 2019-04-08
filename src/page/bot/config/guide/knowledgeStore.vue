@@ -13,9 +13,10 @@
           <span class="checked-box-container">
             <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" @change="typeBox(index,item.checked)"></el-checkbox>
           </span>
-          <!--<el-tooltip class="item" effect="dark" :content="item.IntentName" placement="top-start">-->
+          <el-tooltip v-if='item.IntentName.length>14' class="item" effect="dark" :content="item.IntentName" placement="top-start">
             <section class="title">{{item.IntentName}}</section>
-          <!--</el-tooltip>-->
+          </el-tooltip>
+          <section v-else class="title">{{item.IntentName}}</section>
         </section>
         <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
         <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
@@ -40,10 +41,6 @@
     props:{
 
     },
-    components:{
-      // TitleItem,
-      // ScrollTable,
-    },
     computed:{
       isSpread(){
         return store.state.isSpread
@@ -63,13 +60,10 @@
         PageIndex:1,
         showTotal: true,
         getListLoading: false,
-        hasLoadingAllData: true,
+        hasLoadingAllData: false,
         IntentName: '',
       }
     },
-    // created(){
-    //   this.getIntentName()
-    // },
     destroyed(){
       store.dispatch(FILTER, {total:0, tableData: [], originData: []})
       store.dispatch(UPDATE, {isSpread: false})
@@ -104,13 +98,18 @@
         }
         request(url, params).then(
           (res) => {
-            const details = store.state.app.Data.Details?store.state.app.Data.Details:[]
-            const total = details.length
+            //节流
+            that.hasLoadingAllData = res.Data.length < 10;
 
+            const details = store.state.app.Data.Details?store.state.app.Data.Details:[]
+            //左侧列表详情
+            const total = details.length
+            //判断列表中的questionId是否为勾选
             let template = []
             for(let v of details.values()){
               template.push(v.QuestionId)
             }
+            //当不为搜索情况下
             if(!that.IntentName){
               let templateArr = []
               for(let v of res.Data.values()){
@@ -133,7 +132,6 @@
                 item.QuestionId = item.ID
                 item.Question = item.IntentName
                 item.checked = template.includes(item.QuestionId);
-                // if(that.showTotal){
                   if(total>=5){
                     item.disabled = !item.checked
                   }else{
@@ -142,13 +140,6 @@
                   return item
               }
             )
-
-
-            if(res.Data.length<10){
-              that.hasLoadingAllData = true
-            }else{
-              that.hasLoadingAllData = false
-            }
 
             const templateData = store.state.dataAll.originData
             let values = []
@@ -297,7 +288,7 @@
         const height = trueHeight - scrollTop
         this.PageIndex++
         const that = this
-        const url = '/api/admin/portal/guideQuestion/queryIntent'
+        const url = QUERYINTENT
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
         const params = {
@@ -384,20 +375,12 @@
           }
         )
 
-                store.dispatch(
-                  DETAILS, { Details: data }
-                )
+        store.dispatch(
+          DETAILS, { Details: data }
+        )
       },
       add(){
-        const details = store.state.app.Data.Details
         const tableData = store.state.dataAll.tableData
-
-        // details.forEach(
-        //   (item,index) => {
-        //     item.checked = true
-        //     item.IntentName = item.Question
-        //   }
-        // )
 
         let templateTableData = tableData.filter(
           (item,index) =>{
@@ -406,18 +389,6 @@
           }
         )
 
-        // let arr = []
-        // for(let v of details.values()) {
-        //   arr.push(v.QuestionId)
-        // }
-        // const someData = templateTableData.filter(
-        //   (v,index) => {
-        //     if(!arr.includes(v.QuestionId)){
-        //       return v
-        //     }
-        //   }
-        // )
-        // templateTableData = [...someData, ...details]
         this.showLoading(templateTableData)
       }
     },
@@ -537,7 +508,7 @@
   }
   .checked-box-container{
     display: inline-block;
-    height: 40px;
+    height: 20px;
     line-height: 40px;
     width: 40px;
     text-align: center;
