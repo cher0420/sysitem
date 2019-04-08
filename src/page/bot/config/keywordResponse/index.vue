@@ -526,6 +526,7 @@
       },
       deleteSingle(ID, index) {
         const that = this
+        this.loading = true
         const params = {
           headers: {
             'Access-Token': getCookies(TOKEN)
@@ -545,7 +546,6 @@
             message: '删除成功',
             duration: 2000,
           })
-          this.loading = true
           this.tableData.splice(index, 1)
           this.total--;
           if (this.total % this.PageSize === 0) {
@@ -555,6 +555,7 @@
             setTimeout(
               () => {
                 that.getList()
+                that.loading = false
               }, 800
             )
           }

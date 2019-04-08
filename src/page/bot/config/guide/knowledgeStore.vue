@@ -77,6 +77,14 @@
     },
     methods: {
       search(){
+        if (!(/^[0-9a-zA-Z\u4e00-\u9eff]{1,}$/).test(this.IntentName)&&this.IntentName) {
+          this.$message({
+            type: 'error',
+            message: "请不要输入特殊字符作为关键词搜索，例如 *，<，>，%，;，/，?，'，_等",
+            duration: 2000,
+          })
+          return
+        }
         this.PageIndex = 1
         this.showTotal = true
         const that = this
