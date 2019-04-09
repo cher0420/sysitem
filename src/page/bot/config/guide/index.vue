@@ -51,7 +51,7 @@
       </div>
       <section class="config">选择引导问题（最多5个）</section>
       <tap-item></tap-item>
-      <el-button class="open" :disabled="!disabled" @click="openKnowLedgeStore">打开知识库</el-button>
+      <el-button class="open" :disabled="!disabled || isSpread" @click="openKnowLedgeStore">打开知识库</el-button>
       <section class="config">选择渠道</section>
       <div class="checkbox">
         <template  class="checkbox">
@@ -98,6 +98,9 @@
     computed:{
       details(){
         return store.state.app.Data.Details&&store.state.app.Data.Details||[]
+      },
+      isSpread(){
+        return store.state.isSpread
       }
     },
     created() {
@@ -364,9 +367,9 @@
           () => {
             const  ID = store.state.app.Data.ID
             const id = JSON.parse(sessionStorage.getItem('recordId'))
-            const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-            const GuideDescription= this.Guidetext
-            let Channels=this.checkList
+            const BotConfigId = that.$route.query.recordId?that.$route.query.recordId:id
+            const GuideDescription= that.Guidetext
+            let Channels=that.checkList
 
             let QuestionDetails = JSON.parse(JSON.stringify(store.state.app.Data.Details))
 
@@ -458,7 +461,7 @@
             )
 
             //
-            const hasChecked = store.state.app.Data.Details.filter(
+            const hasChecked = store.state.app.Data.Details&&store.state.app.Data.Details.filter(
               (v) => {
                 v.checked = true
                 v.ID = v.QuestionId
@@ -489,16 +492,6 @@
             )
             // }
             store.dispatch( FILTER, {tableData, originData:  tableData} )
-          }
-        ).catch(
-          () => {
-            that.$message(
-              {
-                type:'error',
-                message: '意图列表获取失败，请稍后重试',
-                duration: 2000
-              }
-            )
           }
         )
       },

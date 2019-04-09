@@ -80,6 +80,7 @@
             { Details: this.Details }
           )
           const tableData = store.state.dataAll.tableData
+          const hasChecked = this.Details
           tableData.forEach(
             (v,index) => {
               if(v.QuestionId === id){
@@ -91,7 +92,7 @@
           let total =  store.state.dataAll.total
           total--
           store.dispatch(
-            FILTER, { tableData,total }
+            FILTER, { tableData,total,hasChecked }
           )
         }else{
           return

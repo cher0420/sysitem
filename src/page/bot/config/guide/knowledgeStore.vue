@@ -16,14 +16,14 @@
           <span class="checked-box-container">
             <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" @change="typeBox(index,item.checked,item)"></el-checkbox>
           </span>
-          <!--<el-tooltip v-if='item.IntentName.length>14' class="item" effect="dark" :content="item.IntentName" placement="top-start">-->
-            <!--<section class="title">{{item.IntentName}}</section>-->
-          <!--</el-tooltip>-->
-          <section class="title">{{item.IntentName}}</section>
+          <el-tooltip v-if='item.IntentName.length>18' class="item" effect="dark" :content="item.IntentName" placement="bottom-start">
+            <section class="title">{{item.IntentName}}</section>
+          </el-tooltip>
+          <section v-else class="title">{{item.IntentName}}</section>
         </section>
         <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
         <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
-          <i v-show='!hasLoadingAllData' class="el-icon-loading"></i>
+          <i v-show='!hasLoadingAllData || tableData.length <= 10' class="el-icon-loading"></i>
           {{hasLoadingAllData?'- 已经到底啦 -': '正在加载中...'}}
         </section>
       </section>
@@ -68,7 +68,7 @@
       }
     },
     destroyed(){
-      store.dispatch(FILTER, {total:0, tableData: [], originData: []})
+      store.dispatch(FILTER, {total:0, tableData: [], originData: [], hasChecked: []})
       store.dispatch(UPDATE, {isSpread: false})
       store.dispatch(APP, {Data: {
         ID: '',//
@@ -113,7 +113,6 @@
             const originData = JSON.parse(JSON.stringify(res.Data))
             that.hasLoadingAllData = res.Data.length < 10;
 
-            // const details = store.state.app.Data.Details?store.state.app.Data.Details:[]
             const details = store.state.dataAll.hasChecked
             //左侧列表详情
             const total = store.state.dataAll.total
@@ -122,23 +121,6 @@
             for(let v of details.values()){
               template.push(v.QuestionId)
             }
-            //当不为搜索情况下
-            // if(!that.IntentName){
-            //   let templateArr = []
-            //   for(let v of res.Data.values()){
-            //     templateArr.push(v.QuestionId)
-            //   }
-            // res.Data.forEach(
-            //     (v,index) => {
-            //       v.ID = v.QuestionId
-            //       v.IntentName = v.Question
-            //       if(template.includes(v.QuestionId)){
-            //         v.checked = true
-            //         // res.Data.unshift(v)
-            //       }
-            //     }
-            //   )
-            // }
 
             const resArr = res.Data.filter(
               ( item, index ) => {
@@ -153,20 +135,6 @@
                   return item
               }
             )
-
-            // const templateData = store.state.dataAll.originData
-            // let values = []
-            // for(let v of templateData.values()){
-            //   values.push(v.QuestionId)
-            // }
-            // const newArr = res.Data.filter(
-            //   (v,index) => {
-            //     if(!values.includes(v.QuestionId)){
-            //       return v
-            //     }
-            //   }
-            // )
-            // let  originData = [...templateData,...newArr]
 
             store.dispatch(
               FILTER, { tableData: resArr, originData: originData, total}
@@ -236,11 +204,6 @@
         const originData = v.slice(0)
         store.dispatch(FILTER, {originData})
         this.total = this.details.length
-        // const ids = this.details.map(
-        //   (item, value) => {
-        //     return item.QuestionId
-        //   }
-        // )
 
         let hasChecked = []
 
@@ -263,38 +226,19 @@
       showHasChecked(){
         const total = store.state.dataAll.total
         if(this.showTotal){
-          this.hasLoadingAllData = true
             if(this.total){
               this.showTotal = false
 
-              // const tableData = store.state.dataAll.tableData.filter(
-              //   (item) => {
-              //     if(item.checked)
-              //       return item;
-              //   }
-              // )
-
-              // let arr = []
-              // for(let v of tableData.values()){
-              //   arr.push(v.ID)
-              // }
-              //
-              // const templateData = store.state.dataAll.originData
-              // const filterTableData = templateData.filter(
-              //   (item,index) =>{
-              //     if(item.checked && !arr.includes(item.ID) )
-              //       return item;
-              //   }
-              // )
-              //
-              // let data = [...tableData,...filterTableData]
-
               const hasChecked = JSON.parse(JSON.stringify(store.state.dataAll.hasChecked))
-              store.dispatch(FILTER, {tableData:hasChecked})
+              store.dispatch(FILTER, {tableData:hasChecked}).then(
+                () => {
+                  console.log(store.state.dataAll.tableData)
+                }
+              )
+
             }
 
           }else{
-            this.hasLoadingAllData = false
             this.showTotal = true
             const tableData = store.state.dataAll.originData.slice(0)
             const hasChecked = store.state.dataAll.hasChecked
@@ -336,42 +280,42 @@
         this.throttle(this.get)
       },
       get(){
-        this.getListLoading = true
-        const scrollContainer = document.getElementById('scroll-container')
-        const trueHeight = scrollContainer.scrollHeight
-        const scrollTop = scrollContainer.scrollTop
-        const height = trueHeight - scrollTop
-        this.PageIndex++
-        const that = this
-        const url = QUERYINTENT
-        const id = JSON.parse(sessionStorage.getItem('recordId'))
-        const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
-        const params = {
-          headers:{
-            'Access-Token': getCookies(TOKEN)
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            BotConfigId: recordId,
-            IntentName: that.IntentName,
-            PageIndex: that.PageIndex,
-            PageSize: 10,
-          })
-        }
-        request(url, params).then(
-          (res) => {
+        if(this.showTotal){
+          this.getListLoading = true
+          const scrollContainer = document.getElementById('scroll-container')
+          const trueHeight = scrollContainer.scrollHeight
+          const scrollTop = scrollContainer.scrollTop
+          const height = trueHeight - scrollTop
+          this.PageIndex++
+          const that = this
+          const url = QUERYINTENT
+          const id = JSON.parse(sessionStorage.getItem('recordId'))
+          const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
+          const params = {
+            headers:{
+              'Access-Token': getCookies(TOKEN)
+            },
+            method: 'POST',
+            body: JSON.stringify({
+              BotConfigId: recordId,
+              IntentName: that.IntentName,
+              PageIndex: that.PageIndex,
+              PageSize: 10,
+            })
+          }
+          request(url, params).then(
+            (res) => {
+              const table = store.state.dataAll.tableData
+              const originData = store.state.dataAll.originData
+              const hasChecked = store.state.dataAll.hasChecked
 
-            const table = store.state.dataAll.tableData
-            const originData = store.state.dataAll.originData
-            const hasChecked = store.state.dataAll.hasChecked
+              that.hasLoadingAllData = res.Data.length < 10;
+              const total = store.state.dataAll.total
 
-            that.hasLoadingAllData = res.Data.length < 10;
-            const total = store.state.dataAll.total
-
-            let values = []
-            for(let v of hasChecked.values()){
-              values.push(v.QuestionId)
-            }
+              let values = []
+              for(let v of hasChecked.values()){
+                values.push(v.QuestionId)
+              }
 
               res.Data.forEach(
                 (v,index) => {
@@ -387,44 +331,32 @@
                   }
                 }
               )
-            const newTable = [...table,...res.Data]
-            const newOrigin = [...originData,...res.Data]
+              const newTable = [...table,...res.Data]
+              const newOrigin = [...originData,...res.Data]
 
-            // let values = []
-            // for(let v of hasChecked.values()){
-            //   values.push(v.QuestionId)
-            // }
-            // const someData = res.Data.filter(
-            //   (v,index) => {
-            //     if(values.includes(v.QuestionId)){
-            //       v.checked = true
-            //     }
-            //   }
-            // )
+              store.dispatch(
+                FILTER, { tableData:newTable, originData:newOrigin}
+              ).then(
+                () => {
+                  that.getListLoading = false
+                }
+              )
+            }
+          ).catch(
+            () => {
+              that.$message(
+                {
+                  type:'error',
+                  message: '意图列表获取失败，请稍后重试',
+                  duration: 2000
+                }
+              )
+            }
+          )
 
-
-            store.dispatch(
-              FILTER, { tableData:newTable, originData:newOrigin}
-            ).then(
-              () => {
-                that.getListLoading = false
-              }
-            )
+          if(height < this.tableData.length*40){
+            this.getListLoading = false
           }
-        ).catch(
-          () => {
-            that.$message(
-              {
-                type:'error',
-                message: '意图列表获取失败，请稍后重试',
-                duration: 2000
-              }
-            )
-          }
-        )
-
-        if(height < this.tableData.length*40){
-          this.getListLoading = false
         }
       },
       showLoading(data){
@@ -589,10 +521,6 @@
     border-right: 1px solid #edf4fc;
     vertical-align: top;
   }
-  .has-checked{
-    color: $primary-color;
-    border-color: $primary-color;
-  }
   .padding-30{
     padding-left: 30px;
     padding-right: 30px;
@@ -601,5 +529,8 @@
     margin-left: 30px;
     margin-right: 30px;
   }
-
+  .has-checked{
+    color: $primary-color;
+    border-color: $primary-color;
+  }
 </style>
