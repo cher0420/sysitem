@@ -22,8 +22,6 @@
 </template>
 <script>
   import store from '../../store/index'
-  // import {STR} from "../../constants/constants";
-  import {REPLACE} from "../../store/mutations";
 
   export default {
     data(){
