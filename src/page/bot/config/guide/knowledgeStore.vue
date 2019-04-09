@@ -113,7 +113,7 @@
             const originData = JSON.parse(JSON.stringify(res.Data))
             that.hasLoadingAllData = res.Data.length < 10;
 
-            const details = store.state.dataAll.hasChecked
+            const details = store.state.dataAll.hasChecked?store.state.dataAll.hasChecked:[]
             //左侧列表详情
             const total = store.state.dataAll.total
             //判断列表中的questionId是否为勾选
@@ -138,16 +138,6 @@
 
             store.dispatch(
               FILTER, { tableData: resArr, originData: originData, total}
-            )
-          }
-        ).catch(
-          () => {
-            that.$message(
-              {
-                type:'error',
-                message: '意图列表获取失败，请稍后重试',
-                duration: 2000
-              }
             )
           }
         )
@@ -305,9 +295,9 @@
           }
           request(url, params).then(
             (res) => {
-              const table = store.state.dataAll.tableData
-              const originData = store.state.dataAll.originData
-              const hasChecked = store.state.dataAll.hasChecked
+              const table = store.state.dataAll.tableData?store.state.dataAll.tableData:[]
+              const originData = store.state.dataAll.originData?store.state.dataAll.originData:[]
+              const hasChecked = store.state.dataAll.hasChecked?store.state.dataAll.hasChecked:[]
 
               that.hasLoadingAllData = res.Data.length < 10;
               const total = store.state.dataAll.total
@@ -339,16 +329,6 @@
               ).then(
                 () => {
                   that.getListLoading = false
-                }
-              )
-            }
-          ).catch(
-            () => {
-              that.$message(
-                {
-                  type:'error',
-                  message: '意图列表获取失败，请稍后重试',
-                  duration: 2000
                 }
               )
             }
