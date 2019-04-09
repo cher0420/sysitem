@@ -29,21 +29,17 @@
     </section>
     <section class="startIt">
     </section>
-    <!--<section style="margin-top: -67px;background: #fff">-->
       <section class="title">
         <nav-title title="引导问题">
           <span @click="why" class="state"><i class="el-icon-question"></i>什么是引导问题？</span>
           <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
           <span class="stopBtn" v-show='!stopIt' >
               <el-button class="off"  @click="stop">停用</el-button>
-              <el-button class="on"  @click="clearAll" :disabled="disable||!clearBtn">清空数据</el-button>
+              <el-button class="on"  @click="clearAll" :disabled="disable||!textTotal && details.length === 0&&checkList.length===0">清空数据</el-button>
           </span>
         </nav-title>
-
-
       </section>
       <section class="config">引导语设置</section>
-      <!-- <textarea name="" id="" cols="90" rows="5" class="area" placeholder="例如：您可以尝试这样问我："></textarea> -->
       <div class="area">
         <textarea class="c555" :disabled="!disabled"
                   v-model.trim="Guidetext" rows="8" type="text"
@@ -67,8 +63,6 @@
       </div>
       <el-button class="open save" :disabled="!disabled || !textTotal || details.length === 0||checkList.length===0" @click="save">保存 </el-button>
       <knowledge-store ref="knowledge"/>
-    <!--</section>-->
-    <!--<section style="height: 67px;"></section>-->
   </div>
 
 </template>
@@ -100,7 +94,8 @@
     },
     computed:{
       details(){
-        return store.state.app.Data.Details&&store.state.app.Data.Details||[]
+
+        return store.state.app.Data.Details
       },
       isSpread(){
         return store.state.isSpread
@@ -195,7 +190,6 @@
           const checkList=res.Data?res.Data.Channels.split("|"):[]
           this.checkList=checkList
           console.log(this.checkList)
-          store.dispatch(APP,{Data:res.Data})
           this.checkService()
           this.getTextTotal()
           if (!res.Data) {
@@ -203,13 +197,13 @@
             this.loading=false
             this.clearBtn=false
           } else {
+            store.dispatch(APP,{Data:res.Data})
             this.change=true//不显示遮罩
             this.disabled =true  //保存不可点  enable为true
             this.changeIt=true  //开启按钮隐藏
             this.loading=false
             this.clearBtn=true
           }
-
         });
       },
       checkService(){
@@ -244,46 +238,72 @@
       },
       clearAll(){
         const ID = store.state.app.Data.ID
-        console.log(ID)
-        if (!store.state.app.Data.ID) {
-          console.log('buclear')
-          this.clearBtn=false
-        } else {
-          console.log('clear')
-          const params = {
-            headers:{
-              'Access-token': getCookies(TOKEN)
-            },
-            method: 'POST',
-            body: JSON.stringify({
-              ID
-            })
+        store.dispatch(DETAILS,{GuideDescription:this.Guidetext,Channels:this.checkList})
+        this.$confirm('确定清空以上信息?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(
+          () => {
+            if (!store.state.app.Data.ID) {
+              this.clearBtn=false
+              store.dispatch(RESTART,{Data:null}).then(
+                () =>{
+                  this.checkList=store.state.app.Data.Channels||[]
+                  this.Guidetext=store.state.app.Data&&store.state.app.Data.GuideDescription||''
+                  this.getTextTotal()
+                })
+            } else {
 
-          }
-          request(DELETEALL, params).then(res => {
-            store.dispatch(RESTART,{Data:null}).then(
-              () =>{
-                console.log(store.state.app.Data)
-                this.checkList=store.state.app.Data.Channels
-                this.Guidetext=store.state.app.Data&&store.state.app.Data.GuideDescription||''
-                const dataAll = store.state.dataAll
-                const tableData = dataAll.tableData.map(
-                  (v, index) => {
-                    v.checked = false
-                    v.disabled = false
-                    return v
+              const params = {
+                headers:{
+                  'Access-token': getCookies(TOKEN)
+                },
+                method: 'POST',
+                body: JSON.stringify({
+                  ID
+                })
+
+              }
+              request(DELETEALL, params).then(res => {
+                store.dispatch(RESTART,{Data:null}).then(
+                  () =>{
+                    console.log(store.state.app.Data)
+                    this.checkList=store.state.app.Data.Channels
+                    this.Guidetext=store.state.app.Data&&store.state.app.Data.GuideDescription||''
+                    const dataAll = store.state.dataAll
+                    const tableData = dataAll.tableData.map(
+                      (v, index) => {
+                        v.checked = false
+                        v.disabled = false
+                        return v
+                      }
+                    )
+                    store.dispatch(
+                      FILTER, {tableData,originData: tableData,total: 0}
+                    )
                   }
                 )
-                store.dispatch(
-                  FILTER, {tableData,originData: tableData,total: 0}
-                )
+              });
+              this.clearBtn=false
+              this.textTotal=0
+            }
+            let tableData = store.state.dataAll.tableData
+            let originData = store.state.dataAll.originData
+            tableData.forEach(
+              (v) => {
+                v.checked = false
               }
             )
-          });
-          this.clearBtn=false
-          this.textTotal=0
-        }
-
+            originData.forEach(
+              (v) => {
+                v.checked = false
+              }
+            )
+            store.dispatch(
+              FILTER,{tableData,originData,hasChecked: [],total:0}
+            )
+          })
       },
       getTextTotal(){
         if (this.Guidetext!=null) {

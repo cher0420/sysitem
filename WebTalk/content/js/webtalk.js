@@ -90,7 +90,7 @@ $(function () {
                             }
 
                             addMsg('Hightalk', botObject.DialogGreetings);
-
+                            callWebTalkService("CRS_GuideQuestion");
                             if (botObject.NavigationSwitch == "1") {
                                 getNavigation("homepage", "首页");
                             }

@@ -86,7 +86,7 @@ $(function () {
                     verifyAuthorization(host, returnCitySN.cip, function () {
                         if (isAuthorize) {
                             addMsg('Hightalk', botObject.DialogGreetings);
-
+                            callWebTalkService("CRS_GuideQuestion");
                             if (botObject.NavigationSwitch == "1") {
                                 getNavigation("homepage", "首页");
                             }

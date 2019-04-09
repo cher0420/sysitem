@@ -379,7 +379,7 @@
     position: absolute;
     z-index: 998;
     right: 0;
-    top: 36px;
+    top: 46px;
     height: 100%;
     max-width: 575px;
     min-height: calc( 100vh - 156px);
