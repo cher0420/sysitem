@@ -1,5 +1,6 @@
 <template>
  <div v-loading="loadingEdit" >
+    <nav-title title="编辑"/>
      <section class="title f-s-16 c555 box-sizing margin-b-30px"> 设置关键词（至多三个）  </section>
     <p class="keyword">{{getKeyValue}}</p>
       <div class="addContent">
@@ -22,7 +23,7 @@
   import { getCookies } from "../../../../../utils/cookie";
   import {TOKEN} from "../../../../../constants/constants";
   import store from '../../../../../store/index';
-  // import { REPLACE } from "../../../../store/mutations";
+  import NavTitle from '../../../../../components/NavTitle'
 
 
   export default {
@@ -37,7 +38,9 @@
       }
     },
     computed: {},
-
+    components:{
+      NavTitle
+    },
     created() {
       this.init();
     },

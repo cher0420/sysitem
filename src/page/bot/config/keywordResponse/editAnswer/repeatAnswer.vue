@@ -1,5 +1,6 @@
 <template>
  <div v-loading="loadingEdit" >
+   <nav-title title="添加关键词回复"/>
     <div class="keywordTip">
 
      <section class="title f-s-16 c555 box-sizing margin-b-30px"> 设置关键词（至多三个）  </section>
@@ -26,7 +27,7 @@ import {mapGetters,mapActions} from 'vuex';
   import { getCookies } from "../../../../../utils/cookie";
   import {TOKEN} from "../../../../../constants/constants";
   import store from '../../../../../store/index'
-  import {REPLACE} from "../../../../../store/mutations";
+  import NavTitle from '../../../../../components/NavTitle'
 
   export default {
     name: "Allen-EditQA",
@@ -39,6 +40,9 @@ import {mapGetters,mapActions} from 'vuex';
     },
     computed: {
 
+    },
+    components:{
+      NavTitle
     },
 
     created() {
