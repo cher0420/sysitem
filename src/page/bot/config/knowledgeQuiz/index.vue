@@ -250,8 +250,8 @@
         )
       },
       handleDetail(name,v,index,title,ID,IntentName){
-        store.dispatch(REPLACE,{navIndex:title}).then(
-          () => {
+        // store.dispatch(REPLACE,{navIndex:title}).then(
+        //   () => {
             const query = this.$route.query
             const url={
               path:'/bot/config/knowledgeQuiz/knowledgeDetail',
@@ -265,8 +265,8 @@
               }
             }
             this.$router.push(url)
-          }
-        )
+          // }
+        // )
       },
       handleCurrentChange(v){
         store.dispatch(REPLACE,{PageIndex:v}).then(

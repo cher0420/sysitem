@@ -12,8 +12,8 @@
     </section>
   </section>
 </template>
-<style lang="scss" scoped>
-  @import '../style/index.scss';
+<style lang="scss">
+  @import '../style/index';
   .full-width{
     width:100%;
   }

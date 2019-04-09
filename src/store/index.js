@@ -15,7 +15,7 @@ Vue.use(Vuex)
       defaultActiveSecondM:'config',                   //二级菜单active-key
       userName: '',                                    //用户名
       userInfo: {},                                    //用户信息
-      navIndex: '',                                    //标题
+      // navIndex: '',                                    //标题
       isCollapse: false,                               //折叠菜单状态
       aSideWidth: '14vw',                              //菜单宽度
       breadArr:[{url:'/',name :'首页'}],                //面包屑数组

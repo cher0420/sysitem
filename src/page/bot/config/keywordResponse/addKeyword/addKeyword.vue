@@ -6,7 +6,7 @@
       <div style="height:32px;display: inline-block;">
         <div class="addContent" v-for="(item,index) in keywordList" :key="index">
           <div class="inputContent keyword">
-            <el-input  type="text"
+            <el-input  type="text"  :autofocus="autofocus"
                        :placeholder="keywordList[index]" v-model="keywordList[index]"
                        @blur="emptyKey(index)" @input="gettotal" :class="[regIndex === index?'changeColor':'']">
             </el-input>
@@ -83,7 +83,15 @@
         this.isRed=true;
       },
       delKeyword(index) {
-
+        var arr = this.keywordList;
+        var arr1 = Array.from(new Set(arr));
+        if (arr.length> arr1.length) {
+          console.log('chongddddd', '')
+          this.change =true ;// 提示语
+          this.disabled =false// 按钮
+          this.isRed=true;//
+          this.regIndex = index//
+        }
         if (this.keywordList.length>=2){
           console.log('shan', '')
           this.keywordList.splice(index,1)

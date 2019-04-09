@@ -41,9 +41,9 @@
       };
     },
     computed: {
-      navIndex () {
-        return store.state.app.navIndex
-      },
+      // navIndex () {
+      //   return store.state.app.navIndex
+      // },
       isCollapse () {
         return store.state.app.isCollapse
       },
@@ -65,13 +65,13 @@
               const navIndexArr = to.path.split('/')
               const activeKey =navIndexArr[1]
               //设置标题
-              if(to.name === 'detail'||to.name === 'edit'){
-                const navIndex = to.query.title ?to.query.title:STR[to.name]
-                  store.dispatch(REPLACE,{navIndex})
-              }else{
-                const navIndex = STR[navIndexArr[navIndexArr.length-1]]
-                store.dispatch(REPLACE,{navIndex})
-              }
+              // if(to.name === 'detail'||to.name === 'edit'){
+              //   const navIndex = to.query.title ?to.query.title:STR[to.name]
+              //     store.dispatch(REPLACE,{navIndex})
+              // }else{
+              //   const navIndex = STR[navIndexArr[navIndexArr.length-1]]
+              //   store.dispatch(REPLACE,{navIndex})
+              // }
               const config = navIndexArr[2] === 'config'
               let aSideWidth = null;
               if(config){

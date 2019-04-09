@@ -1,6 +1,6 @@
 <template>
   <section>
-    <nav-title title="意见反馈"></nav-title>
+    <nav-title title="仪表盘"></nav-title>
     <wait-page></wait-page>
   </section>
 </template>

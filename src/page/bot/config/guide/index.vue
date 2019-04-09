@@ -31,13 +31,15 @@
     </section>
     <!--<section style="margin-top: -67px;background: #fff">-->
       <section class="title">
-        <div class="line"></div>
-        引导问题 <span @click="why" class="state"><i class="el-icon-question"></i>什么是引导问题？</span>
-        <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
-        <span class="stopBtn" v-show='!stopIt' >
-        <el-button class="off"  @click="stop">停用</el-button>
-        <el-button class="on"  @click="clearAll" :disabled="disable||!clearBtn">清空数据</el-button>
-    </span>
+        <nav-title title="引导问题">
+          <span @click="why" class="state"><i class="el-icon-question"></i>什么是引导问题？</span>
+          <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
+          <span class="stopBtn" v-show='!stopIt' >
+              <el-button class="off"  @click="stop">停用</el-button>
+              <el-button class="on"  @click="clearAll" :disabled="disable||!clearBtn">清空数据</el-button>
+          </span>
+        </nav-title>
+
 
       </section>
       <section class="config">引导语设置</section>
@@ -74,6 +76,7 @@
   import KnowledgeStore from './knowledgeStore'
   import TapItem from './TapItem'
   import store from './store'
+  import NavTitle from '../../../../components/NavTitle'
   import {UPDATE, FILTER, DETAILS,APP,RESTART} from "./store/mutations";
   import { GETSERVICE ,UPDATESERVICE,CHECKQUERY,UPDATEQUESTION,DELETEALL,ADDQUESTION} from "../../../../constants/api.js";
   import { mapGetters, mapActions } from "vuex";
@@ -108,7 +111,8 @@
     },
     components:{
       KnowledgeStore,
-      TapItem
+      TapItem,
+      NavTitle
     },
     destroyed(){
 
@@ -521,7 +525,7 @@
     height: 24px;
     background-color: #2a8ce7;
     margin-right: 6px;}
-  .title{border-bottom:1px solid #eaedf1;color: #555;font-size: 24px;  font-family: "Microsoft YaHei";
+  .title{color: #555;font-size: 24px;  font-family: "Microsoft YaHei";
     span{font-size: 12px;color:#2a8ce7;margin-left:15px;display: inline-block;}
     .on{float: right;background: #2a8ce7;color:#fff;z-index:990;}
     .off{background: red;color:#fff;float: right;z-index: 888;margin-left:20px;}

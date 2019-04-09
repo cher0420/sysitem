@@ -1,5 +1,5 @@
 <template>
-  <section class="yoy-title box-sizing border-bottom text-title" style="width: 98%;line-height: 1.5">
+  <section class="yoy-title box-sizing border-bottom text-title" style="line-height: 1.5">
     <span class="align-middle dis-i-b line"></span>
     <span class="align-middle dis-i-b">
         {{title}}

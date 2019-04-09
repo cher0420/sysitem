@@ -22,7 +22,7 @@
 </template>
 <script>
   import store from '../../store/index'
-  import {STR} from "../../constants/constants";
+  // import {STR} from "../../constants/constants";
   import {REPLACE} from "../../store/mutations";
 
   export default {
@@ -35,23 +35,20 @@
       breadArr(){
         return store.state.app.breadArr
       },
-      navIndex(){
-        return store.state.app.navIndex
-      },
     },
     created(){
-      //判断面包屑初始化时是否为详情页
-      const to = this.$route
-      const arr = to.path.split('/')
-      const last = to.name === 'detail'
-
-      if(last){
-        const navIndex = to.query.title
-        store.dispatch(REPLACE,{navIndex})
-      }else{
-        const navIndex = STR[arr[arr.length-1]]
-        store.dispatch(REPLACE,{navIndex})
-      }
+      // //判断面包屑初始化时是否为详情页
+      // const to = this.$route
+      // const arr = to.path.split('/')
+      // const last = to.name === 'detail'
+      //
+      // if(last){
+      //   const navIndex = to.query.title
+      //   store.dispatch(REPLACE,{navIndex})
+      // }else{
+      //   const navIndex = STR[arr[arr.length-1]]
+      //   store.dispatch(REPLACE,{navIndex})
+      // }
     },
     methods:{
 

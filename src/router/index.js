@@ -13,7 +13,7 @@ const arr = [
         path:'/',
         name: 'dashboard',
         component: resolve =>
-          require(["../page/wait/index"], resolve),
+          require(["../page/dashboard/index"], resolve),
       }
     ]
   },
@@ -26,7 +26,7 @@ const arr = [
         path:'/',
         name:'skill',
         component: resolve =>
-          require(["../page/wait/index"], resolve),
+          require(["../page/skill/index"], resolve),
       }
     ]
   },
@@ -39,7 +39,7 @@ const arr = [
         path:'/',
         name:'custom',
         component: resolve =>
-          require(["../page/wait/index"], resolve),
+          require(["../page/custom/index"], resolve),
       }
     ]
   },
@@ -52,7 +52,7 @@ const arr = [
         path:'/',
         name:'authority',
         component: resolve =>
-          require(["../page/wait/index"], resolve),
+          require(["../page/authority/index"], resolve),
       }
     ]
   },
@@ -65,7 +65,7 @@ const arr = [
         path:'/',
         name:'opinion',
         component: resolve =>
-          require(["../page/wait/index"], resolve),
+          require(["../page/opinion/index"], resolve),
       }
     ]
   },
@@ -121,19 +121,19 @@ const arr = [
       {
         path:'config/weChatCompany',
         component: resolve =>
-          require(["../page/wait/index"], resolve),
+          require(["../page/bot/config/weChatCompany/index"], resolve),
         name: 'config',
       },
       {
         path:'config/robot',
         component: resolve =>
-          require(["../page/wait/index"], resolve),
+          require(["../page/bot/config/robot/index"], resolve),
         name: 'config',
       },
       {
         path:'config/desktopApp',
         component: resolve =>
-          require(["../page/wait/index"], resolve),
+          require(["../page/bot/config/desktopApp/index"], resolve),
         name: 'config',
       },
       // {
