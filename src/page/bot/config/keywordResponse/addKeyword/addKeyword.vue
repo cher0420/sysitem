@@ -1,5 +1,6 @@
 <template>
   <div v-loading="loadingEdit">
+    <nav-title title="添加关键词回复"/>
     <div class="keywordTip">
       <section class="title f-s-16 c555 box-sizing margin-b-30px" >设置关键词（至多三个）</section>
       <div style="height:32px;display: inline-block;">
@@ -31,12 +32,11 @@
 <script>
   import { mapGetters, mapActions } from "vuex";
   import { request } from "../../../../../serive/request";
-  import { ADDKEYWORD, VERIFYDUPLICATED } from "../../../../../constants/api";
+  import { VERIFYDUPLICATED } from "../../../../../constants/api";
   import { getCookies } from "../../../../../utils/cookie";
   import { TOKEN } from "../../../../../constants/constants";
   import store from "../../../../../store/index";
-  import vue from "vue";
-  import vuex from "vuex";
+  import NavTitle from '../../../../../components/NavTitle'
 
   export default {
     data() {
@@ -48,7 +48,8 @@
         regIndex:'index'
       };
     },
-    computed: {
+    components:{
+      NavTitle
     },
     created(){
       this.init();

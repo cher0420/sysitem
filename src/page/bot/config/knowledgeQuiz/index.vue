@@ -1,5 +1,6 @@
 <template>
-  <section >
+  <section>
+    <nav-title title="知识问答"/>
     <div class="inputBox">
       <el-select v-model="value4" clearable placeholder="请选择技能集" class="select" @change="select">
       <el-option
@@ -70,6 +71,7 @@
 <script>
   import store from '../../../../store/index'
   import {REPLACE} from "../../../../store/mutations";
+  import NavTitle from '../../../../components/NavTitle'
   import {BOTKNOWQUIZSKILL,BOTKNOWQUIZLIST} from "../../../../constants/api";
   import {getList} from "./service";
   import URL from '../../../../host/baseUrl'
@@ -84,6 +86,9 @@
         keyWords:'',
         resizable:false
       }
+    },
+    components:{
+      NavTitle
     },
     computed:{
       /**

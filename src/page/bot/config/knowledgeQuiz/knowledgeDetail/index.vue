@@ -1,5 +1,6 @@
 <template>
   <section class="c999 f-s-14">
+    <nav-title :title="title"/>
     <section class="tapList">
       <span class="firTap">选择渠道：</span>
       <span  v-for="(data,key) in tapList"  class="text-a-c"  v-bind:class="{isChecked:key === botCheckIndex}"  @click="handleClick(key)" :index="key" :key="key">
@@ -182,6 +183,7 @@
   import { upload_delete_img } from "../../../../../serive/request";
   import { TENANTID, USERNAME } from "../../../../../constants/constants";
   import { getCookies } from "../../../../../utils/cookie";
+  import NavTitle from '../../../../../components/NavTitle'
 
   export default {
     data() {
@@ -208,15 +210,19 @@
         DeleteIds: [],
         deleteImgArr: [],
         textTotal: 0,
-        statusTest: "basic"
+        statusTest: "basic",
+        title:''
       };
     },
     created() {
       const query = this.$route.query;
       const botCheckIndex = query.botCheckIndex; // 选中项
       this.botCheckIndex = botCheckIndex;
+      this.title = query.title
       this.get_knowledge_detail(botCheckIndex);
-
+    },
+    components:{
+      NavTitle
     },
     methods: {
       getBase64(imgUrl) {

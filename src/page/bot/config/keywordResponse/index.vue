@@ -1,5 +1,6 @@
 <template>
   <section class="p-relative">
+    <nav-title title="关键词回复"/>
     <section class="f-l done">
       <el-input class='searchInput middle' size = 'small' v-model="keyWords" placeholder="关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
@@ -78,6 +79,7 @@
 <script>
   import moment from 'moment'
   import {request} from "../../../../serive/request";
+  import NavTitle from '../../../../components/NavTitle'
   import {KEYWORDLIST, DELETEKEYWORD, KEYWORDLEADEXCEL, KEYWORDCLEAR, KEYWORDENABLE, KEYWORDSTATUS} from "../../../../constants/api";
   import { getCookies } from "../../../../utils/cookie";
   import {TOKEN} from "../../../../constants/constants";
@@ -129,6 +131,9 @@
       this.webSocket.close()
       store.dispatch( REPLACE, { mainLoading: false } )
       clearInterval(this.setInterval)
+    },
+    components:{
+      NavTitle,
     },
     methods: {
       init() {

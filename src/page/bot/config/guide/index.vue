@@ -29,7 +29,7 @@
     </section>
     <section class="startIt">
     </section>
-    <section style="margin-top: -67px;background: #fff">
+    <!--<section style="margin-top: -67px;background: #fff">-->
       <section class="title">
         <div class="line"></div>
         引导问题 <span @click="why" class="state"><i class="el-icon-question"></i>什么是引导问题？</span>
@@ -65,8 +65,8 @@
       </div>
       <el-button class="open save" :disabled="!disabled || !textTotal || details.length === 0||checkList.length===0" @click="save">保存 </el-button>
       <knowledge-store ref="knowledge"/>
-    </section>
-    <section style="height: 67px;"></section>
+    <!--</section>-->
+    <!--<section style="height: 67px;"></section>-->
   </div>
 
 </template>
