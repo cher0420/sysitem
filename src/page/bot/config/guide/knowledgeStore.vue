@@ -163,7 +163,7 @@
         let total = store.state.dataAll.total
         v?total++:total--
         const tableData = store.state.dataAll.tableData
-        let hasChecked = JSON.parse(JSON.stringify(store.state.dataAll.hasChecked))
+        let hasChecked = store.state.dataAll.hasChecked?JSON.parse(JSON.stringify(store.state.dataAll.hasChecked)):[]
         //
         store.dispatch(FILTER,{total}).then(
           () => {
