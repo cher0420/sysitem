@@ -6,9 +6,9 @@
       <div style="height:32px;display: inline-block;">
         <div class="addContent" v-for="(item,index) in keywordList" :key="index">
           <div class="inputContent keyword">
-            <el-input  type="text"  :autofocus="autofocus"
+            <el-input  type="text"  autofocus='true'
                        :placeholder="keywordList[index]" v-model="keywordList[index]"
-                       @blur="emptyKey(index)" @input="gettotal" :class="[regIndex === index?'changeColor':'']">
+                       @input="emptyKey(index)" :class="[regIndex === index?'changeColor':'']">
             </el-input>
             <!-- @input="emptyKey(index)"  -->
             <i class="el-icon-error del" @click="delKeyword(index)"></i>
@@ -45,7 +45,8 @@
         keywordList: [''],
         change:true,
         isRed:false,
-        regIndex:'index'
+        regIndex:'index',
+        autofocus: true
       };
     },
     components:{
@@ -81,6 +82,7 @@
         this.emptyKey();
         this.regIndex = index;
         this.isRed=true;
+        this.change =true ;// 提示语
       },
       delKeyword(index) {
         var arr = this.keywordList;
@@ -95,17 +97,19 @@
         if (this.keywordList.length>=2){
           console.log('shan', '')
           this.keywordList.splice(index,1)
+          console.log(this.keywordList)
           this.counter--;
+          this.emptyKey()
           return;
           this.change =false ;// 提示语
           this.disabled =false// 按钮
           this.isRed=true;//
           this.regIndex = index//
+
         };
 
       },
       emptyKey(index){
-        console.log('00000000',index);
         console.log(this.keywordList)
         if (this.keywordList[index]) {
           console.log(this.keywordList[index])

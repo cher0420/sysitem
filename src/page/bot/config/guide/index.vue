@@ -29,40 +29,40 @@
     </section>
     <section class="startIt">
     </section>
-      <section class="title">
-        <nav-title title="引导问题">
-          <span @click="why" class="state"><i class="el-icon-question"></i>什么是引导问题？</span>
-          <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
-          <span class="stopBtn" v-show='!stopIt' >
+    <section class="title">
+      <nav-title title="引导问题">
+        <span @click="why" class="state"><i class="el-icon-question"></i>什么是引导问题？</span>
+        <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
+        <span class="stopBtn" v-show='!stopIt' >
               <el-button class="off"  @click="stop">停用</el-button>
               <el-button class="on"  @click="clearAll" :disabled="disable||!textTotal && details.length === 0&&checkList.length===0">清空数据</el-button>
           </span>
-        </nav-title>
-      </section>
-      <section class="config">引导语设置</section>
-      <div class="area">
+      </nav-title>
+    </section>
+    <section class="config">引导语设置</section>
+    <div class="area">
         <textarea class="c555" :disabled="!disabled"
                   v-model.trim="Guidetext" rows="8" type="text"
                   @input="getTextTotal" maxlength="50"
                   placeholder="例如：你可以这样问我" ></textarea>
-        <span>{{textTotal}}/50字</span>
-      </div>
-      <section class="config">选择引导问题（最多5个）</section>
-      <tap-item></tap-item>
-      <el-button class="open" :disabled="!disabled || isSpread" @click="openKnowLedgeStore">打开知识库</el-button>
-      <section class="config">选择渠道</section>
-      <div class="checkbox">
-        <template  class="checkbox">
-          <div class="check" v-show="!over"></div>
-          <el-checkbox-group v-model="checkList">
-            <el-checkbox class='checkbox' label="webchat" >网页</el-checkbox><br>
-            <el-checkbox class='checkbox' label="wechat" >微信</el-checkbox>
-          </el-checkbox-group>
-        </template>
-        <p class="tip"> <i class="el-icon-warning"> </i>默认引导语与引导问题问候语一同出现</p>
-      </div>
-      <el-button class="open save" :disabled="!disabled || !textTotal || details.length === 0||checkList.length===0" @click="save">保存 </el-button>
-      <knowledge-store ref="knowledge"/>
+      <span>{{textTotal}}/50字</span>
+    </div>
+    <section class="config">选择引导问题（最多5个）</section>
+    <tap-item></tap-item>
+    <el-button class="open" :disabled="!disabled || isSpread" @click="openKnowLedgeStore">打开知识库</el-button>
+    <section class="config">选择渠道</section>
+    <div class="checkbox">
+      <template  class="checkbox">
+        <div class="check" v-show="!over"></div>
+        <el-checkbox-group v-model="checkList">
+          <el-checkbox class='checkbox' label="webchat" >网页</el-checkbox><br>
+          <el-checkbox class='checkbox' label="wechat" >微信</el-checkbox>
+        </el-checkbox-group>
+      </template>
+      <p class="tip"> <i class="el-icon-warning"> </i>默认引导语与引导问题问候语一同出现</p>
+    </div>
+    <el-button class="open save" :disabled="!disabled || !textTotal || details.length === 0||checkList.length===0" @click="save">保存 </el-button>
+    <knowledge-store ref="knowledge"/>
   </div>
 
 </template>
@@ -529,11 +529,11 @@
   @import "../../../../style/index.scss";
   .state{ cursor:pointer;}
   .pop{position:fixed;top:60px;left:260px;background: rgba($color: #000000, $alpha: .5);  width:100%;height: 100%;z-index:999;
-    .location{position:absolute; top:50%; left:40%;  transform:translate(-50%,-50%);
+    .location{position:absolute;top:50%;left:40%;transform:translate(-50%,-50%);
       .guide{background:#eaedf1;border-radius: 10px;display: inline-block;padding:30px;width:100%;box-sizing:border-box;}
-      .way{margin-top:40px;margin-bottom: 30px; display: flex;box-sizing:border-box;
-        .text{height: 300px;width:220px;}
-        img{height: 90%;}
+      .way{margin-top:40px;margin-bottom:-40px;display: flex;box-sizing:border-box;
+        .text{height: 260px;width:220px;}
+        img{height: 80%;}
       }
       .center{text-align: center;color: #fff}
     }
