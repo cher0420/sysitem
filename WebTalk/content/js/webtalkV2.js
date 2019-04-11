@@ -160,7 +160,7 @@ $(function () {
                     if (result.status == 1) {
                         var answer = "";
                         var i = 0;
-                        if (result.responseType == 2) {
+                        if (result.responseType == 2 && result.context != null) {
                             if (result.context.Header != null && result.context.Header.length > 0) {
                                 for (i = 0; i < result.context.Header.length; i++) {
                                     answer += filterMsgSpechars(result.context.Header[i]);
@@ -181,7 +181,7 @@ $(function () {
                                     answer += "\n";
                                 }
                             }
-                        } else {
+                        } else if (result.answer != null) {
                             if (result.answer.Header != null && result.answer.Header.length > 0) {
                                 for (i = 0; i < result.answer.Header.length; i++) {
                                     answer += filterMsgSpechars(result.answer.Header[i]);
@@ -232,7 +232,7 @@ $(function () {
                             }
                         }
 
-                        if (answer == "") {
+                        if (answer == "" && result.responseType != 6) {
                             sendErrorMsg();
                         } else {
                             if (answer.substring(answer.length - 2) == "\n") {
