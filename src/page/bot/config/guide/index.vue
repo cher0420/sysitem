@@ -440,6 +440,11 @@
       },
       getIntentName(){
         const that = this
+        store.dispatch( FILTER, {total: 0} ).then(
+          () => {
+            store.dispatch( UPDATE, {isSpread: true} )
+          }
+        )
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
         const url = '/api/admin/portal/guideQuestion/queryIntent'
@@ -460,7 +465,7 @@
             const details = store.state.app.Data.Details?store.state.app.Data.Details:[]
             store.dispatch( FILTER, {total: details.length} ).then(
               () => {
-                store.dispatch( UPDATE, {isSpread: true} )
+
               }
             )
             const tableData = res.Data

@@ -339,35 +339,23 @@
           }
         }
       },
-      showLoading(data){
-
-        data.forEach(
-          (v,index) => {
-            if(v.IntentName){
-              v.QuestionId = v.ID
-              v.Question = v.IntentName
-            }else{
-              v.IntentName = v.Question
-              v.ID = v.QuestionId
-            }
-          }
-        )
-
-        store.dispatch(
-          DETAILS, { Details: data }
-        )
-      },
       add(){
-        const tableData = store.state.dataAll.tableData
+        const tableData = store.state.dataAll.hasChecked
 
-        let templateTableData = tableData.filter(
-          (item,index) =>{
-            if(item.checked)
-              return item;
-          }
-        )
-
-        this.showLoading(templateTableData)
+        tableData.forEach(
+            (v,index) => {
+              if(v.IntentName){
+                v.QuestionId = v.ID
+                v.Question = v.IntentName
+              }else{
+                v.IntentName = v.Question
+                v.ID = v.QuestionId
+              }
+            }
+          )
+          store.dispatch(
+            DETAILS, { Details: tableData }
+          )
       }
     },
   }
