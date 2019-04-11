@@ -1,7 +1,7 @@
 <template>
   <el-menu
     :default-active="defaultActiveSecondM"
-    class=""
+    class="menu"
     @open="handleOpen"
     @close="handleClose"
     @select="select"
@@ -112,6 +112,12 @@
 
 <style lang="scss" scoped>
   @import '../../style/index';
+  .menu{
+    height: 100%;
+    width: 100%;
+    background: $second-side;
+    overflow-y: scroll;
+  }
 .omit{
   overflow:hidden;
   text-overflow:ellipsis;
