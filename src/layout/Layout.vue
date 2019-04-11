@@ -18,9 +18,9 @@
         <!-- display area -->
            <!-- second -->
         <el-container class="full-height robotDisplayArea" :style="{width:realMainWidth}">
-            <section v-if="config"  class='full-height' style="float:left">
-              <secondary-menu class='full-height yoy-second-menu'>
-              </secondary-menu>
+            <section v-if="config"  class='full-height' style="float:left;">
+                <secondary-menu class='full-height yoy-second-menu'>
+                </secondary-menu>
             </section>
             <el-main v-loading="mainLoading" class="full-height " :element-loading-text="loadingText" id="main">
               <app-main></app-main>
@@ -81,6 +81,9 @@
 <style lang="scss" scoped>
   @import '../style/var/color';
   @import '../style/var/size';
+  .el-aside{
+    transition: width 0.2s;
+  }
   .nav-b-color{
     background: $nav-b-color;
   }

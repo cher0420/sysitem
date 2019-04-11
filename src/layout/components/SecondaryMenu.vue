@@ -1,7 +1,7 @@
 <template>
   <el-menu
     :default-active="defaultActiveSecondM"
-    class="menu"
+    class="menu-scroll"
     @open="handleOpen"
     @close="handleClose"
     @select="select"
@@ -112,11 +112,9 @@
 
 <style lang="scss" scoped>
   @import '../../style/index';
-  .menu{
-    height: 100%;
-    width: 100%;
-    background: $second-side;
-    overflow-y: scroll;
+  .menu-scroll{
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 .omit{
   overflow:hidden;
