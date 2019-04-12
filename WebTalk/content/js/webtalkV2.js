@@ -234,7 +234,7 @@ $(function () {
 
                         if (answer == "" && result.responseType != 6) {
                             sendErrorMsg();
-                        } else {
+                        } else if (answer !== "") {
                             if (answer.substring(answer.length - 2) == "\n") {
                                 answer = answer.substring(0, answer.length - 2);
                             }

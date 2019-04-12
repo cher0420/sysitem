@@ -111,7 +111,6 @@
 </script>
 
 <style lang="scss" scoped>
-  @import '../../style/index';
   .menu-scroll{
     overflow-y: auto;
     overflow-x: hidden;

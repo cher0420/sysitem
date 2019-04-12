@@ -189,21 +189,30 @@
           this.Guidetext=Guidetext
           const checkList=res.Data?res.Data.Channels.split("|"):[]
           this.checkList=checkList
-          console.log(this.checkList)
-          this.checkService()
           this.getTextTotal()
+          this.checkService()
           if (!res.Data) {
-            this.change=false
             this.loading=false
             this.clearBtn=false
+            request(GETSERVICE, params).then(res => {
+              const ID = res.Data.ID
+              store.dispatch(DETAILS,{Enable:res.Data.Enable})
+              if (res.Data.Enable) {
+                this.change =true
+              } else {
+                this.change = false
+              }
+              store.dispatch(DETAILS,{serviceId:ID,Enable:res.Data.Enable})
+            })
+
           } else {
             store.dispatch(APP,{Data:res.Data})
-            this.change=true//不显示遮罩
             this.disabled =true  //保存不可点  enable为true
             this.changeIt=true  //开启按钮隐藏
             this.loading=false
             this.clearBtn=true
           }
+
         });
       },
       checkService(){
@@ -219,18 +228,27 @@
           })
         }
         request(GETSERVICE, params).then(res => {
-          const ID=res.Data.ID
-          if (res.Data.Enable) {
+          const ID = res.Data.ID
+          store.dispatch(DETAILS,{Enable:res.Data.Enable}).then(
+            () =>{
+              console.log(store.state.app.Data.Enable)
+            }
+          )
 
+          if (res.Data.Enable) {
+            this.change =true
             this.stopIt=false   //停用和清空按钮
             this.changeIt=true
             this.disabled =true
             this.over=true
           } else {
+            this.change = false
             this.stopIt=true   //停用和清空按钮显示
             this.changeIt=false  //开启按钮隐藏
             this.disabled =false
             this.over=false  // check可以点击
+
+
           }
           store.dispatch(DETAILS,{serviceId:ID,Enable:res.Data.Enable})
         })
@@ -463,11 +481,7 @@
         request(url, params).then(
           (res) => {
             const details = store.state.app.Data.Details?store.state.app.Data.Details:[]
-            store.dispatch( FILTER, {total: details.length} ).then(
-              () => {
-
-              }
-            )
+            store.dispatch( FILTER, {total: details.length} )
             const tableData = res.Data
             let template = []
 
@@ -533,8 +547,13 @@
 <style scoped lang="scss">
   @import "../../../../style/index.scss";
   .state{ cursor:pointer;}
-  .pop{position:fixed;top:60px;left:260px;background: rgba($color: #000000, $alpha: .5);  width:100%;height: 100%;z-index:999;
-    .location{position:absolute;top:50%;left:40%;transform:translate(-50%,-50%);
+  .pop{
+    position: absolute;
+    left: 0;
+    top: -50px;
+    height: calc(100% + 105px);
+    background: rgba($color: #000000, $alpha: .5);  width:100%;z-index:999;
+    .location{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
       .guide{background:#eaedf1;border-radius: 10px;display: inline-block;padding:30px;width:100%;box-sizing:border-box;}
       .way{margin-top:40px;margin-bottom:-40px;display: flex;box-sizing:border-box;
         .text{height: 260px;width:220px;}

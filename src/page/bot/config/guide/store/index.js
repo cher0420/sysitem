@@ -48,6 +48,7 @@ const store = new Vuex.Store({
         ...state.app.Data,
         ...payload
       }
+
     },
     [APP] (state, payload) { //更新详情
       state.app = {

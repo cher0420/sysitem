@@ -27,9 +27,9 @@ form label
     left: 100px;
   }
 }
-  /*
-  覆盖button
-   */
+/*
+覆盖button
+ */
 .el-button{
   border-radius:2px;
   padding: 8px 25px;
@@ -118,21 +118,21 @@ form label
     color:$primary-color;
   }
   .el-input__inner::-webkit-input-placeholder {
-        color: #C7CAD1 !important;
-        font-size: 13px !important;
-      }
+    color: #C7CAD1 !important;
+    font-size: 13px !important;
+  }
   .el-input__inner:-moz-placeholder {
-        color: #C7CAD1 !important;
-        font-size: 13px !important;
-      }
+    color: #C7CAD1 !important;
+    font-size: 13px !important;
+  }
   .el-input__inner::-moz-placeholder {
-        color: #C7CAD1 !important;
-        font-size: 13px !important;
-      }
+    color: #C7CAD1 !important;
+    font-size: 13px !important;
+  }
   .el-input__inner:-ms-input-placeholder {
-        color: #C7CAD1 !important;
-        font-size: 13px !important;
-      }
+    color: #C7CAD1 !important;
+    font-size: 13px !important;
+  }
 }
 .el-button.is-disabled, .el-button.is-disabled:hover, .el-button.is-disabled:focus{
   cursor: default;
@@ -141,5 +141,11 @@ form label
 .sayHello{
   .el-textarea__inner {
     padding-left: 10px !important;
+  }
+}
+.keywordTip .changeColor{
+  border:1px solid red;
+  .el-input.is-active,.el-input__inner:focus{
+    border: none !important;
   }
 }
