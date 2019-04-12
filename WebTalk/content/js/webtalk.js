@@ -216,7 +216,7 @@ $(function () {
             return value;
         }
 
-        return value.replace(/^\s+|\s+$/g, '');
+        return value.replace(/^\s+|\s+$/g, '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
     // 如果答案是图片，图片标签
