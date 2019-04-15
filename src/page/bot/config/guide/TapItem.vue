@@ -12,7 +12,7 @@
     >
       <transition-group>
         <div v-for="(item, index) in Details" :key="item.QuestionId" class="item">
-          <span class="question">{{item.Question}}</span>
+          <span class="question">{{item.QuestionFriendlyName}}</span>
           <span :class="Enable?['del']:['del','disabled']" @click="handleDel(index, item.QuestionId)">
             <i class="el-icon-close"></i>
             <span class="text">删除</span>

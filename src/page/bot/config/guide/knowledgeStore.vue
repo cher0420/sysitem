@@ -16,10 +16,10 @@
           <span class="checked-box-container">
             <el-checkbox v-model="item.checked" :disabled='item.disabled' size="medium" @change="typeBox(index,item.checked,item)"></el-checkbox>
           </span>
-          <el-tooltip v-if='item.IntentName.length>18' class="item" effect="dark" :content="item.IntentName" placement="bottom-start">
-            <section class="title">{{item.IntentName}}</section>
+          <el-tooltip v-if='item.FriendlyName.length>18' class="item" effect="dark" :content="item.FriendlyName" placement="bottom-start">
+            <section class="title">{{item.FriendlyName}}</section>
           </el-tooltip>
-          <section v-else class="title">{{item.IntentName}}</section>
+          <section v-else class="title">{{item.FriendlyName}}</section>
         </section>
         <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
         <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">

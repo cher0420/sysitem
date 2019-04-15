@@ -8,7 +8,7 @@
           <div class="inputContent keyword">
             <el-input  type="text"  autofocus='true'
                        :placeholder="keywordList[index]" v-model="keywordList[index]"
-                       @input="emptyKey(index)" :class="[indexList.indexOf(index) > -1?'changeColor':'']">
+                       @input="emptyKey(index)" :class="[indexList.indexOf(index) > -1?'keyword-changeColor':'']">
             </el-input>
             <i class="el-icon-error del" @click="delKeyword(index)"></i>
           </div>
@@ -152,10 +152,11 @@
           if (arr.length> arr1.length) {
             this.disabled =true
             this.indexList.push(index)
-
+            this.change =false
             // console.log('===>', this.indexList)
           } else {
             this.disabled =false
+            this.change =true
             const arry = this.indexList.filter(
               (item) => {
                 if( !item == index){
@@ -174,17 +175,31 @@
           this.regIndex = index
           this.indexList.push(index)
           console.log('jia', '')
-        }
-        this.keywordList.filter(
-          (v, index, arr) => {
-            if(!v){
-              this.indexList.push(index)
-            }else if (v === arr[index + 1]){
-              this.indexList.push(index)
-            }else{
 
-            }
-          })
+        }
+        // this.keywordList.filter(
+        //   (v, index, arr) => {
+        //      if(!v){
+        //        console.log('11111===1', '')
+        //          this.indexList.push(index)
+
+        //      }else if (v === arr[index + 1]){
+        //       this.indexList.push(index)
+        //       console.log('11111===2', '')
+        //     }else{
+        //       const arry = this.indexList.filter(
+        //         (item) => {
+        //           if( !item == index){
+        //             return item
+        //           }
+        //         }
+        //       )
+        //       this.indexList = arry
+        //       console.log('11111===3', '')
+        //       //  this.change =false
+        //     }
+        //   })
+        // this.change =true
       },
       nextAnswer() {
         const that = this;

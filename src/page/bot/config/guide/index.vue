@@ -72,7 +72,7 @@
   import store from './store'
   import NavTitle from '../../../../components/NavTitle'
   import {UPDATE, FILTER, DETAILS,APP,RESTART} from "./store/mutations";
-  import { GETSERVICE ,UPDATESERVICE,CHECKQUERY,UPDATEQUESTION,DELETEALL,ADDQUESTION} from "../../../../constants/api.js";
+  import { GETSERVICE ,UPDATESERVICE,CHECKQUERY,UPDATEQUESTION,DELETEALL,ADDQUESTION,QUERYINTENT} from "../../../../constants/api.js";
   import { mapGetters, mapActions } from "vuex";
   import { request } from "../../../../serive/request";
   import { getCookies } from "../../../../utils/cookie";
@@ -108,9 +108,6 @@
       KnowledgeStore,
       TapItem,
       NavTitle
-    },
-    destroyed(){
-
     },
     methods: {
       init() {
@@ -360,6 +357,8 @@
                 v.Sort = index
                 delete v.disabled
                 delete v.checked
+                delete v.IntentName
+                delete v.FriendlyName
               }
             )
             const params = {
@@ -420,6 +419,8 @@
                 v.Sort = index
                 delete v.disabled
                 delete v.checked
+                delete v.IntentName
+                delete v.FriendlyName
               }
             )
             const params = {
@@ -464,7 +465,7 @@
         )
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const recordId = this.$route.query.recordId ? this.$route.query.recordId : id
-        const url = '/api/admin/portal/guideQuestion/queryIntent'
+        const url = QUERYINTENT
         const params = {
           headers:{
             'Access-Token': getCookies(TOKEN)
@@ -491,6 +492,7 @@
               (item, index, arr) => {
                 item.QuestionId = item.ID
                 item.Question = item.IntentName
+                item.QuestionFriendlyName = item.FriendlyName
                 delete item.Sort
                 item.checked = template.includes(item.QuestionId);
                 if (details.length >= 5) {
@@ -504,6 +506,7 @@
                 v.checked = true
                 v.ID = v.QuestionId
                 v.IntentName = v.Question
+                v.FriendlyName = v.QuestionFriendlyName
                 delete v.Sort
                 return v
               }
