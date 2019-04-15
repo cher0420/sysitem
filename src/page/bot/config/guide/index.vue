@@ -42,7 +42,7 @@
     <section class="config">引导语设置</section>
     <div class="area">
         <textarea class="c555" :disabled="!disabled"
-                  v-model.trim="Guidetext" rows="8" type="text"
+                  v-model="Guidetext" rows="8" type="text"
                   @input="getTextTotal" maxlength="50"
                   placeholder="例如：你可以这样问我" ></textarea>
       <span>{{textTotal}}/50字</span>
@@ -350,7 +350,7 @@
           () => {
             const id = JSON.parse(sessionStorage.getItem('recordId'))
             const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-            const GuideDescription= this.Guidetext
+            const GuideDescription= that.Guidetext.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'')
             const Channels = this.checkList
 
             let QuestionDetails = JSON.parse(JSON.stringify(store.state.app.Data.Details))
@@ -410,7 +410,7 @@
             const  ID = store.state.app.Data.ID
             const id = JSON.parse(sessionStorage.getItem('recordId'))
             const BotConfigId = that.$route.query.recordId?that.$route.query.recordId:id
-            const GuideDescription= that.Guidetext
+            const GuideDescription= that.Guidetext.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'')
             let Channels=that.checkList
 
             let QuestionDetails = JSON.parse(JSON.stringify(store.state.app.Data.Details))
