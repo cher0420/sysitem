@@ -457,7 +457,6 @@
 
       },
       getIntentName(){
-        const that = this
         store.dispatch( FILTER, {total: 0} ).then(
           () => {
             store.dispatch( UPDATE, {isSpread: true} )
@@ -485,12 +484,9 @@
             const tableData = res.Data
             let template = []
 
-            // if(details.length>0){
             for(let v of details.values()){
               template.push(v.QuestionId)
             }
-            // }
-            // if(res.Data.length>0) {
             tableData.forEach(
               (item, index, arr) => {
                 item.QuestionId = item.ID
@@ -503,7 +499,6 @@
               }
             )
 
-            //
             const hasChecked = store.state.app.Data.Details&&store.state.app.Data.Details.filter(
               (v) => {
                 v.checked = true
@@ -513,28 +508,7 @@
                 return v
               }
             )
-
-            store.dispatch(FILTER, {hasChecked})
-            //
-
-            const tableArr = []
-            // if(tableData.length>0){
-            for (let v of tableData.values()) {
-              tableArr.push(v.QuestionId)
-            }
-            // }
-            details.forEach(
-              (v, index) => {
-                if (!tableArr.includes(v.QuestionId)) {
-                  v.ID = v.QuestionId
-                  v.IntentName = v.Question
-                  v.checked = true
-                  // tableData.unshift(v)
-                }
-              }
-            )
-            // }
-            store.dispatch( FILTER, {tableData, originData:  tableData} )
+            store.dispatch( FILTER, {tableData, originData:  tableData, hasChecked} )
           }
         )
       },

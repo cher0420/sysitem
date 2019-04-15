@@ -154,7 +154,7 @@
         v?total++:total--
         const tableData = store.state.dataAll.tableData
         let hasChecked = store.state.dataAll.hasChecked?JSON.parse(JSON.stringify(store.state.dataAll.hasChecked)):[]
-        //
+
         store.dispatch(FILTER,{total}).then(
           () => {
             if(total >= 5){
@@ -220,11 +220,7 @@
               this.showTotal = false
 
               const hasChecked = JSON.parse(JSON.stringify(store.state.dataAll.hasChecked))
-              store.dispatch(FILTER, {tableData:hasChecked}).then(
-                () => {
-                  console.log(store.state.dataAll.tableData)
-                }
-              )
+              store.dispatch(FILTER, {tableData:hasChecked})
 
             }
 

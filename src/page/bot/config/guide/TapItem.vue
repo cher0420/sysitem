@@ -80,7 +80,14 @@
             { Details: this.Details }
           )
           const tableData = store.state.dataAll.tableData
-          const hasChecked = this.Details
+          const hasChecked = store.state.dataAll.hasChecked.filter(
+            (v,index) => {
+              if(v.QuestionId !== id){
+                return v
+              }
+            }
+          )
+
           tableData.forEach(
             (v,index) => {
               if(v.QuestionId === id){
@@ -94,20 +101,9 @@
           store.dispatch(
             FILTER, { tableData,total,hasChecked }
           )
-        }else{
-          return
         }
 
       },
-      showLoading(){
-        const target = document.getElementById('item-container')
-        let loadingInstance = Loading.service({
-          target
-        });
-        store.dispatch(
-          REPLACE, {loadingInstance}
-        )
-      }
     }
   }
 </script>
