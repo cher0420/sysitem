@@ -73,6 +73,7 @@
         )
       },
       handleDel(v, id){
+        console.log(id)
         if(this.Enable){
           this.Details.splice(v,1)
           store.dispatch(
@@ -90,12 +91,14 @@
 
           tableData.forEach(
             (v,index) => {
+
               if(v.QuestionId === id){
                 v.checked = false
               }
               v.disabled = false
             }
           )
+          console.log(tableData)
           let total =  store.state.dataAll.total
           total--
           store.dispatch(

@@ -44,7 +44,7 @@
         <textarea class="c555" :disabled="!disabled"
                   v-model="Guidetext" rows="8" type="text"
                   @input="getTextTotal" maxlength="50"
-                  placeholder="例如：你可以这样问我" ></textarea>
+                  placeholder="例如：你可以这样问我"  ></textarea>
       <span>{{textTotal}}/50字</span>
     </div>
     <section class="config">选择引导问题（最多5个）</section>
@@ -321,8 +321,10 @@
           })
       },
       getTextTotal(){
+        // return str.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'');
         if (this.Guidetext!=null) {
           this.textTotal =this.Guidetext.length;
+          console.log(this.Guidetext)
         }
       },
       save(){
@@ -347,7 +349,7 @@
           () => {
             const id = JSON.parse(sessionStorage.getItem('recordId'))
             const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-            const GuideDescription= that.Guidetext.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'')
+            const GuideDescription= this.Guidetext.replace(/^(\s|\u00A0)+/,'').replace(/(\s|\u00A0)+$/,'')
             const Channels = this.checkList
 
             let QuestionDetails = JSON.parse(JSON.stringify(store.state.app.Data.Details))
@@ -554,8 +556,8 @@
   .open{background: #2a8ce7;color:#fff;border:1px solid #2a8ce7;margin-left: 40px;}
   .config{background:#f9fafc;font-size:16px;margin:30px 0;height: 40px;line-height: 40px;}
   .area{position: relative;margin-left:40px;width:60%;
-    span{position: absolute;bottom:15px;right: 0;color:#999;}
-    textarea{width:100%;border:1px solid #eaedf1; }
+    span{position: absolute;bottom:15px;right: 10px;color:#999;}
+    textarea{width:100%;border:1px solid #eaedf1; padding:10px;box-sizing:border-box;}
   }
   .checkbox{ margin-bottom:30px;padding-left:40px;
     .el-checkbox{padding:0;}

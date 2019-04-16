@@ -126,6 +126,7 @@
               ( item, index ) => {
                 item.QuestionId = item.ID
                 item.Question = item.IntentName
+                item.QuestionFriendlyName = item.FriendlyName
                 item.checked = template.includes(item.QuestionId);
                   if(total>=5){
                     item.disabled = !item.checked
@@ -307,6 +308,7 @@
                 (v,index) => {
                   v.QuestionId = v.ID
                   v.Question = v.IntentName
+                  v.QuestionFriendlyName = v.FriendlyName
                   if(values.includes(v.QuestionId)){
                     v.checked = true
                   }
@@ -343,8 +345,10 @@
               if(v.IntentName){
                 v.QuestionId = v.ID
                 v.Question = v.IntentName
+                v.QuestionFriendlyName = v.FriendlyName
               }else{
                 v.IntentName = v.Question
+                v.FriendlyName = v.QuestionFriendlyName
                 v.ID = v.QuestionId
               }
             }

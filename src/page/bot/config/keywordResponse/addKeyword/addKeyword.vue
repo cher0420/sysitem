@@ -6,10 +6,11 @@
       <div style="height:32px;display: inline-block;">
         <div class="addContent" v-for="(item,index) in keywordList" :key="index">
           <div class="inputContent keyword">
-            <el-input  type="text"  autofocus='true'
+            <el-input  v-focus type="text"
                        :placeholder="keywordList[index]" v-model="keywordList[index]"
                        @input="emptyKey(index)" :class="[indexList.indexOf(index) > -1?'keyword-changeColor':'']">
             </el-input>
+            <!-- autofocus='true' -->
             <i class="el-icon-error del" @click="delKeyword(index)"></i>
           </div>
         </div>
@@ -55,8 +56,22 @@
     created(){
       this.init();
     },
-    mounted() {},
+    mounted() {
+
+
+    },
     watch: {
+
+    },
+    directives:{
+      // 注册一个局部的自定义指令 v-focus
+      focus: {
+        // 指令的定义
+        inserted: function (el) {
+          // 聚焦元素
+          el.querySelector('input').focus()
+        }
+      }
 
     },
     methods: {
@@ -68,7 +83,6 @@
           this.isRed=true;//
           //this.regIndex = index//
         } else {
-          console.log('chongfushuju', '')
           this.keywordList = this.store.split("&");
           this.counter= this.keywordList.length-1;
           this.disabled =false//
@@ -114,25 +128,44 @@
         const test = new RegExp("&");
         this.keywordList.filter(
           (v, index, arr) => {
+
             if(!v){
-              console.log('有错误',index)
               this.change =false ;// 提示语
               this.disabled =true// 按钮不可点  为true
+              this.indexList.push(index)
+              console.log('kong',index)
+            } else  {
+              if(v === arr[index + 1]){
+                this.change =false ;// 提示语
+                this.disabled =true// 按钮不可点  为true
+                this.indexList.push(index)
+                console.log('有重复',index)
+                return
+              }else{
+                console.log('有值且不重复', '')
 
-            }else if (v === arr[index + 1]){
-              console.log('有重复',index)
-              this.change =false ;// 提示语
-              this.disabled =true// 按钮不可点  为true
+                const arry = this.indexList.filter(
+                  (item) => {
+                    if( !item == index){
+                      return item
+                    }
+                  }
+                )
+                this.indexList = arry
 
-            }else if (test.test(v)){
-              console.log('有特殊')
+
+              }
+
+
             }
+
           }
         )
+        console.log(this.indexList)
+
 
       },
       emptyKey(index){
-
         var arr = this.keywordList;
         var arr1 = Array.from(new Set(arr));
         if (this.keywordList[index]) {
@@ -148,13 +181,14 @@
             }
           )
           this.indexList = arry
-          // console.log('jian', '')
+
           if (arr.length> arr1.length) {
             this.disabled =true
             this.indexList.push(index)
             this.change =false
-            // console.log('===>', this.indexList)
+            console.log('tag', '')
           } else {
+            console.log('111', '')
             this.disabled =false
             this.change =true
             const arry = this.indexList.filter(
@@ -165,41 +199,17 @@
               }
             )
             this.indexList = arry
-            // console.log('jian', '')
+
           }
         } else {
-
           this.change =false ;// 提示语
           this.disabled =true// 按钮不可点  为true
           this.isRed=true; //红色边框
           this.regIndex = index
           this.indexList.push(index)
-          console.log('jia', '')
-
         }
-        // this.keywordList.filter(
-        //   (v, index, arr) => {
-        //      if(!v){
-        //        console.log('11111===1', '')
-        //          this.indexList.push(index)
+        this.letters()
 
-        //      }else if (v === arr[index + 1]){
-        //       this.indexList.push(index)
-        //       console.log('11111===2', '')
-        //     }else{
-        //       const arry = this.indexList.filter(
-        //         (item) => {
-        //           if( !item == index){
-        //             return item
-        //           }
-        //         }
-        //       )
-        //       this.indexList = arry
-        //       console.log('11111===3', '')
-        //       //  this.change =false
-        //     }
-        //   })
-        // this.change =true
       },
       nextAnswer() {
         const that = this;
