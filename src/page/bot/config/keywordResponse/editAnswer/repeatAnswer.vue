@@ -50,10 +50,10 @@ import {mapGetters,mapActions} from 'vuex';
       //  console.log(this.$route.query.repeatId)
 
     },
-    mounted() {
-
+    destroyed(){
+          sessionStorage.removeItem("KeyWord")
+          sessionStorage.removeItem("AnsWer")
     },
-    watch: {},
     methods: {
        init() {
          this.keyList();
@@ -175,11 +175,6 @@ import {mapGetters,mapActions} from 'vuex';
 
 
   },
-
-
-    destroyed() {
-      clearInterval(this.timer);
-    }
 
   }
 </script>

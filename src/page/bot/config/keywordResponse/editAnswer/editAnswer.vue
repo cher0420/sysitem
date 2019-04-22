@@ -35,14 +35,15 @@
         textTotal:0
       }
     },
-    computed: {},
     components:{
       NavTitle
     },
     created() {
       this.init();
     },
-    mounted() {
+    destroyed(){
+      sessionStorage.removeItem("KeyWord")
+      sessionStorage.removeItem("AnsWer")
     },
     watch: {
       kilometers:function(val) {
@@ -135,9 +136,7 @@
       // })
     }
     },
-    destroyed() {
 
-    },
 
   }
 
