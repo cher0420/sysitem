@@ -354,7 +354,8 @@
           res => {
             this.detail = res;
             const BasicText =  res.Basic.Text.length !== 0 ? res.Basic.Text[0].KnowledgeBase : "";
-            this.basicAnswer = BasicText.replace(/[<br/>]+/g, "\n");
+            this.basicAnswer = BasicText;
+            // .replace(/[<br/>]+/g, "\n");
             this.friendlyAnswer =  res.Friendly.Text.length !== 0 ? res.Friendly.Text[0].KnowledgeBase : "";
             //  const images = res.Basic.Image;//初始，切换
             this.uploadList=res.Friendly.Image.slice(0);
@@ -458,7 +459,6 @@
       },
 
       save() {
-
         this.loading = true;
         const that = this;
         this.upload_img();

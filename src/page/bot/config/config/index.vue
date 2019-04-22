@@ -141,7 +141,8 @@
       }
     },
     created(){
-      store.dispatch(REPLACE, {mainLoading: true,loadingText:null})
+      this.loading = true
+      store.dispatch(REPLACE, {mainLoading: false, loadingText:null})
       const id = JSON.parse(sessionStorage.getItem('recordId'))
       const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
       const body = {
@@ -163,7 +164,6 @@
           }else{
             this.getBot_Constellation()
           }
-          store.dispatch(REPLACE, {mainLoading: false})
         }
       )
     },
@@ -251,6 +251,7 @@
           const res = "魔羯水瓶双鱼白羊金牛双子巨蟹狮子处女天秤天蝎射手魔羯".substr(m*2-(d<"102223444433".charAt(m-1)- -19)*2,2);
           this.ruleForm.Bot_Constellation = res+'座'
         }
+        this.loading = false
       },
       selectArea(k){
         const that = this
@@ -307,7 +308,6 @@
         ADDRESS.forEach((key,value,arr) =>{
           if(data.Bot_Birthplace.province === key['name']){
             that.city = key['child']
-            return;
           }
         })
         store.dispatch(REPLACE,{Bot_Name:data.Bot_Name}).then(
@@ -315,6 +315,7 @@
             that.ruleForm = data
           }
         )
+        this.loading = false
       },
     },
   }

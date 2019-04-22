@@ -233,13 +233,11 @@
         )
       },
       search(v){
-        const str ="<>%;/?'_"
-        const index = this.keyWords&&str.indexOf(this.keyWords) > -1
-        if(index){
+        if (!(/^[0-9a-zA-Z\u4e00-\u9eff]{1,}$/).test(this.keyWords)&&this.keyWords) {
           this.$message({
-            type:'error',
-            message:"请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
-            duration:2000,
+            type: 'error',
+            message: "请不要输入特殊字符作为关键词搜索，例如 *，<，>，%，;，/，?，'，_等",
+            duration: 2000,
           })
           return
         }
