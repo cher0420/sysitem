@@ -6,7 +6,7 @@
       <div style="height:32px;display: inline-block;">
         <div class="addContent" v-for="(item,index) in keywordList" :key="index">
           <div class="inputContent keyword">
-            <el-input  v-focus type="text"   
+            <el-input  v-focus type="text"
                 :placeholder="keywordList[index]" v-model="keywordList[index]"
                 @input="emptyKey(index)" :class="[indexList.indexOf(index) > -1?'keyword-changeColor':'']">
             </el-input>
@@ -54,11 +54,10 @@
       NavTitle
     },
     created(){
-      console.error('tag', '111')
       this.init();
-    },  
-    directives:{  
-      focus: {  
+    },
+    directives:{
+      focus: {
        inserted: function (el) {
        el.querySelector('input').focus()
        }
@@ -87,9 +86,9 @@
         // this.regIndex = index;
           this.isRed=false;
           this.change =true ;// 提示语
-           
+
       },
-      delKeyword(index) { 
+      delKeyword(index) {
         var arr = this.keywordList;
         var arr1 = Array.from(new Set(arr));
         if (this.keywordList.length>=2){
@@ -108,9 +107,9 @@
           this.change =true ;// 提示语
           this.disabled =false// 按钮
           this.isRed=false;//
-          this.regIndex = index// 
+          this.regIndex = index//
         };
-       
+
       this.letters()
       },
       letters(){
@@ -118,16 +117,16 @@
        const test = new RegExp("&");
        this.keywordList.filter(
         (v, index, arr) => {
-      
+
           if(!v){
             this.change =false ;// 提示语
             this.disabled =true// 按钮不可点  为true
              this.indexList.push(index)
              console.log('kong',index)
-          } else  { 
+          } else  {
               if (v !== arr[index + 1]) {
                 console.log('正确', '')
-              }  
+              }
               console.log('有重复',index)
                return
 
@@ -146,17 +145,17 @@
             // this.disabled =true// 按钮不可点  为true
             // this.indexList.push(index)
             // console.log('有重复',index)
-             
-            // } 
-            // return; 
-           
-          } 
+
+            // }
+            // return;
+
+          }
 
         }
       )
         console.log(this.indexList)
 
-    
+
       },
       emptyKey(index){
         var arr = this.keywordList;
@@ -174,14 +173,14 @@
               }
             )
             this.indexList = arry
-           
+
           if (arr.length> arr1.length) {
             this.disabled =true
             this.indexList.push(index)
            this.change =false
-          
+
           } else {
-            
+
              this.disabled =false
               this.change =true
               const arry = this.indexList.filter(
@@ -192,7 +191,7 @@
               }
             )
             this.indexList = arry
-           
+
           }
         } else {
           this.change =false ;// 提示语
@@ -210,7 +209,7 @@
         const TenantId = store.state.app.userInfo.TenantId;
         const BotId = JSON.parse(sessionStorage.getItem('recordId'));
         const CreateUserId = store.state.app.userInfo.UserId;
-     
+
         const CreateUserName = store.state.app.userInfo.FullName;
         const TenantDomain = store.state.app.userInfo.Email;
         sessionStorage.setItem("KeyWord", this.keywordList.join("&"));
