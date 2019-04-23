@@ -1,3 +1,14 @@
 .el-card{
   border-radius: 10px;
+  padding-left: 20px;
+  padding-right: 18px;
+}
+.el-card__header{
+  height: 52px;
+  box-sizing: border-box;
+  line-height: 52px;
+  padding:0;
+}
+.el-card__body{
+  padding: 40px 0 40px 0;
 }

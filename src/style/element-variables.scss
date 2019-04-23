@@ -19,6 +19,7 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 @import "./table";
 @import './upload';
 @import './var/size';
+@import './card';
 /*
 覆盖原有element组件ui
  */
@@ -35,10 +36,7 @@ $--font-path: '~element-ui/lib/theme-chalk/fonts';
 覆盖弹框默认样式
  */
 .el-message-box{
-  border-top-left-radius:0;
-  border-top-right-radius:0;
-  border-bottom-left-radius:0;
-  border-bottom-right-radius:0;
+  border-radius: 0;
 }
 
 /*

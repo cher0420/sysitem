@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "echarts": "^4.2.1",
     "element-ui": "^2.5.4",
     "jquery": "^1.12.4",
     "js-cookie": "^2.2.0",
