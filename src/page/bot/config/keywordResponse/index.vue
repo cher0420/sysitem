@@ -18,7 +18,7 @@
         :limit="1"
         :on-exceed="handleExceed"
       ><el-button :disabled=' !status || uploadStatus ' size="small" type="primary" class="big-button">导入关键词 </el-button></el-upload>
-      <a :href='status?"../../../../../static/file/template.csv":"javascript:;"' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
+      <a :href='status?"../../../../../static/file/template.xlsx":"javascript:;"' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
     </section>
     <section class="f-r">
       <el-button  :disabled='tableData.length === 0' v-show='tableData.length !== 0' type="primary" class="big-button" @click="dumpAll">清空数据</el-button>
