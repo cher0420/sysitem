@@ -208,14 +208,14 @@ const arr = [
 const root = [{
   path: '/',
   component: Layout,
-  redirect: '/bot',
-  name: 'bot',
+  redirect: '/dashboard',
+  name: 'dashboard',
   hidden: true,
   children: [{
-    path: 'bot',
-    name: 'bot',
+    path: 'dashboard',
+    name: 'dashboard',
     component: resolve =>
-      require(["../page/bot/index"], resolve),
+      require(["../page/dashboard/index"], resolve),
   }]
 },
   {
