@@ -84,25 +84,35 @@
             <i class="hot icon"></i>
             <span class="title">昨日热点问题</span>
           </div>
-          <div v-for="o in 4" :key="o" class="text item">
-            {{'列表内容 ' + o }}
+          <div class="hot-list">
+            <div v-for="(item, index) in hotQuestionList" :key="o" >
+              <span>
+                {{item.FriendlyName}}
+              </span>
+              <span>
+                <span class="count">{{item.Count}}次</span>
+                <span :class="isRise(item.Rise)"></span>
+              </span>
+            </div>
           </div>
         </el-card>
       </el-col>
       <el-col :span="8">
         <el-row>
-          <el-card class="box-card" body-style="height:174px;">
+          <el-card class="box-card unknown-card" body-style="height:122px;box-sizing:border-box">
             <div slot="header">
               <i class="unknown icon"></i>
               <span class="title">昨日未知问题数量</span>
+              <el-button type="text" class="downLoad">文字按钮</el-button>
             </div>
-            <div v-for="o in 4" :key="o" class="text item">
-              {{'列表内容 ' + o }}
+            <div>
+              <span>{{Data.UnknowQANum}}</span>
+              <span>个</span>
             </div>
           </el-card>
         </el-row>
         <el-row class="margin-top-20">
-          <el-card class="box-card">
+          <el-card class="box-card" body-style="height:122px;box-sizing:border-box">
             <div slot="header">
               <i class="port icon"></i>
               <span class="title">昨日端口访问量</span>
@@ -138,7 +148,7 @@
           SaveTime: 44640,
           ProfessionQANum: '',
           ChatQANum: '',
-          UnknowQANum: '',
+          UnknowQANum: 980,
           WechatChannelNum: '',
           WebChannelNum: '',
           RobotChannelNum: '',
@@ -151,7 +161,31 @@
           MonthlynteractCountRise: '1.28%',
           UnknownQFileUrl:''
       },
-    }
+        hotQuestionList:[
+          {
+            IntentName:'3502eda0-87d7-4a37-b9db-b0f85b32d276',
+            FriendlyName:'办理居住证',
+            Count: 630,
+            Ranking: 1,
+            Rise:1,
+          },
+          {
+            IntentName:'3502eda0-87d7-4a37-b9db-b0f85b32d276',
+            FriendlyName:'办理居住证材料',
+            Count: 630,
+            Ranking: 2,
+            Rise:-1,
+          },
+          {
+            IntentName:'3502eda0-87d7-4a37-b9db-b0f85b32d276',
+            FriendlyName:'办理居住证时间',
+            Count: 630,
+            Ranking: 2,
+            Rise: 0,
+          },
+
+        ]
+      }
     },
     mounted() {
       this.drawLine();
@@ -172,65 +206,67 @@
         let myChart = echarts.init(document.getElementById('myChart'))
         // 绘制图表
         myChart.setOption({
+          color: ['#2a8be7', '#f39504', '#999999'],
           tooltip: {
-            type:'pieSelect',
+            show:false,
+            type:'hideTip',
             trigger: 'item',
-            formatter: "{a} <br/>{b}: {c} ({d}%)"
+            formatter: null
           },
           legend: {
             orient: 'vertical',
             x: 'left',
             icon:"circle",
-            data:['直接访问','邮件营销','联盟广告']
+            data:['专业知识/业务咨询','闲聊','未知问题']
           },
           series: [
             {
-              name:'访问来源',
+              name:'sss',
               type:'pie',
               radius: ['50%', '70%'],
               avoidLabelOverlap: false,
               label: {
                 normal: {
-                  show: false,
-                  position: 'center'
-                },
-                itemStyle: {
-                  emphasis: {
-                    shadowBlur: 10,
-                    shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                  show: true,
+                  textStyle: {
+                    fontSize: 14,
+                    color: '#999999'
                   },
-                  normal:{
-                    color:function(params) {
-                      //自定义颜色
-                      var colorList = [
-                        '#00FFFF', '#00FF00', '#FFFF00', '#FF8C00', '#FF0000', '#FE8463',
-                      ];
-                      return colorList[params.dataIndex]
-                    }
+                  formatter(params){
+                    return params.value/100
                   }
                 },
                 emphasis: {
-                  show: true,
-                  textStyle: {
-                    fontSize: '30',
-                    fontWeight: 'bold'
-                  }
+                  show: false,
                 }
               },
               labelLine: {
                 normal: {
-                  show: false
+                  lineStyle: {
+                    color: '#999999'
+                  },
+
                 }
               },
               data:[
-                {value:335, name:'直接访问'},
-                {value:310, name:'邮件营销'},
-                {value:234, name:'联盟广告'},
+                {value:8076, name:'专业知识/业务咨询', itemStyle:{normal:{color:'#2a8be7'},emphasis:{color:'#2a8be7'}}},
+                {value:310, name:'闲聊', itemStyle:{normal:{color:'#f39504'},emphasis:{color:'#f39504'}}},
+                {value:890, name:'未知问题', itemStyle:{normal:{color:'#999999'},emphasis:{color:'#999999'}}},
               ]
             }
           ]
         });
+      },
+      isRise(className){
+        if(className){
+          if(className>0){
+            return ['rise', 'hot-icon']
+          }else{
+            return ['decline', 'hot-icon']
+          }
+        }else{
+          return ['keep', 'hot-icon']
+        }
       }
     }
   }
@@ -254,9 +290,13 @@
    margin-top: 20px;
  }
   .title{
+    display: inline-block;
     margin-left: 14px;
     font-size: 16px;
     color:$f-pri-c;
+    height: 26px;
+    line-height: 26px;
+    vertical-align: middle;
   }
   .icon{
     display: inline-block;
@@ -295,11 +335,15 @@
     margin:0 14px 0 8px;
   }
   .rise{
-    background: url("../../assets/dashboard/rise.png");
+    background: url("../../assets/dashboard/rise.png") no-repeat center;
     background-size: auto;
   }
   .decline{
-    background: url("../../assets/dashboard/decline.png");
+    background: url("../../assets/dashboard/decline.png") no-repeat center;
+    background-size: auto;
+  }
+  .keep{
+    background: url("../../assets/dashboard/keep.png") no-repeat center;
     background-size: auto;
   }
   .user-primary-color{
@@ -340,5 +384,53 @@
       }
     }
   }
-
+  .hot-list{
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 14px;
+    color:$f-pri-c;
+    border:1px solid $border-color;
+    div{
+      height: 40px;
+      line-height: 40px;
+      padding:0 15px;
+    }
+    div:nth-child(odd){
+      background: #f9fafc;
+    }
+    span:first-child{
+      float:left;
+    }
+    span:last-child{
+      float:right;
+    }
+    .count{
+      margin-right: 12px;
+      margin-left: 15px;
+    }
+    .hot-icon{
+      display: inline-block;
+      width: 10px;
+      height: 40px;
+      line-height: 40px;
+      vertical-align: middle;
+    }
+  }
+  .unknown-card{
+    .downLoad{
+      float: right;
+      padding: 0;
+      height: 50px;
+      line-height: 50px;
+    }
+    {
+      height: 175px;
+      line-height: 175px;
+      text-align: center;
+      span:first-child{
+        font-size: 54px;
+        color: #f26f5e;
+      }
+    }
+  }
 </style>
