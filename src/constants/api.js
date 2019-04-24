@@ -59,5 +59,7 @@ export const CHECKQUERY = '/api/admin/portal/GuideQuestion/Query';//查询引导
 export const UPDATEQUESTION = '/api/admin/portal/GuideQuestion/Update';//更新引导问题
 export const DELETEALL= '/api/admin/portal/GuideQuestion/Delete';//删除引导问题
 export const QUERYINTENT = '/api/admin/portal/guideQuestion/queryIntent'; //获取意图列表
+//dashboard
+export const QUERYBOT = '/api/admin/portal/BotTalkStatistic/QueryBot'; //查询机器人
 
 

@@ -1,12 +1,12 @@
 <template>
   <section>
     <nav-title title="仪表盘">
-      <el-select v-model="bot" placeholder="请选择机器人" class="select">
+      <el-select v-model="bot" filterable placeholder="请选择机器人" class="select">
         <el-option
-          v-for="item in getBotList()"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id">
+          v-for="item in getBotList"
+          :key="item.BotConfigId"
+          :label="item.AliasName"
+          :value="item.BotConfigId">
         </el-option>
       </el-select>
     </nav-title>
@@ -17,7 +17,7 @@
             <i class="user icon"></i>
             <span class="title">昨日用户访问量</span>
           </div>
-          <div class="content">
+          <div v-if='Data.VisitCount<0' class="content">
             <div class="count">
               <span class="user-primary-color">{{Data.VisitCount}}</span>
               <span>人</span>
@@ -28,9 +28,18 @@
               <span>月：{{Data.MonthlyVisitCountRise}}<span class="rise percent-icon" style="margin-right: 0"></span></span>
             </div>
           </div>
+          <div v-else class="no-data">
+            <span class="no-data-icon"></span>
+            <span class="text">暂无数据</span>
+            <div class='details' style="height: 54px;">
+              <span>日： <span class="keep"></span></span>
+              <span>周： <span class="keep"></span></span>
+              <span>月： <span class="keep"></span></span>
+            </div>
+          </div>
         </el-card>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" style="min-width: 380px;">
         <el-card class="box-card" >
           <div slot="header">
             <i class="interaction icon"></i>
@@ -49,13 +58,13 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" class="save-box">
         <el-card class="box-card" >
           <div slot="header">
             <i class="time icon"></i>
-            <span class="title">累积节约时间</span>
+            <span class="title">累计昨日节约时间</span>
           </div>
-          <div class="content">
+          <div class="content" v-if="Data.VisitCount < 0" >
             <div class="count">
               <span class="save-primary-color">{{Data.VisitCount}}</span>
               <span>分钟</span>
@@ -64,22 +73,27 @@
               <span>相当于节约<span class="save save-primary-color">{{31}}</span>天</span>
             </div>
           </div>
+          <div v-else class="no-data">
+              <span class="no-data-icon"></span>
+              <span class="text">暂无数据</span>
+              <div style="height: 54px;"></div>
+          </div>
         </el-card>
       </el-col>
     </el-row>
     <el-row :gutter="20" class="col second">
-      <el-col :span="8">
-        <el-card class="box-card" body-style="height:362px;">
+      <el-col :span="8" style="min-width: 380px;">
+        <el-card class="box-card" body-style="height:363px;box-sizing:border-box;position:relative">
           <div slot="header">
             <i class="question icon"></i>
             <span class="title">昨日提问分布</span>
           </div>
-          <div id="myChart" style="height: 100%;width:100%;padding-left: 20px;padding-right: 20px;">
+          <div id="myChart" style="height: 100%;width:100%;position: absolute;right: 0;top: 40px;">
           </div>
         </el-card>
       </el-col>
-      <el-col :span="8">
-        <el-card class="box-card" body-style="height:362px">
+      <el-col :span="8" style="min-width: 380px;">
+        <el-card class="box-card" body-style="height:363px;box-sizing:border-box;">
           <div slot="header">
             <i class="hot icon"></i>
             <span class="title">昨日热点问题</span>
@@ -90,39 +104,59 @@
                 {{item.FriendlyName}}
               </span>
               <span>
-                <span class="count">{{item.Count}}次</span>
+                <!--<span class="count">{{item.Count}}次</span>-->
                 <span :class="isRise(item.Rise)"></span>
               </span>
             </div>
           </div>
         </el-card>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="8" class="unknown-box">
         <el-row>
-          <el-card class="box-card unknown-card" body-style="height:122px;box-sizing:border-box">
+          <el-card class="box-card unknown-card" body-style="height:122px;box-sizing:border-box;">
             <div slot="header">
               <i class="unknown icon"></i>
               <span class="title">昨日未知问题数量</span>
-              <el-button type="text" class="downLoad">文字按钮</el-button>
+              <el-button type="text" class="downLoad">问题导出</el-button>
             </div>
-            <div>
+            <div class="total">
               <span>{{Data.UnknowQANum}}</span>
               <span>个</span>
             </div>
           </el-card>
         </el-row>
         <el-row class="margin-top-20">
-          <el-card class="box-card" body-style="height:122px;box-sizing:border-box">
+          <el-card class="box-card port-visitor" body-style="height:170px;box-sizing:border-box;">
             <div slot="header">
               <i class="port icon"></i>
               <span class="title">昨日端口访问量</span>
             </div>
-            <div v-for="o in 4" :key="o" class="text item">
-              {{'列表内容 ' + o }}
+            <div class="progress">
+              <span :style="{width:Data.WechatChannelNum}">
+                <span>{{Data.WechatChannelNum}}</span>
+                <span :style="{height:'15px',width:'100%',background:'#288288'}"></span>
+              </span>
+              <span :style="{width:Data.WebChannelNum}">
+                <span>{{Data.WebChannelNum}}</span>
+                <span :style="{height:'15px',width:'100%',background:'#24a5ae'}"></span>
+              </span>
+              <span :style="{width:Data.RobotChannelNum}">
+                <span>{{Data.RobotChannelNum}}</span>
+                <span :style="{height:'15px',width:'100%',background:'#2ec6d1'}"></span>
+              </span>
+              <span :style="{width:Data.MiniProgramChannelNum}">
+                <span>{{Data.MiniProgramChannelNum}}</span>
+                <span :style="{height:'15px',width:'100%',background:'#8fe0e6'}"></span>
+              </span>
+            </div>
+            <div class="tooltip">
+              <span><i style="background: #288288"></i>微信端</span>
+              <span><i style="background: #24a5ae"></i>网页端</span>
+              <span><i style="background: #2ec6d1"></i>桌面</span>
+              <span><i style="background: #8fe0e6"></i>实体机器人</span>
             </div>
           </el-card>
         </el-row>
-
       </el-col>
     </el-row>
   </section>
@@ -130,6 +164,11 @@
 <script>
 
   import NavTitle from '../../components/NavTitle';
+  import {request} from "../../serive/request";
+  import {getCookies} from "../../utils/cookie";
+  import {TOKEN} from "../../constants/constants";
+  import {QUERYBOT} from "../../constants/api";
+  import store from '../../store/index'
   // 引入基本模板
   let echarts = require('echarts/lib/echarts')
   // 引入柱状图组件
@@ -149,10 +188,10 @@
           ProfessionQANum: '',
           ChatQANum: '',
           UnknowQANum: 980,
-          WechatChannelNum: '',
-          WebChannelNum: '',
-          RobotChannelNum: '',
-          MiniProgramChannelNum: '',
+          WechatChannelNum: '30%',
+          WebChannelNum: '30%',
+          RobotChannelNum: '10%',
+          MiniProgramChannelNum: '30%',
           DailyVisitCountRise: '0.32%',
           DailyInteractCountRise: '1.38%',
           WeeklyVisitCountRise: '1.62%',
@@ -184,8 +223,15 @@
             Rise: 0,
           },
 
-        ]
+        ],
+        show: false,
+        PageIndex:0,
+        PageSize:0,
+        getBotList:[]
       }
+    },
+    created(){
+      this.getBotListFetch()
     },
     mounted() {
       this.drawLine();
@@ -194,7 +240,21 @@
       NavTitle,
     },
     methods:{
-      getBotList(){
+      getBotListFetch(){
+        const TenantId = store.state.app.userInfo.TenantId
+        const params = {
+          method: 'POST',
+          headers:{
+            'Access-Token': getCookies(TOKEN)
+          },
+          body:JSON.stringify({TenantId:TenantId,PageIndex:this.PageIndex,PageSize:this.PageSize})
+        }
+        request(QUERYBOT,params).then(
+          (res) => {
+            this.getBotList = res.Data
+            console.log(res)
+          }
+        )
         return [
           {id: 1, name: '工作助理机器人'},
           {id: null, name: '全部机器人'},
@@ -204,6 +264,7 @@
       drawLine() {
         // 基于准备好的dom，初始化echarts实例
         let myChart = echarts.init(document.getElementById('myChart'))
+        const that = this
         // 绘制图表
         myChart.setOption({
           color: ['#2a8be7', '#f39504', '#999999'],
@@ -217,13 +278,22 @@
             orient: 'vertical',
             x: 'left',
             icon:"circle",
+            textStyle:{
+              fontSize:14,
+              color: '#999999'
+            },
             data:['专业知识/业务咨询','闲聊','未知问题']
+          },
+          grid:{
+            x:'20%',
+            y: '20%'
           },
           series: [
             {
+              center:['62%', '51%'],
               name:'sss',
               type:'pie',
-              radius: ['50%', '70%'],
+              radius: ['40%', '60%'],
               avoidLabelOverlap: false,
               label: {
                 normal: {
@@ -237,7 +307,10 @@
                   }
                 },
                 emphasis: {
-                  show: false,
+                  show: true,
+                  formatter(params){
+                    return params.value/100
+                  }
                 }
               },
               labelLine: {
@@ -245,7 +318,6 @@
                   lineStyle: {
                     color: '#999999'
                   },
-
                 }
               },
               data:[
@@ -275,12 +347,15 @@
   @import '../../style/card';
   @import '../../style/var/color';
   .col{
+    color: $f-pri-c;
     margin-bottom: 20px;
     &:last-child{
       margin-bottom: 0;
     }
   }
   .select{
+    max-width: 300px;
+    width: 20%;
     float: right;
   }
   .second{
@@ -346,6 +421,10 @@
     background: url("../../assets/dashboard/keep.png") no-repeat center;
     background-size: auto;
   }
+  .port{
+    background: url("../../assets/dashboard/port.png") no-repeat center;
+    background-size: auto;
+  }
   .user-primary-color{
     color: #2ec6d1;
   }
@@ -359,10 +438,11 @@
     color: $f-pri-c;
     text-align: center;
     .count{
+      height: 50px;
       margin-bottom: 38px;
       span:first-child{
-        height: 60px;
-        line-height: 60px;
+        height: 50px;
+        line-height: 50px;
         font-size: 60px;
       }
       span{
@@ -423,14 +503,110 @@
       height: 50px;
       line-height: 50px;
     }
-    {
-      height: 175px;
-      line-height: 175px;
-      text-align: center;
+     .total{
+       color:$f-pri-c;
+       height: 100%;
+       line-height: 42px;
+       text-align: center;
+       font-size: 24px;
+       span:first-child{
+         font-size: 54px;
+         color: #f26f5e;
+       }
+     }
+  }
+  .port-visitor{
+    position: relative;
+    font-size: 0;
+    color:$f-pri-c;
+    .progress span{
+      display: inline-block;
+      font-size: 12px;
+      height: 12px;
+      line-height: 12px;
+    }
+    .progress>span{
       span:first-child{
-        font-size: 54px;
-        color: #f26f5e;
+        margin-bottom: 6px;
       }
+    }
+    .tooltip{
+      width: 100%;
+      box-sizing: border-box;
+      padding-left: 20px;
+      padding-right: 20px;
+      position: absolute;
+      left: 0;
+      bottom: 40px;
+      font-size: 12px;
+      span{
+        display: inline-block;
+        float:left;
+        width: 25%;
+      }
+
+      i{
+        display: inline-block;
+        width: 16px;
+        height:16px;
+        border-radius: 50%;
+        vertical-align: middle;
+      }
+    }
+  }
+  .no-data{
+    text-align: center;
+    height: 104px;
+    color: $disabled;
+    box-sizing: border-box;
+    padding-top: 5px;
+    .no-data-icon{
+      display: inline-block;
+      width: 45px;
+      height: 45px;
+      vertical-align: middle;
+      background: url("../../assets/dashboard/noData.png") no-repeat center;
+    }
+    .details{
+      height: 12px;
+      line-height: 12px;
+      padding-top: 21px;
+      box-sizing: border-box;
+    }
+    .details>span{
+      display: inline-block;
+      width: 32%;
+      text-align: center;
+    }
+
+    .text{
+      font-size: 14px;
+    }
+    .keep{
+      display: inline-block;
+      height: 3px;
+      vertical-align: middle;
+      width: 20px;
+      background: $disabled;
+    }
+  }
+  @media screen and (max-width: 1440px) {
+    .save-box,.unknown-box,.port-box{
+      width: 30%;
+      min-width: 270px;
+    }
+    .port-visitor{
+      .tooltip{
+        span{
+          width: 50%;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 1340px) {
+    .save-box,.unknown-box,.port-box{
+      width: 24%;
+      min-width: 270px;
     }
   }
 </style>
