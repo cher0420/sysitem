@@ -103,10 +103,14 @@
           <div v-else class="no-question-data">
             <ul>
               <li><span></span>专业知识/业务咨询</li>
-              <li><span></span>专业知识/业务咨询</li>
-              <li><span></span>专业知识/业务咨询</li>
+              <li><span></span>闲聊</li>
+              <li><span></span>未知问题</li>
             </ul>
-            <div></div>
+            <div class="no-data" style="margin-top: 38px;">
+              <span class="no-data-icon"></span>
+              <span class="text">暂无数据</span>
+              <div style="height: 54px;"></div>
+            </div>
           </div>
         </el-card>
       </el-col>
@@ -116,16 +120,24 @@
             <i class="hot icon"></i>
             <span class="title">昨日热点问题</span>
           </div>
-          <div class="hot-list">
-            <div v-for="(item, index) in hotQuestionList" :key="o" >
+          <div v-if='Data.VisitCount<0' class="hot-list">
+              <div v-for="(item, index) in hotQuestionList" :key="index" >
               <span>
                 {{item.FriendlyName}}
               </span>
-              <span>
-                <!--<span class="count">{{item.Count}}次</span>-->
+                <span>
                 <span :class="isRise(item.Rise)"></span>
               </span>
-            </div>
+              </div>
+          </div>
+          <div v-else class="no-data hot-list-no-data" style="position: relative;width: 100%;">
+            <ul style='height: 100%;'>
+              <li v-for="(item,index) in hotQuestionList"></li>
+            </ul>
+            <div style="position: absolute;top: 50%;left: 50%;width: 100%;transform:translate(-50%, -50%)">
+              <span class="no-data-icon"></span>
+              <span class="text">暂无数据</span>
+              <div style="height: 54px;"></div></div>
           </div>
         </el-card>
       </el-col>
@@ -240,7 +252,34 @@
             Ranking: 2,
             Rise: 0,
           },
-
+          {
+            IntentName:'3502eda0-87d7-4a37-b9db-b0f85b32d276',
+            FriendlyName:'办理居住证时间',
+            Count: 630,
+            Ranking: 2,
+            Rise: 0,
+          },
+          {
+            IntentName:'3502eda0-87d7-4a37-b9db-b0f85b32d276',
+            FriendlyName:'办理居住证时间',
+            Count: 630,
+            Ranking: 2,
+            Rise: 0,
+          },
+          {
+            IntentName:'3502eda0-87d7-4a37-b9db-b0f85b32d276',
+            FriendlyName:'办理居住证时间',
+            Count: 630,
+            Ranking: 2,
+            Rise: 0,
+          },
+          {
+            IntentName:'3502eda0-87d7-4a37-b9db-b0f85b32d276',
+            FriendlyName:'办理居住证时间',
+            Count: 630,
+            Ranking: 2,
+            Rise: 0,
+          },
         ],
         show: false,
         PageIndex:0,
@@ -572,19 +611,20 @@
       }
     }
   }
+  .no-data-icon{
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    vertical-align: middle;
+    background: url("../../assets/dashboard/noData.png") no-repeat center;
+  }
   .no-data{
     text-align: center;
     height: 104px;
     color: $disabled;
     box-sizing: border-box;
     padding-top: 5px;
-    .no-data-icon{
-      display: inline-block;
-      width: 45px;
-      height: 45px;
-      vertical-align: middle;
-      background: url("../../assets/dashboard/noData.png") no-repeat center;
-    }
+
     .details{
       height: 16px;
       line-height: 16px;
@@ -613,6 +653,11 @@
   .no-question-data{
     ul{
       color: $disabled;
+      li{
+        font-size: 14px;
+        height: 14px;
+        line-height: 14px;
+      }
       li span{
         display: inline-block;
         width: 16px;
@@ -620,13 +665,16 @@
         border-radius: 50%;
         vertical-align: middle;
         margin-right: 5px;
+
       }
       li:first-child{
+        margin-bottom: 16px;
         span{
           background: #2a8ce5;
         }
       }
       li:nth-child(2){
+        margin-bottom: 16px;
         span{
           background: #f49503;
         }
@@ -636,6 +684,16 @@
           background: #999999;
         }
       }
+    }
+  }
+  .hot-list-no-data{
+    border: 1px solid $border-color;
+    height: 100%;
+    ul li{
+      height: 40px;
+    }
+    ul li:nth-child(odd){
+      background-color: #f9fafc;
     }
   }
   @media screen and (max-width: 1440px) {
