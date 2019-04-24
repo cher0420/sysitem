@@ -45,7 +45,7 @@
             <i class="interaction icon"></i>
             <span class="title">昨日人机交互量</span>
           </div>
-          <div class="content">
+          <div v-if='Data.VisitCount<0' class="content">
             <div class="count">
               <span class="interaction-primary-color">{{Data.VisitCount}}</span>
               <span>次</span>
@@ -56,6 +56,16 @@
               <span>月：{{Data.MonthlyVisitCountRise}}<span class="rise percent-icon" style="margin-right: 0"></span></span>
             </div>
           </div>
+          <div v-else class="no-data">
+            <span class="no-data-icon"></span>
+            <span class="text">暂无数据</span>
+            <div class='details' style="height: 54px;">
+              <span>日： <span class="keep"></span></span>
+              <span>周： <span class="keep"></span></span>
+              <span>月： <span class="keep"></span></span>
+            </div>
+          </div>
+
         </el-card>
       </el-col>
       <el-col :span="8" class="save-box">
@@ -88,7 +98,15 @@
             <i class="question icon"></i>
             <span class="title">昨日提问分布</span>
           </div>
-          <div id="myChart" style="height: 100%;width:100%;position: absolute;right: 0;top: 40px;">
+          <div v-if='Data.VisitCount<0' id="myChart" style="height: 100%;width:100%;position: absolute;right: 0;top: 40px;">
+          </div>
+          <div v-else class="no-question-data">
+            <ul>
+              <li><span></span>专业知识/业务咨询</li>
+              <li><span></span>专业知识/业务咨询</li>
+              <li><span></span>专业知识/业务咨询</li>
+            </ul>
+            <div></div>
           </div>
         </el-card>
       </el-col>
@@ -568,9 +586,10 @@
       background: url("../../assets/dashboard/noData.png") no-repeat center;
     }
     .details{
-      height: 12px;
-      line-height: 12px;
-      padding-top: 21px;
+      height: 16px;
+      line-height: 16px;
+      padding-top: 38px;
+      font-size: 16px;
       box-sizing: border-box;
     }
     .details>span{
@@ -580,7 +599,8 @@
     }
 
     .text{
-      font-size: 14px;
+      font-size: 16px;
+      vertical-align: middle;
     }
     .keep{
       display: inline-block;
@@ -588,6 +608,34 @@
       vertical-align: middle;
       width: 20px;
       background: $disabled;
+    }
+  }
+  .no-question-data{
+    ul{
+      color: $disabled;
+      li span{
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-right: 5px;
+      }
+      li:first-child{
+        span{
+          background: #2a8ce5;
+        }
+      }
+      li:nth-child(2){
+        span{
+          background: #f49503;
+        }
+      }
+      li:last-child{
+        span{
+          background: #999999;
+        }
+      }
     }
   }
   @media screen and (max-width: 1440px) {
