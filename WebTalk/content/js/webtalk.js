@@ -574,7 +574,7 @@ $(function () {
 
                             if (result.context.Content != null && result.context.Content.length > 0) {
                                 for (i = 0; i < result.context.Content.length; i++) {
-                                    answer += filterMsgSpechars(result.context.Content[i].Value);
+                                    answer += (i + 1) + ". " + filterMsgSpechars(result.context.Content[i].Value);
                                     answer += "\n";
                                 }
                             }
