@@ -61,5 +61,7 @@ export const DELETEALL= '/api/admin/portal/GuideQuestion/Delete';//删除引导�
 export const QUERYINTENT = '/api/admin/portal/guideQuestion/queryIntent'; //获取意图列表
 //dashboard
 export const QUERYBOT = '/api/admin/portal/BotTalkStatistic/QueryBot'; //查询机器人
+export const STATUSMETRICS = '/api/admin/portal/BotTalkStatistic/StatusMetrics'; //查询统计数据
+export const HOTQA = '/api/admin/portal/BotTalkStatistic/HotQA'; //查询热点问题
 
 

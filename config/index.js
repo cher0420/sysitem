@@ -42,7 +42,7 @@ module.exports = {
         changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
       },
       '/api/admin/keyword/ws': {
-        target:'ws://192.168.1.103:18000/',
+        target:'ws://192.168.1.103:10036/',
         pathRewrite: {"^/api/admin/keyword/" : ""},
         ws: true,
         secure: false,
