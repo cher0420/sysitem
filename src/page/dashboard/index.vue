@@ -318,9 +318,6 @@
       NavTitle,
     },
     methods:{
-      downLoad(url){
-        window.open(url)
-      },
       refreshData(id){
         this.getStatusMetrics()
         this.getHotQA()
@@ -335,7 +332,10 @@
           headers:{
             'Access-Token': getCookies(TOKEN)
           },
-          body:JSON.stringify({TenantId:TenantId,BotConfigId:this.BotConfigId})
+          body:JSON.stringify({TenantId:TenantId,BotConfigId:this.BotConfigId,"PreStartDate":"2019-4-1 00:00:00",
+            "PreEndDate":"2019-4-10 23:59:59",
+            "CurrStartDate":"2019-4-11 00:00:00",
+            "CurrEndDate":"2019-4-21 23:59:59"})
         }
         request(HOTQA, params).then(
           (res) =>{
@@ -368,7 +368,10 @@
           headers:{
             'Access-Token': getCookies(TOKEN)
           },
-          body:JSON.stringify({TenantId:TenantId,BotConfigId:this.BotConfigId})
+          body:JSON.stringify({TenantId:TenantId,BotConfigId:this.BotConfigId,"PreStartDate":"2019-4-1 00:00:00",
+            "PreEndDate":"2019-4-10 23:59:59",
+            "CurrStartDate":"2019-4-11 00:00:00",
+            "CurrEndDate":"2019-4-21 23:59:59"})
         }
         request(STATUSMETRICS, params).then(
           (res) =>{
