@@ -3,7 +3,7 @@
     {{/* 以后待更新面包屑 */}}
     <el-breadcrumb separator-class="el-icon-arrow-right" class="single">
 
-      <el-breadcrumb-item class="primary-color align-middle index" to="/bot">首页</el-breadcrumb-item>
+      <el-breadcrumb-item class="primary-color align-middle index" to="/">首页</el-breadcrumb-item>
 
       <el-breadcrumb-item
         v-for="(item,index) in breadArr"

@@ -452,7 +452,7 @@
               icon:"circle",
               textStyle:{
                 fontSize:14,
-                color: '#999999'
+                color: '#555'
               },
               data:['专业知识/业务咨询','闲聊','未知问题']
             },
@@ -470,34 +470,36 @@
                 label: {
                   normal: {
                     show: true,
+                    position:'left',
                     textStyle: {
                       fontSize: 14,
-                      color: '#999999'
+                      color: '#555'
                     },
                     formatter(params){
                       const value = (params.value/(data.ProfessionQANum + data.ChatQANum + data.UnknowQANum)*100).toFixed()+'%'
-                      return `${value}`
+                      return [value, params.name].join('\n')
                     }
                   },
                   emphasis: {
                     show: true,
                     formatter(params){
                       const value = (params.value/(data.ProfessionQANum + data.ChatQANum + data.UnknowQANum)*100).toFixed()+'%'
-                      return `${value}`
+                      return [value, params.name].join('\n')
                     }
                   }
                 },
                 labelLine: {
                   normal: {
+                    show: true,
                     lineStyle: {
-                      color: '#999999'
+                      color: '#555'
                     },
                   }
                 },
                 data:[
-                  {value:data.ProfessionQANum, name:'专业知识/业务咨询', itemStyle:{normal:{color:'#2a8be7'},emphasis:{color:'#2a8be7'}}},
-                  {value:data.ChatQANum, name:'闲聊', itemStyle:{normal:{color:'#f39504'},emphasis:{color:'#f39504'}}},
                   {value:data.UnknowQANum, name:'未知问题', itemStyle:{normal:{color:'#999999'},emphasis:{color:'#999999'}}},
+                  {value:data.ChatQANum, name:'闲聊', itemStyle:{normal:{color:'#f39504'},emphasis:{color:'#f39504'}}},
+                  {value:data.ProfessionQANum, name:'专业知识/业务咨询', itemStyle:{normal:{color:'#2a8be7'},emphasis:{color:'#2a8be7'}}},
                 ]
               }
             ]
@@ -713,8 +715,6 @@
     .tooltip{
       width: 100%;
       box-sizing: border-box;
-      padding-left: 20px;
-      padding-right: 20px;
       position: absolute;
       left: 0;
       bottom: 40px;
