@@ -22,8 +22,8 @@
           <section v-else class="title">{{item.FriendlyName}}</section>
         </section>
         <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
-        <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
-          <i v-show='!hasLoadingAllData || tableData.length <= 10' class="el-icon-loading"></i>
+        <section v-show='tableData.length>=20' class="loading-container primary-color" id="tableLoadingElement">
+          <i v-show='!hasLoadingAllData || tableData.length <= 20' class="el-icon-loading"></i>
           {{hasLoadingAllData?'- 已经到底啦 -': '正在加载中...'}}
         </section>
       </section>
@@ -103,7 +103,7 @@
             BotConfigId: recordId,
             IntentName: this.IntentName,
             PageIndex: this.PageIndex,
-            PageSize: 10,
+            PageSize: 20,
           })
 
         }
@@ -111,7 +111,7 @@
           (res) => {
             //节流
             const originData = JSON.parse(JSON.stringify(res.Data))
-            that.hasLoadingAllData = res.Data.length < 10;
+            that.hasLoadingAllData = res.Data.length < 20;
 
             const details = store.state.dataAll.hasChecked?store.state.dataAll.hasChecked:[]
             //左侧列表详情
@@ -287,7 +287,7 @@
               BotConfigId: recordId,
               IntentName: that.IntentName,
               PageIndex: that.PageIndex,
-              PageSize: 10,
+              PageSize: 20,
             })
           }
           request(url, params).then(
@@ -296,7 +296,7 @@
               const originData = store.state.dataAll.originData?store.state.dataAll.originData:[]
               const hasChecked = store.state.dataAll.hasChecked?store.state.dataAll.hasChecked:[]
 
-              that.hasLoadingAllData = res.Data.length < 10;
+              that.hasLoadingAllData = res.Data.length < 20;
               const total = store.state.dataAll.total
 
               let values = []
@@ -439,7 +439,7 @@
   .scroll-container{
     box-sizing: border-box;
     width: 100%;
-    max-height: 400px;
+    max-height: calc(100vh - 310px);
     border: 1px solid $border-color;
     overflow: scroll;
     .even{

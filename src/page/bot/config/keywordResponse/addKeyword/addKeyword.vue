@@ -28,6 +28,7 @@
       <el-button class="nextBtn" @click="nextAnswer" :disabled="disabled">下一步</el-button>
     </div>
   </div>
+ 
 </template>
 <script>
   import { mapGetters, mapActions } from "vuex";
@@ -108,29 +109,39 @@
           this.disabled =false// 按钮
           this.isRed=false;//
           this.regIndex = index//
+          const arry = this.indexList.filter(
+                  (item) => {
+                    if( !item == index){
+                      return item
+                    }
+                  }
+                )
+          this.indexList = arry
+          this.letters()
         };
 
-        this.letters()
+        // this.letters()
       },
       letters(){
+          console.log(this.keywordList)
         let letters=[]
         const test = new RegExp("&");
         this.keywordList.filter(
           (v, index, arr) => {
-
             if(!v){
               this.change =false ;// 提示语
               this.disabled =true// 按钮不可点  为true
               this.indexList.push(index)
+              console.log(this.keywordList,index)
               console.log('kong',index)
             } else  {
               if (v !== arr[index + 1]) {
                 console.log('正确', '')
+              }else{
+                this.indexList.push(index)
               }
-              console.log('有重复',index)
+              console.log('有重复',index) 
               return
-
-
               //   const arry = this.indexList.filter(
               //     (item) => {
               //       if( !item == index){
@@ -150,7 +161,6 @@
               // return;
 
             }
-
           }
         )
         console.log(this.indexList)

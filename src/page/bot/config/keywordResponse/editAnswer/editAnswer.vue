@@ -148,7 +148,7 @@
  .title{ padding-left:10px; width: 100%; height:36px; line-height: 36px; background: #f9fafc;margin-bottom:30px;}
  .answer-area{height: 300px;outline: none;width: 100%;resize: none; padding:10px;border:none;box-sizing:border-box;}
  .nextBtn{color:#fff;background:#2a8ce7;border:none;margin-top:40px;display: block;}
- .keyword{font-size:14px;color:#555;margin-bottom: 40px;}
+ .keyword{font-size:14px;color:#555;margin-bottom: 40px;margin-left:40px;}
  .is-disabled{background: #7abafc;color:#fff}
 .is-disabled:hover{background: #7abafc;color:#fff}
 </style>
