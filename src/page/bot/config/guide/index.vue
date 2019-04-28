@@ -9,9 +9,9 @@
           - 引导问题设置：选择添加右侧知识库中的知识，设置完成后出现形式如下图
         </div>
         <section class="way">
-          <div style="margin-right:60px">
+          <div class="center">
             <img src="../../../../assets/guide/weChat.png" alt="">
-            <p class="center">微信端</p>
+            <p >微信端</p>
           </div>
           <p class="guide text">您好，请问有什么能帮助您?<br><br>
             您可以尝试这样问我： <br><br>
@@ -19,12 +19,12 @@
             引导问题2<br>
             引导问题3<br>
             ...</p>
-          <div style="margin-left:60px">
+          <div class="center">
             <img src="../../../../assets/guide/webChat.png" alt="">
-            <p class="center">网页端</p>
+            <p >网页端</p>
           </div>
         </section>
-        <div style="text-align:center;"><el-button  class="open" @click="hide">我知道了</el-button></div>
+        <div style="text-align:center;"><el-button  class="open kown" @click="hide">我知道了</el-button></div>
       </div>
     </section>
     <section class="startIt">
@@ -59,7 +59,7 @@
           <el-checkbox class='checkbox' label="wechat" >微信</el-checkbox>
         </el-checkbox-group>
       </template>
-      <p class="tip"> <i class="el-icon-warning"> </i>默认引导语与引导问题问候语一同出现</p>
+      <p class="tip"> <i class="el-icon-warning" style="margin-right:10px;"> </i>默认引导语与引导问题问候语一同出现</p>
     </div>
     <el-button class="open save" :disabled="!disabled || !textTotal || details.length === 0||checkList.length===0" @click="save">保存 </el-button>
     <knowledge-store ref="knowledge"/>
@@ -526,6 +526,7 @@
 <style scoped lang="scss">
   @import "../../../../style/index.scss";
   .state{ cursor:pointer;}
+  button:hover{cursor:pointer;}
   .pop{
     position: absolute;
     left: 0;
@@ -535,8 +536,8 @@
     .location{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
       .guide{background:#eaedf1;border-radius: 10px;display: inline-block;padding:30px;width:100%;box-sizing:border-box;}
       .way{margin-top:40px;margin-bottom:-40px;display: flex;box-sizing:border-box;
-        .text{height: 260px;width:220px;}
-        img{height: 80%;}
+        .text{height: 260px;width:220px;margin:0 60px;box-sizing:border-box;}
+        img{height: 80%; margin-bottom:10px;}
       }
       .center{text-align: center;color: #fff}
     }
@@ -550,14 +551,17 @@
     margin-right: 6px;}
   .title{color: #555;font-size: 24px;  font-family: "Microsoft YaHei";
     span{font-size: 12px;color:#2a8ce7;margin-left:15px;display: inline-block;}
-    .on{float: right;background: #2a8ce7;color:#fff;z-index:990;}
-    .off{background: red;color:#fff;float: right;z-index: 888;margin-left:20px;}
+    .on{float: right;background: #2a8ce7;color:#fff;z-index:990;cursor: pointer;}
+    .off{background:$danger;color:#fff;float: right;z-index: 888;margin-left:20px;border:1px solid $danger;}
+    .off:hover{background: $fff;color: $danger;cursor:pointer;}
   }
-  .open{background: #2a8ce7;color:#fff;border:1px solid #2a8ce7;margin-left: 40px;}
-  .config{background:#f9fafc;font-size:16px;margin:30px 0;height: 40px;line-height: 40px;}
+  .open{background: #2a8ce7;color:#fff;border:1px solid #2a8ce7;margin-left: 40px;cursor: pointer;}
+  .kown{margin:0;}
+  .config{background:#f9fafc;font-size:16px;margin:30px 0;height: 40px;line-height: 40px;padding-left:10px;}
   .area{position: relative;margin-left:40px;width:60%;
     span{position: absolute;bottom:15px;right: 10px;color:#999;}
     textarea{width:100%;border:1px solid #eaedf1; padding:10px;box-sizing:border-box;}
+    textarea:disabled {background: #f9f9f9;}
   }
   .checkbox{ margin-bottom:30px;padding-left:40px;
     .el-checkbox{padding:0;}
@@ -565,6 +569,7 @@
   }
   .stopBtn{display: inline-block;float: right;}
   .save{margin-left:0px;}
+  .save:hover{cursor: pointer;}
   .is-disabled{background: #7abafc!important;color:#fff;border:1px solid #fff;}
   .is-disabled:hover{background: #7abafc;color:#fff;border:1px solid #fff;}
   textarea:focus{outline: none !important; border: #2a8ce7 1px solid; box-shadow: none; }
