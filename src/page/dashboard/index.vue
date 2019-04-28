@@ -17,7 +17,7 @@
             <i class="user icon"></i>
             <span class="title">昨日用户访问量</span>
           </div>
-          <div v-if='Data.SaveTime>0' class="content">
+          <div v-if='Data.SaveTime' class="content">
             <div class="count">
               <span class="user-primary-color">{{Data.VisitCount}}</span>
               <span>人</span>
@@ -45,7 +45,7 @@
             <i class="interaction icon"></i>
             <span class="title">昨日人机交互量</span>
           </div>
-          <div v-if='Data.SaveTime>0' class="content">
+          <div v-if='Data.SaveTime' class="content">
             <div class="count">
               <span class="interaction-primary-color">{{Data.InteractCount}}</span>
               <span>次</span>
@@ -74,7 +74,7 @@
             <i class="time icon"></i>
             <span class="title">累计昨日节约时间</span>
           </div>
-          <div class="content" v-if="Data.SaveTime >0" >
+          <div class="content" v-if="Data.SaveTime" >
             <div class="count">
               <span class="save-primary-color">{{Data.SaveTimeHours <= 99999? Data.SaveTime <= 99999?Data.SaveTime:Data.SaveTimeHours:(Data.SaveTimeHours/10000).toFixed()}}</span>
               <span>{{Data.SaveTimeHours<=99999?Data.SaveTime <= 99999?'分钟':'小时':'万小时'}}</span>
@@ -98,7 +98,7 @@
             <i class="question icon"></i>
             <span class="title">昨日提问分布</span>
           </div>
-          <div id="myChart" v-show='Data.SaveTime > 0'>
+          <div id="myChart" v-show='Data.SaveTime'>
           </div>
           <div v-show='Data.SaveTime <= 0' class="no-question-data">
             <ul>
@@ -120,7 +120,7 @@
             <i class="hot icon"></i>
             <span class="title">昨日热点问题</span>
           </div>
-          <div v-if='Data.SaveTime >0' class="hot-list">
+          <div v-if='Data.SaveTime' class="hot-list">
               <div v-for="(item, index) in hotQuestionList" :key="index" >
               <span>
                 {{item.FriendlyName}}
@@ -155,7 +155,7 @@
                 >问题导出</a>
               </el-button>
             </div>
-            <div v-if='Data.SaveTime>0' class="total">
+            <div v-if='Data.SaveTime' class="total">
               <span>{{Data.UnknowQANum}}</span>
               <span>个</span>
             </div>
@@ -171,7 +171,7 @@
               <i class="port icon"></i>
               <span class="title">昨日端口访问量</span>
             </div>
-            <div v-if="Data.SaveTime>0">
+            <div v-if="Data.SaveTime">
               <div class="progress">
               <span :style="{width:Data.WechatChannelNumPrecent}">
                 <span>{{Data.WechatChannelNumPrecent}}</span>
@@ -228,12 +228,12 @@
       return {
         BotConfigId: null,
         Data: {
-          VisitCount: 5700,
-          InteractCount: 9280,
-          SaveTime: 44640,
+          VisitCount: 0,
+          InteractCount: 0,
+          SaveTime: 0,
           ProfessionQANum: '',
           ChatQANum: '',
-          UnknowQANum: 980,
+          UnknowQANum: 0,
           WechatChannelNum: '30%',
           WebChannelNum: '30%',
           RobotChannelNum: '10%',
@@ -375,8 +375,9 @@
         }
         request(STATUSMETRICS, params).then(
           (res) =>{
-            const data = res.Data
-            // res.Data.SaveTime = 100000
+            // res.Data = null
+            const data = res.Data?res.Data:this.Data
+
             data.WechatChannelNumPrecent = (data.WechatChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()+'%'
             data.WebChannelNumPrecent = (data.WebChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()+'%'
             data.RobotChannelNumPrecent = (data.RobotChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()+'%'
@@ -384,15 +385,16 @@
 
             res.Data.SaveTimeHours = (res.Data.SaveTime/60).toFixed()
 
-            this.Data = res.Data
-
-            this.drawLine(this.Data);
+            this.Data = data
 
             setTimeout(
               () => {
                 this.loading = false
               },500
             )
+            this.drawLine(this.Data);
+
+
           }
         ).catch(
           () => {
@@ -416,15 +418,10 @@
               BotConfigId: null,
               TenantId: null
             }
-            this.getBotList = [all, ...res.Data]
+            this.getBotList = res.Data?[all, ...res.Data]:[all]
             this.hotLoading = false
           }
         )
-        return [
-          {id: 1, name: '工作助理机器人'},
-          {id: null, name: '全部机器人'},
-
-        ]
       },
       drawLine(data) {
         // 基于准备好的dom，初始化echarts实例
