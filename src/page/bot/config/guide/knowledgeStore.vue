@@ -19,7 +19,7 @@
           <el-tooltip v-if='item.FriendlyName.length>18' class="item" effect="dark" :content="item.FriendlyName" placement="bottom-start">
             <section class="title">{{item.FriendlyName}}</section>
           </el-tooltip>
-          <section v-else class="title">{{item.FriendlyName}}</section>
+          <section v-else class="title">{{item.FriendlyName}}{{PageSize}}{{tableData.length}}</section>
         </section>
         <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
         <section v-show='tableData.length>=20' class="loading-container primary-color" id="tableLoadingElement">
