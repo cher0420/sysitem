@@ -62,7 +62,7 @@
       <p class="tip"> <i class="el-icon-warning icon" > </i>默认引导语与引导问题问候语一同出现</p>
     </div>
     <el-button class="open save" :disabled="!disabled || !textTotal || details.length === 0||checkList.length===0" @click="save">保存 </el-button>
-    <knowledge-store ref="knowledge"/>
+    <knowledge-store ref="knowledge" :PageSize="PageSize"/>
   </div>
 
 </template>
@@ -89,7 +89,8 @@
         textTotal:0,
         checkList: ['wechat','webchat'],
         clearBtn:false,
-        loading:true
+        loading:true,
+        PageSize: 20,
       }
     },
     computed:{
@@ -460,6 +461,12 @@
 
       },
       getIntentName(){
+        const knowledgeStore = document.getElementById('knowledgeStore')
+        const container = document.getElementById('scroll-container')
+        const height = knowledgeStore.clientHeight-130
+        container.style.height = height-20 + 'px'
+        this.PageSize = Math.floor(height/40)
+
         store.dispatch( FILTER, {total: 0} ).then(
           () => {
             store.dispatch( UPDATE, {isSpread: true} )
@@ -477,7 +484,7 @@
             BotConfigId: recordId,
             IntentName: '',
             PageIndex: 1,
-            PageSize: 20,
+            PageSize: this.PageSize,
           })
         }
         request(url, params).then(
