@@ -18,7 +18,7 @@
         :limit="1"
         :on-exceed="handleExceed"
       ><el-button :disabled=' !status || uploadStatus ' size="small" type="primary" class="big-button">导入关键词 </el-button></el-upload>
-      <a :href='status?"../../../../../static/file/template.csv":"javascript:;"' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
+      <a :href='status?"../../../../../static/file/template.xlsx":"javascript:;"' :class="status?['primary-color', 'download', 'margin-left-20'] : ['primary-color', 'download', 'margin-left-20', 'disabled']">下载导入模版</a>
     </section>
     <section class="f-r">
       <el-button  :disabled='tableData.length === 0' v-show='tableData.length !== 0' type="primary" class="big-button" @click="dumpAll">清空数据</el-button>
@@ -37,9 +37,9 @@
         </template>
 
       </el-table-column>
-      <el-table-column prop="Keyword" label="关键词" :resizable="resizable"></el-table-column>
-      <el-table-column prop="CreateDate" label="创建时间" :resizable="resizable"></el-table-column>
-      <el-table-column label="操作" :resizable="resizable" width="280">
+      <el-table-column prop="Keyword" label="关键词" :resizable="resizable" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="CreateDate" label="创建时间" :resizable="resizable" align="center" width="200"></el-table-column>
+      <el-table-column label="操作" :resizable="resizable" width="200" align="center">
         <template slot-scope="scope">
           <span :class="status?['hover','edit']:['disabled','hover','edit']" @click="go('/bot/config/keywordResponse/updateAnswer', '编辑', scope.row.ID )"><i class="el-icon-edit" ></i>编辑</span><span :class="status?['hover','delete']:['hover','delete','disabled']" style="" @click="doDelete(scope.row.ID, scope.$index)"><i class="el-icon-close"></i>删除</span>
         </template>
@@ -62,16 +62,16 @@
           </div>
         </div>
         <div class="el-message-box__content">
-            <div class="el-message-box__status el-icon-warning">
-            </div>
-            <div class="el-message-box__message">
-              <p>{{response.Message}}</p>
-            </div>
-          </div><div class="el-message-box__btns">
-          <button class="el-button el-button--small" @click="operate('Cancel')">取消上传</button>
-          <button class="el-button el-button--small el-button--primary" @click="operate('SkipDuplicates')">跳过</button>
-          <button class="el-button el-button--small el-button--primary margin-left-20" @click="operate('Overrides')">覆盖</button>
-        </div>
+          <div class="el-message-box__status el-icon-warning">
+          </div>
+          <div class="el-message-box__message">
+            <p>{{response.Message}}</p>
+          </div>
+        </div><div class="el-message-box__btns">
+        <button class="el-button el-button--small" @click="operate('Cancel')">取消上传</button>
+        <button class="el-button el-button--small el-button--primary" @click="operate('SkipDuplicates')">跳过</button>
+        <button class="el-button el-button--small el-button--primary margin-left-20" @click="operate('Overrides')">覆盖</button>
+      </div>
       </div>
     </div>
   </section>
@@ -158,7 +158,7 @@
             store.dispatch(REPLACE,{mainLoading: false})
           }
         ).catch( () => {
-            that.status = false
+          that.status = false
         } )
       },
       successUpload (res, file, fileList) {
@@ -258,78 +258,78 @@
         this.reloadNum++
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-            const agreement = location.host.indexOf('localhost')> -1? 'ws':'wss'
-            const url = `${agreement}://${location.host}/api/admin/keyword/ws?BotId=${BotConfigId}`
-            // const url = `ws://192.168.50.198/ws?BotId=${BotConfigId}`
-            const token = getCookies(TOKEN)
-            that.webSocket = new WebSocket(url, token);
+        const agreement = location.host.indexOf('localhost')> -1? 'ws':'wss'
+        const url = `${agreement}://${location.host}/api/admin/keyword/ws?BotId=${BotConfigId}`
+        // const url = `ws://192.168.50.198/ws?BotId=${BotConfigId}`
+        const token = getCookies(TOKEN)
+        that.webSocket = new WebSocket(url, token);
 
-            that.webSocket.onopen = function (event) {
-              // that.heartCheck().reset();
-              switch (event.currentTarget.readyState) {
-                case 0:
-                  that.$refs.upload.abort()
-                  that.$refs.upload.clearFiles()
-                  that.$message({
-                    type: 'error',
-                    message: '上传功能暂时不能使用，请稍后重试',
-                    duration: 2000
-                  })
-                  that.uploadStatus = true
-                  break;
-                default:
-                  that.uploadStatus = false
-              }
-            };
-            that.webSocket.onmessage = function (res) {
-              // that.heartCheck().reset();
-              const response = JSON.parse(res.data)
-              if (response) {
-                switch (response.Code) {
-                  case "IRV00002" || "IRV00006":
-                    that.$message({
-                      type: 'error',
-                      message: `${response.Message} 请重新上传`,
-                      duration: 2000,
-                    })
-                    store.dispatch( REPLACE, { mainLoading: false } )
-                    break;
-                  case "IRV00003":
-                    that.alertFun(response);
-                    break;
-                  case 'Succeed':
-                    that.loading = true
-                    that.$message( {
-                      type: 'success',
-                      message: `${response.Message}`,
-                      duration: 2000,
-                      onClose(){
-                        that.getList()
-                      }
-                    } )
-                    store.dispatch( REPLACE, { mainLoading: false } )
-                        break;
-                  default:
-                    that.$message({
-                      type: 'error',
-                      message: `${response.Message} 请重新上传`,
-                      duration: 2000,
-                    })
-                    store.dispatch( REPLACE, { mainLoading: false } )
+        that.webSocket.onopen = function (event) {
+          // that.heartCheck().reset();
+          switch (event.currentTarget.readyState) {
+            case 0:
+              that.$refs.upload.abort()
+              that.$refs.upload.clearFiles()
+              that.$message({
+                type: 'error',
+                message: '上传功能暂时不能使用，请稍后重试',
+                duration: 2000
+              })
+              that.uploadStatus = true
+              break;
+            default:
+              that.uploadStatus = false
+          }
+        };
+        that.webSocket.onmessage = function (res) {
+          // that.heartCheck().reset();
+          const response = JSON.parse(res.data)
+          if (response) {
+            switch (response.Code) {
+              case "IRV00002" || "IRV00006":
+                that.$message({
+                  type: 'error',
+                  message: `${response.Message} 请重新上传`,
+                  duration: 2000,
+                })
+                store.dispatch( REPLACE, { mainLoading: false } )
+                break;
+              case "IRV00003":
+                that.alertFun(response);
+                break;
+              case 'Succeed':
+                that.loading = true
+                that.$message( {
+                  type: 'success',
+                  message: `${response.Message}`,
+                  duration: 2000,
+                  onClose(){
+                    that.getList()
                   }
-              }
+                } )
+                store.dispatch( REPLACE, { mainLoading: false } )
+                break;
+              default:
+                that.$message({
+                  type: 'error',
+                  message: `${response.Message} 请重新上传`,
+                  duration: 2000,
+                })
+                store.dispatch( REPLACE, { mainLoading: false } )
             }
-            that.webSocket.onerror = (err) => {
+          }
+        }
+        that.webSocket.onerror = (err) => {
 
-            }
-            that.webSocket.onclose = (info) => {
-              // that.heartCheck().start();
-              console.log('关闭了',info)
-            }
+        }
+        that.webSocket.onclose = (info) => {
+          // that.heartCheck().start();
+          console.log('关闭了',info)
+        }
       },
       alertFun (res) {
-          this.uploadResponseStatus = true
-          this.response = res
+        this.uploadResponseStatus = true
+        this.response = res
       },
       operate (key) {
         const id = JSON.parse(sessionStorage.getItem('recordId'))
@@ -432,7 +432,7 @@
         //   cancelButtonText: '取消',
         //   type: 'warning'
         // }).then(() => {
-          this.doEnale(this.status)
+        this.doEnale(this.status)
         // }).catch(() => {
         //   this.$message({
         //     type: 'info',
@@ -577,7 +577,7 @@
     margin-bottom: 20px;
   }
   .transition{
-      transition: margin 1s;
+    transition: margin 1s;
   }
   /*do some thing*/
   .hover {
@@ -630,7 +630,7 @@
     left: 50%;
     transform: translate( -50%, -50%);
     transition: transform 1s;
-}
+  }
   .nonBack{
     position: absolute;
     top: 0;

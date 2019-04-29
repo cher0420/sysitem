@@ -19,11 +19,11 @@
           <el-tooltip v-if='item.FriendlyName.length>18' class="item" effect="dark" :content="item.FriendlyName" placement="bottom-start">
             <section class="title">{{item.FriendlyName}}</section>
           </el-tooltip>
-          <section v-else class="title">{{item.FriendlyName}}</section>
+          <section v-else class="title">{{item.FriendlyName}}{{PageSize}}{{tableData.length}}</section>
         </section>
         <section v-show='tableData.length===0' class="f-s-14 c555 null">暂无数据</section>
-        <section v-show='tableData.length>=10' class="loading-container primary-color" id="tableLoadingElement">
-          <i v-show='!hasLoadingAllData || tableData.length <= 10' class="el-icon-loading"></i>
+        <section v-show='tableData.length>=20' class="loading-container primary-color" id="tableLoadingElement">
+          <i v-show='!hasLoadingAllData || tableData.length <= PageSize' class="el-icon-loading"></i>
           {{hasLoadingAllData?'- 已经到底啦 -': '正在加载中...'}}
         </section>
       </section>
@@ -41,9 +41,7 @@
 
   export default {
     name:'store',
-    props:{
-
-    },
+    props:['PageSize'],
     computed:{
       isSpread(){
         return store.state.isSpread
@@ -103,7 +101,7 @@
             BotConfigId: recordId,
             IntentName: this.IntentName,
             PageIndex: this.PageIndex,
-            PageSize: 10,
+            PageSize: this.PageSize,
           })
 
         }
@@ -111,7 +109,7 @@
           (res) => {
             //节流
             const originData = JSON.parse(JSON.stringify(res.Data))
-            that.hasLoadingAllData = res.Data.length < 10;
+            that.hasLoadingAllData = res.Data.length < that.PageSize;
 
             const details = store.state.dataAll.hasChecked?store.state.dataAll.hasChecked:[]
             //左侧列表详情
@@ -273,6 +271,7 @@
           const trueHeight = scrollContainer.scrollHeight
           const scrollTop = scrollContainer.scrollTop
           const height = trueHeight - scrollTop
+
           this.PageIndex++
           const that = this
           const url = QUERYINTENT
@@ -287,7 +286,7 @@
               BotConfigId: recordId,
               IntentName: that.IntentName,
               PageIndex: that.PageIndex,
-              PageSize: 10,
+              PageSize: this.PageSize,
             })
           }
           request(url, params).then(
@@ -296,7 +295,7 @@
               const originData = store.state.dataAll.originData?store.state.dataAll.originData:[]
               const hasChecked = store.state.dataAll.hasChecked?store.state.dataAll.hasChecked:[]
 
-              that.hasLoadingAllData = res.Data.length < 10;
+              that.hasLoadingAllData = res.Data.length < that.PageSize;
               const total = store.state.dataAll.total
 
               let values = []
@@ -439,7 +438,7 @@
   .scroll-container{
     box-sizing: border-box;
     width: 100%;
-    max-height: 400px;
+    /*max-height: calc(100% - 600px);*/
     border: 1px solid $border-color;
     overflow: scroll;
     .even{

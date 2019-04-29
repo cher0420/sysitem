@@ -6,9 +6,9 @@
       <div style="height:32px;display: inline-block;">
         <div class="addContent" v-for="(item,index) in keywordList" :key="index">
           <div class="inputContent keyword">
-            <el-input  v-focus type="text"
-                :placeholder="keywordList[index]" v-model="keywordList[index]"
-                @input="emptyKey(index)" :class="[indexList.indexOf(index) > -1?'keyword-changeColor':'']">
+            <el-input  v-focus type="text" maxlength="20"
+                       :placeholder="keywordList[index]" v-model="keywordList[index]"
+                       @input="emptyKey(index)" :class="[indexList.indexOf(index) > -1?'keyword-changeColor':'']">
             </el-input>
             <!-- autofocus='true' -->
             <i class="el-icon-error del" @click="delKeyword(index)"></i>
@@ -28,6 +28,7 @@
       <el-button class="nextBtn" @click="nextAnswer" :disabled="disabled">下一步</el-button>
     </div>
   </div>
+ 
 </template>
 <script>
   import { mapGetters, mapActions } from "vuex";
@@ -58,9 +59,9 @@
     },
     directives:{
       focus: {
-       inserted: function (el) {
-       el.querySelector('input').focus()
-       }
+        inserted: function (el) {
+          el.querySelector('input').focus()
+        }
       }
     },
     methods: {
@@ -84,21 +85,21 @@
         console.log(this.counter)
         this.emptyKey();
         // this.regIndex = index;
-          this.isRed=false;
-          this.change =true ;// 提示语
+        this.isRed=false;
+        this.change =true ;// 提示语
 
       },
       delKeyword(index) {
         var arr = this.keywordList;
         var arr1 = Array.from(new Set(arr));
         if (this.keywordList.length>=2){
-            if ( arr.length> arr1.length) {
-              // console.log('chongddddd', '')
-              this.change =true ;// 提示语
-              this.disabled =false// 按钮
-              this.isRed=false;//
-              this.regIndex = index//
-            }
+          if ( arr.length> arr1.length) {
+            // console.log('chongddddd', '')
+            this.change =true ;// 提示语
+            this.disabled =false// 按钮
+            this.isRed=false;//
+            this.regIndex = index//
+          }
           console.log('shan', '')
           this.keywordList.splice(index,1)
           console.log(this.keywordList)
@@ -108,51 +109,60 @@
           this.disabled =false// 按钮
           this.isRed=false;//
           this.regIndex = index//
+          const arry = this.indexList.filter(
+                  (item) => {
+                    if( !item == index){
+                      return item
+                    }
+                  }
+                )
+          this.indexList = arry
+          this.letters()
         };
 
-      this.letters()
+        // this.letters()
       },
       letters(){
-       let letters=[]
-       const test = new RegExp("&");
-       this.keywordList.filter(
-        (v, index, arr) => {
-
-          if(!v){
-            this.change =false ;// 提示语
-            this.disabled =true// 按钮不可点  为true
-             this.indexList.push(index)
-             console.log('kong',index)
-          } else  {
+          console.log(this.keywordList)
+        let letters=[]
+        const test = new RegExp("&");
+        this.keywordList.filter(
+          (v, index, arr) => {
+            if(!v){
+              this.change =false ;// 提示语
+              this.disabled =true// 按钮不可点  为true
+              this.indexList.push(index)
+              console.log(this.keywordList,index)
+              console.log('kong',index)
+            } else  {
               if (v !== arr[index + 1]) {
                 console.log('正确', '')
+              }else{
+                this.indexList.push(index)
               }
-              console.log('有重复',index)
-               return
+              console.log('有重复',index) 
+              return
+              //   const arry = this.indexList.filter(
+              //     (item) => {
+              //       if( !item == index){
+              //         return item
+              //       }
+              //     }
+              //   )
+              // this.indexList = arry
+              // console.log('正确', '')
+              // if(v === arr[index + 1]){
+              // this.change =false ;// 提示语
+              // this.disabled =true// 按钮不可点  为true
+              // this.indexList.push(index)
+              // console.log('有重复',index)
 
+              // }
+              // return;
 
-            //   const arry = this.indexList.filter(
-            //     (item) => {
-            //       if( !item == index){
-            //         return item
-            //       }
-            //     }
-            //   )
-            // this.indexList = arry
-            // console.log('正确', '')
-            // if(v === arr[index + 1]){
-            // this.change =false ;// 提示语
-            // this.disabled =true// 按钮不可点  为true
-            // this.indexList.push(index)
-            // console.log('有重复',index)
-
-            // }
-            // return;
-
+            }
           }
-
-        }
-      )
+        )
         console.log(this.indexList)
 
 
@@ -165,25 +175,25 @@
           this.keywordList[index]=this.keywordList[index].replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g,'');
           var arr = this.keywordList;
           var arr1 = Array.from(new Set(arr));
-           const arry = this.indexList.filter(
-              (item) => {
-                if( !item == index){
-                  return item
-                }
+          const arry = this.indexList.filter(
+            (item) => {
+              if( !item == index){
+                return item
               }
-            )
-            this.indexList = arry
+            }
+          )
+          this.indexList = arry
 
           if (arr.length> arr1.length) {
             this.disabled =true
             this.indexList.push(index)
-           this.change =false
+            this.change =false
 
           } else {
 
-             this.disabled =false
-              this.change =true
-              const arry = this.indexList.filter(
+            this.disabled =false
+            this.change =true
+            const arry = this.indexList.filter(
               (item) => {
                 if( !item == index){
                   return item
@@ -200,7 +210,7 @@
           this.regIndex = index
           this.indexList.push(index)
         }
-      this.letters()
+        this.letters()
 
       },
       nextAnswer() {

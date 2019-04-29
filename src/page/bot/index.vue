@@ -17,14 +17,14 @@
       <el-table-column
         prop="AliasName"
         label="机器人名称"
-        :resizable="resizable"
+        :resizable="resizable" show-overflow-tooltip
       >
       </el-table-column>
       <el-table-column
         prop="Description"
         label="描述"
         min-width="220"
-        :resizable="resizable"
+        :resizable="resizable" show-overflow-tooltip
       >
       </el-table-column>
       <el-table-column
@@ -66,7 +66,7 @@
               <span class="config">
                 <i class="el-icon-setting"></i>
                 <span class="c555"
-                   @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">配置</span>
+                      @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">配置</span>
               </span>
               <span class="del">
                 <i class="el-icon-delete"></i>
@@ -96,16 +96,16 @@
       </el-table-column>
     </el-table>
     <!--<section class="">-->
-      <el-pagination
-        @current-change="handleCurrentChange"
-        class="pagination"
-        background
-        layout="total, prev, pager, next"
-        :total="total"
-        :current-page.sync="PageIndex"
-      >
-      </el-pagination>
-    </section>
+    <el-pagination
+      @current-change="handleCurrentChange"
+      class="pagination"
+      background
+      layout="total, prev, pager, next"
+      :total="total"
+      :current-page.sync="PageIndex"
+    >
+    </el-pagination>
+  </section>
 </template>
 <script>
   import {BOTLIST, ITEMKEY} from './constants'

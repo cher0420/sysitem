@@ -186,7 +186,7 @@ import {mapGetters,mapActions} from 'vuex';
  .answer-area{height: 300px;outline: none;width: 100%;resize: none; padding:10px;border:none;box-sizing:border-box;}
  .nextBtn{color:#fff;background:#2a8ce7;border:none;margin-top:40px;display: inline-block;}
  .nextBtnFix{border:1px solid #2a8ce7;color:#2a8ce7}
- .keyword{font-size:14px;color:#555;margin-bottom: 40px;}
+ .keyword{font-size:14px;color:#555;margin-bottom: 40px;margin-left:40px;}
  .is-disabled{background: #7abafc;color:#fff}
 .is-disabled:hover{background: #7abafc;color:#fff}
 </style>
