@@ -13,7 +13,7 @@
           </el-button>
         </el-col>
       </el-form-item>
-      <title-item title="客服图标悬浮位置"></title-item>
+       <title-item title="客服图标悬浮位置"></title-item>
       <el-form-item label="" class="margin-top30 margin-bottom-30">
         <el-col :span="18">
           <el-radio-group v-model="formData.Position" class="full-width">
@@ -32,7 +32,7 @@
           </el-radio-group>
         </el-col>
       </el-form-item>
-      <title-item title="自定义机器人头像"></title-item>
+       <title-item title="自定义机器人头像"></title-item>
       <el-form-item label="" class="margin-top30 margin-bottom-30">
         <el-radio-group v-model="headerPicture" class="full-width" @change="changeHeaderImage">
           <el-col :span="9">
@@ -57,7 +57,7 @@
           </el-col>
         </el-radio-group>
       </el-form-item>
-      <title-item title="自定义标题栏背景颜色"></title-item>
+       <title-item title="自定义标题栏背景颜色"></title-item>
       <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
         <el-col :span="9">
           <el-col :span="2" v-for="item in titleColorItems" :index="index" :key="index">
@@ -75,7 +75,7 @@
                     @blur="typeColor('DialogColor','titleColorItems')" style="width: 360px;"></el-input>
         </el-col>
       </el-form-item>
-      <title-item title="自定义标题栏字体颜色"></title-item>
+       <title-item title="自定义标题栏字体颜色"></title-item>
       <el-form-item label="" class="margin-top30 margin-bottom-30 full-width">
         <el-col :span="9">
           <el-col :span="2" v-for="(item,index) in textColorItems" :index="index" :key="index">
@@ -94,7 +94,7 @@
                     @blur="typeColor('DialogTitleColor','textColorItems')" style="width: 360px;"></el-input>
         </el-col>
       </el-form-item>
-      <title-item title="功能开关"></title-item>
+       <title-item title="功能开关"></title-item>
       <el-form-item label="" style="margin-bottom: 32px;margin-top: 18px;">
         <el-col :span="12">
           <el-checkbox v-model="formData.LoginSwitch" style="width: 134px;">登录验证</el-checkbox>
@@ -131,7 +131,7 @@
           </el-radio-group>
         </el-col>
       </el-form-item>
-      <title-item title="自定义问候语"></title-item>
+       <title-item title="自定义问候语"></title-item>
       <el-form-item class="none-label" prop="DialogTitle" style='margin-top: 26px;margin-bottom: 26px;'>
       <span style="width:70px;" class="dis-i-b text-align-right">
         对话框标题
@@ -222,7 +222,7 @@
     name: 'webTest',
     computed: {},
     components: {
-      Title,
+      titleItem:Title,
       NavTitle
     },
     created() {
