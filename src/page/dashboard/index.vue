@@ -19,7 +19,7 @@
           </div>
           <div v-if='Data.hasNum' class="content">
             <div class="count">
-              <span class="user-primary-color">{{Data.VisitCount}}</span>
+              <span class="user-primary-color">{{Data.VisitCount>99999?`${(Data.VisitCount/10000).toFixed()}万`:Data.VisitCount}}</span>
               <span>人</span>
             </div>
             <div class="percent">
@@ -47,7 +47,7 @@
           </div>
           <div v-if='Data.hasNum' class="content">
             <div class="count">
-              <span class="interaction-primary-color">{{Data.InteractCount}}</span>
+              <span class="interaction-primary-color">{{Data.InteractCount>99999?`${(Data.InteractCount/10000).toFixed()}万`:Data.InteractCount}}</span>
               <span>次</span>
             </div>
             <div class="percent">
@@ -339,20 +339,19 @@
             'Access-Token': getCookies(TOKEN)
           },
           body:JSON.stringify({
-            // TenantId:TenantId,
-            // BotConfigId:this.BotConfigId,
-            "TenantId":"60124b8f-4355-4c4e-a9bf-6286b434d8c4",
-            "BotConfigId":"huajing0-181a-46bd-94b2-8a5b5cestage",
-            "PreStartDate":"2019-4-1 00:00:00",
-            "PreEndDate":"2019-4-10 23:59:59",
-            "CurrStartDate":"2019-4-11 00:00:00",
-            "CurrEndDate":"2019-4-21 23:59:59"})
+            TenantId:TenantId,
+            BotConfigId:this.BotConfigId,
+            // "TenantId":"60124b8f-4355-4c4e-a9bf-6286b434d8c4",
+            // "BotConfigId":"huajing0-181a-46bd-94b2-8a5b5cestage",
+            // "PreStartDate":"2019-4-1 00:00:00",
+            // "PreEndDate":"2019-4-10 23:59:59",
+            // "CurrStartDate":"2019-4-11 00:00:00",
+            // "CurrEndDate":"2019-4-21 23:59:59"
+          })
         }
         request(HOTQA, params).then(
           (res) =>{
             this.hotQuestionList = []
-            res.Data[0].FriendlyName = '生育保险待遇_领取_查询办理生育保险待遇_领取_查询办理生育保险待遇_领取_查询办理生育保险待遇_领取_查询办理生育保险待遇_领取_查询办理'
-
             res.Data.forEach(
               (item, index, arr) => {
                 if(item.Ranking === index+1){
@@ -383,20 +382,20 @@
             'Access-Token': getCookies(TOKEN)
           },
           body:JSON.stringify({
-            // TenantId:TenantId,
-            // BotConfigId:this.BotConfigId,
-            "TenantId":"60124b8f-4355-4c4e-a9bf-6286b434d8c4",
-            "BotConfigId":"huajing0-181a-46bd-94b2-8a5b5cestage",
-            "PreStartDate":"2019-4-1 00:00:00",
-            "PreEndDate":"2019-4-10 23:59:59",
-            "CurrStartDate":"2019-4-11 00:00:00",
-            "CurrEndDate":"2019-4-21 23:59:59"
+            TenantId:TenantId,
+            BotConfigId:this.BotConfigId,
+            // "TenantId":"60124b8f-4355-4c4e-a9bf-6286b434d8c4",
+            // "BotConfigId":"huajing0-181a-46bd-94b2-8a5b5cestage",
+            // "PreStartDate":"2019-4-1 00:00:00",
+            // "PreEndDate":"2019-4-10 23:59:59",
+            // "CurrStartDate":"2019-4-11 00:00:00",
+            // "CurrEndDate":"2019-4-21 23:59:59"
           })
         }
         request(STATUSMETRICS, params).then(
           (res) =>{
-            // res.Data = null
             const data = res.Data?res.Data:this.Data
+
             data.hasNum = data.SaveTime > 0
             data.WechatChannelNumPrecent = (data.WechatChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()+'%'
             data.WebChannelNumPrecent = (data.WebChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()+'%'
@@ -462,7 +461,7 @@
                 width: 200,
                 height: 50
               },
-              formatter: '<div style="position: absolute;left: 50%;top: 50%;"><span style="color: #2a8be7; font-size: 30px">'+'{c}'+'</span><span style="color: #555; font-size: 16px">条</span></div>',
+              formatter: `<div style="position: absolute;left: 50%;top: 50%;"><span style="color: #2a8be7; font-size: 30px">'+'{c}'+'</span><span style="color: #555; font-size: 16px">条</span></div>`,
             },
             legend: {
               orient: 'vertical',
