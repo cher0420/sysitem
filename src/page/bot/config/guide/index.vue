@@ -31,7 +31,7 @@
     </section>
     <section class="title">
       <nav-title title="引导问题">
-        <span @click="why" class="state"><i class="el-icon-question icon"></i>什么是引导问题？</span>
+        <span @click="why" class="state"><i class="el-icon-question"></i>什么是引导问题？</span>
         <el-button class="on" v-show='!changeIt' @click="start">开启</el-button>
         <span class="stopBtn" v-show='!stopIt' >
               <el-button class="off"  @click="stop">停用</el-button>
@@ -59,10 +59,10 @@
           <el-checkbox class='checkbox' label="wechat" >微信</el-checkbox>
         </el-checkbox-group>
       </template>
-      <p class="tip"> <i class="el-icon-warning icon" > </i>默认引导语与引导问题问候语一同出现</p>
+      <p class="tip"> <i class="el-icon-warning" style="margin-right:10px;"> </i>默认引导语与引导问题问候语一同出现</p>
     </div>
     <el-button class="open save" :disabled="!disabled || !textTotal || details.length === 0||checkList.length===0" @click="save">保存 </el-button>
-    <knowledge-store ref="knowledge" :PageSize="PageSize"/>
+    <knowledge-store ref="knowledge"/>
   </div>
 
 </template>
@@ -89,8 +89,7 @@
         textTotal:0,
         checkList: ['wechat','webchat'],
         clearBtn:false,
-        loading:true,
-        PageSize: 20,
+        loading:true
       }
     },
     computed:{
@@ -461,12 +460,6 @@
 
       },
       getIntentName(){
-        const knowledgeStore = document.getElementById('knowledgeStore')
-        const container = document.getElementById('scroll-container')
-        const height = knowledgeStore.clientHeight-130
-        container.style.height = height-20 + 'px'
-        this.PageSize = Math.floor(height/40)
-
         store.dispatch( FILTER, {total: 0} ).then(
           () => {
             store.dispatch( UPDATE, {isSpread: true} )
@@ -484,7 +477,7 @@
             BotConfigId: recordId,
             IntentName: '',
             PageIndex: 1,
-            PageSize: this.PageSize,
+            PageSize: 10,
           })
         }
         request(url, params).then(
@@ -532,7 +525,6 @@
 </script>
 <style scoped lang="scss">
   @import "../../../../style/index.scss";
-  .icon{margin-right: 10px;}
   .state{ cursor:pointer;}
   button:hover{cursor:pointer;}
   .pop{
@@ -541,7 +533,7 @@
     top: -50px;
     height: calc(100% + 105px);
     background: rgba($color: #000000, $alpha: .5);  width:100%;z-index:999;
-    .location{position:absolute;top:150px;left:50%;transform:translateX(-50%);
+    .location{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
       .guide{background:#eaedf1;border-radius: 10px;display: inline-block;padding:30px;width:100%;box-sizing:border-box;}
       .way{margin-top:40px;margin-bottom:-40px;display: flex;box-sizing:border-box;
         .text{height: 260px;width:220px;margin:0 60px;box-sizing:border-box;}

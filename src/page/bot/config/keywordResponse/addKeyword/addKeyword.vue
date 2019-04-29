@@ -28,7 +28,6 @@
       <el-button class="nextBtn" @click="nextAnswer" :disabled="disabled">下一步</el-button>
     </div>
   </div>
- 
 </template>
 <script>
   import { mapGetters, mapActions } from "vuex";
@@ -117,7 +116,8 @@
                   }
                 )
           this.indexList = arry
-          this.letters()
+        this.letters()
+
         };
 
         // this.letters()
@@ -132,7 +132,6 @@
               this.change =false ;// 提示语
               this.disabled =true// 按钮不可点  为true
               this.indexList.push(index)
-              console.log(this.keywordList,index)
               console.log('kong',index)
             } else  {
               if (v !== arr[index + 1]) {
