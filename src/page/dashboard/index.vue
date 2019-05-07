@@ -24,22 +24,22 @@
             </div>
             <div class="percent">
               <span>
-                <span v-if="Math.abs(Data.DailyVisitCountRise).toFixed()<1">日：{{Data.DailyVisitCountRise == 0 ?'':`${(Math.abs(Data.DailyVisitCountRise)*100).toFixed(2)}%`}}</span>
-                <span v-else-if="Math.abs(Data.DailyVisitCountRise).toFixed() == 1">日：{{Data.DailyVisitCountRise == 0 ?'':`${(Math.abs(Data.DailyVisitCountRise)*100).toFixed()}%`}}</span>
+                <span v-if="Math.abs(Data.DailyVisitCountRise).toFixed(2)<1">日：{{Data.DailyVisitCountRise == 0 ?'':`${(Math.abs(Data.DailyVisitCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.DailyVisitCountRise).toFixed(2) == '1.00'">日：{{Data.DailyVisitCountRise == 0 ?'':`${(Math.abs(Data.DailyVisitCountRise)*100).toFixed()}%`}}</span>
                 <el-tooltip v-else :content="Data.DailyVisitCountRise == 0 ?'':`${(Math.abs(Data.DailyVisitCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
                   <span>日：100%+</span>
                 </el-tooltip><i :class="Data.DailyVisitCountRise != 0?Data.DailyVisitCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
               </span>
               <span>
-                <span v-if="Math.abs(Data.WeeklyVisitCountRise).toFixed()<1">周：{{Data.WeeklyVisitCountRise == 0 ?'':`${(Math.abs(Data.WeeklyVisitCountRise)*100).toFixed(2)}%`}}</span>
-                <span v-else-if="Math.abs(Data.WeeklyVisitCountRise).toFixed() == 1">周：{{Data.WeeklyVisitCountRise == 0 ?'':`${(Math.abs(Data.WeeklyVisitCountRise)*100).toFixed()}%`}}</span>
+                <span v-if="Math.abs(Data.WeeklyVisitCountRise).toFixed(2)<1">周：{{Data.WeeklyVisitCountRise == 0 ?'':`${(Math.abs(Data.WeeklyVisitCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.WeeklyVisitCountRise).toFixed(2) == '1.00'">周：{{Data.WeeklyVisitCountRise == 0 ?'':`${(Math.abs(Data.WeeklyVisitCountRise)*100).toFixed()}%`}}</span>
                 <el-tooltip v-else :content="Data.WeeklyVisitCountRise == 0 ?'':`${(Math.abs(Data.WeeklyVisitCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
                   <span>周：100%+</span>
                 </el-tooltip><i :class="Data.WeeklyVisitCountRise != 0?Data.WeeklyVisitCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
               </span>
               <span>
-                <span v-if="Math.abs(Data.MonthlyVisitCountRise).toFixed()<1">月：{{Data.MonthlyVisitCountRise == 0 ?'':`${(Math.abs(Data.MonthlyVisitCountRise)*100).toFixed(2)}%`}}</span>
-                <span v-else-if="Math.abs(Data.MonthlyVisitCountRise).toFixed() == 1">月：{{Data.MonthlyVisitCountRise == 0 ?'':`${(Math.abs(Data.MonthlyVisitCountRise)*100).toFixed()}%`}}</span>
+                <span v-if="Math.abs(Data.MonthlyVisitCountRise).toFixed(2)<1">月：{{Data.MonthlyVisitCountRise == 0 ?'':`${(Math.abs(Data.MonthlyVisitCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.MonthlyVisitCountRise).toFixed(2) == '1.00'">月：{{Data.MonthlyVisitCountRise == 0 ?'':`${(Math.abs(Data.MonthlyVisitCountRise)*100).toFixed()}%`}}</span>
                 <el-tooltip v-else :content="Data.MonthlyVisitCountRise == 0 ?'':`${(Math.abs(Data.MonthlyVisitCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
                   <span>月：100%+</span>
                 </el-tooltip><i :class="Data.MonthlyVisitCountRise != 0?Data.MonthlyVisitCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
@@ -70,8 +70,8 @@
             </div>
             <div class="percent">
               <span>
-                <span v-if="Math.abs(Data.DailyInteractCountRise).toFixed()<1">日：{{Data.DailyInteractCountRise == 0 ? '' : `${(Math.abs(Data.DailyInteractCountRise)*100).toFixed(2)}%`}}</span>
-                <span v-else-if="Math.abs(Data.DailyInteractCountRise).toFixed() == 1">日：{{Data.DailyInteractCountRise == 0 ? '' : `${(Math.abs(Data.DailyInteractCountRise)*100).toFixed()}%`}}</span>
+                <span v-if="Math.abs(Data.DailyInteractCountRise).toFixed(2)<1">日：{{Data.DailyInteractCountRise == 0 ? '' : `${(Math.abs(Data.DailyInteractCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.DailyInteractCountRise).toFixed(2) == '1.00'">日：{{Data.DailyInteractCountRise == 0 ? '' : `${(Math.abs(Data.DailyInteractCountRise)*100).toFixed()}%`}}</span>
                 <el-tooltip v-else :content="Data.DailyInteractCountRise === 0 ? '' : `${(Math.abs(Data.DailyInteractCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
                   <span>
                     日：100%+
@@ -79,8 +79,8 @@
                 </el-tooltip><i :class="Data.DailyInteractCountRise != 0?Data.DailyInteractCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
               </span>
               <span>
-                <span v-if="Math.abs(Data.WeeklyInteractCountRise).toFixed()<1">周：{{Data.WeeklyInteractCountRise == 0 ? '' : `${(Math.abs(Data.WeeklyInteractCountRise)*100).toFixed(2)}%`}}</span>
-                <span v-else-if="Math.abs(Data.WeeklyInteractCountRise).toFixed() == 1">周：{{Data.WeeklyInteractCountRise == 0 ? '' : `${(Math.abs(Data.WeeklyInteractCountRise)*100).toFixed()}%`}}</span>
+                <span v-if="Math.abs(Data.WeeklyInteractCountRise).toFixed(2)<1">周：{{Data.WeeklyInteractCountRise == 0 ? '' : `${(Math.abs(Data.WeeklyInteractCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.WeeklyInteractCountRise).toFixed(2) == '1.00'">周：{{Data.WeeklyInteractCountRise == 0 ? '' : `${(Math.abs(Data.WeeklyInteractCountRise)*100).toFixed()}%`}}</span>
                 <el-tooltip v-else :content="Data.WeeklyInteractCountRise == 0 ? '' : `${(Math.abs(Data.WeeklyInteractCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
                   <span>
                   周：100%+
@@ -88,8 +88,8 @@
                 </el-tooltip><i :class="Data.WeeklyInteractCountRise != 0?Data.WeeklyInteractCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
               </span>
               <span>
-                <span v-if="Math.abs(Data.MonthlynteractCountRise).toFixed()<1">月：{{Data.MonthlynteractCountRise == 0 ? '' : `${(Math.abs(Data.MonthlynteractCountRise)*100).toFixed(2)}%`}}</span>
-                <span v-else-if="Math.abs(Data.MonthlynteractCountRise).toFixed() == 1">月：{{Data.MonthlynteractCountRise == 0 ? '' : `${(Math.abs(Data.MonthlynteractCountRise)*100).toFixed()}%`}}</span>
+                <span v-if="Math.abs(Data.MonthlynteractCountRise).toFixed(2)<1">月：{{Data.MonthlynteractCountRise == 0 ? '' : `${(Math.abs(Data.MonthlynteractCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.MonthlynteractCountRise).toFixed(2) == '1.00'">月：{{Data.MonthlynteractCountRise == 0 ? '' : `${(Math.abs(Data.MonthlynteractCountRise)*100).toFixed()}%`}}</span>
                 <el-tooltip v-else :content="Data.MonthlynteractCountRise == 0 ? '' : `${(Math.abs(Data.MonthlynteractCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
                   <span>
                   月：100%+
@@ -143,6 +143,7 @@
             <span class="title">昨日提问分布</span>
           </div>
           <div id="myChart" v-show="Data.hasNum && Data.showEchart">
+
           </div>
           <div v-show='!Data.hasNum || !Data.showEchart' class="no-question-data">
             <ul>
@@ -230,21 +231,21 @@
               </div>
             </div>
             <div v-else class="progress">
-                <span :style="{width:Data.WebChannelNumPrecent}">
-                  <span v-show="Data.WebChannelNum" >{{Data.WebChannelNumPrecent}}</span>
+                <span :style="{width:Data.WebChannelNumPrecentWidth}">
+                  <span v-show="Data.WebChannelNum" >{{Data.WebChannelNumPrecent+'%'}}</span>
                   <span :style="{height:'15px',width:'100%',background:'#0d575c'}"></span>
                 </span>
-              <span :style="{width:Data.RobotChannelNumPrecent}">
-                  <span v-show="Data.RobotChannelNum" style="transform:translateX(5px)">{{Data.RobotChannelNumPrecent}}</span>
+              <span :style="{width:Data.RobotChannelNumPrecentWidth}">
+                  <span v-show="Data.RobotChannelNum" style="transform:translateX(2px)">{{Data.RobotChannelNumPrecent+'%'}}</span>
                   <span :style="{height:'15px',width:'100%',background:'#288288'}"></span>
                 </span>
-              <span :style="{width:Data.WechatChannelNumPrecent}">
-                  <span v-show="Data.WechatChannelNum" style="transform:translateX(5px)">{{Data.WechatChannelNumPrecent}}</span>
-                  <span :style="{height:'15px',width:'100%',background:'#8fe0e6'}"></span>
-                </span>
-              <span :style="{width:Data.MiniProgramChannelNumPrecent}">
-                  <span v-show="Data.MiniProgramChannelNum" style="transform:translateX(5px)">{{Data.MiniProgramChannelNumPrecent}}</span>
+              <span :style="{width:Data.WechatChannelNumPrecentWidth}">
+                  <span v-show="Data.WechatChannelNum" style="transform:translateX(2px)">{{Data.WechatChannelNumPrecent+'%'}}</span>
                   <span :style="{height:'15px',width:'100%',background:'#2ec6d1'}"></span>
+                </span>
+              <span :style="{width:Data.MiniProgramChannelNumPrecentWidth}">
+                  <span v-show="Data.MiniProgramChannelNum" style="transform:translateX(2px)">{{Data.MiniProgramChannelNumPrecent+'%'}}</span>
+                  <span :style="{height:'15px',width:'100%',background:'#8fe0e6'}"></span>
                 </span>
             </div>
             <div class="tooltip">
@@ -450,6 +451,8 @@
                         // ////////
                         if(data.ProfessionQANum == 0 && data.ChatQANum == 0 && data.UnknowQANum == 0){
                             data.showEchart = false
+                        }else{
+                          data.showEchart = true
                         }
                         data.hasNum = data.SaveTime > 0
                         data.WechatChannelNumPrecent = (data.WechatChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()-0
@@ -470,10 +473,10 @@
                           return v>0
                         }
                       )
-                      const newArr = that.buildData(arrobj, 5-Math.min(...valueArr)).map(
+                      const newArr = that.buildData(arrobj, 8-Math.min(...valueArr)).map(
                         (item) => {
-                          if(item.num<5 && item.num !==0 ){
-                            item.num = 5
+                          if(item.num<8 && item.num !==0 ){
+                            item.num = 8
                           }
                           return item.num
                         }
@@ -501,10 +504,10 @@
                         )
                         newArr[num] = newArr[num]-(reduceStr-100)
                       }
-                      data.WechatChannelNumPrecent = newArr[0]+ '%'
-                      data.WebChannelNumPrecent = newArr[1]+ '%'
-                      data.RobotChannelNumPrecent = newArr[2]+ '%'
-                      data.MiniProgramChannelNumPrecent = newArr[3]+ '%'
+                      data.WechatChannelNumPrecentWidth = newArr[0]+ '%'
+                      data.WebChannelNumPrecentWidth = newArr[1]+ '%'
+                      data.RobotChannelNumPrecentWidth = newArr[2]+ '%'
+                      data.MiniProgramChannelNumPrecentWidth = newArr[3]+ '%'
 
 
                       this.Data = data
