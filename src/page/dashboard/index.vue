@@ -3,10 +3,10 @@
     <nav-title title="仪表盘">
       <el-select v-model="BotConfigId" filterable placeholder="请选择机器人" class="select" @change="refreshData()">
         <el-option
-          v-for="item in getBotList"
-          :key="item.BotConfigId"
-          :label="item.AliasName"
-          :value="item.BotConfigId">
+                v-for="item in getBotList"
+                :key="item.BotConfigId"
+                :label="item.AliasName"
+                :value="item.BotConfigId">
         </el-option>
       </el-select>
     </nav-title>
@@ -23,9 +23,27 @@
               <span>人</span>
             </div>
             <div class="percent">
-              <span>日：{{Data.DailyVisitCountRise}}<span :class="Data.DailyVisitCountRise != 0?Data.DailyVisitCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></span></span>
-              <span>周：{{Data.WeeklyVisitCountRise}}<span :class="Data.WeeklyVisitCountRise != 0?Data.WeeklyVisitCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></span></span>
-              <span>月：{{Data.MonthlyVisitCountRise}}<span :class="Data.MonthlyVisitCountRise != 0?Data.MonthlyVisitCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']" style="margin-right: 0"></span></span>
+              <span>
+                <span v-if="Math.abs(Data.DailyVisitCountRise).toFixed()<1">日：{{Data.DailyVisitCountRise == 0 ?'':`${(Math.abs(Data.DailyVisitCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.DailyVisitCountRise).toFixed() == 1">日：{{Data.DailyVisitCountRise == 0 ?'':`${(Math.abs(Data.DailyVisitCountRise)*100).toFixed()}%`}}</span>
+                <el-tooltip v-else :content="Data.DailyVisitCountRise == 0 ?'':`${(Math.abs(Data.DailyVisitCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
+                  <span>日：100%+</span>
+                </el-tooltip><i :class="Data.DailyVisitCountRise != 0?Data.DailyVisitCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
+              </span>
+              <span>
+                <span v-if="Math.abs(Data.WeeklyVisitCountRise).toFixed()<1">周：{{Data.WeeklyVisitCountRise == 0 ?'':`${(Math.abs(Data.WeeklyVisitCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.WeeklyVisitCountRise).toFixed() == 1">周：{{Data.WeeklyVisitCountRise == 0 ?'':`${(Math.abs(Data.WeeklyVisitCountRise)*100).toFixed()}%`}}</span>
+                <el-tooltip v-else :content="Data.WeeklyVisitCountRise == 0 ?'':`${(Math.abs(Data.WeeklyVisitCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
+                  <span>周：100%+</span>
+                </el-tooltip><i :class="Data.WeeklyVisitCountRise != 0?Data.WeeklyVisitCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
+              </span>
+              <span>
+                <span v-if="Math.abs(Data.MonthlyVisitCountRise).toFixed()<1">月：{{Data.MonthlyVisitCountRise == 0 ?'':`${(Math.abs(Data.MonthlyVisitCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.MonthlyVisitCountRise).toFixed() == 1">月：{{Data.MonthlyVisitCountRise == 0 ?'':`${(Math.abs(Data.MonthlyVisitCountRise)*100).toFixed()}%`}}</span>
+                <el-tooltip v-else :content="Data.MonthlyVisitCountRise == 0 ?'':`${(Math.abs(Data.MonthlyVisitCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
+                  <span>月：100%+</span>
+                </el-tooltip><i :class="Data.MonthlyVisitCountRise != 0?Data.MonthlyVisitCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
+              </span>
             </div>
           </div>
           <div v-else class="no-data">
@@ -51,9 +69,35 @@
               <span>次</span>
             </div>
             <div class="percent">
-              <span>日：{{Data.DailyInteractCountRise}}<span :class="Data.DailyInteractCountRise != 0?Data.DailyInteractCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></span></span>
-              <span>周：{{Data.WeeklyInteractCountRise}}<span :class="Data.WeeklyInteractCountRise != 0?Data.WeeklyInteractCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></span></span>
-              <span>月：{{Data.MonthlynteractCountRise}}<span :class="Data.MonthlynteractCountRise != 0?Data.MonthlynteractCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']" style="margin-right: 0"></span></span>
+              <span>
+                <span v-if="Math.abs(Data.DailyInteractCountRise).toFixed()<1">日：{{Data.DailyInteractCountRise == 0 ? '' : `${(Math.abs(Data.DailyInteractCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.DailyInteractCountRise).toFixed() == 1">日：{{Data.DailyInteractCountRise == 0 ? '' : `${(Math.abs(Data.DailyInteractCountRise)*100).toFixed()}%`}}</span>
+                <el-tooltip v-else :content="Data.DailyInteractCountRise === 0 ? '' : `${(Math.abs(Data.DailyInteractCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
+                  <span>
+                    日：100%+
+                  </span>
+                </el-tooltip><i :class="Data.DailyInteractCountRise != 0?Data.DailyInteractCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
+              </span>
+              <span>
+                <span v-if="Math.abs(Data.WeeklyInteractCountRise).toFixed()<1">周：{{Data.WeeklyInteractCountRise == 0 ? '' : `${(Math.abs(Data.WeeklyInteractCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.WeeklyInteractCountRise).toFixed() == 1">周：{{Data.WeeklyInteractCountRise == 0 ? '' : `${(Math.abs(Data.WeeklyInteractCountRise)*100).toFixed()}%`}}</span>
+                <el-tooltip v-else :content="Data.WeeklyInteractCountRise == 0 ? '' : `${(Math.abs(Data.WeeklyInteractCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
+                  <span>
+                  周：100%+
+                </span>
+                </el-tooltip><i :class="Data.WeeklyInteractCountRise != 0?Data.WeeklyInteractCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
+              </span>
+              <span>
+                <span v-if="Math.abs(Data.MonthlynteractCountRise).toFixed()<1">月：{{Data.MonthlynteractCountRise == 0 ? '' : `${(Math.abs(Data.MonthlynteractCountRise)*100).toFixed(2)}%`}}</span>
+                <span v-else-if="Math.abs(Data.MonthlynteractCountRise).toFixed() == 1">月：{{Data.MonthlynteractCountRise == 0 ? '' : `${(Math.abs(Data.MonthlynteractCountRise)*100).toFixed()}%`}}</span>
+                <el-tooltip v-else :content="Data.MonthlynteractCountRise == 0 ? '' : `${(Math.abs(Data.MonthlynteractCountRise)*100).toFixed(2)}%`" placement="top" effect="dark">
+                  <span>
+                  月：100%+
+                </span>
+                </el-tooltip><i :class="Data.MonthlynteractCountRise != 0?Data.MonthlynteractCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']"></i>
+              </span>
+
+<!--              <span>月：{{Data.MonthlynteractCountRise == 0 ? '' : `${(Math.abs(Data.MonthlynteractCountRise)*100).toFixed()}%`}}<i :class="Data.MonthlynteractCountRise != 0?Data.MonthlynteractCountRise >0?['rise','percent-icon']:['decline','percent-icon']:['keep','percent-icon']" style="margin-right: 0"></i></span>-->
             </div>
           </div>
           <div v-else class="no-data">
@@ -72,21 +116,21 @@
         <el-card class="box-card" v-loading="loading">
           <div slot="header">
             <i class="time icon"></i>
-            <span class="title">累计昨日节约时间</span>
+            <span class="title">截至昨日累计节约时间</span>
           </div>
           <div class="content" v-if="Data.hasNum" >
             <div class="count">
               <span class="save-primary-color">{{Data.SaveTimeHours <= 99999? Data.SaveTime <= 99999?Data.SaveTime:Data.SaveTimeHours:(Data.SaveTimeHours/10000).toFixed()}}</span>
               <span>{{Data.SaveTimeHours<=99999?Data.SaveTime <= 99999?'分钟':'小时':'万小时'}}</span>
             </div>
-            <div class="percent" style="transform: translateY(-7px)">
+            <div class="save-container" style="transform: translateY(-7px)">
               <span>相当于节约<span class="save save-primary-color">{{(Data.SaveTimeHours/8).toFixed(1)}}</span>人天</span>
             </div>
           </div>
           <div v-else class="no-data">
-              <span class="no-data-icon"></span>
-              <span class="text">暂无数据</span>
-              <div style="height: 54px;"></div>
+            <span class="no-data-icon"></span>
+            <span class="text">暂无数据</span>
+            <div style="height: 54px;"></div>
           </div>
         </el-card>
       </el-col>
@@ -98,9 +142,9 @@
             <i class="question icon"></i>
             <span class="title">昨日提问分布</span>
           </div>
-          <div id="myChart" v-show="Data.hasNum">
+          <div id="myChart" v-show="Data.hasNum && Data.showEchart">
           </div>
-          <div v-show='!Data.hasNum' class="no-question-data">
+          <div v-show='!Data.hasNum || !Data.showEchart' class="no-question-data">
             <ul>
               <li><span></span>专业知识/业务咨询</li>
               <li><span></span>闲聊</li>
@@ -120,30 +164,33 @@
             <i class="hot icon"></i>
             <span class="title">昨日热点问题</span>
           </div>
-          <div v-if='Data.hasNum' class="hot-list" id="hotList">
+          <div id="hotList">
+            <div v-if='Data.hasNum && hotQuestionList.length>0' class="hot-list" >
               <div v-for="(item, index) in hotQuestionList" :key="index">
                 <el-tooltip v-if='item.showTooltip' :content="item.FriendlyName" placement="top" effect="dark">
                   <span style="width: 85%;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">
                     {{item.FriendlyName}}
                   </span>
                 </el-tooltip>
-                <span v-else style="width: 85%;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">
+                <span v-else>
                     {{item.FriendlyName}}
                   </span>
                 <span>
                 <span :class="isRise(item.Rise, 'hot-icon')"></span>
               </span>
               </div>
-          </div>
-          <div v-else class="no-data hot-list-no-data" style="position: relative;width: 100%;">
-            <ul style='height: 100%;'>
-              <li v-for="(item,index) in hotQuestionListNoData"></li>
-            </ul>
-            <div style="position: absolute;top: 50%;left: 50%;width: 100%;transform:translate(-50%, -50%)">
-              <span class="no-data-icon"></span>
-              <span class="text">暂无数据</span>
+            </div>
+            <div v-else class="no-data hot-list-no-data" style="position: relative;width: 100%;">
+              <ul style='height: 100%;'>
+                <li v-for="(item,index) in hotQuestionListNoData"></li>
+              </ul>
+              <div style="position: absolute;top: 50%;left: 50%;width: 100%;transform:translate(-50%, -50%)">
+                <span class="no-data-icon"></span>
+                <span class="text">暂无数据</span>
+              </div>
             </div>
           </div>
+
         </el-card>
       </el-col>
       <el-col :span="8" class="unknown-box">
@@ -161,7 +208,7 @@
               </el-button>
             </div>
             <div v-if='Data.hasNum' class="total">
-              <span>{{Data.UnknowQANum}}</span>
+              <span>{{Data.UnknowQANum>99999?`${(Data.UnknowQANum/10000).toFixed()}万`:Data.UnknowQANum}}</span>
               <span>个</span>
             </div>
             <div v-else style="text-align: center">
@@ -174,37 +221,37 @@
           <el-card class="box-card port-visitor" body-style="height:168px;box-sizing:border-box;position:relative;" v-loading="loading">
             <div slot="header">
               <i class="port icon"></i>
-              <span class="title">昨日端口访问量</span>
+              <span class="title">昨日渠道访问量</span>
             </div>
-            <div v-if="Data.hasNum">
-              <div class="progress">
-                <span :style="{width:Data.WechatChannelNumPrecent}">
-                  <span v-show="Data.WechatChannelNum" >{{Data.WechatChannelNumPrecent}}</span>
+            <div v-if="!Data.hasNum||(Data.WechatChannelNum == 0 &&Data.WebChannelNum == 0 && Data.MiniProgramChannelNum == 0 && Data.RobotChannelNum == 0)">
+              <div style="text-align: center;position: absolute;top: 20%;left: 50%;transform:translate(-50%,0)">
+                <span class="no-data-icon"></span>
+                <span class="text">暂无数据</span>
+              </div>
+            </div>
+            <div v-else class="progress">
+                <span :style="{width:Data.WebChannelNumPrecent}">
+                  <span v-show="Data.WebChannelNum" >{{Data.WebChannelNumPrecent}}</span>
                   <span :style="{height:'15px',width:'100%',background:'#0d575c'}"></span>
                 </span>
-                <span :style="{width:Data.WebChannelNumPrecent}">
-                  <span v-show="Data.WebChannelNum" style="transform:translateX(5px)">{{Data.WebChannelNumPrecent}}</span>
+              <span :style="{width:Data.RobotChannelNumPrecent}">
+                  <span v-show="Data.RobotChannelNum" style="transform:translateX(5px)">{{Data.RobotChannelNumPrecent}}</span>
                   <span :style="{height:'15px',width:'100%',background:'#288288'}"></span>
                 </span>
-                <span :style="{width:Data.MiniProgramChannelNumPrecent}">
-                  <span v-show="Data.MiniProgramChannelNum" style="transform:translateX(5px)">{{Data.MiniProgramChannelNumPrecent}}</span>
+              <span :style="{width:Data.WechatChannelNumPrecent}">
+                  <span v-show="Data.WechatChannelNum" style="transform:translateX(5px)">{{Data.WechatChannelNumPrecent}}</span>
                   <span :style="{height:'15px',width:'100%',background:'#8fe0e6'}"></span>
                 </span>
-                <span :style="{width:Data.RobotChannelNumPrecent}">
-                  <span v-show="Data.RobotChannelNum" style="transform:translateX(5px)">{{Data.RobotChannelNumPrecent}}</span>
+              <span :style="{width:Data.MiniProgramChannelNumPrecent}">
+                  <span v-show="Data.MiniProgramChannelNum" style="transform:translateX(5px)">{{Data.MiniProgramChannelNumPrecent}}</span>
                   <span :style="{height:'15px',width:'100%',background:'#2ec6d1'}"></span>
                 </span>
-              </div>
-              <div class="tooltip">
-                <span><i style="background: #0d575c"></i>微信端</span>
-                <span><i style="background: #288288"></i>网页端</span>
-                <span><i style="background: #2ec6d1"></i>小程序</span>
-                <span><i style="background: #8fe0e6"></i>实体机器人</span>
-              </div>
             </div>
-            <div v-else style="text-align: center;position: absolute;top: 50%;left: 50%;transform:translate(-50%,-50%)">
-              <span class="no-data-icon"></span>
-              <span class="text">暂无数据</span>
+            <div class="tooltip">
+              <span><i style="background: #0d575c"></i>网页端</span>
+              <span><i style="background: #288288"></i>实体机器人</span>
+              <span><i style="background: #2ec6d1"></i>微信端</span>
+              <span><i style="background: #8fe0e6"></i>小程序</span>
             </div>
           </el-card>
         </el-row>
@@ -214,336 +261,438 @@
 </template>
 <script>
 
-  import NavTitle from '../../components/NavTitle';
-  import {request} from "../../serive/request";
-  import {getCookies} from "../../utils/cookie";
-  import {TOKEN} from "../../constants/constants";
-  import {QUERYBOT,STATUSMETRICS,HOTQA} from "../../constants/api";
-  import store from '../../store/index'
-  // 引入基本模板
-  let echarts = require('echarts/lib/echarts')
-  // 引入柱状图组件
-  require('echarts/lib/chart/pie')
-  // 引入提示框和title组件
-  require('echarts/lib/component/tooltip')
-  require('echarts/lib/component/title')
-  require('echarts/lib/component/legend')
-  export default {
-    data(){
-      return {
-        BotConfigId: null,
-        Data: {
-          hasNum: true,
-          VisitCount: 0,
-          InteractCount: 0,
-          SaveTime: 0,
-          SaveTimeHours: 0,
-          ProfessionQANum: '',
-          ChatQANum: '',
-          UnknowQANum: 0,
-          WechatChannelNum: '30%',
-          WebChannelNum: '30%',
-          RobotChannelNum: '10%',
-          MiniProgramChannelNum: '30%',
-          DailyVisitCountRise: '-1.38',
-          DailyInteractCountRise: '0',
-          WeeklyVisitCountRise: '0',
-          WeeklyInteractCountRise: '2',
-          MonthlyVisitCountRise: '8.88',
-          MonthlynteractCountRise: '1.28',
-          UnknownQFileUrl:''
-      },
-        hotQuestionList:[],
-        hotQuestionListNoData:[
-            {
-              Count: '',
-              FriendlyName: "",
-              IntentName: "",
-              Ranking: '',
-              Rise: ''
-            },
-          {
-            Count: '',
-            FriendlyName: "",
-            IntentName: "",
-            Ranking: '',
-            Rise: ''
-          },
-          {
-            Count: '',
-            FriendlyName: "",
-            IntentName: "",
-            Ranking: '',
-            Rise: ''
-          },
-          {
-            Count: '',
-            FriendlyName: "",
-            IntentName: "",
-            Ranking: '',
-            Rise: ''
-          },
-          {
-            Count: '',
-            FriendlyName: "",
-            IntentName: "",
-            Ranking: '',
-            Rise: ''
-          },
-          {
-            Count: '',
-            FriendlyName: "",
-            IntentName: "",
-            Ranking: '',
-            Rise: ''
-          },
-          {
-            Count: '',
-            FriendlyName: "",
-            IntentName: "",
-            Ranking: '',
-            Rise: ''
-          }
-          ],
-        loading: true,
-        hotLoading: true,
-        show: false,
-        PageIndex:0,
-        PageSize:0,
-        getBotList:[]
-      }
-    },
-    created(){
-      this.getStatusMetrics()
-      this.getBotListFetch()
-      this.getHotQA()
-    },
-    mounted() {
-    },
-    components:{
-      NavTitle,
-    },
-    methods:{
-      refreshData(id){
-        this.getStatusMetrics()
-        this.getHotQA()
-      },
-      getHotQA(){
-        const that = this
-        that.hotLoading = true
-        const TenantId = store.state.app.userInfo.TenantId
-
-        const params = {
-          method: 'POST',
-          headers:{
-            'Access-Token': getCookies(TOKEN)
-          },
-          body:JSON.stringify({
-            TenantId:TenantId,
-            BotConfigId:this.BotConfigId,
-            // "TenantId":"60124b8f-4355-4c4e-a9bf-6286b434d8c4",
-            // "BotConfigId":"huajing0-181a-46bd-94b2-8a5b5cestage",
-            // "PreStartDate":"2019-4-1 00:00:00",
-            // "PreEndDate":"2019-4-10 23:59:59",
-            // "CurrStartDate":"2019-4-11 00:00:00",
-            // "CurrEndDate":"2019-4-21 23:59:59"
-          })
-        }
-        request(HOTQA, params).then(
-          (res) =>{
-            this.hotQuestionList = []
-            res.Data.forEach(
-              (item, index, arr) => {
-                if(item.Ranking === index+1){
-                  this.hotQuestionList.push(item)
-                }
-                item.showTooltip = item.FriendlyName.length > that.computedFontLength()
-              }
-            )
-            setTimeout(
-              () => {
-                that.hotLoading = false
-              },500
-            )
-          }
-        ).catch(
-          () => {
-            this.hotLoading = false
-          }
-        )
-      },
-      getStatusMetrics(){
-        this.loading = true
-        const TenantId = store.state.app.userInfo.TenantId
-
-        const params = {
-          method: 'POST',
-          headers:{
-            'Access-Token': getCookies(TOKEN)
-          },
-          body:JSON.stringify({
-            TenantId:TenantId,
-            BotConfigId:this.BotConfigId,
-            // "TenantId":"60124b8f-4355-4c4e-a9bf-6286b434d8c4",
-            // "BotConfigId":"huajing0-181a-46bd-94b2-8a5b5cestage",
-            // "PreStartDate":"2019-4-1 00:00:00",
-            // "PreEndDate":"2019-4-10 23:59:59",
-            // "CurrStartDate":"2019-4-11 00:00:00",
-            // "CurrEndDate":"2019-4-21 23:59:59"
-          })
-        }
-        request(STATUSMETRICS, params).then(
-          (res) =>{
-            const data = res.Data?res.Data:this.Data
-
-            data.hasNum = data.SaveTime > 0
-            data.WechatChannelNumPrecent = (data.WechatChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()+'%'
-            data.WebChannelNumPrecent = (data.WebChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()+'%'
-            data.RobotChannelNumPrecent = (data.RobotChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()+'%'
-            data.MiniProgramChannelNumPrecent = (data.MiniProgramChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()+'%'
-
-            res.Data.SaveTimeHours = (res.Data.SaveTime/60).toFixed()
-
-            this.Data = data
-
-            setTimeout(
-              () => {
-                this.loading = false
-              },500
-            )
-            this.drawLine(this.Data);
-          }
-        ).catch(
-          () => {
-            this.loading = false
-          }
-        )
-      },
-      getBotListFetch(){
-        const TenantId = store.state.app.userInfo.TenantId
-        const params = {
-          method: 'POST',
-          headers:{
-            'Access-Token': getCookies(TOKEN)
-          },
-          body:JSON.stringify({TenantId:TenantId,PageIndex:this.PageIndex,PageSize:this.PageSize})
-        }
-        request(QUERYBOT,params).then(
-          (res) => {
-            const all = {
-              AliasName: '全部机器人',
-              BotConfigId: null,
-              TenantId: null
+    import NavTitle from '../../components/NavTitle';
+    import {request} from "../../serive/request";
+    import {getCookies} from "../../utils/cookie";
+    import {TOKEN} from "../../constants/constants";
+    import {QUERYBOT,STATUSMETRICS,HOTQA} from "../../constants/api";
+    import store from '../../store/index'
+    // 引入基本模板
+    let echarts = require('echarts/lib/echarts')
+    // 引入柱状图组件
+    require('echarts/lib/chart/pie')
+    // 引入提示框和title组件
+    require('echarts/lib/component/tooltip')
+    require('echarts/lib/component/title')
+    require('echarts/lib/component/legend')
+    export default {
+        data(){
+            return {
+                BotConfigId: null,
+                Data: {
+                    hasNum: true,
+                    showEchart: true,
+                    VisitCount: 0,
+                    InteractCount: 0,
+                    SaveTime: 0,
+                    SaveTimeHours: 0,
+                    ProfessionQANum: '',
+                    ChatQANum: '',
+                    UnknowQANum: 0,
+                    WechatChannelNum: '0',
+                    WebChannelNum: '0',
+                    RobotChannelNum: '0',
+                    MiniProgramChannelNum: '0',
+                    DailyVisitCountRise: '0',
+                    DailyInteractCountRise: '0',
+                    WeeklyVisitCountRise: '0',
+                    WeeklyInteractCountRise: '0',
+                    MonthlyVisitCountRise: '0',
+                    MonthlynteractCountRise: '0',
+                    UnknownQFileUrl:''
+                },
+                hotQuestionList:[],
+                hotQuestionListNoData:[
+                    {
+                        Count: '',
+                        FriendlyName: "",
+                        IntentName: "",
+                        Ranking: '',
+                        Rise: ''
+                    },
+                    {
+                        Count: '',
+                        FriendlyName: "",
+                        IntentName: "",
+                        Ranking: '',
+                        Rise: ''
+                    },
+                    {
+                        Count: '',
+                        FriendlyName: "",
+                        IntentName: "",
+                        Ranking: '',
+                        Rise: ''
+                    },
+                    {
+                        Count: '',
+                        FriendlyName: "",
+                        IntentName: "",
+                        Ranking: '',
+                        Rise: ''
+                    },
+                    {
+                        Count: '',
+                        FriendlyName: "",
+                        IntentName: "",
+                        Ranking: '',
+                        Rise: ''
+                    },
+                    {
+                        Count: '',
+                        FriendlyName: "",
+                        IntentName: "",
+                        Ranking: '',
+                        Rise: ''
+                    },
+                    {
+                        Count: '',
+                        FriendlyName: "",
+                        IntentName: "",
+                        Ranking: '',
+                        Rise: ''
+                    }
+                ],
+                loading: true,
+                hotLoading: true,
+                show: false,
+                PageIndex:0,
+                PageSize:0,
+                getBotList:[]
             }
-            this.getBotList = res.Data?[all, ...res.Data]:[all]
-            this.hotLoading = false
-          }
-        )
-      },
-      drawLine(data) {
-        // 基于准备好的dom，初始化echarts实例
-        const that = this
-        if(document.getElementById('myChart')){
-          // 绘制图表
-          let myChart = echarts.init(document.getElementById('myChart'))
-          myChart.setOption({
-            color: ['#2a8be7', '#f39504', '#999999'],
-            tooltip : {             // Series config.
-              trigger: 'item',
-              backgroundColor: '#fff',
-              position : function (point, params, dom, rect, size) {
-                // 固定在顶部
-                const domWidth = dom.offsetWidth
-                return [size.viewSize[0]/2-18,size.viewSize[1]/2-15];
-              },
-              textStyle:{
-                textAlign: 'center',
-                width: 200,
-                height: 50
-              },
-              formatter: `<div style="position: absolute;left: 50%;top: 50%;"><span style="color: #2a8be7; font-size: 30px">'+'{c}'+'</span><span style="color: #555; font-size: 16px">条</span></div>`,
+        },
+        created(){
+            this.getStatusMetrics()
+            this.getBotListFetch()
+            this.getHotQA()
+        },
+        mounted() {
+        },
+        components:{
+            NavTitle,
+        },
+        methods:{
+            refreshData(id){
+                this.getStatusMetrics()
+                this.getHotQA()
             },
-            legend: {
-              orient: 'vertical',
-              x: 'left',
-              icon:"circle",
-              textStyle:{
-                fontSize:14,
-                color: '#555'
-              },
-              data:['专业知识/业务咨询','闲聊','未知问题']
-            },
-            grid:{
-              x:'20%',
-              y: '20%'
-            },
-            series: [
-              {
-                center:['55%', '50%'],
-                name:'sss',
-                type:'pie',
-                radius: ['35%', '50%'],
-                avoidLabelOverlap: false,
-                label: {
-                  normal: {
-                    show: false,
-                    position:'left',
-                    textStyle: {
-                      fontSize: 12,
-                      color: '#555'
+            getHotQA(){
+                const that = this
+                that.hotLoading = true
+                const TenantId = store.state.app.userInfo.TenantId
+
+                const params = {
+                    method: 'POST',
+                    headers:{
+                        'Access-Token': getCookies(TOKEN)
                     },
-                    formatter(params){
-                      const value = params.percent.toFixed()+'%'
-                      return [value, params.name].join('\n')
+                    body:JSON.stringify({
+                        TenantId:TenantId,
+                        BotConfigId:this.BotConfigId,
+                        // "TenantId":"60124b8f-4355-4c4e-a9bf-6286b434d8c4",
+                        // "BotConfigId":"huajing0-181a-46bd-94b2-8a5b5cestage",
+                        // "PreStartDate":"2019-4-1 00:00:00",
+                        // "PreEndDate":"2019-4-10 23:59:59",
+                        // "CurrStartDate":"2019-4-11 00:00:00",
+                        // "CurrEndDate":"2019-4-21 23:59:59"
+                    })
+                }
+                request(HOTQA, params).then(
+                    (res) =>{
+                        this.hotQuestionList = []
+                        res.Data.forEach(
+                            (item, index, arr) => {
+                              item.showTooltip = item.FriendlyName.length > that.computedFontLength()
+                              if(item.Ranking === index+1){
+                                    this.hotQuestionList.push(item)
+                                }
+                            }
+                        )
+
+                        setTimeout(
+                            () => {
+                                that.hotLoading = false
+                            },500
+                        )
                     }
-                  },
-                  emphasis: {
-                    show: true,
-                    formatter(params){
-                      const value = params.percent.toFixed()+'%'
-                      return [value, params.name].join('\n')
+                ).catch(
+                    () => {
+                        this.hotLoading = false
                     }
-                  }
-                },
-                labelLine: {
-                  normal: {
-                    show: true,
-                    lineStyle: {
-                      color: '#555'
+                )
+            },
+            getStatusMetrics(){
+                const that = this
+                this.loading = true
+                const TenantId = store.state.app.userInfo.TenantId
+
+                const params = {
+                    method: 'POST',
+                    headers:{
+                        'Access-Token': getCookies(TOKEN)
                     },
-                  }
-                },
-                data:[
-                  {value:data.UnknowQANum, name:'未知问题', itemStyle:{normal:{color:'#999999'},emphasis:{color:'#999999'}}},
-                  {value:data.ChatQANum, name:'闲聊', itemStyle:{normal:{color:'#f39504'},emphasis:{color:'#f39504'}}},
-                  {value:data.ProfessionQANum, name:'专业知识/业务咨询', itemStyle:{normal:{color:'#2a8be7'},emphasis:{color:'#2a8be7'}}},
-                  // {value:110, name:'未知问题', itemStyle:{normal:{color:'#999999'},emphasis:{color:'#999999'}}},
-                  // {value:5, name:'闲聊', itemStyle:{normal:{color:'#f39504'},emphasis:{color:'#f39504'}}},
-                  // {value:420, name:'专业知识/业务咨询', itemStyle:{normal:{color:'#2a8be7'},emphasis:{color:'#2a8be7'}}},
-                ]
+                    body:JSON.stringify({
+                        TenantId:TenantId,
+                        BotConfigId:this.BotConfigId,
+                        // "TenantId":"60124b8f-4355-4c4e-a9bf-6286b434d8c4",
+                        // "BotConfigId":"huajing0-181a-46bd-94b2-8a5b5cestage",
+                        // "PreStartDate":"2019-4-1 00:00:00",
+                        // "PreEndDate":"2019-4-10 23:59:59",
+                        // "CurrStartDate":"2019-4-11 00:00:00",
+                        // "CurrEndDate":"2019-4-21 23:59:59"
+                    })
+                }
+                request(STATUSMETRICS, params).then(
+                    (res) =>{
+                        const data = res.Data?res.Data:this.Data
+                        /////////
+                        //test
+                        // ////////
+                        if(data.ProfessionQANum == 0 && data.ChatQANum == 0 && data.UnknowQANum == 0){
+                            data.showEchart = false
+                        }
+                        data.hasNum = data.SaveTime > 0
+                        data.WechatChannelNumPrecent = (data.WechatChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()-0
+                        data.WebChannelNumPrecent = (data.WebChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()-0
+                        data.RobotChannelNumPrecent = (data.RobotChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()-0
+                        data.MiniProgramChannelNumPrecent = (data.MiniProgramChannelNum/( data.WechatChannelNum+ data.WebChannelNum+data.RobotChannelNum+data.MiniProgramChannelNum)*100).toFixed()-0
+
+                        res.Data.SaveTimeHours = (res.Data.SaveTime/60).toFixed()
+
+                        let arr = [data.WechatChannelNumPrecent,data.WebChannelNumPrecent,data.RobotChannelNumPrecent,data.MiniProgramChannelNumPrecent]
+                        let arrobj = [{index:1,num:data.WechatChannelNumPrecent},{index:2,num:data.WebChannelNumPrecent},{index:3,num:data.RobotChannelNumPrecent},{index:4,num:data.MiniProgramChannelNumPrecent}]
+
+
+                        //////////
+                        ///test
+                      const valueArr = arr.filter(
+                        (v,index) => {
+                          return v>0
+                        }
+                      )
+                      const newArr = that.buildData(arrobj, 5-Math.min(...valueArr)).map(
+                        (item) => {
+                          if(item.num<5 && item.num !==0 ){
+                            item.num = 5
+                          }
+                          return item.num
+                        }
+                      )
+
+                      /////////
+
+
+
+
+                        let reduceStr = newArr.reduce(
+                          (pre,current) => {
+                            return (pre-0) + (current-0)
+                          }
+                        )
+
+                      if(reduceStr>100){
+                        let num = null
+                        newArr.forEach(
+                          (v,index) => {
+                            if(v === Math.max(...newArr)){
+                              num = index
+                            }
+                          }
+                        )
+                        newArr[num] = newArr[num]-(reduceStr-100)
+                      }
+                      data.WechatChannelNumPrecent = newArr[0]+ '%'
+                      data.WebChannelNumPrecent = newArr[1]+ '%'
+                      data.RobotChannelNumPrecent = newArr[2]+ '%'
+                      data.MiniProgramChannelNumPrecent = newArr[3]+ '%'
+
+
+                      this.Data = data
+
+                        setTimeout(
+                            () => {
+                                this.loading = false
+                            },500
+                        )
+                        this.drawLine(this.Data);
+                    }
+                ).catch(
+                    () => {
+                        this.Data.hasNum = false
+                        this.data.showEchart = false
+                        this.loading = false
+                    }
+                )
+            },
+            getBotListFetch(){
+                const TenantId = store.state.app.userInfo.TenantId
+                const params = {
+                    method: 'POST',
+                    headers:{
+                        'Access-Token': getCookies(TOKEN)
+                    },
+                    body:JSON.stringify({TenantId:TenantId,PageIndex:this.PageIndex,PageSize:this.PageSize})
+                }
+                request(QUERYBOT,params).then(
+                    (res) => {
+                        const all = {
+                            AliasName: '全部机器人',
+                            BotConfigId: null,
+                            TenantId: null
+                        }
+                        this.getBotList = res.Data?[all, ...res.Data]:[all]
+                        this.hotLoading = false
+                    }
+                )
+            },
+            drawLine(data) {
+                // 基于准备好的dom，初始化echarts实例
+                const that = this
+                if(document.getElementById('myChart')){
+                    // 绘制图表
+                    let myChart = echarts.init(document.getElementById('myChart'))
+                    myChart.setOption({
+                        color: ['#2a8be7', '#f39504', '#999999'],
+                        tooltip : {             // Series config.
+                            trigger: 'item',
+                            // backgroundColor: '#fff',
+                            // position : function (point, params, dom, rect, size) {
+                            //   // 固定在顶部
+                            //   const domWidth = dom.offsetWidth
+                            //   return [size.viewSize[0]/2-18,size.viewSize[1]/2-15];
+                            // },
+                            textStyle:{
+                                textAlign: 'center',
+                                width: 200,
+                                height: 50
+                            },
+                            //
+                            // formatter: `<div style="position: absolute;left: 50%;top: 50%;"><span style="color: #2a8be7; font-size: 30px">'+'{c}'+'</span><span style="color: #555; font-size: 16px">条</span></div>`,
+                            //
+                            formatter: `{d}%<br/>{b}`,
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            x: 'left',
+                            icon:"circle",
+                            textStyle:{
+                                fontSize:14,
+                                color: '#555'
+                            },
+                            data:['专业知识/业务咨询','闲聊','未知问题']
+                        },
+                        grid:{
+                            x:'20%',
+                            y: '20%'
+                        },
+                        series: [
+                            {
+                                center:['60%', '50%'],
+                                name:'sss',
+                                type:'pie',
+                                radius: ['43%', '58%'],
+                                avoidLabelOverlap: false,
+                                label: {
+                                    normal: {
+                                        show: false,
+                                        position:'center',
+                                        textStyle: {
+                                            fontSize: 12,
+                                            color: '#555'
+                                        },
+                                        formatter(params){
+                                            const value = params.value
+                                            return [value, '次'].join('\n')
+                                        }
+                                    },
+                                    emphasis: {
+                                        show: true,
+                                        position:'center',
+                                        fontSize:30,
+                                        color:'#2a8be7',
+                                        formatter(params){
+                                            const value = params.value
+                                            if(value>99999){
+                                                return value/10000+'万次'
+                                            }
+                                            else{
+                                                return value+'次'
+                                            }
+                                        }
+                                    }
+                                },
+                                labelLine: {
+                                    normal: {
+                                        show: true,
+                                        lineStyle: {
+                                            color: '#555'
+                                        },
+                                    }
+                                },
+                                data:[
+                                    {value:data.UnknowQANum, name:'未知问题', itemStyle:{normal:{color:'#999999'},emphasis:{color:'#999999'}}},
+                                    {value:data.ChatQANum, name:'闲聊', itemStyle:{normal:{color:'#f39504'},emphasis:{color:'#f39504'}}},
+                                    {value:data.ProfessionQANum, name:'专业知识/业务咨询', itemStyle:{normal:{color:'#2a8be7'},emphasis:{color:'#2a8be7'}}},
+                                    // {value:110, name:'未知问题', itemStyle:{normal:{color:'#999999'},emphasis:{color:'#999999'}}},
+                                    // {value:99999, name:'闲聊', itemStyle:{normal:{color:'#f39504'},emphasis:{color:'#f39504'}}},
+                                    // {value:100000, name:'专业知识/业务咨询', itemStyle:{normal:{color:'#2a8be7'},emphasis:{color:'#2a8be7'}}},
+                                ]
+                            }
+                        ]
+                    });
+                }
+            },
+            isRise(value,className = ''){
+                if(value){
+                    if(value>0){
+                        return ['rise', className]
+                    }else{
+                        return ['decline', className]
+                    }
+                }else{
+                    return ['keep', className]
+                }
+            },
+            computedFontLength(){
+                const ele = document.getElementById('hotList');
+                const length = ele.clientWidth*0.85/16
+                return Math.floor(length)
+            },
+            buildData(list, value) {
+              list = list.sort(function (i, j) {
+                return i.num - j.num;
+              });
+
+              if ((list[list.length - 1].num - list[list.length - 2].num) > value) {
+                list[list.length - 1] = {
+                  index: list[list.length - 1].index,
+                  num: list[list.length - 1].num - value
+                }
+              } else if ((list[list.length - 2].num - list[list.length - 3].num) > value) {
+                list[list.length - 2] = {
+                  index: list[list.length - 2].index,
+                  num: list[list.length - 2].num - value
+                }
+              } else if ((list[list.length - 3].num - list[list.length - 4].num) > value) {
+                list[list.length - 3] = {
+                  index: list[list.length - 3].index,
+                  num: list[list.length - 3].num - value
+                }
+              } else {
+                list[list.length - 4] = {
+                  index: list[list.length - 4].index,
+                  num: list[list.length - 4].num - value
+                }
               }
-            ]
-          });
-        }
-      },
-      isRise(value,className = ''){
-        if(value){
-          if(value>0){
-            return ['rise', className]
-          }else{
-            return ['decline', className]
+
+              list = list.sort(function (i, j) {
+                return i.index - j.index;
+              });
+
+              return list
           }
-        }else{
-          return ['keep', className]
         }
-      },
-      computedFontLength(){
-        const ele = document.getElementById('hotList');
-        const length = ele.clientWidth*0.85/16
-        return Math.floor(length)
-      }
     }
-  }
 </script>
 <style lang="scss" scoped>
   @import '../../style/card';
@@ -563,9 +712,9 @@
   .second{
     margin-bottom: 20px
   }
- .margin-top-20{
-   margin-top: 20px;
- }
+  .margin-top-20{
+    margin-top: 20px;
+  }
   .title{
     display: inline-block;
     margin-left: 14px;
@@ -651,12 +800,14 @@
         font-size: 24px;
       }
     }
-    .percent{
+    .percent,.save-container{
       font-size: 0;
       color: $f-pri-c;
       height: 16px;
       line-height: 16px;
+      text-align: center;
       span{
+        display: inline-block;
         font-size: 16px;
       }
       .save{
@@ -665,6 +816,16 @@
         height:16px;
       }
     }
+
+    .percent>span{
+      width: 33.33%;
+    }
+    /*.percent>span:first-child{*/
+    /*  text-align: left;*/
+    /*}*/
+    /*.percent>span:last-child{*/
+    /*  text-align: right;*/
+    /*}*/
   }
   .hot-list{
     box-sizing: border-box;
@@ -710,17 +871,17 @@
         color: #2a8be7;
       }
     }
-     .total{
-       color:$f-pri-c;
-       height: 100%;
-       line-height: 42px;
-       text-align: center;
-       font-size: 24px;
-       span:first-child{
-         font-size: 54px;
-         color: #f26f5e;
-       }
-     }
+    .total{
+      color:$f-pri-c;
+      height: 100%;
+      line-height: 42px;
+      text-align: center;
+      font-size: 24px;
+      span:first-child{
+        font-size: 54px;
+        color: #f26f5e;
+      }
+    }
   }
   .port-visitor{
     position: relative;
@@ -856,6 +1017,15 @@
       height: 100% !important;
     }
   }
+  @media screen and (max-width: 1580px) {
+    .percent-icon{
+      margin:0 5px
+    }
+    .box-card{
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+  }
   @media screen and (max-width: 1440px) {
     .save-box,.unknown-box,.port-box{
       width: 30%;
@@ -865,14 +1035,41 @@
       .tooltip{
         span{
           width: 50%;
+
         }
       }
+    }
+    .box-card{
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+    .percent-icon{
+      margin:0 3px
     }
   }
   @media screen and (max-width: 1340px) {
     .save-box,.unknown-box,.port-box{
       width: 24%;
       min-width: 290px;
+    }
+    .box-card{
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+  @media screen and (max-width: 1280px) {
+    .box-card{
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+    .percent-icon{
+      margin:0 3px;
+    }
+    .percent>span:first-child{
+      text-align: left;
+    }
+    .percent>span:last-child{
+      text-align: right;
     }
   }
 </style>

@@ -17,7 +17,7 @@
       <el-table-column
         prop="AliasName"
         label="机器人名称"
-        :resizable="resizable" show-overflow-tooltip
+        :resizable="resizable" show-overflow-tooltip min-width='400px'
       >
       </el-table-column>
       <el-table-column
@@ -32,7 +32,7 @@
         label="状态"
         :resizable="resizable"
         :render-header="renderProductId"
-        min-width="40"
+        min-width="80"
       >
         <template slot-scope="scope">
           <span :style="{'color': scope.row.StatusString === '已创建'? '#555':'#999'}">
@@ -43,8 +43,8 @@
       <el-table-column
         prop="CreateDate"
         label="创建时间"
-        min-width="50"
-        :resizable="resizable"
+        min-width="120"
+        :resizable="resizable"  show-overflow-tooltip align="center"
       >
         <template slot-scope="scope">
           <span v-if="scope.row.Status == 0||scope.row.Status == 1||scope.row.Status == 6">
@@ -57,7 +57,7 @@
       </el-table-column>
       <el-table-column
         label="操作"
-        width="230"
+        width="160"
         :resizable="resizable"
       >
         <template slot-scope="scope">
@@ -349,16 +349,15 @@
         )
       },
       search() {
-        const str ="<>%;/?'_"
-        const index = this.keyWords&&str.indexOf(this.keyWords) > -1
-        if(index){
+        if (!(/^[0-9a-zA-Z\u4e00-\u9eff]{1,}$/).test(this.keyWords)&&this.keyWords) {
           this.$message({
-            type:'error',
-            message:"请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
-            duration:2000,
+            type: 'error',
+            message: "请不要输入特殊字符作为关键词搜索，例如 *，<，>，%，;，/，?，'，_等",
+            duration: 2000,
           })
           return
         }
+
         const description = this.keyWords
         const searchStatus = store.state.app.searchStatus
         store.dispatch(REPLACE, {PageIndex: 1, description}).then(

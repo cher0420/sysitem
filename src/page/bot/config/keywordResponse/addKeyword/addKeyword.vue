@@ -109,23 +109,22 @@
           this.isRed=false;//
           this.regIndex = index//
           const arry = this.indexList.filter(
-                  (item) => {
-                    if( !item == index){
-                      return item
-                    }
-                  }
-                )
+            (item) => {
+              if( !item == index){
+                return item
+              }
+            }
+          )
           this.indexList = arry
-        this.letters()
+          this.letters()
 
         };
 
-        // this.letters()
       },
       letters(){
-          console.log(this.keywordList)
         let letters=[]
         const test = new RegExp("&");
+        // debugger;
         this.keywordList.filter(
           (v, index, arr) => {
             if(!v){
@@ -134,35 +133,26 @@
               this.indexList.push(index)
               console.log('kong',index)
             } else  {
-              if (v !== arr[index + 1]) {
-                console.log('正确', '')
+              if (v === arr[index - 1]) {
+                console.log('chongfu', '')
               }else{
-                this.indexList.push(index)
-              }
-              console.log('有重复',index) 
-              return
-              //   const arry = this.indexList.filter(
-              //     (item) => {
-              //       if( !item == index){
-              //         return item
-              //       }
-              //     }
-              //   )
-              // this.indexList = arry
-              // console.log('正确', '')
-              // if(v === arr[index + 1]){
-              // this.change =false ;// 提示语
-              // this.disabled =true// 按钮不可点  为true
-              // this.indexList.push(index)
-              // console.log('有重复',index)
+                console.log('buchongfu',index)
+                // this.indexList.push(index)
 
-              // }
-              // return;
+              }
+
+              //  const arry = this.indexList.filter(
+              //   (item) => {
+              //     if( !item == index){
+              //       return item
+              //     }
+              //   }
+              // )
+              // this.indexList = arry
 
             }
           }
         )
-        console.log(this.indexList)
 
 
       },
