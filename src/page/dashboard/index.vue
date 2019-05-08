@@ -367,8 +367,6 @@
             this.getBotListFetch()
             this.getHotQA()
         },
-        mounted() {
-        },
         components:{
             NavTitle,
         },
