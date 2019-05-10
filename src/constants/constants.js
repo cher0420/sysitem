@@ -80,26 +80,26 @@ export const MENUS=[
                 }
               ]
             },
-            // {
-            //   id:'quicklyQA',
-            //   chineseName:'快速问答',
-            //   path:'quicklyQA',
-            //   parent: 'knowledgeBuild',
-            //   children:[
-            //     {
-            //       id:'create',
-            //       chineseName:'新建',
-            //       path:'create',
-            //       parent: 'quicklyQA',
-            //     },
-            //     {
-            //       id:'edit',
-            //       chineseName:'编辑',
-            //       path:'edit',
-            //       parent: 'quicklyQA',
-            //     }
-            //   ]
-            // },
+            {
+              id:'quicklyQA',
+              chineseName:'快速问答',
+              path:'quicklyQA',
+              parent: 'knowledgeBuild',
+              children:[
+                {
+                  id:'create',
+                  chineseName:'新建',
+                  path:'create',
+                  parent: 'quicklyQA',
+                },
+                {
+                  id:'edit',
+                  chineseName:'编辑',
+                  path:'edit',
+                  parent: 'quicklyQA',
+                }
+              ]
+            },
             {
               id:'keywordResponse',
               chineseName:'关键词回复',
@@ -204,9 +204,7 @@ export const STR = {
   knowledgeDetail:'知识问答',
   caseStore:'案例库',
   quicklyQA:'快速问答',
-  createrNewQA:'创建新问答',
-  updateQA:'创建新问答',
-  editQA:'编辑',
+  createNewQA:'创建新问答',
   keywordResponse:'关键词回复',
   addKeyword:'添加关键词回复',
   editAnswer: '添加关键词回复',
