@@ -21,11 +21,10 @@
       >
         <el-form-item
           class="question-item"
-          :prop="'similarity.' + index + '.value'"
-          :rules="rules[index]"
+          :error="item.error"
         >
           <el-input v-model="item.value" placeholder="请添加问法" @keyup.enter.native="addSimilarity"></el-input>
-          <section class="delete" @click="deleteItem(index)">
+          <section v-show='dynamicValidateForm.similarity.length>3' class="delete" @click="deleteItem(index)">
             <i class="el-icon-close"></i>
             <span>删除</span>
           </section>
@@ -37,7 +36,10 @@
       <el-col>
         <el-form-item>
               <el-button type="primary" @click="submitForm('dynamicValidateForm')">下一步</el-button>
-            </el-form-item>
+          <section v-if="errorTips"> {{errorTips}}</section>
+          <section v-else></section>
+
+        </el-form-item>
       </el-col>
     </el-form>
   </section>
@@ -50,43 +52,12 @@
     data(){
 
       return {
-        validatePass:(rule, value, callback) => {
-          let similarity = this.dynamicValidateForm.similarity.map(
-            (item) => {
-              return item.value
-            }
-          )
-          // function sortAndSet (arr){
-            for(let i = 0;i < similarity.length; i ++){
-              for(let j = 0; j< similarity.length-i-1; j++){
-                if(similarity[j]>similarity[j+1]){
-                  [similarity[j],similarity[j+1]] = [similarity[j+1],similarity[j]]
-                }
-              }
-            }
-          // similarity.forEach(
-          //   (item,index,arr) => {
-          //     if(item&&item === arr[index+1]){
-          //       return callback(new Error('已有重复项'));
-          //     }
-          //   }
-          // )
-          let s = similarity.join(",")+",";
-          for(let i=0;i<similarity.length;i++) {
-            if(similarity[i]&&s.replace(similarity[i]+",","").indexOf(similarity[i]+",")>-1) {
-              return callback(new Error('已有重复项'));
-            }
-          }
-        },
+
         dynamicValidateForm: {
-          similarity: [{ value: ''}, { value: ''}, { value: ''}],
+          similarity: [{ value: '',error: ''}, { value: '',error: ''}, { value: '',error: ''}],
           question: ''
         },
-        rules:{
-          0:[{ validator: this.validatePass, trigger: 'blur' }],
-          1:[{ validator: this.validatePass, trigger: 'blur' }],
-          2:[{ validator: this.validatePass, trigger: 'blur' }],
-        }
+
       }
     },
     components:{
@@ -94,34 +65,87 @@
       TitleText
     },
     created(){
-      this.rules = {
-        0:[{ validator: this.validatePass, trigger: 'blur' }],
-        1:[{ validator: this.validatePass, trigger: 'blur' }],
-        2:[{ validator: this.validatePass, trigger: 'blur' }],
-      }
+
     },
-    methods:{
+    methods: {
       submitForm(formName) {
+        const that = this
         this.$refs.form.validate((valid) => {
           if (valid) {
-
+            if(that.filterData()){
+              console.log('通过校验')
+            }else{
+              return false
+            }
           } else {
-
             return false;
           }
         });
       },
+      filterData(){
+        const that = this
+        let status = true
+        if(that.dynamicValidateForm.similarity.length >= 3 ){
+          let answer = that.dynamicValidateForm.similarity.map(
+            (item) => {
+              return item.value
+            }
+          )
+          answer = answer.filter(item => item)
+          status = answer&&answer.length >= 3
+        }else{
+          status = false
+        }
+        let arr = that.dynamicValidateForm.similarity.map(
+          (item, index) => {
+            return item.value
+          }
+        )
+        arr.map(
+          (item,index,content) => {
+            let allIndex = that.searchKeys(item, content)
+
+            if(item&&allIndex.length>1 && allIndex.includes(index+'')){
+              that.dynamicValidateForm.similarity[index].error = '已有重复项'
+            }else{
+              that.dynamicValidateForm.similarity[index].error = ''
+            }
+          }
+        )
+
+        let error = that.dynamicValidateForm.similarity.map(
+          (item, index) => {
+            return item.error
+          }
+        )
+        if(!status){
+          this.errorTips = '请至少输入三个问法'
+          return false
+        }else if(error.includes('已有重复项')){
+          return false
+        } else {
+          this.errorTips = null
+          return true
+        }
+      },
       resetForm(formName) {
         this.$refs[formName].resetFields();
       },
+      searchKeys(needle, haystack) {
+        let result = [];
+        for (let i in haystack) {
+          if (haystack[i] === needle) {
+            result.push(i);
+          }
+        }
+        return result;
+        },
       deleteItem(index){
         this.dynamicValidateForm.similarity.splice(index,1)
+        this.filterData()
+
       },
       addSimilarity(){
-        const key = Object.keys(this.rules).length
-
-        this.rules[key] = [{ validator: this.validatePass, trigger: 'blur' }]
-        console.log(this.rules);
         this.dynamicValidateForm.similarity.push({
           value: '',
         });
