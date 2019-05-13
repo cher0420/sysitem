@@ -1,63 +1,194 @@
 <template>
-  <section>
-    <nav-title title="创建新问答"></nav-title>
-    <title-text title="第一步：问题名称"></title-text>
-    <el-form ref="form" :model="dynamicValidateForm" label-width="0px">
-      <el-row>
-        <el-col :span="14">
-          <el-form-item prop="question" :rules="[
-      { required: true, message: '请输入问题', trigger: 'blur' },
-    ]">
-            <el-input v-model="dynamicValidateForm.question" placeholder="例如：2019年年会在哪里举办"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-    <title-text title="添加问法（至少三个，至多十个）"></title-text>
-      <el-col
-        :span="14"
-        v-for="(item, index) in dynamicValidateForm.similarity"
-        :key="index"
-        class="quicklyQA"
-      >
-        <el-form-item
-          class="question-item"
-          :error="item.error"
-        >
-          <el-input v-model="item.value" placeholder="请添加问法" @keyup.enter.native="addSimilarity"></el-input>
-          <section v-show='dynamicValidateForm.similarity.length>3' class="delete" @click="deleteItem(index)">
-            <i class="el-icon-close"></i>
-            <span>删除</span>
-          </section>
-        </el-form-item>
-      </el-col>
-      <el-col :span="14">
-        <el-button type="text" style="width: auto" @click="addSimilarity"><i class="el-icon-circle-plus"></i><span>添加</span></el-button>
-      </el-col>
-      <el-col>
-        <el-form-item>
+  <section id="quicklyQa">
+<!--    创建页面-->
+    <nav-title :title="title"></nav-title>
+    <section>
+<!--      步骤页面-->
+      <section v-if="step === 1">
+        <title-text title="第一步：问题名称"></title-text>
+        <el-form ref="dynamicValidateForm" :model="dynamicValidateForm" label-width="40px" style="margin-top: 30px;">
+          <el-row>
+            <el-col :span="14" style="margin-bottom: 8px;">
+              <el-form-item prop="question" :rules="rules">
+                <el-input v-model="dynamicValidateForm.question" maxLength='50' placeholder="例如：2019年年会在哪里举办"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <title-text title="添加问法（至少三个，至多十个）"></title-text>
+          <el-row style="margin-top: 30px;">
+            <el-col
+              :span="14"
+              v-for="(item, index) in dynamicValidateForm.similarity"
+              :key="index"
+              class="quicklyQA"
+            >
+              <el-form-item
+                class="question-item"
+                :error="item.error"
+                label-width="40px"
+              >
+                <el-input v-model="item.value" placeholder="请输入问法语句" @keyup.enter.native="addSimilarity"></el-input>
+                <section v-show='dynamicValidateForm.similarity.length>3' class="delete" @click="deleteItem(index)">
+                  <i class="el-icon-close"></i>
+                  <span>删除</span>
+                </section>
+              </el-form-item>
+            </el-col>
+            <el-col :span="14" v-show="dynamicValidateForm.similarity.length<=10">
+              <el-button type="text" style="width: 120px" @click="addSimilarity"><i class="el-icon-circle-plus"></i><span>添加</span></el-button>
+            </el-col>
+          </el-row>
+          <section style="margin-top: 50px;">
+            <el-form-item>
               <el-button type="primary" @click="submitForm('dynamicValidateForm')">下一步</el-button>
-          <section v-if="errorTips"> {{errorTips}}</section>
-          <section v-else></section>
+              <span class="error">{{errorTips}}</span>
+            </el-form-item>
+          </section>
+        </el-form>
+      </section>
+      <section v-else>
+        <title-text title="第一步：问题名称"></title-text>
+          <el-row class="normal-text-box">
+            <el-col :span="14" class="normal-text">
+              {{dynamicValidateForm.question}}
+            </el-col>
+          </el-row>
+          <title-text title="添加问法（至少三个，至多十个）"></title-text>
+          <el-row class="normal-text-box" :style="{height: !longList?dynamicValidateForm.similarity.length<=3?'190px':'211px':'auto',transition:'height 1s ease 1s'}">
+            <el-col
+              :span="14"
+              v-for="(item, index) in dynamicValidateForm.similarity"
+              :key="index"
+              class="normal-text"
+              :style="{display: !longList&&index>2?'none':'block'}"
+            >
+              {{item.value}}
+            </el-col>
+            <el-col v-if='dynamicValidateForm.similarity.length>3' :span="14" class="show-more">
+              <span @click="showMore">
+                 {{longList?'收起':'展开'}}
+              </span>
+            </el-col>
+          </el-row>
+          <title-text title="第二步：设置答案"></title-text>
+<!--        <el-row>-->
+<!--          <el-col :span="14" class="p-relative">-->
+          <section class="p-relative" style="width: 60%;">
+              <textarea
+                class="c555 answer-box"
+                rows="8"
+                maxlength="500"
+                placeholder="请输入自定义回答，最多500个字符"
+                v-model="textAnswer"
+                @input="getTextTotal"
+            >
+            </textarea>
+              <span class='computedTotal'>{{textTotal}}/500字</span>
+  <!--          </el-col>-->
+  <!--        </el-row>-->
+          </section>
+        <el-row
+          v-show="uploadList.length>0"
+          class="el-upload-list el-upload-list--picture-card"
+          style="margin-left: 40px;float: left;"
+        >
+          <el-col v-for="(item,index) in uploadList" class="p-relative picItem text-a-c" :key="index">
+            <img :src="item.KnowledgeBase" alt="图片" class="align-middle-img">
+            <section class="p-absolute opacity f-s-20" >
+              <span class="dis-i-b"  >
+                <i class="el-icon-zoom-in" @click="preview(item.KnowledgeBase)"></i>
+                <i class="el-icon-delete"  @click="del(item,index,'uploadList')"></i>
+              </span>
+            </section>
+          </el-col>
+        </el-row>
+        <section style="height: 80px;margin-left: 40px;">
+          <section
+            v-if="uploadList.length<3"
+            class="el-upload el-upload--picture-card p-relative"
+            @click="uploadContainer"
+            style="float: left;margin-right: 20px"
+          >
+            <i
+              class="el-icon-plus"
+              style="position: absolute;left: 50%;
+          top: 50%;
+          margin-top: -14px;
+          margin-left: -14px;"
+            ></i>
+            <input
+              type="file"
+              accept="image/*"
+              class="el-upload__input"
+              style="display: none"
+              ref="yoy-image-upload"
+              @change="uploadHandle"
+            >
+          </section>
+          <section class="tips">（至多上传3张，每张不超过200K，支持jpg、jpeg、png、gif格式）</section>
+        </section>
+        <el-dialog :visible.sync="dialogVisible" class="text-a-c">
+          <img width="400" :src="dialogImageUrl" alt>
+        </el-dialog>
+        <section style="margin-top: 50px;">
+          <el-button @click="lastStep">上一步</el-button>
+          <el-button type="primary" @click="save('dynamicValidateForm')">完成</el-button>
+          <span class="error">{{errorTips}}</span>
+        </section>
+      </section>
+      </section>
 
-        </el-form-item>
-      </el-col>
-    </el-form>
+<!--    编辑页面-->
+
+<!--    <section v-else>-->
+<!--      我是编辑页面-->
+<!--    </section>-->
   </section>
 </template>
 <script>
   import NavTitle from '../../../../../components/NavTitle';
   import TitleText from '../../../../../components/Title';
+  import store from '../../../../../store';
+  import {request} from "../../../../../serive/request";
+  import {getCookies} from "../../../../../utils/cookie";
+  import {TOKEN} from "../../../../../constants/constants";
+  import {upload_delete_img} from "../../../../../serive/request";
+  import {Loading} from 'element-ui'
 
   export default {
     data(){
-
+      var validatePass = (rule, value, callback) => {
+          value = this.trimStr(value)
+          if (value === '') {
+            callback(new Error('问题名称不能为空'));
+          } else {
+            callback();
+          }
+      }
       return {
 
         dynamicValidateForm: {
-          similarity: [{ value: '',error: ''}, { value: '',error: ''}, { value: '',error: ''}],
+          similarity: [{ value: '',error: ''}, { value: '',error: ''},{ value: '',error: ''}],
           question: ''
         },
+        rules:[
+          { required: true, message: '问题名称不能为空', trigger: 'blur' },
+          { validator: validatePass, trigger: 'blur' }
 
+        ],
+        errorTips:'',
+        step:2,
+        title: '创建新问答',
+        routerName: 'create',
+        uploadList:[],
+        dialogVisible:false,
+        textTotal:0,
+        textAnswer:'',
+        dialogImageUrl:'',
+        DeleteIds:[],
+        deleteImgArr:[],
+        longList: false,
+        loadingInstance:null,
       }
     },
     components:{
@@ -65,15 +196,177 @@
       TitleText
     },
     created(){
-
+      this.routerName = this.$route.name
+      // this.routerName = 'edit'
+      this.title = this.routerName === 'create'? '创建新问答':'编辑'
+      this.step = this.routerName === 'create'? 1:2
     },
     methods: {
+      save(){
+        const element = document.getElementById('quicklyQa')
+        this.loadingInstance = Loading.service({target: element});
+        this.upload_img()
+      },
+      upload_img() {
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const Id = this.$route.query.recordId?this.$route.query.recordId:id
+        const Files = [];
+        let imageArr = this.uploadList.slice(0)
+        // console.log(1)
+        imageArr.forEach((v, key, arr) => {
+          if (v.KnowledgeBase.match(/base64,(\S*)/)) {
+            const Context = v.KnowledgeBase.match(/base64,(\S*)/)[1];
+            const obj = {
+              Content:Context,
+              Extension: v.type
+            };
+            Files.push(obj);
+          }
+        });
+
+        const body = {
+          Command: "upload",
+          Id,
+          Files
+        };
+        const params = {
+          body: JSON.stringify(body)
+        };
+        upload_delete_img(params).then(res => {
+          const arr = [];
+          res.FilesName.forEach((v, k) => {
+            const obj = {
+              KnowledgeBase: v,
+              Id: ""
+            };
+            arr.push(obj);
+          });
+          this.update_Detail(arr);
+        });
+      },
+      update_Detail(arr){
+        const TenantId = store.state.app.userInfo.TenantId
+        const BotRecordId = this.$route.query.recordId?this.$route.query.recordId:JSON.parse(sessionStorage.getItem('recordId'))
+        const token = getCookies(TOKEN)
+        const SimilarQuestions = this.dynamicValidateForm.similarity.map(
+          (item) => {
+            return item.value
+          }
+        )
+        const params = {
+          headers:{
+            'Access-Token': token
+          },
+          method:'POST',
+          body:JSON.stringify({
+            TenantId,
+            BotRecordId,
+            QuestionName: this.dynamicValidateForm.question,
+            SimilarQuestions,
+            Answer:{
+              Text: this.textAnswer,
+              Images:[]
+            }
+          })
+        }
+        request('/api/admin/portal/QQA/Add',params).then(
+          (res) => {
+            this.$message({
+              type:'success',
+              message: '创建成功',
+              duration: 2000
+            })
+            setTimeout(
+              () => {
+                this.$router.push('/bot/config/quicklyQA')
+              },800
+            )
+            this.loadingInstance.close()
+          }
+        )
+      },
+      showMore(){
+        this.longList = !this.longList
+      },
+      getTextTotal() {
+        this.textTotal =  this.textAnswer.length
+      },
+      lastStep(){
+        this.step = 1
+      },
+      uploadHandle(v) {
+        const that = this;
+        const file = v.target.files[0];
+        const type = file.type;
+        if (!/image\/\w+/.test(type) || file.type.indexOf("svg") > -1) {
+          this.$message({
+            type: "error",
+            message: "只能上传jpg, jpeg, png, gif格式类型的图片"
+          });
+          return;
+        }
+        if (!file || file.size > 200 * 1024) {
+          this.$message({
+            type: "error",
+            message: "请上传文件不大于200KB的图片！"
+          });
+          return;
+        }
+        // 读取文件:
+        const reader = new FileReader();
+        //初始化图像对象
+        let obj = {};
+        //获取文件名字
+        const name = file.name;
+        reader.onload = function(e) {
+          const KnowledgeBase = e.target.result;
+
+          //图像对象赋值
+          // debugger;
+          const type = name.substring(name.lastIndexOf(".")).replace(".", "");
+          obj = {
+            name,
+            KnowledgeBase,
+            type
+          };
+          that.uploadList.push(obj)
+          that.$refs["yoy-image-upload"].value = "";
+        };
+        // 以DataURL的形式读取文件:
+        reader.readAsDataURL(file);
+        // });
+
+      },
+      uploadContainer(v) {
+        const input = this.$refs["yoy-image-upload"];
+        input.click();
+        // 监听change事件:
+      },
+      del(v, index,arr) {
+        this[arr].splice(index, 1);
+        if (v.ID) {
+          this.DeleteIds.push(v.ID);
+          this.deleteImgArr.push(v.KnowledgeBase);
+        }
+
+        // this.save();
+      },
+      preview(v) {
+        this.dialogVisible = true;
+        this.dialogImageUrl = v;
+      },
+      trimStr(value){
+        value = value.replace(/(^\s*)|(\s*$)/g, "")
+        return value
+      },
       submitForm(formName) {
         const that = this
-        this.$refs.form.validate((valid) => {
+        this.$refs[formName].validate((valid) => {
           if (valid) {
             if(that.filterData()){
-              console.log('通过校验')
+              that.step = 2
+
+              console.log(that[formName])
             }else{
               return false
             }
@@ -85,6 +378,18 @@
       filterData(){
         const that = this
         let status = true
+        //去除空格
+        that.dynamicValidateForm.question = that.trimStr(that.dynamicValidateForm.question)
+
+        that.dynamicValidateForm.similarity.map(
+          (item) => {
+            item.value = that.trimStr(item.value)
+          }
+        )
+        //去除空格
+
+        //判断重复
+
         if(that.dynamicValidateForm.similarity.length >= 3 ){
           let answer = that.dynamicValidateForm.similarity.map(
             (item) => {
@@ -96,19 +401,32 @@
         }else{
           status = false
         }
+
+
         let arr = that.dynamicValidateForm.similarity.map(
           (item, index) => {
             return item.value
           }
         )
-        arr.map(
+        console.log(arr)
+
+        arr.forEach(
           (item,index,content) => {
+
             let allIndex = that.searchKeys(item, content)
 
             if(item&&allIndex.length>1 && allIndex.includes(index+'')){
-              that.dynamicValidateForm.similarity[index].error = '已有重复项'
+
+              // that.dynamicValidateForm.similarity[index].error = '输入问法重复'
+
+              const similarityArr = JSON.parse(JSON.stringify(that.dynamicValidateForm.similarity))
+              similarityArr[index].error = '输入问法重复'
+              that.dynamicValidateForm.similarity = similarityArr
             }else{
-              that.dynamicValidateForm.similarity[index].error = ''
+              const similarityArr = JSON.parse(JSON.stringify(that.dynamicValidateForm.similarity))
+              similarityArr[index].error = ''
+              that.dynamicValidateForm.similarity = similarityArr
+
             }
           }
         )
@@ -118,13 +436,18 @@
             return item.error
           }
         )
-        if(!status){
-          this.errorTips = '请至少输入三个问法'
+
+        //判断重复
+
+        if(status){
+          that.errorTips = ''
+        }else{
+          that.errorTips = '请至少输入三个问法'
+        }
+
+        if(!status || error.includes('输入问法重复') || !that.dynamicValidateForm.question){
           return false
-        }else if(error.includes('已有重复项')){
-          return false
-        } else {
-          this.errorTips = null
+        }else{
           return true
         }
       },
@@ -160,6 +483,9 @@
     cursor: pointer;
     color: $primary-color;
   }
+  .error{
+    color: $danger;
+  }
   .question-item{
     position: relative;
   }
@@ -179,7 +505,121 @@
       display: inline-block;
     }
   }
+  .answer-box {
+    border: 1px solid $border-color;
+    outline: none;
+    width: 100%;
+    padding: 20px;
+    resize: none;
+    transition: border .5s;
+    margin-top: 30px;
+    margin-left: 40px;
+    margin-bottom: 15px;
+  }
+  .answer-box:hover {
+    border: 1px solid $primary-color;
+  }
+  .answer-box:focus {
+    border: 1px solid $primary-color;
+  }
+
+  .answer-box::-webkit-input-placeholder {
+    color: #999;
+  }
+  .computedTotal{
+    display: inline-block;
+    text-align: right;
+    position: absolute;
+    height: 14px;
+    line-height: 14px;
+    right: -52px;
+    bottom: 35px;
+    color: $f-pri-c;
+  }
+  .deleteBtn{display:none;}
+
+  .picItem {
+    width: 80px;
+    height: 80px;
+    margin-right: 20px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    border: 1px solid #c0ccda;
+    overflow: hidden;
+  }
+  .opacity {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    background: rgba(0, 0, 0, 0);
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    span {
+      width: 100%;
+      margin: 0 auto;
+      height: 80px;
+      line-height: 80px;
+      text-align: center;
+      color: #fff;
+      i {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        cursor: pointer;
+      }
+    }
+  }
+  .opacity:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.5);
+    transition: all 0.3s;
+  }
+  .tips {
+    color:#999;
+    float: left;
+    height: 80px;
+    line-height: 80px;
+  }
+  .align-middle-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+  }
+  .normal-text-box{
+    box-sizing: border-box;
+    overflow: hidden;
+    transition: .3s;
+    padding: 30px 0 30px 40px;
+  }
+  .normal-text{
+    color: $f-pri-c;
+    font-size: 14px;
+    height: 40px;
+    line-height: 40px;
+  }
+  .show-more{
+    color: $primary-color;
+    font-size: 14px;
+    margin-bottom: 10px;
+    span{
+      display: inline-block;
+      width: 60px;
+      /*height: 28px;*/
+      /*line-height: 28px;*/
+      cursor: pointer;
+    }
+  }
+
 </style>
+
 <style lang="scss">
   @import '../../../../../style/var/color';
   .quicklyQA{
