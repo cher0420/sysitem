@@ -2,9 +2,11 @@ import {request} from "../../../../serive/request";
 import {getCookies} from "../../../../utils/cookie";
 import {TOKEN} from "../../../../constants/constants";
 import URL from '../../../../host/baseUrl';
-import {DELETEQUESTION, QUICKLYLIST,QUERYSTATUS} from "../../../../constants/api";
+import {DELETEQUESTION, GETQUICKLYLIST,GETQUERYSTATUS} from "../../../../constants/api";
 import route from '../../../../router/index'
 import moment from 'moment';
+import store from '../../../../store';
+
 
 /*
 机器人id
@@ -12,20 +14,27 @@ import moment from 'moment';
 
 export const getList  = (params) =>{
 
-    /*
-    无参数情况下请求数据初始化
-     */
+  /*
+  无参数情况下请求数据初始化
+   */
   const id = JSON.parse(sessionStorage.getItem('recordId'))
-  const BotConfigId = id?id:route.currentRoute.query.recordId
+  // const BotConfigId = id?id:route.currentRoute.query.recordId
   const token = getCookies(TOKEN)
 
+
+  const TenantId = store.state.app.userInfo.TenantId
+  const BotRecordId = '254b7095-0281-4fab-b27f-9f080f063684'//route.currentRoute.query.recordId
+
+
   const body = {
-    BotConfigId,
+    TenantId,
+    BotRecordId,
+    // BotConfigId,
     PageSize:10,
     PageIndex:1,
-    Keys:null,
-    Status:null,
-    ...params,
+    KeyWord:null,
+    Status:0,
+    // ...params,
   }
 
   const option = {
@@ -37,9 +46,10 @@ export const getList  = (params) =>{
   }
   return new Promise(
     (resolve,reject) =>{
-      const url = URL.requestHost+QUICKLYLIST
+      const url = URL.requestHost+GETQUICKLYLIST
       request(url,option).then(
         (res)=> {
+
           const data = res['Data']
           /*
           1、分页为50，
@@ -104,18 +114,21 @@ export const del = (params) => {
 export const _ask = (botId = null) => {
   const token = getCookies(TOKEN)
   const id = JSON.parse(sessionStorage.getItem('recordId'))
-  const BotConfigId = route.currentRoute.query.recordId?route.currentRoute.query.recordId:id
+  // const BotConfigId = route.currentRoute.query.recordId?route.currentRoute.query.recordId:id
+  const TenantId = store.state.app.userInfo.TenantId
+  const BotRecordId = '254b7095-0281-4fab-b27f-9f080f063684'//route.currentRoute.query.recordId
+
 
   const params = {
     headers:{
       'Access-Token':token
     },
     method:'POST',
-    body:JSON.stringify({BotConfigId}),
+    body:JSON.stringify({TenantId,BotRecordId}),
   }
   return new Promise(
     (resolve,reject) => {
-      request(URL.requestHost+QUERYSTATUS,params).then(
+      request(URL.requestHost+GETQUERYSTATUS,params).then(
         (res) =>{
           if(res.Data === 0){
             //不存在培训中或者发布中的数据

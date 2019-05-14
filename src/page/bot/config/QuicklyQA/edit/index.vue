@@ -9,8 +9,9 @@
         <el-form ref="dynamicValidateForm" :model="dynamicValidateForm" label-width="40px" style="margin-top: 30px;">
           <el-row>
             <el-col :span="14" style="margin-bottom: 8px;">
-              <el-form-item prop="question" :rules="rules">
-                <el-input v-model="dynamicValidateForm.question" maxLength='50' placeholder="例如：2019年年会在哪里举办"></el-input>
+              <el-form-item prop="question" :rules="rules" :error="errorQuestionMessage">
+                <el-input v-if="routerName === 'create'" v-model="dynamicValidateForm.question" maxLength='50' placeholder="例如：2019年年会在哪里举办" @blur="checkQuestion"></el-input>
+                <section class="c555" v-else>{{dynamicValidateForm.question}}</section>
               </el-form-item>
             </el-col>
           </el-row>
@@ -79,7 +80,7 @@
                 rows="8"
                 maxlength="500"
                 placeholder="请输入自定义回答，最多500个字符"
-                v-model="textAnswer"
+                v-model="textAnswer.Knowledge"
                 @input="getTextTotal"
             >
             </textarea>
@@ -159,6 +160,7 @@
     data(){
       var validatePass = (rule, value, callback) => {
           value = this.trimStr(value)
+          // console.log(this.checkQuestion(value,callback))
           if (value === '') {
             callback(new Error('问题名称不能为空'));
           } else {
@@ -183,12 +185,13 @@
         uploadList:[],
         dialogVisible:false,
         textTotal:0,
-        textAnswer:'',
+        textAnswer:{Id:'',Knowledge:''},
         dialogImageUrl:'',
         DeleteIds:[],
         deleteImgArr:[],
         longList: false,
         loadingInstance:null,
+        errorQuestionMessage:''
       }
     },
     components:{
@@ -200,14 +203,111 @@
       // this.routerName = 'edit'
       this.title = this.routerName === 'create'? '创建新问答':'编辑'
       this.step = this.routerName === 'create'? 1:2
+      if(this.step === 2){
+        this.getDetails()
+      }
     },
     methods: {
+      getDetails(){
+        const that = this
+        const TenantId = store.state.app.userInfo.TenantId
+        const BotRecordId = this.$route.query.recordId?this.$route.query.recordId:JSON.parse(sessionStorage.getItem('recordId'))
+        const QuestionId = this.$route.query.QuestionId
+        const token = getCookies(TOKEN)
+        const params = {
+          headers:{
+            'Access-Token': token
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            TenantId,
+            BotRecordId,
+            QuestionId: '210118bb-2577-4d94-a7a9-230d98271318'
+          })
+        }
+        request('/api/admin/portal/QQA/QueryDetails',params).then(
+          (res) => {
+            let similarityFamily =
+              res.Data.SimilarQuestions.length>0&&
+              res.Data.SimilarQuestions.map(
+              (item) => {
+                if(item){
+                  return {
+                    value:item,
+                    error:''
+                  }
+                }
+              }
+            )
+
+            this.dynamicValidateForm.question = res.Data.QuestionName
+            this.dynamicValidateForm.similarity = similarityFamily
+            this.textAnswer = res.Data.Text
+            this.uploadList = res.Data.Image
+            this.textTotal = this.textAnswer.Knowledge.length
+          }
+        )
+
+      },
+
+      /**
+       * 问题名称查重
+       * @param value
+       */
+      checkQuestion(value){
+          value = this.trimStr(this.dynamicValidateForm.question)
+          if(value){
+            const QuestionName = value
+            const TenantId = store.state.app.userInfo.TenantId
+            const BotRecordId = this.$route.query.recordId?this.$route.query.recordId:JSON.parse(sessionStorage.getItem('recordId'))
+            const token = getCookies(TOKEN)
+            const params = {
+              headers:{
+                'Access-Token': token
+              },
+              method: 'POST',
+              body: JSON.stringify({
+                QuestionName,
+                TenantId,
+                BotRecordId
+              })
+            }
+            request('/api/admin/portal/QQA/IsQuesExist',params).then((res) => {
+              if(res.Data){
+                this.errorQuestionMessage = '当前问题已存在'
+              } else {
+                this.errorQuestionMessage = ''
+              }
+            }).catch(() => {
+
+            })
+          }
+
+      },
+
+      /**
+       * 保存答案.根据路由判断
+       */
       save(){
         const element = document.getElementById('quicklyQa')
         this.loadingInstance = Loading.service({target: element});
+
+        if(this.routerName === 'create'){
+          this.createQuestion()
+        }else{
+          this.updateQuestion()
+        }
+
+
+      },
+      createQuestion(){
         this.upload_img()
       },
+      updateQuestion(){
+
+      },
       upload_img() {
+        const that = this
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const Id = this.$route.query.recordId?this.$route.query.recordId:id
         const Files = [];
@@ -233,14 +333,23 @@
           body: JSON.stringify(body)
         };
         upload_delete_img(params).then(res => {
-          const arr = [];
-          res.FilesName.forEach((v, k) => {
-            const obj = {
-              KnowledgeBase: v,
-              Id: ""
-            };
-            arr.push(obj);
-          });
+          let arr = [];
+          if(that.routerName === 'create'){
+
+            arr = res.FilesName
+
+          } else {
+
+            res.FilesName.forEach((v, k) => {
+              const obj = {
+                KnowledgeBase: v,
+                Id: ""
+              };
+              arr.push(obj);
+            });
+
+          }
+
           this.update_Detail(arr);
         });
       },
@@ -253,6 +362,7 @@
             return item.value
           }
         )
+
         const params = {
           headers:{
             'Access-Token': token
@@ -264,8 +374,8 @@
             QuestionName: this.dynamicValidateForm.question,
             SimilarQuestions,
             Answer:{
-              Text: this.textAnswer,
-              Images:[]
+              Text: this.textAnswer.Knowledge,
+              Images: arr
             }
           })
         }
@@ -278,7 +388,9 @@
             })
             setTimeout(
               () => {
-                this.$router.push('/bot/config/quicklyQA')
+                const query = this.$route.query
+                const url = { path: "/bot/config/quicklyQA", query:{...query}};
+                this.$router.push(url)
               },800
             )
             this.loadingInstance.close()
@@ -289,7 +401,7 @@
         this.longList = !this.longList
       },
       getTextTotal() {
-        this.textTotal =  this.textAnswer.length
+        this.textTotal =  this.textAnswer.Knowledge.length
       },
       lastStep(){
         this.step = 1
@@ -365,8 +477,13 @@
           if (valid) {
             if(that.filterData()){
               that.step = 2
-
-              console.log(that[formName])
+              that.dynamicValidateForm.similarity = that.dynamicValidateForm.similarity.filter(
+                (item) => {
+                  if(item.value){
+                    return item
+                  }
+                }
+              )
             }else{
               return false
             }
@@ -408,7 +525,6 @@
             return item.value
           }
         )
-        console.log(arr)
 
         arr.forEach(
           (item,index,content) => {

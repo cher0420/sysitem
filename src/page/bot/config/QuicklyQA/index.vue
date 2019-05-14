@@ -1,14 +1,44 @@
 <template>
   <section>
+
+    <nav-title title="快速问答"></nav-title>
     <a :href="blankUrl" style="display: none" target="_blank" id="blankNew" ref="blankNew"></a>
     <section class="p-relative" style="">
-      <el-button  v-if="!enableChecked" type="primary" class="text-a-c createAnswer" @click="newQA">创建新问答</el-button>
-      <el-input v-model='keys' class='searchInput' :style="{transition:'left .3s',left: !enableChecked?'120px':'0'}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      <el-button  v-if="!enableChecked" type="primary" class="text-a-c createAnswer" :disabled='!status' @click="newQA">创建新问答</el-button>
+
+      <!-- :headers="params.headers"
+        :data="params.body"
+        :action="params.url" -->
+
+      <el-upload
+        ref="upload"
+        :headers="params.headers"
+        :data="params.body"
+        :action="params.url"
+
+
+        :on-success='successUpload'
+        :on-error='onError'
+        :limit="1"
+        :on-exceed="handleExceed"
+      >
+        <el-button   type="primary" class="text-a-c introduction" :disabled='!status' @click="dao">导入</el-button>
+      </el-upload>
+      <el-input v-model='keys' class='searchInput ' :style="{transition:'left .3s',}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
-      <span v-if="!originDisabled">
-        <el-button type="primary" v-if="!enableChecked" class="p-absolute right-0" @click="typeCheckedStatus" style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;">编辑</el-button>
-        <span v-else class="p-absolute right-0">
-          <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消编辑</el-button><el-button :disabled="tableDataCopy.length>0?false:true" type="primary" style="margin-right: 10px;" @click="train">培训</el-button><el-button type="primary" :disabled="tableDataCopy.length>0?false:true" @click="publish">发布</el-button>
+      <span  >
+        <!-- v-if="!originDisabled" -->
+        <span class="start-quickly p-absolute" v-show='startIt'>
+          <el-button @click="clearAll"  disabled="">清空</el-button>
+          <el-button class="btn-bg" @click="stop">开启</el-button>
+        </span>
+        <span v-show='!stopIt'>
+          <el-badge is-dot class="item p-absolute" v-show='!release'>发布</el-badge>
+          <el-button  class="item p-absolute red" v-show='release'>发布</el-button>
+          <el-button type="primary" v-if="!enableChecked" @click="start" class="p-absolute right-0"  style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;" >停用</el-button>
+          <span v-else class="p-absolute right-0">
+            <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消编辑</el-button><el-button :disabled="tableDataCopy.length>0?false:true" type="primary" style="margin-right: 10px;" @click="train">培训</el-button><el-button type="primary" :disabled="tableDataCopy.length>0?false:true" @click="publish">发布</el-button>
+           </span>
         </span>
       </span>
     </section>
@@ -33,36 +63,37 @@
           </span>
         </template>
         <template slot-scope="scope">
-          <el-checkbox style="height: 24px;line-height: 24px;margin-bottom: 0" v-model="scope.row.checkedStatus" v-if="enableChecked" @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index,scope.row.Status)"></el-checkbox>
+          <el-checkbox style="height: 24px;line-height: 24px;margin-bottom: 0" v-model="scope.row.QAStatus" v-if="enableChecked" @change="checked(scope.row.checkedStatus,scope.row.ID,scope.$index,scope.row.Status)"></el-checkbox>
           <span v-else>{{scope.$index+1}}</span>
         </template>
       </el-table-column>
       <el-table-column
-        prop="Question"
-        label="问题"
+        prop="QuestionName"
+        label="问题" show-overflow-tooltip
         :resizable="resizable"
-        >
+      >
         <template slot-scope="scope">
           <section class='link' @click="pathToDetail(scope.row)">
-            {{scope.row.Question}}
+            {{scope.row.QuestionName}}
           </section>
         </template>
       </el-table-column>
       <el-table-column
-        prop="Keyword"
-        label="关键词"
+        prop="Domain"
+        label="行业领域"
+        width="160" show-overflow-tooltip
         :resizable="resizable"
       >
         <template slot-scope="scope">
-          {{scope.row.Keyword.replace(/,/g,'、')}}
+          {{scope.row.Domain.replace(/,/g,'、')}}
         </template>
       </el-table-column>
       <el-table-column
-        prop="Status"
-        width="160"
-        :resizable="resizable"
-      >
+        prop="QAStatusText"
+        width="100"
+        :resizable="resizable" >
         <template slot="header" slot-scope="scope">
+
           <el-dropdown @command="handleCommand" trigger='click' placement="bottom-start" class="p-absolute left-0 yoy-dropDown">
   <span class="el-dropdown-link c333">
     {{title}}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -72,14 +103,13 @@
             </el-dropdown-menu>
           </el-dropdown>
         </template>
-        <template slot-scope="scope"><span>{{statusString[scope.row.Status]}}</span></template>
+        <template slot-scope="scope"><span>{{scope.row.QAStatusText}}</span></template>
       </el-table-column>
       <el-table-column
         prop="CreateDate"
-        label="创建时间"
+        label="更新时间"
         :resizable="resizable"
-        :width="showDel?'320':'160'"
-      >
+        :width="showDel?'320':'200'" >
       </el-table-column>
       <el-table-column
         width="200"
@@ -115,25 +145,37 @@
   </section>
 </template>
 <script>
+  import {request} from "../../../../serive/request";
   import questionOptions from './constants'
   import {getList,del,_ask,doSomething} from './service'
   import URL from '../../../../host/baseUrl'
-  import {PUBLISHORTRAIN} from "../../../../constants/api";
+  import {GETQQASEVICE,UPDATEQQASEVICE,QQAEXCEL,} from "../../../../constants/api";
   import store from '../../../../store';
   import {REPLACE} from "../../../../store/mutations";
   import $ from 'jquery';
-
+  import {TOKEN} from "../../../../constants/constants";
+  import { getCookies } from "../../../../utils/cookie";
   import {mapActions} from 'vuex';
 
   export default {
     data() {
       return {
+        params: {},
+        startIt:true,
+        stopIt:true,
+        release:true,
+        webSocket: null,
+        status:true,
+        tableData: [],
+        tableDataCopy:[],
+
+
         resizable:false,
         border:true,
         loading: false,
-        tableData: [],
+
         dataContainer:[],
-        tableDataCopy:[],
+
         enableChecked: false,
         options: questionOptions.status,
         title:'状态',
@@ -155,44 +197,65 @@
     生命周期函数
      */
     created(){
+      this.getSevice()
+      this.reLoad() //导入
+      // 获取数据，发布状态，列表和导入 websocket
+
       this.tableData = []
       this.total = 0
-
       /*
       获取全部已发布的数据
       */
+      const id = JSON.parse(sessionStorage.getItem('recordId'))
+      const BotId = this.$route.query.recordId?this.$route.query.recordId:id
+      this.params = {
+        headers: {'Access-Token': getCookies(TOKEN)},
+        // url: QQAEXCEL,
+        url: `http://192.168.50.198${QQAEXCEL}`,
+        body: {
+          BotId,
+          TenantDomain: store.state.app.userInfo.Email,
+          TenantId: store.state.app.userInfo.TenantId
+        }
+
+      }
       const params = {PageSize:0, Status:1}
       getList(params).then(
         (res) =>{
-          if(res['Data'].length>0){
-            res['Data'].forEach(
-              (v,index) =>{
-                      that.dataContainer.push(v.ID)
-                    }
-            )
-            that.tableDataCopy = that.dataContainer.slice(0)}
+          console.log(res['Data'].Result,'list--->')
+          that.tableData = res.Data.Result
+          if(res['Data'].Result.length>0){
+            // res['Data'].Result.forEach(
+            //   (v,index) =>{
+            //     console.log('1212', '')
+            //           // that.dataContainer.push(v.ID)
+            //         }
+            // )
+            // that.tableDataCopy = that.dataContainer.slice(0)
+          }
+
         }
       )
       /*
        获取初始列表
        */
       const that = this
-      this.loading = true
+      // this.loading = true
       _ask().then(
         (res) => {
           getList().then(
             (res) => {
-            that.complateGetList(res)
-           }
+              that.complateGetList(res)
+            }
           ).catch(
             (err) =>{
               /*
                抛出错误
               */
               that.loading = false
-                }
-              )
             }
+          )
+        }
       ).catch(
         (err) =>{
           store.dispatch(REPLACE,{loadingText:null})
@@ -204,6 +267,7 @@
               getList(params).then(
                 (res) =>{
                   that.complateGetList(res)
+
                   store.dispatch(
                     REPLACE,{mainLoading:false,loadingText:null}
                   )
@@ -227,17 +291,292 @@
       )
     },
     destroyed(){
+      this.webSocket.close()
       store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
     },
     methods: {
       ...mapActions(
         ["newDataDis",]
       ),
+
+      start(){
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        const TenantId = store.state.app.userInfo.TenantId
+        const Enable = true
+        const  BotRecordId = this.$route.query.recordId
+        const params = {
+          headers:{
+            'Access-token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotConfigId,id,Enable,BotRecordId,TenantId
+          })
+        }
+        request(UPDATEQQASEVICE, params).then(res => {
+          console.log(res)
+          //吧状态存到store
+
+          //修改enable状态 为true
+          //  store.dispatch(DETAILS,{Enable:res.Data})
+          // console.log('store')
+        });
+        this.startIt =true
+        this.stopIt =true
+        this.status=false
+
+        // this.disabled =true
+        // this.changeIt=true
+        // this.over=true  // check可以点击
+      },
+      stop(){
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        const TenantId = store.state.app.userInfo.TenantId
+        const Enable = false
+        const  BotRecordId = this.$route.query.recordId
+        const params = {
+          headers:{
+            'Access-token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotConfigId,id,Enable,BotRecordId,TenantId
+          })
+        }
+        request(UPDATEQQASEVICE, params).then(res => {
+          console.log(res)
+          //吧状态存到store
+
+
+          //修改enable状态 为true
+          //  store.dispatch(DETAILS,{Enable:res.Data})
+          console.log(res.Data)
+        });
+        this.startIt =false
+        this.stopIt =false
+        this.status=true
+      },
+      getSevice(){
+        const that = this
+        const BotId = this.$route.query.recordId?this.$route.query.recordId:id
+        const TenantId = store.state.app.userInfo.TenantId
+        const ServiceType = '1'
+        const  BotRecordId = this.$route.query.recordId
+        const token = getCookies(TOKEN)
+        const params = {
+          headers: {
+            'Access-Token': token,
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotRecordId,TenantId,ServiceType,
+          })
+        }
+        request(GETQQASEVICE, params).then(res => {
+          console.log(res.Data.Enable)
+          if (res.Data.Enable) {
+            // true 为开启状态 ，停用按钮
+            this.startIt =false
+            this.stopIt =false
+          } else {
+            this.startIt =true
+            this.stopIt =true
+          }
+        });
+
+      },
+      clearAll(){
+        console.log('清空所有', '')
+
+        // const  BotRecordId = this.$route.query.recordId
+        // const params = {
+        //   headers:{
+        //     'Access-token': getCookies(TOKEN)
+        //   },
+        //   method: 'POST',
+        //   body: JSON.stringify({
+        //     BotConfigId,id,Enable,BotRecordId,TenantId
+        //   })
+        // }
+        // request(ddd, params).then(res => {
+        //   //修改enable状态 为true
+        //   //  store.dispatch(DETAILS,{Enable:res.Data})
+        //   // console.log('store')
+        // });
+
+      },
+      getUpload(){
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        const TenantId = store.state.app.userInfo.TenantId
+        const fileinfo= DDD
+
+        const params = {
+          headers:{
+            'Access-token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            BotConfigId,TenantId,fileinfo
+          })
+        }
+        request(UPLOAD, params).then(res => {
+          //修改enable状态 为true
+          //  store.dispatch(DETAILS,{Enable:res.Data})
+          // console.log('store')
+        });
+      },
+      reLoad(){
+        const that = this
+        that.webSocketFun()
+        this.setInterval = setInterval(
+          () => {
+            that.webSocket.close()
+            that.webSocketFun()
+          }, 1740000
+        )
+      },
+      successUpload (res, file, fileList) {
+
+        if(!res.Status){
+          this.$message(
+            {
+              type: 'error',
+              message: `${res.ErrorMsg}请稍后重试`,
+              duration: 2000
+            }
+          )
+        }
+
+        this.$refs.upload.clearFiles();
+      },
+      onError (err, file, fileList) {
+        this.$message(
+          {
+            type: 'error',
+            message: '服务器错误，请稍后重试',
+            duration: 2000
+          }
+        )
+        this.$refs.upload.clearFiles();
+      },
+      go(v, title, ID = undefined) {
+        if(this.status){
+          const query = this.$route.query
+          this.$router.push(
+            {
+              path: v,
+              query: {
+                ...query,
+                title: title,
+                ID: ID
+              },
+            }
+          )
+        }
+
+      },
+
+
+      handleExceed(files, fileList) {
+        this.$message.warning(`请依次上传文件`);
+      },
+
+
+      webSocketFun() {
+        const that = this
+        if(this.reloadNum >= 10){
+          that.$notify({
+            title: '提示',
+            message: '与服务器连接已安全断开，如需上传文件，请刷新页面',
+            duration: 0,
+          });
+          clearInterval(that.setInterval)
+          return
+        }
+        this.reloadNum++
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        const agreement = location.host.indexOf('localhost')> -1? 'ws':'wss'
+        const url = `${agreement}://${location.host}/api/admin/keyword/ws?BotId=${BotConfigId}`
+        // const url = `ws://192.168.50.198/ws?BotId=${BotConfigId}`
+        const token = getCookies(TOKEN)
+        that.webSocket = new WebSocket(url, token);
+
+        that.webSocket.onopen = function (event) {
+          // that.heartCheck().reset();
+          switch (event.currentTarget.readyState) {
+            case 0:
+              that.$refs.upload.abort()
+              that.$refs.upload.clearFiles()
+              that.$message({
+                type: 'error',
+                message: '上传功能暂时不能使用，请稍后重试',
+                duration: 2000
+              })
+              that.uploadStatus = true
+              break;
+            default:
+              that.uploadStatus = false
+          }
+        };
+        that.webSocket.onmessage = function (res) {
+          // that.heartCheck().reset();
+          const response = JSON.parse(res.data)
+          if (response) {
+            switch (response.Code) {
+              case "IRV00002" || "IRV00006":
+                that.$message({
+                  type: 'error',
+                  message: `${response.Message} 请重新上传`,
+                  duration: 2000,
+                })
+                store.dispatch( REPLACE, { mainLoading: false } )
+                break;
+              case "IRV00003":
+                that.alertFun(response);
+                break;
+              case 'Succeed':
+                that.loading = true
+                that.$message( {
+                  type: 'success',
+                  message: `${response.Message}`,
+                  duration: 2000,
+                  onClose(){
+                    that.getList()
+                  }
+                } )
+                store.dispatch( REPLACE, { mainLoading: false } )
+                break;
+              default:
+                that.$message({
+                  type: 'error',
+                  message: `${response.Message} 请重新上传`,
+                  duration: 2000,
+                })
+                store.dispatch( REPLACE, { mainLoading: false } )
+            }
+          }
+        }
+        that.webSocket.onerror = (err) => {
+
+        }
+        that.webSocket.onclose = (info) => {
+          // that.heartCheck().start();
+          console.log('关闭了',info)
+        }
+      },
+      alertFun (res) {
+        this.uploadResponseStatus = true
+        this.response = res
+      },
+
       newQA() {
         const query = this.$route.query;
         this.newDataDis(); // 进入创建问题 首页
         this.$router.push({
-          path:'/bot/config/quicklyQA/createrNewQA',
+          path:'/bot/config/quicklyQA/createNewQA',
           query:{
             recordId:query.recordId,
           }
@@ -250,12 +589,13 @@
           return;
         }else{
           this.$router.push({
-            path:'/bot/config/quicklyQA/editQA',
+            path:'/bot/config/quicklyQA/edit',
             query:{
               // ...query,
               recordId:query.recordId,
-              title:v.Question,
-              v
+              questionId: v.Id,
+              // title:v.Question,
+              // v
             }
           })
         }
@@ -263,6 +603,8 @@
       pathToDetail(v){
         const query = this.$route.query;
         sessionStorage.setItem('detaildata',JSON.stringify(v) ); // 存入
+
+
 
         this.$router.push({
           path:'/bot/config/quicklyQA/detailQA',
@@ -360,6 +702,7 @@
         )
       },
       _reload_ask(isGetList,botId){
+        console.log('111', '')
         const that = this
         let id = setInterval(function () {
           _ask(botId).then(
@@ -420,7 +763,8 @@
                 that.tableData.forEach(
                   (v,index) =>{
                     if(v.checkedStatus){
-                      v.Status = 5
+                      console.log( '啦啦啦啦啦')
+                      // v.Status = 5
                     }else{
                       v.Status = 1
                     }
@@ -469,7 +813,8 @@
                     )
                   }
                 )
-              }else if(res.Data === 1){
+              }
+              else if(res.Data === 1){
                 that.initStatus('train',res.recordId)
                 if(that.$route.path === '/bot/config/quicklyQA'){
                   botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'培训预计需要几分钟，请稍后'}):null
@@ -524,7 +869,7 @@
         return status
       },
       complateGetList(res){
-        this.tableData= res['Data']
+        this.tableData= res['Data'].Result  //[{1:'33'},{2:'33'}]
         this.originDisabled = this.tableData.length <= 0
         this.total = res.TotalCount
         this.PageIndex = res.PageIndex
@@ -834,6 +1179,7 @@
   }
   .createAnswer{
     position: absolute;
+    top:18px;left:380px;
     width: 100px;
     padding-left:0;
     padding-right:0;
@@ -884,4 +1230,15 @@
   .link:hover{
     text-decoration: underline;
   }
+  .item {
+    margin-top: 10px; top:8px;
+    margin-right: 40px;right: 60px;background: #2a8ce7;padding:6px 20px;color: #fff;box-sizing:border-box; font-size: 14px;border-radius: 2px;
+  }
+  .introduction{position:absolute;top:18px;left:500px;}
+  .start-quickly{top:17px;right:0;
+    .btn-bg{background: #2a8ce7;color:#fff;}
+  }
+  .red{background:red!important;padding:8px 20px;}
+
+
 </style>
