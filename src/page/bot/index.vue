@@ -63,10 +63,9 @@
         <template slot-scope="scope">
           <span class="yoy-list-todo c555">
             <span v-if="scope.row.Status == 2||scope.row.Status == 5">
-              <span class="config">
+              <span class="config" @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">
                 <i class="el-icon-setting"></i>
-                <span class="c555"
-                      @click="go('/bot/config',scope.row.RecordId,scope.row.AliasName)">配置</span>
+                <span class="c555">配置</span>
               </span>
               <span class="del">
                 <i class="el-icon-delete"></i>

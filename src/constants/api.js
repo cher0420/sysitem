@@ -30,14 +30,14 @@ export const DELETEKMOWDETAIL = '/api/admin/channel/v2/webchat/deleteknowledge'/
 export const IMG_UPLOADORDELETE = '/api/admin/portal/file/uploadanddeleteasync'//图片上传与图片删除接口
 
 /*快速问答列表*/
-export const QUICKLYLIST = '/api/admin/portal/qqa/querykeywordslist' //问题列表/关键字搜索
-export const DELETEQUESTION = '/api/admin/portal/qqa/delete'//删除快速问答关键字
-export const QUERYSTATUS = '/api/admin/portal/qqa/queryoperationstatus'  //快速问答获取数据状态接口
-export const PUBLISHORTRAIN = '/api/admin/portal/qqa/publishaiml'  //快速问答发布或测试接口
-//
-// export const GETKEYWORDS = "/api/admin/portal/qqa/getkeywords"; // 快速问答分词接口
-// export const QUERYQADATA = "/api/admin/portal/qqa/querybykeyword"; //  快速问答根据关键字获取答案
-// export const STOREQADATA = "/api/admin/portal/qqa/save"; // 快速问答存储答案
+// export const QUICKLYLIST = '/api/admin/portal/qqa/querykeywordslist' //问题列表/关键字搜索
+// export const DELETEQUESTION = '/api/admin/portal/qqa/delete'//删除快速问答关键字
+// export const QUERYSTATUS = '/api/admin/portal/qqa/queryoperationstatus'  //快速问答获取数据状态接口
+// export const PUBLISHORTRAIN = '/api/admin/portal/qqa/publishaiml'  //快速问答发布或测试接口
+
+export const GETKEYWORDS = "/api/admin/portal/qqa/getkeywords"; // 快速问答分词接口
+export const QUERYQADATA = "/api/admin/portal/qqa/querybykeyword"; //  快速问答根据关键字获取答案
+export const STOREQADATA = "/api/admin/portal/qqa/save"; // 快速问答存储答案
 
 // 关键词回复
 export const KEYWORDLIST = '/api/admin/keyword/KQA/search';//关键词列表
@@ -67,6 +67,10 @@ export const HOTQA = '/api/admin/portal/BotTalkStatistic/HotQA'; //查询热点�
 // qqa
 export const GETQQASEVICE = '/api/admin/portal/CurrencyService/Get'; //获取服务
 export const UPDATEQQASEVICE = '/api/admin/portal/CurrencyService/Update'; //更新服务
-export const QQAEXCEL = '/api/admin/portal/QQA/Upload'; //更新服务
+export const QQAEXCEL = '/api/admin/portal/QQA/Upload'; //上传
 export const GETQUICKLYLIST = '/api/admin/portal/QQA/Query' //查询列表
+export const GETPUBLISHSTATUS = '/api/admin/portal/QQA/GetPublishStatus'  //查询发布状态
+export const QQADELETE = '/api/admin/portal/QQA/Delete'  //删除数据
+export const PUBLISH = '/api/admin/portal/QQA/Publish'  //查询发布状态
 
+//导入/ 发布// 清空/  页码 

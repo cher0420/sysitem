@@ -47,6 +47,13 @@ module.exports = {
         ws: true,
         secure: false,
         changeOrigin: true,
+      },
+      '/api/admin/qqa/ws': {
+        target:'ws://192.168.1.103:10018/',
+        pathRewrite: {"^/api/admin/qqa/" : ""},
+        ws: true,
+        secure: false,
+        changeOrigin: true,
       }
     },
 

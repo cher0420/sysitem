@@ -1,43 +1,69 @@
 <template>
   <section>
-
     <nav-title title="快速问答"></nav-title>
     <a :href="blankUrl" style="display: none" target="_blank" id="blankNew" ref="blankNew"></a>
     <section class="p-relative" style="">
       <el-button  v-if="!enableChecked" type="primary" class="text-a-c createAnswer" :disabled='!status' @click="newQA">创建新问答</el-button>
+      <el-button type="primary"  size="small" class="text-a-c introduction" :disabled='!status' @click="uploadMessage = true">导入</el-button>
 
-      <!-- :headers="params.headers"
-        :data="params.body"
-        :action="params.url" -->
+      <el-dialog
+        title="提示"
+        :visible.sync="uploadMessage"
+        width="40%"
+        top="300px"
+        center>
+        <div style="height:30px;">
+          <div style="float:left;height:30px;">
+            <span>上传文件:</span>
+            <el-upload  class="uploadbtn"
+                        ref="upload"
+                        accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        :headers="params.headers"
+                        :data="params.body"
+                        :action="params.url"
+                        :on-success='successUpload'
+                        :on-error='onError'
+                        :limit="1"
+                        :on-exceed="handleExceed"
+            >
+              <el-button type="primary" >导入</el-button>
+            </el-upload>
+          </div>
+          <div  >
+            <span class="">已选取文件  </span>
+            <ul class="el-upload-list el-upload-list--text" style="float:right;dispaly:inline;">
+              <li tabindex="0" class="el-upload-list__item is-success">
+                <a class="el-upload-list__item-name">   </a>
+                <label class="el-upload-list__item-status-label">  </label>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <br><br>
+        <p>1.点击 <a href="../../../../../static/file/qqatemplate.xlsx">下载文件</a>，按格式填写</p>
+        <p>2.上传excel完成批量导入</p>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="uploadMessage = false">取 消</el-button>
+            <el-button type="primary" @click="uploadMessage = false">确 定</el-button>
+          </span>
+      </el-dialog>
 
-      <el-upload
-        ref="upload"
-        :headers="params.headers"
-        :data="params.body"
-        :action="params.url"
-
-
-        :on-success='successUpload'
-        :on-error='onError'
-        :limit="1"
-        :on-exceed="handleExceed"
-      >
-        <el-button   type="primary" class="text-a-c introduction" :disabled='!status' @click="dao">导入</el-button>
-      </el-upload>
       <el-input v-model='keys' class='searchInput ' :style="{transition:'left .3s',}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
       <span  >
         <!-- v-if="!originDisabled" -->
         <span class="start-quickly p-absolute" v-show='startIt'>
-          <el-button @click="clearAll"  disabled="">清空</el-button>
+          <el-button @click="clearAll" v-show="clearshow" >清空</el-button>
           <el-button class="btn-bg" @click="stop">开启</el-button>
         </span>
         <span v-show='!stopIt'>
-          <el-badge is-dot class="item p-absolute" v-show='!release'>发布</el-badge>
-          <el-button  class="item p-absolute red" v-show='release'>发布</el-button>
-          <el-button type="primary" v-if="!enableChecked" @click="start" class="p-absolute right-0"  style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;" >停用</el-button>
+          <el-button  class="item p-absolute red" disabled v-show='release' >发布</el-button>
+          <el-badge is-dot  class="item p-absolute weight"  v-show='!release'>
+            <el-button  @click="publish" type="primary">发布</el-button>
+        </el-badge>
+          <el-button type="primary" v-if="!enableChecked" @click="start" class= "p-absolute p-ting right-0"  style="-webkit-transition: 0s;-moz-transition: 0s;-ms-transition: 0 time;-o-transition: 0s;transition: 0s;" >停用</el-button>
           <span v-else class="p-absolute right-0">
-            <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消编辑</el-button><el-button :disabled="tableDataCopy.length>0?false:true" type="primary" style="margin-right: 10px;" @click="train">培训</el-button><el-button type="primary" :disabled="tableDataCopy.length>0?false:true" @click="publish">发布</el-button>
+            <!-- <el-button class='cancel' style="width: 100px;padding-right: 0;padding-left: 0;margin-right: 10px;" @click="typeCheckedStatus">取消编辑</el-button><el-button :disabled="tableDataCopy.length>0?false:true" type="primary" style="margin-right: 10px;" @click="train">培训</el-button><el-button type="primary" :disabled="tableDataCopy.length>0?false:true" @click="publish">发布</el-button> -->
            </span>
         </span>
       </span>
@@ -56,7 +82,6 @@
       >
         <template slot="header" slot-scope="scope">
           <span v-if="enableChecked">
-
           </span>
           <span v-else>
             序号
@@ -83,6 +108,7 @@
         label="行业领域"
         width="160" show-overflow-tooltip
         :resizable="resizable"
+        align="center"
       >
         <template slot-scope="scope">
           {{scope.row.Domain.replace(/,/g,'、')}}
@@ -93,12 +119,11 @@
         width="100"
         :resizable="resizable" >
         <template slot="header" slot-scope="scope">
-
           <el-dropdown @command="handleCommand" trigger='click' placement="bottom-start" class="p-absolute left-0 yoy-dropDown">
   <span class="el-dropdown-link c333">
     {{title}}<i class="el-icon-arrow-down el-icon--right"></i>
   </span>
-            <el-dropdown-menu slot="dropdown">
+            <el-dropdown-menu slot="dropdown" @command="handleCommand">
               <el-dropdown-item :command="key" v-for="(value, key, index) in options" :key="index">{{value}}</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -109,7 +134,8 @@
         prop="CreateDate"
         label="更新时间"
         :resizable="resizable"
-        :width="showDel?'320':'200'" >
+        align="center"
+        :width="showDel?'320':'150'" >
       </el-table-column>
       <el-table-column
         width="200"
@@ -127,7 +153,7 @@
               <i class="el-icon-edit" style="margin-right: 5px;"></i>
               <span>编辑</span>
             </span>
-            <span :class="[scope.row.Status == '5'?'un-handle':'delete']" @click="handDel(scope.row.ID,scope.$index,scope.row.Status)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
+            <span :class="[scope.row.Status == '5'?'un-handle':'delete']" @click="handDel(scope.row.Id,scope.$index,scope.row.Status)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
           </section>
         </template>
       </el-table-column>
@@ -149,13 +175,12 @@
   import questionOptions from './constants'
   import {getList,del,_ask,doSomething} from './service'
   import URL from '../../../../host/baseUrl'
-  import {GETQQASEVICE,UPDATEQQASEVICE,QQAEXCEL,} from "../../../../constants/api";
+  import {GETQQASEVICE,UPDATEQQASEVICE,QQAEXCEL,QQADELETE,GETPUBLISHSTATUS,PUBLISH} from "../../../../constants/api";
   import store from '../../../../store';
-  import {REPLACE} from "../../../../store/mutations";
-  import $ from 'jquery';
+  import {REPLACE,DETAILS} from "../../../../store/mutations"
   import {TOKEN} from "../../../../constants/constants";
   import { getCookies } from "../../../../utils/cookie";
-  import {mapActions} from 'vuex';
+  import{NavTitle} from "../../../../components/NavTitle"
 
   export default {
     data() {
@@ -163,12 +188,13 @@
         params: {},
         startIt:true,
         stopIt:true,
-        release:true,
+        release:false,
         webSocket: null,
-        status:true,
+        status:false,
         tableData: [],
         tableDataCopy:[],
-
+        clearshow:true,
+        uploadMessage:false,
 
         resizable:false,
         border:true,
@@ -177,20 +203,18 @@
         dataContainer:[],
 
         enableChecked: false,
-        options: questionOptions.status,
+        options: {0:'全部',1:'未发布',  2: '已发布'},
         title:'状态',
-        status:'',
-        statusString:{0:'不可用',1:'未发布',2:'未发布',3:'未发布',4:'未发布',5:'已发布'},
+        // dropStatus:'',
+        statusString:{0:'全部',1:'未发布',  2: '已发布'},
         keys:'',
         total:0,
         PageIndex:1,
         PageSize:10,
-        // arr:[],
         showDel:false,
-        // reloadId:null,
         originDisabled:true,
-        // id:null,
         blankUrl:'',
+
       }
     },
     /*
@@ -198,112 +222,49 @@
      */
     created(){
       this.getSevice()
+      //  this.checkSatus()
       this.reLoad() //导入
-      // 获取数据，发布状态，列表和导入 websocket
-
       this.tableData = []
       this.total = 0
-      /*
-      获取全部已发布的数据
-      */
       const id = JSON.parse(sessionStorage.getItem('recordId'))
-      const BotId = this.$route.query.recordId?this.$route.query.recordId:id
+      const botConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+
       this.params = {
         headers: {'Access-Token': getCookies(TOKEN)},
-        // url: QQAEXCEL,
-        url: `http://192.168.50.198${QQAEXCEL}`,
+        url: QQAEXCEL,
+        // url: `http://192.168.50.198${QQAEXCEL}`,
         body: {
-          BotId,
-          TenantDomain: store.state.app.userInfo.Email,
-          TenantId: store.state.app.userInfo.TenantId
+          botConfigId,
+          tenantId: store.state.app.userInfo.TenantId
         }
-
       }
-      const params = {PageSize:0, Status:1}
+      const params = {}
       getList(params).then(
         (res) =>{
-          console.log(res['Data'].Result,'list--->')
           that.tableData = res.Data.Result
-          if(res['Data'].Result.length>0){
-            // res['Data'].Result.forEach(
-            //   (v,index) =>{
-            //     console.log('1212', '')
-            //           // that.dataContainer.push(v.ID)
-            //         }
-            // )
-            // that.tableDataCopy = that.dataContainer.slice(0)
+          this.total = res.Data.TotalCount
+          if (res['Data'].IsNeedPublished) {
+            this.release=false
+          } else {
+            this.release=true
           }
+
 
         }
       )
-      /*
-       获取初始列表
-       */
+
+
       const that = this
-      // this.loading = true
-      _ask().then(
-        (res) => {
-          getList().then(
-            (res) => {
-              that.complateGetList(res)
-            }
-          ).catch(
-            (err) =>{
-              /*
-               抛出错误
-              */
-              that.loading = false
-            }
-          )
-        }
-      ).catch(
-        (err) =>{
-          store.dispatch(REPLACE,{loadingText:null})
-          if(that.$route.path === '/bot/config/quicklyQA'){
-            store.dispatch(REPLACE,{mainLoading:true})
-            if(err.Data === 3){
-              that.clearReloadId(err)
-              const params = {Status:null}
-              getList(params).then(
-                (res) =>{
-                  that.complateGetList(res)
 
-                  store.dispatch(
-                    REPLACE,{mainLoading:false,loadingText:null}
-                  )
-                }
-              ).catch(
-                err => err
-              )
-              return ;
-            }else if(err.Data === 1){
-              store.dispatch(REPLACE,{loadingText:'培训预计需要几分钟，请稍后'})
-              that.initStatus('train')
-            }else if(err.Data === 2){
-              store.dispatch(REPLACE,{loadingText:'正在发布中，请稍后'})
-              that.initStatus('publish')
-            }
-            that.loading = false
-            that.clearReloadId(err)
-            that._reload_ask(true,err.recordId)
-          }
-        }
-      )
     },
     destroyed(){
-      this.webSocket.close()
+      // this.webSocket.close()
       store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
     },
     methods: {
-      ...mapActions(
-        ["newDataDis",]
-      ),
-
-      start(){
-        const id = JSON.parse(sessionStorage.getItem('recordId'))
-        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+      // 查询发布状态
+      checkSatus(){
         const TenantId = store.state.app.userInfo.TenantId
-        const Enable = true
         const  BotRecordId = this.$route.query.recordId
         const params = {
           headers:{
@@ -311,48 +272,58 @@
           },
           method: 'POST',
           body: JSON.stringify({
-            BotConfigId,id,Enable,BotRecordId,TenantId
+            BotRecordId,TenantId
+          })
+        }
+
+        request(GETPUBLISHSTATUS, params).then(res => {
+          if (res.Status=1) {
+            //1为 未发布
+            this.release=true
+          } else {
+            //2为已发布
+            this.release=false
+          }
+        })
+
+      },
+
+      start(){
+        const ID = sessionStorage.getItem("seviceId");
+        // const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        const TenantId = store.state.app.userInfo.TenantId
+        const Enable = false
+        const  BotRecordId =   this.$route.query.recordId
+        const params = {
+          headers:{
+            'Access-token': getCookies(TOKEN)
+          },
+          method: 'POST',
+          body: JSON.stringify({
+            ID,Enable,BotRecordId,TenantId
           })
         }
         request(UPDATEQQASEVICE, params).then(res => {
-          console.log(res)
-          //吧状态存到store
-
-          //修改enable状态 为true
-          //  store.dispatch(DETAILS,{Enable:res.Data})
-          // console.log('store')
         });
         this.startIt =true
         this.stopIt =true
         this.status=false
-
-        // this.disabled =true
-        // this.changeIt=true
-        // this.over=true  // check可以点击
       },
       stop(){
-        const id = JSON.parse(sessionStorage.getItem('recordId'))
-        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        const ID = sessionStorage.getItem("seviceId");
         const TenantId = store.state.app.userInfo.TenantId
-        const Enable = false
-        const  BotRecordId = this.$route.query.recordId
+        const Enable = true
+        const  BotRecordId =   this.$route.query.recordId
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
           },
           method: 'POST',
           body: JSON.stringify({
-            BotConfigId,id,Enable,BotRecordId,TenantId
+            ID,Enable,BotRecordId,TenantId
           })
         }
         request(UPDATEQQASEVICE, params).then(res => {
-          console.log(res)
-          //吧状态存到store
-
-
-          //修改enable状态 为true
-          //  store.dispatch(DETAILS,{Enable:res.Data})
-          console.log(res.Data)
         });
         this.startIt =false
         this.stopIt =false
@@ -360,10 +331,9 @@
       },
       getSevice(){
         const that = this
-        const BotId = this.$route.query.recordId?this.$route.query.recordId:id
         const TenantId = store.state.app.userInfo.TenantId
         const ServiceType = '1'
-        const  BotRecordId = this.$route.query.recordId
+        const  BotRecordId =  this.$route.query.recordId
         const token = getCookies(TOKEN)
         const params = {
           headers: {
@@ -375,58 +345,52 @@
           })
         }
         request(GETQQASEVICE, params).then(res => {
-          console.log(res.Data.Enable)
+          // cunid
+          const ID = res.Data.Id
+          sessionStorage.setItem("seviceId",res.Data.Id);
           if (res.Data.Enable) {
             // true 为开启状态 ，停用按钮
             this.startIt =false
             this.stopIt =false
+            this.status=true
           } else {
+            // false  显示开启按钮
             this.startIt =true
             this.stopIt =true
+            this.status=false
           }
         });
 
       },
-      clearAll(){
-        console.log('清空所有', '')
-
-        // const  BotRecordId = this.$route.query.recordId
-        // const params = {
-        //   headers:{
-        //     'Access-token': getCookies(TOKEN)
-        //   },
-        //   method: 'POST',
-        //   body: JSON.stringify({
-        //     BotConfigId,id,Enable,BotRecordId,TenantId
-        //   })
-        // }
-        // request(ddd, params).then(res => {
-        //   //修改enable状态 为true
-        //   //  store.dispatch(DETAILS,{Enable:res.Data})
-        //   // console.log('store')
-        // });
+      getlistAgain(){
 
       },
-      getUpload(){
-        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        const TenantId = store.state.app.userInfo.TenantId
-        const fileinfo= DDD
 
+      clearAll(){
+        const TenantId = store.state.app.userInfo.TenantId
+        const BotRecordId = this.$route.query.recordId//route.currentRoute.query.recordId
+
+        const DeleteType = 2
+        const token = getCookies(TOKEN)
         const params = {
-          headers:{
-            'Access-token': getCookies(TOKEN)
+          headers: {
+            'Access-Token': token,
           },
           method: 'POST',
           body: JSON.stringify({
-            BotConfigId,TenantId,fileinfo
+            BotRecordId,TenantId,DeleteType,
           })
         }
-        request(UPLOAD, params).then(res => {
-          //修改enable状态 为true
-          //  store.dispatch(DETAILS,{Enable:res.Data})
-          // console.log('store')
+        request(QQADELETE, params).then(res => {
+          this.tableData = []
+          this.clearshow=false
         });
+
+
+
+
       },
+
       reLoad(){
         const that = this
         that.webSocketFun()
@@ -437,21 +401,35 @@
           }, 1740000
         )
       },
-      successUpload (res, file, fileList) {
 
+      successUpload (res, fileInfo, fileList) {
         if(!res.Status){
           this.$message(
             {
               type: 'error',
-              message: `${res.ErrorMsg}请稍后重试`,
+              message: `${res.ErrorMsg}请稍后重试111`,
               duration: 2000
             }
           )
         }
-
         this.$refs.upload.clearFiles();
+        const that =this
+
+
+        const params = {
+          // PageIndex: this.PageIndex,
+          // Status: this.status,
+          // Keys:this.keys
+        }
+
+        getList(params).then((res) =>{
+          console.log(res.Data.Result)
+          // that.complateGetList(res)
+          this. tableData=res.Data.Result
+          this.handleCurrentChange()
+        })
       },
-      onError (err, file, fileList) {
+      onError (err, fileInfo, fileList) {
         this.$message(
           {
             type: 'error',
@@ -475,15 +453,10 @@
             }
           )
         }
-
       },
-
-
-      handleExceed(files, fileList) {
+      handleExceed(fileInfo, fileList) {
         this.$message.warning(`请依次上传文件`);
       },
-
-
       webSocketFun() {
         const that = this
         if(this.reloadNum >= 10){
@@ -499,13 +472,12 @@
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const agreement = location.host.indexOf('localhost')> -1? 'ws':'wss'
-        const url = `${agreement}://${location.host}/api/admin/keyword/ws?BotId=${BotConfigId}`
+        const url = `${agreement}://${location.host}/api/admin/qqa/ws?BotId=${BotConfigId}`
         // const url = `ws://192.168.50.198/ws?BotId=${BotConfigId}`
         const token = getCookies(TOKEN)
         that.webSocket = new WebSocket(url, token);
 
         that.webSocket.onopen = function (event) {
-          // that.heartCheck().reset();
           switch (event.currentTarget.readyState) {
             case 0:
               that.$refs.upload.abort()
@@ -574,7 +546,7 @@
 
       newQA() {
         const query = this.$route.query;
-        this.newDataDis(); // 进入创建问题 首页
+        // this.newDataDis(); // 进入创建问题 首页s
         this.$router.push({
           path:'/bot/config/quicklyQA/createNewQA',
           query:{
@@ -603,9 +575,6 @@
       pathToDetail(v){
         const query = this.$route.query;
         sessionStorage.setItem('detaildata',JSON.stringify(v) ); // 存入
-
-
-
         this.$router.push({
           path:'/bot/config/quicklyQA/detailQA',
           query:{
@@ -618,29 +587,9 @@
       go(recordId){
         const BotConfigId = recordId?recordId:this.$route.query.recordId
         const url = `/WebTalk/validaiml.html?id=${BotConfigId}`
-        // this.blankUrl = url
+        this.blankUrl = url
 
-        // const link = this.$refs['blankNew']
-        // link.click()
-        // 监听change事件:
-        //   const newScreen = window.open()
-        //   newScreen.location = url
-        //window.open(url, '_blank');
-        // this.createSomeThing(url)
-        //this.callbackfunction(url)
-        this.downloadReportEvent(url,'someThing')
-      },
-      downloadReportEvent(downloadFileUrl,fileName) {
 
-        var theAnchor = $("<a href='" + downloadFileUrl + "' target='_blank'>file</a >");
-        //判断是否为chroczme浏览器
-        // if (isChrome()) {
-        //   theAnchor.attr('download', fileName);
-        // }
-
-        //var theAnchor = $('<a />')
-        //theAnchor.attr('href', urls[i].url);
-        //theAnchor[0].dispatchEvent(new MouseEvent('click'));//IE不支持此方式附加事件
 
         var e = document.createEvent('MouseEvents');
         e.initEvent('click', true, true);
@@ -648,48 +597,21 @@
 
         theAnchor.remove();
       },
-      // createSomeThing(url){
-      //
-      //   var o = document.body;
-      //   var a = document.createElement("a");
-      //   a.setAttribute("id", "blankNew");
-      //   a.setAttribute("target", "_blank");
-      //
-      //   a.href = url;
-      //   a.innerHTML = '特殊';
-      //   a.style.color = "red";
-      //   o.appendChild(a);
-      //   this.callbackfunction(url)
-      //
-      // },
-      // callbackfunction(url){
-      //
-      //   var comment = document.getElementById('blankNew');
-      //
-      //   if (document.all) {
-      //     // For IE
-      //     comment.click();
-      //   } else if (document.createEvent) {
-      //     //FOR DOM2
-      //     var ev = document.createEvent('MouseEvents');
-      //     ev.initEvent('click', true, true);
-      //
-      //     comment.dispatchEvent(ev);
-      //   }
-      //
-      // },
+
       handleCurrentChange(v) {
         this.loading = true
         this.PageIndex = v
         const options = {
           PageIndex: this.PageIndex,
-          Status: this.status,
-          Keys:this.keys
+          Status: this.command,
+
         }
         getList(options).then(
           (res) =>{
-            res['Data'].forEach(
+            console.log(res, 're')
+            res['Data'].Result.forEach(
               (v,index) =>{
+                console.log(v, 'current')
                 if(this.tableDataCopy.includes(v.ID)){
                   v.checkedStatus = true
                 }else{
@@ -701,135 +623,7 @@
           }
         )
       },
-      _reload_ask(isGetList,botId){
-        console.log('111', '')
-        const that = this
-        let id = setInterval(function () {
-          _ask(botId).then(
-            (res) =>{
-              /*
-              不存在发布
-              */
-              /*
-              clearReloadId
-              */
 
-              that.clearReloadId(res)
-              let loading = true;
-              const arr = store.state.app.quickQuizArr
-
-              arr.forEach(
-                (v,index) =>{
-                  if(v.recordId === that.$route.query.recordId){
-                    loading = v.loading
-                    return
-                  }
-                  loading = false
-                }
-              )
-
-              if(that.$route.path === '/bot/config/quicklyQA'){
-                store.dispatch(REPLACE,{mainLoading:loading})
-              }
-              store.dispatch(REPLACE,{loadingText:null})
-              if(isGetList){
-                that.loading = true
-                getList().then(
-                  (res) =>{
-                    that.complateGetList(res)
-                  }
-                )
-              }
-
-              if(that.isReloadBlankNew(res.recordId)){
-                that.go(res.recordId)
-              }else{
-                that.dataContainer = []
-                const params = {
-                  PageSize: 0,
-                  Status:1,
-                }
-                getList(params).then(
-                  (res) =>{
-                    if(res['Data'].length>0){
-                      res['Data'].forEach(
-                        (v,index) =>{
-                          that.dataContainer.push(v.ID)
-                        }
-                      )
-                    }
-                  }
-                )
-                that.tableData.forEach(
-                  (v,index) =>{
-                    if(v.checkedStatus){
-                      console.log( '啦啦啦啦啦')
-                      // v.Status = 5
-                    }else{
-                      v.Status = 1
-                    }
-                  }
-                )
-              }
-            }
-          ).catch(
-            (res) =>{
-              if(res.Data === 3){
-                that.$message(
-                  {
-                    type:'error',
-                    message:'操作失败，请稍后重试',
-                    duration:2000,
-                  }
-                )
-                // sessionStorage.setItem('doingStatus','nothing')
-                that.clearReloadId(res)
-                // clearInterval(that.reloadId)
-                const params = {
-                  Keys:that.keys,
-                  PageIndex:that.PageIndex,
-                  Status: that.status
-                }
-                getList(params).then(
-                  (res) =>{
-                    that.complateGetList(res)
-                    store.dispatch(
-                      REPLACE,{mainLoading:false,loadingText:null}
-                    )
-                  }
-                ).catch(
-                  (err) =>{
-                    that.$message(
-                      {
-                        type:'error',
-                        message:'服务器错误，请稍后重试',
-                        duration:2000,
-                        onClose: () =>{
-                          store.dispatch(
-                            REPLACE,{mainLoading:false}
-                          )
-                        }
-                      }
-                    )
-                  }
-                )
-              }
-              else if(res.Data === 1){
-                that.initStatus('train',res.recordId)
-                if(that.$route.path === '/bot/config/quicklyQA'){
-                  botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'培训预计需要几分钟，请稍后'}):null
-                }
-              } else{
-                that.initStatus('publish',res.recordId)
-                if(that.$route.path === '/bot/config/quicklyQA') {
-                  botId === that.$route.query.recordId ? store.commit(REPLACE, {loadingText: '正在发布中，请稍后'}) : null
-                }
-              }
-            }
-          )
-        },20000)
-        that.addReloadArr(id,botId)
-      },
       clearReloadId(err){
         const reloadArr = store.state.app.quickQuizArr
         let newID = null;
@@ -869,37 +663,34 @@
         return status
       },
       complateGetList(res){
-        this.tableData= res['Data'].Result  //[{1:'33'},{2:'33'}]
-        this.originDisabled = this.tableData.length <= 0
-        this.total = res.TotalCount
-        this.PageIndex = res.PageIndex
+        this.tableData= res['Data'].Result
+        // this.originDisabled = this.tableData.length <= 0
+        this.total = res.Data.TotalCount
+        this.PageIndex = res.Data.PageIndex
         this.loading = false
+        // this.release=true
       },
       handleCommand(command){
         const that = this
-        this.originDisabled = true
-        this.tableData = []
-        this.total = 0
-        this.title = this.options[command]
-        this.status= command?command-0:null
-        const status = {Status:this.status}
-        this.keys = ''
-        this.loading = true
-        getList(status).then(
-          (res) => {
-            res['Data'].forEach(
-              (v,index) =>{
-                if(that.tableDataCopy.includes(v.ID)){
-                  v.checkedStatus = true
-                }else{
-                  v.checkedStatus = false
-                }
-              }
-            )
-            this.complateGetList(res)
+        this.status = command-0
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const botConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+
+        this.params = {
+          body: {
+            Status: this.status
           }
+        }
+        const params = {Status: this.status}
+        getList(params).then(
+          (res) =>{
+            that.tableData = res.Data.Result
+
+          }
+
         )
       },
+
       typeCheckedStatus(v){
         const that = this
         this.enableChecked = !this.enableChecked
@@ -964,7 +755,6 @@
       },
       search() {
         const that = this
-
         this.loading = true
         const str ="<>%;/?'_"
         const index = this.keys&&str.indexOf(this.keys) > -1
@@ -980,9 +770,11 @@
         this.originDisabled = true
         this.tableData = []
         const Keys = {Keys:this.keys}
-        getList(Keys).then(
+        this.keyword   = this.keys
+        getList({keyword:this.keys}).then(
           (res) => {
-            res['Data'].forEach(
+            res.Data.Result.forEach(
+
               (v,index) =>{
                 if(that.tableDataCopy.includes(v.ID)){
                   v.checkedStatus = true
@@ -1002,9 +794,6 @@
       },
       handDel(v,index,status) {
         const that = this
-        if(status == 5){
-          return;
-        }
         this.$confirm('是否删除此条问题?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -1014,36 +803,39 @@
           const params = {
             QuickQuizId:v
           }
+
           del(params).then(
             (res) => {
               this.tableData.splice(index,1)
               this.total--;
+              // if(this.total%this.PageSize === 0){
+              //   if(this.PageIndex !== 1){
+              //     this.PageIndex --
+              //   }
 
-              if(this.total%this.PageSize === 0){
-                if(this.PageIndex !== 1){
-                  this.PageIndex --
-                }
-                const params = {
-                  PageIndex: this.PageIndex,
-                  Status: this.status,
-                  Keys:this.keys
-                }
-                getList(params).then((res) =>{
-                  that.complateGetList(res)
-                })
+              // }
+              const params = {
+                PageIndex: this.PageIndex,
+                Status: this.command,
               }
+              getList(params).then((res) =>{
+                that.complateGetList(res)
+              })
+              //改发布状态
+              this.release=false
               store.dispatch(REPLACE,{mainLoading:false})
               this.$message({
                 type: 'success',
                 message: '删除成功'
               });
+              // that.complateGetList(res)
             }
           ).catch(
             () =>{
               store.dispatch(REPLACE,{mainLoading:false})
               this.$message({
-                type: 'error',
-                message: '删除失败，请稍后重试'
+                type: 'success',
+                message: '删除成功'
               });
             }
           )
@@ -1081,11 +873,8 @@
             Action:'train',
           }
           that.initStatus('train',that.$route.query.recordId)
-          store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
-            () =>{
-              that._reload_ask(false,that.$route.query.recordId) //开启论询且不刷新列表
-            }
-          )
+          store.dispatch(REPLACE,{id:that.$route.query.recordId})
+
           doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
             (res) =>{
             }
@@ -1126,48 +915,63 @@
       },
       publish(){
         const that = this
-        that.$confirm('本次发布内容将覆盖上一次发布，是否继续发布？','提示',{
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(
-          () =>{
-            store.dispatch(REPLACE,{mainLoading:true,loadingText:'正在发布中，请稍后'})
-            const params = {
-              Ids: that.tableDataCopy,
-              Action:'publish',
-            }
-            that.initStatus('publish',that.$route.query.recordId)
-            store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
-              () =>{
-                that._reload_ask(false,that.$route.query.recordId)
-              }
-            )
+        this.loading = true
+        const params = {
+          TenantId: store.state.app.userInfo.TenantId ,
+          BotRecordId : this.$route.query.recordId
+        }
+        that.initStatus('publish',that.$route.query.recordId)
 
-            doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
-              (res) =>{
-
-              }
-            ).catch(
-              (err) =>{
-                that.$message({
-                  type: 'error',
-                  message: '服务器错误,请稍后重试',
-                  duration:2000,
-                });
-                that.clearReloadId(err)
-                store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
-              }
-            )
+        doSomething(URL.requestHost+PUBLISH,params).then(
+          (res) =>{
+            this.loading = false
+            that.$message({
+              type:'success',
+              message:'发布成功',
+              duration:2000,
+            })
           }
-        ).catch(() =>{
-          that.$message({
-            type: 'info',
-            message: '已取消发布',
-            duration:2000,
-          });
-        })
-      }
+        ).catch(
+          (err) =>{
+            this.loading = false
+            that.$message({
+              type:'error',
+              message:'服务器错误',
+              duration:2000,
+            })
+          }
+        )
+        store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
+          () =>{
+            getList().then(
+              (res) => {
+                this.complateGetList(res)
+                this.title = '状态'
+                this.release=true
+                //发布状态要改成已发布 check123
+                this.tableData=res.Data.Result
+              })
+
+
+          }
+
+        ).catch(
+          (err) =>{
+            that.$message({
+              type: 'error',
+              message: '服务器错误,请稍后重试',
+              duration:2000,
+            });
+            that.clearReloadId(err)
+            store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
+          }
+        )
+
+
+      },
+
+
+
     }
   }
 </script>
@@ -1238,7 +1042,11 @@
   .start-quickly{top:17px;right:0;
     .btn-bg{background: #2a8ce7;color:#fff;}
   }
-  .red{background:red!important;padding:8px 20px;}
-
-
+  .red{padding:8px 20px;background:#95c6f3!important;}
+  .red:disabled{color:#fff;}
+  .weight{padding:0;}
+  .uploadbtn{display: inline;margin-right: 50px;}
+  .uploadText{display: inline-block;float: right;}
+  .searchInput{top:18px;}
+  .p-ting{top:18px;background:red;border:1px solid red;}
 </style>
