@@ -5,14 +5,13 @@
     <section class="p-relative" style="">
       <el-button  v-if="!enableChecked" type="primary" class="text-a-c createAnswer" :disabled='!status' @click="newQA">创建新问答</el-button>
       <el-button type="primary"  size="small" class="text-a-c introduction" :disabled='!status' @click="uploadMessage = true">导入</el-button>
-
       <el-dialog
         title="提示"
         :visible.sync="uploadMessage"
         width="40%"
         top="300px"
         center>
-        <div style="height:30px;">
+        <div class="uploadfile" style="height:30px;">
           <div style="float:left;height:30px;">
             <span>上传文件:</span>
             <el-upload  class="uploadbtn"
@@ -21,17 +20,17 @@
                         :headers="params.headers"
                         :data="params.body"
                         :action="params.url"
-                        :on-success='successUpload'
                         :on-error='onError'
                         :limit="1"
                         :on-exceed="handleExceed"
+                        :auto-upload="false"
             >
-              <el-button type="primary" >导入</el-button>
+              <el-button type="primary" >上传</el-button>
             </el-upload>
           </div>
           <div  >
-            <span class="">已选取文件  </span>
-            <ul class="el-upload-list el-upload-list--text" style="float:right;dispaly:inline;">
+            <span class="">已选取文件</span>
+            <ul class="el-upload-list el-upload-list--text " >
               <li tabindex="0" class="el-upload-list__item is-success">
                 <a class="el-upload-list__item-name">   </a>
                 <label class="el-upload-list__item-status-label">  </label>
@@ -44,14 +43,15 @@
         <p>2.上传excel完成批量导入</p>
         <span slot="footer" class="dialog-footer">
             <el-button @click="uploadMessage = false">取 消</el-button>
-            <el-button type="primary" @click="uploadMessage = false">确 定</el-button>
+            <el-button type="primary"
+                       @click="successUpload"
+            >确 定</el-button>
           </span>
       </el-dialog>
-
-      <el-input v-model='keys' class='searchInput ' :style="{transition:'left .3s',}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
+      <el-input v-model='keys' class='searchInput' style="margin-bottom:15px;" :style="{transition:'left .3s',}" size = 'small' placeholder="输入关键词搜索" @keyup.enter.native="search"><i slot="suffix" class="el-input__icon el-icon-search yoy-search-button" @click="search"></i>
       </el-input>
       <span  >
-        <!-- v-if="!originDisabled" -->
+        <!-- v-if="!originDisabled"   -->
         <span class="start-quickly p-absolute" v-show='startIt'>
           <el-button @click="clearAll" v-show="clearshow" >清空</el-button>
           <el-button class="btn-bg" @click="stop">开启</el-button>
@@ -96,9 +96,10 @@
         prop="QuestionName"
         label="问题" show-overflow-tooltip
         :resizable="resizable"
+
       >
         <template slot-scope="scope">
-          <section class='link' @click="pathToDetail(scope.row)">
+          <section class='link' >
             {{scope.row.QuestionName}}
           </section>
         </template>
@@ -143,17 +144,17 @@
         v-if="!showDel"
       >
         <template slot='header' slot-scope="scope">
-          <section class="handle" style="height: 28px;line-height: 28px">
+          <section class="handle" style="height: 28px;line-height: 28px" >
             操作
           </section>
         </template>
-        <template slot-scope="scope">
-          <section class="handle" style="line-height: 24px">
-            <span :class="[scope.row.Status == '5'?'un-handle':'edit']" style="margin-right: 20px" @click="editSomething(scope.row)">
+        <template slot-scope="scope"  >
+          <section class="handle" style="line-height: 24px"  >
+            <span :class="status?['hover','edit']:['disabled','hover','edit']"  style="margin-right: 20px" @click="editSomething(scope.row)">
               <i class="el-icon-edit" style="margin-right: 5px;"></i>
               <span>编辑</span>
             </span>
-            <span :class="[scope.row.Status == '5'?'un-handle':'delete']" @click="handDel(scope.row.Id,scope.$index,scope.row.Status)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
+            <span   :class="status?['hover','delete']:['disabled','hover','delete']"   @click="handDel(scope.row.Id,scope.$index,scope.row.Status)"><i class="el-icon-close" style="margin-right: 5px;"></i><span>删除</span></span>
           </section>
         </template>
       </el-table-column>
@@ -168,6 +169,28 @@
       :current-page.sync="PageIndex"
     >
     </el-pagination>
+    <!-- 提示 -->
+    <div v-if='uploadResponseStatus' style="z-index: 2004;background: rgba(0, 0, 0, 0.4);" class="el-message-box__wrapper">
+      <div :class="uploadResponseStatus?['el-message-box','responseBack']:['el-message-box','nonBack']">
+        <div class="el-message-box__header">
+          <div class="el-message-box__title">
+            <span >提示</span>
+          </div>
+        </div>
+        <div class="el-message-box__content">
+          <div class="el-message-box__status el-icon-warning">
+          </div>
+          <div class="el-message-box__message">
+            <p>{{response.Message}}</p>
+          </div>
+        </div><div class="el-message-box__btns">
+        <button class="el-button el-button--small" @click="operate('Cancel')">取消上传</button>
+        <button class="el-button el-button--small el-button--primary" @click="operate('SkipDuplicates')">跳过</button>
+        <button class="el-button el-button--small el-button--primary margin-left-20" @click="operate('Overrides')">覆盖</button>
+      </div>
+      </div>
+    </div>
+
   </section>
 </template>
 <script>
@@ -195,13 +218,10 @@
         tableDataCopy:[],
         clearshow:true,
         uploadMessage:false,
-
         resizable:false,
         border:true,
         loading: false,
-
         dataContainer:[],
-
         enableChecked: false,
         options: {0:'全部',1:'未发布',  2: '已发布'},
         title:'状态',
@@ -214,7 +234,7 @@
         showDel:false,
         originDisabled:true,
         blankUrl:'',
-
+        uploadResponseStatus: false,
       }
     },
     /*
@@ -222,7 +242,7 @@
      */
     created(){
       this.getSevice()
-      //  this.checkSatus()
+      this.checkSatus()
       this.reLoad() //导入
       this.tableData = []
       this.total = 0
@@ -243,17 +263,17 @@
         (res) =>{
           that.tableData = res.Data.Result
           this.total = res.Data.TotalCount
-          if (res['Data'].IsNeedPublished) {
-            this.release=false
+          console.log(res['Data'])
+          if (res['Data'].Result) {
+            // this.release=false
+            this.clearshow=true
           } else {
-            this.release=true
+            // 无数据的时候 没有发布和清空按钮
+            // this.release=true
+            this.clearshow=false
           }
-
-
         }
       )
-
-
       const that = this
 
     },
@@ -275,7 +295,6 @@
             BotRecordId,TenantId
           })
         }
-
         request(GETPUBLISHSTATUS, params).then(res => {
           if (res.Status=1) {
             //1为 未发布
@@ -304,10 +323,13 @@
           })
         }
         request(UPDATEQQASEVICE, params).then(res => {
+
+          // sessionStorage.setItem("checkEnalbe",res.Data);
         });
         this.startIt =true
         this.stopIt =true
         this.status=false
+
       },
       stop(){
         const ID = sessionStorage.getItem("seviceId");
@@ -324,10 +346,13 @@
           })
         }
         request(UPDATEQQASEVICE, params).then(res => {
+
+          // sessionStorage.setItem("checkEnalbe",res.Data);
         });
         this.startIt =false
         this.stopIt =false
         this.status=true
+
       },
       getSevice(){
         const that = this
@@ -348,6 +373,7 @@
           // cunid
           const ID = res.Data.Id
           sessionStorage.setItem("seviceId",res.Data.Id);
+          sessionStorage.setItem("checkEnalbe",res.Data.Enable);
           if (res.Data.Enable) {
             // true 为开启状态 ，停用按钮
             this.startIt =false
@@ -367,23 +393,44 @@
       },
 
       clearAll(){
-        const TenantId = store.state.app.userInfo.TenantId
-        const BotRecordId = this.$route.query.recordId//route.currentRoute.query.recordId
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          const TenantId = store.state.app.userInfo.TenantId
+          const BotRecordId = this.$route.query.recordId//route.currentRoute.query.recordId
+          const DeleteType = 2
+          const token = getCookies(TOKEN)
+          const params = {
+            headers: {
+              'Access-Token': token,
+            },
+            method: 'POST',
+            body: JSON.stringify({
+              BotRecordId,TenantId,DeleteType,
+            })
+          }
+          request(QQADELETE, params).then(res => {
+            this.tableData = []
+            this.total = 0
+            this.PageIndex =0
+            // this.complateGetList(res)
+            //  this.clearshow=false
+            if (res.status=1) {
 
-        const DeleteType = 2
-        const token = getCookies(TOKEN)
-        const params = {
-          headers: {
-            'Access-Token': token,
-          },
-          method: 'POST',
-          body: JSON.stringify({
-            BotRecordId,TenantId,DeleteType,
-          })
-        }
-        request(QQADELETE, params).then(res => {
-          this.tableData = []
-          this.clearshow=false
+              this.$message({
+                type: 'success',
+                message: '删除成功!'
+              });
+            }
+            this.clearshow=false
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
         });
 
 
@@ -402,32 +449,38 @@
         )
       },
 
+
       successUpload (res, fileInfo, fileList) {
-        if(!res.Status){
-          this.$message(
-            {
-              type: 'error',
-              message: `${res.ErrorMsg}请稍后重试111`,
-              duration: 2000
-            }
-          )
-        }
-        this.$refs.upload.clearFiles();
-        const that =this
+        // debugger;
+        //  this.reLoad()
 
+        this.$refs.upload.submit();
 
-        const params = {
-          // PageIndex: this.PageIndex,
-          // Status: this.status,
-          // Keys:this.keys
-        }
-
-        getList(params).then((res) =>{
-          console.log(res.Data.Result)
-          // that.complateGetList(res)
-          this. tableData=res.Data.Result
-          this.handleCurrentChange()
-        })
+        // if(!res.Status){
+        //   this.$message(
+        //     {
+        //       type: 'error',
+        //       message: `${res.ErrorMsg},导入格式不对请重新导入`,
+        //       duration: 2000
+        //     }
+        //   )
+        // }
+        setTimeout(() =>{
+          const that =this
+          const params = {
+            PageIndex: this.PageIndex,
+            Status: this.command,
+          }
+          getList(params).then((res) =>{
+            //  that.complateGetList(res)
+            this. tableData=res.Data.Result
+            this.total = res.Data.TotalCount
+            // this.c()
+            this.uploadMessage = false;
+            this.$refs.upload.clearFiles();
+          })
+        },800)
+        this.clearshow=true
       },
       onError (err, fileInfo, fileList) {
         this.$message(
@@ -496,6 +549,7 @@
         that.webSocket.onmessage = function (res) {
           // that.heartCheck().reset();
           const response = JSON.parse(res.data)
+          console.log(response,'websocte')
           if (response) {
             switch (response.Code) {
               case "IRV00002" || "IRV00006":
@@ -506,6 +560,9 @@
                 })
                 store.dispatch( REPLACE, { mainLoading: false } )
                 break;
+              // case "IRV00001":
+              //     that.alertFun(response);
+              //     break;
               case "IRV00003":
                 that.alertFun(response);
                 break;
@@ -522,9 +579,10 @@
                 store.dispatch( REPLACE, { mainLoading: false } )
                 break;
               default:
+                this.loading=false
                 that.$message({
-                  type: 'error',
-                  message: `${response.Message} 请重新上传`,
+                  type: 'success',
+                  message: `${response.Message} `,
                   duration: 2000,
                 })
                 store.dispatch( REPLACE, { mainLoading: false } )
@@ -543,6 +601,26 @@
         this.uploadResponseStatus = true
         this.response = res
       },
+      operate (key) {
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        console.log(this.response)
+        const params = {
+          "Command": key,
+          "BotId": BotConfigId,
+          "Domain": this.response.Domain,
+          "TenantId": store.state.app.userInfo.TenantId
+        }
+        this.webSocket.send( JSON.stringify(params) )
+        if(key === 'Cancel'){
+          this.$message({
+            type: 'info',
+            message: '已取消上传文件',
+            duration: 2000
+          })
+        }
+        this.uploadResponseStatus = false
+      },
 
       newQA() {
         const query = this.$route.query;
@@ -557,7 +635,8 @@
       editSomething(v){
         const query = this.$route.query;
         sessionStorage.setItem('edit',JSON.stringify(v) ); // 存入
-        if(v.Status == 5){
+
+        if(!this.status){
           return;
         }else{
           this.$router.push({
@@ -588,19 +667,14 @@
         const BotConfigId = recordId?recordId:this.$route.query.recordId
         const url = `/WebTalk/validaiml.html?id=${BotConfigId}`
         this.blankUrl = url
-
-
-
         var e = document.createEvent('MouseEvents');
         e.initEvent('click', true, true);
         theAnchor[0].dispatchEvent(e);
-
         theAnchor.remove();
       },
 
       handleCurrentChange(v) {
         this.loading = true
-        this.PageIndex = v
         const options = {
           PageIndex: this.PageIndex,
           Status: this.command,
@@ -676,12 +750,13 @@
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const botConfigId = this.$route.query.recordId?this.$route.query.recordId:id
 
-        this.params = {
-          body: {
-            Status: this.status
-          }
-        }
-        const params = {Status: this.status}
+        // this.params = {
+        //     body: {
+        //         Status: this.status,
+        //         Keyword: this.Keys
+        //     }
+        // }
+        const params = {Status: this.status,Keyword: this.keys}
         getList(params).then(
           (res) =>{
             that.tableData = res.Data.Result
@@ -773,8 +848,11 @@
         this.keyword   = this.keys
         getList({keyword:this.keys}).then(
           (res) => {
-            res.Data.Result.forEach(
+            // 数量显示
+            console.log(res, 'search')
+            this.total = res.Data.TotalCount
 
+            res.Data.Result.forEach(
               (v,index) =>{
                 if(that.tableDataCopy.includes(v.ID)){
                   v.checkedStatus = true
@@ -793,6 +871,9 @@
         )
       },
       handDel(v,index,status) {
+        if(!this.status){
+          return
+        }
         const that = this
         this.$confirm('是否删除此条问题?', '提示', {
           confirmButtonText: '确定',
@@ -877,6 +958,7 @@
 
           doSomething(URL.requestHost+PUBLISHORTRAIN,params).then(
             (res) =>{
+
             }
           ).catch(
             (err) =>{
@@ -914,59 +996,65 @@
         store.dispatch(REPLACE,{quickQuizArr:arr})
       },
       publish(){
-        const that = this
-        this.loading = true
-        const params = {
-          TenantId: store.state.app.userInfo.TenantId ,
-          BotRecordId : this.$route.query.recordId
-        }
-        that.initStatus('publish',that.$route.query.recordId)
 
-        doSomething(URL.requestHost+PUBLISH,params).then(
-          (res) =>{
-            this.loading = false
-            that.$message({
-              type:'success',
-              message:'发布成功',
-              duration:2000,
-            })
+        setTimeout(() =>{
+          const that = this
+          this.loading = true
+          const params = {
+            TenantId: store.state.app.userInfo.TenantId ,
+            BotRecordId : this.$route.query.recordId
           }
-        ).catch(
-          (err) =>{
-            this.loading = false
-            that.$message({
-              type:'error',
-              message:'服务器错误',
-              duration:2000,
-            })
-          }
-        )
-        store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
-          () =>{
-            getList().then(
-              (res) => {
-                this.complateGetList(res)
-                this.title = '状态'
-                this.release=true
-                //发布状态要改成已发布 check123
-                this.tableData=res.Data.Result
+          that.initStatus('publish',that.$route.query.recordId)
+
+          doSomething(URL.requestHost+PUBLISH,params).then(
+            (res) =>{
+              this.loading = false
+
+              that.$message({
+                type:'success',
+                message:'发布成功',
+                duration:2000,
               })
+            }
+          ).catch(
+            (err) =>{
+              this.loading = false
+              that.$message({
+                type:'error',
+                message:'服务器错误',
+                duration:2000,
+              })
+            }
+          )
+          store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
+            () =>{
+              getList().then(
+                (res) => {
+                  this.complateGetList(res)
+                  this.title = '状态'
+                  this.release=true
+                  this.checkSatus()
+                  this.tableData=res.Data.Result
+                })
 
 
-          }
+            }
 
-        ).catch(
-          (err) =>{
-            that.$message({
-              type: 'error',
-              message: '服务器错误,请稍后重试',
-              duration:2000,
-            });
-            that.clearReloadId(err)
-            store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
-          }
-        )
+          ).catch(
+            (err) =>{
+              that.$message({
+                type: 'error',
+                message: '服务器错误,请稍后重试',
+                duration:2000,
+              });
+              that.clearReloadId(err)
+              store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
+            }
+          )
 
+
+
+        },800)
 
       },
 
@@ -1029,7 +1117,7 @@
   }
   .link{
     display: inline-block;
-    cursor: pointer;
+    text-decoration: none;
   }
   .link:hover{
     text-decoration: underline;
@@ -1049,4 +1137,8 @@
   .uploadText{display: inline-block;float: right;}
   .searchInput{top:18px;}
   .p-ting{top:18px;background:red;border:1px solid red;}
+  .uploadfile{position:relative
+  ul{position: absolute;top:0;right: 0;display: block;}
+  }
+  //  .uploadfile
 </style>

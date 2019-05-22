@@ -5,7 +5,8 @@
     <section>
 <!--      步骤页面-->
       <section v-if="step === 1">
-        <title-text title="第一步：问题名称"></title-text>
+        <title-text title="第一步：问题名称">
+        </title-text>
         <el-form ref="dynamicValidateForm" :rules='rules' :model="dynamicValidateForm" label-width="40px" style="margin-top: 30px;">
           <el-row>
             <el-col :span="14" style="margin-bottom: 8px;">
@@ -17,26 +18,25 @@
           </el-row>
           <title-text title="添加问法（至少三个，至多十个）"></title-text>
           <el-row style="margin-top: 30px;">
-            <el-col
-              :span="14"
+            <el-form-item
               v-for="(item, index) in dynamicValidateForm.similarity"
               :key="index"
-              class="quicklyQA"
+              prop="similarity"
+              :error="item.error"
             >
-              <el-form-item
-                prop="similarity"
-                class="question-item"
-                :error="item.error"
-                label-width="40px"
+              <el-col
+                :span="14"
+                class="quicklyQA"
               >
-                <el-input autofocus v-model="item.value" placeholder="请输入问法语句" @keyup.enter.native="addSimilarity(index)" @blur="checkRules(item.value,index)"></el-input>
-                <section v-show='dynamicValidateForm.similarity.length>3' class="delete" @click="deleteItem(index)">
-                  <i class="el-icon-close"></i>
-                  <span>删除</span>
-                </section>
-              </el-form-item>
-            </el-col>
-            <el-col :span="14" v-show="dynamicValidateForm.similarity.length<=10">
+                  <el-input autofocus v-model="item.value" placeholder="请输入问法语句" @keyup.enter.native="addSimilarity(index)" @blur="checkRules(item.value,index)"></el-input>
+                  <section v-show='dynamicValidateForm.similarity.length>3' class="delete" @click="deleteItem(index)">
+                    <i class="el-icon-close"></i>
+                    <span>删除</span>
+                  </section>
+              </el-col>
+            </el-form-item>
+
+            <el-col :span="14" v-show="dynamicValidateForm.similarity.length<10">
               <el-button type="text" style="width: 120px" @click="addSimilarity"><i class="el-icon-circle-plus"></i><span>添加</span></el-button>
             </el-col>
           </el-row>
@@ -50,28 +50,63 @@
       </section>
       <section v-else>
         <title-text title="第一步：问题名称"></title-text>
+        <el-form ref="form" :rules='rules' label-width="0px">
           <el-row class="normal-text-box">
-            <el-col :span="14" class="normal-text">
+            <el-col :span="dynamicValidateForm.question.length>20?'22':'14'" class="normal-text">
               {{dynamicValidateForm.question}}
             </el-col>
           </el-row>
           <title-text title="添加问法（至少三个，至多十个）"></title-text>
           <el-row :class="!longList?dynamicValidateForm.similarity.length<=3?['normal-text-box','height-190']:['normal-text-box','height-211']:['normal-text-box']">
-            <el-col
-              :span="14"
-              v-for="(item, index) in dynamicValidateForm.similarity"
-              :key="index"
-              class="normal-text"
-              :style="{display: !longList&&index>2?'none':'block'}"
-            >
-              {{item.value}}
-            </el-col>
-            <el-col v-if='dynamicValidateForm.similarity.length>3' :span="14" class="show-more">
+            <section v-if="routerName==='create'">
+              <el-col
+                :span="item.value.length>20?'22':'14'"
+                v-for="(item, index) in dynamicValidateForm.similarity"
+                :key="index"
+                class="normal-text"
+                :style="{display: !longList&&index>2?'none':'block'}"
+              >
+                {{item.value}}
+              </el-col>
+              <el-col v-if='dynamicValidateForm.similarity.length>3' :span="14" class="show-more">
               <span @click="showMore">
                  {{longList?'收起':'展开'}}
               </span>
-            </el-col>
+              </el-col>
+            </section>
+            <section v-else>
+              <el-row>
+                <el-form-item
+                  v-for="(item, index) in dynamicValidateForm.similarity"
+                  :key="index"
+                  prop="similarity"
+                  :error="item.error"
+                >
+                  <el-col
+                    :span="14"
+                    class="quicklyQA"
+                  >
+                    <el-input autofocus v-model="item.value" placeholder="请输入问法语句" @keyup.enter.native="addSimilarity(index)" @blur="checkRules(item.value,index)"></el-input>
+                    <section v-show='dynamicValidateForm.similarity.length>3' class="delete" @click="deleteItem(index)">
+                      <i class="el-icon-close"></i>
+                      <span>删除</span>
+                    </section>
+                  </el-col>
+                </el-form-item>
+
+                <el-col :span="14" v-show="dynamicValidateForm.similarity.length<10">
+                  <el-button type="text" style="width: 120px;margin-left: -35px" @click="addSimilarity"><i class="el-icon-circle-plus"></i><span>添加</span></el-button>
+                </el-col>
+              </el-row>
+              <el-col v-if="dynamicValidateForm.similarity.length>3 && routerName ==='create'" :span="14" class="show-more">
+              <span @click="showMore">
+                 {{longList?'收起':'展开'}}
+              </span>
+              </el-col>
+            </section>
+
           </el-row>
+        </el-form>
           <title-text title="第二步：设置答案"></title-text>
 <!--        <el-row>-->
 <!--          <el-col :span="14" class="p-relative">-->
@@ -133,18 +168,12 @@
           <img width="400" :src="dialogImageUrl" alt>
         </el-dialog>
         <section style="margin-top: 50px;">
-          <el-button @click="lastStep">上一步</el-button>
-          <el-button type="primary" @click="save('dynamicValidateForm')">完成</el-button>
+          <el-button @click="lastStep" v-if="routerName==='create'">上一步</el-button>
+          <el-button :disabled='uploadList.length <= 0 && !trimStr(textAnswer.KnowledgeBase)' type="primary" @click="save('dynamicValidateForm')">完成</el-button>
           <span class="error">{{errorTips}}</span>
         </section>
       </section>
       </section>
-
-<!--    编辑页面-->
-
-<!--    <section v-else>-->
-<!--      我是编辑页面-->
-<!--    </section>-->
   </section>
 </template>
 <script>
@@ -161,22 +190,15 @@
     data(){
       var validatePass = (rule, value, callback) => {
           value = this.trimStr(value)
-          // console.log(this.checkQuestion(value,callback))
           if (value === '') {
             callback(new Error('问题名称不能为空'));
           } else {
-            callback();
+            if(this.errorQuestionMessage){
+              callback(new Error(this.errorQuestionMessage));
+            }else{
+              callback();
+            }
           }
-      }
-      let validatePassSimilarityRules = (rule, value, callback) => {
-        debugger
-        // value = this.trimStr(value)
-        // console.log(this.checkQuestion(value,callback))
-        if (value.length>50 ) {
-        callback(new Error('至多输入50个字符'));
-      } else {
-        callback();
-      }
       }
       return {
 
@@ -292,6 +314,7 @@
        * @param value
        */
       checkQuestion(value){
+        this.errorQuestionMessage = ''
         if(this.dynamicValidateForm.question.length <= 50){
           value = this.trimStr(this.dynamicValidateForm.question)
           if(value){
@@ -312,7 +335,8 @@
             }
             request('/api/admin/portal/QQA/IsQuesExist',params).then((res) => {
               if(res.Data){
-                this.errorQuestionMessage = '当前问题已存在'
+                this.errorQuestionMessage = '当前问题已存在'+Math.random()*100
+                this.errorQuestionMessage = this.errorQuestionMessage.substr(0,7)
               } else {
                 this.errorQuestionMessage = ''
               }
@@ -329,22 +353,15 @@
       save(){
         const element = document.getElementById('quicklyQa')
         this.loadingInstance = Loading.service({target: element});
-
+        this.textAnswer.KnowledgeBase = this.trimStr(this.textAnswer.KnowledgeBase)
         if(this.routerName === 'create'){
-          // this.createQuestion()
           this.upload_img('/api/admin/portal/QQA/Add')
         }else{
           this.upload_img('/api/admin/portal/QQA/Update')
-          // this.updateQuestion()
         }
 
 
       },
-      // createQuestion(){
-      //
-      // },
-      // updateQuestion(){
-      // },
       upload_img(url) {
         const that = this
         const id = JSON.parse(sessionStorage.getItem('recordId'))
@@ -529,8 +546,10 @@
       submitForm(formName) {
         const that = this
         let lengthStatus = true
+        // this.errorQuestionMessage = this.errorQuestionMessage?this.errorQuestionMessage+Math.random()*100:''
+        // this.errorQuestionMessage = this.errorQuestionMessage?this.errorQuestionMessage.substr(0,7):''
         this.$refs[formName].validate((valid) => {
-          if (valid) {
+          if (valid && !this.errorQuestionMessage) {
             that.dynamicValidateForm.similarity.forEach(
               (item) => {
                 if(item.value.length > 50){
@@ -554,9 +573,8 @@
             }else{
               that.step = 1
             }
-
           } else {
-            return false;
+            return false
           }
         });
       },
@@ -653,16 +671,13 @@
 
       },
       addSimilarity(index, value){
-        // let el = document.getElementsByTagName('input')
-        //
-        // el[index+1].focus()
-        // el[index+1].select()
-        // if(index>=2){
-          this.dynamicValidateForm.similarity.push({
+        let arr = this.dynamicValidateForm.similarity.slice(0)
+        arr.push({
             value: '',
             error:''
-          });
-        // }
+          }
+        )
+        this.dynamicValidateForm.similarity = arr
       }
     }
   }
@@ -683,21 +698,25 @@
   .error{
     color: $danger;
   }
-  .question-item{
-    position: relative;
-  }
+
   .delete{
+    width: 66px;
     position: absolute;
-    right: 20px;
-    top: 0;
-    color: $danger;
+    right: 1px;
+    top: 50%;
+    height: 30px;
+    line-height: 30px;
+    background: #fff;
+    -webkit-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    color: #f04b4b;
     display: none;
     cursor: pointer;
   }
   .delete:hover{
     text-decoration: underline;
   }
-  .question-item:hover{
+  .normal-text:hover, .quicklyQA:hover{
     .delete{
       display: inline-block;
     }
@@ -792,10 +811,11 @@
   }
   .normal-text-box{
     height: 100%;
-    transition:2s cubic-bezier(.25,.1,.3,1.5);
+    /*transition:2s cubic-bezier(.25,.1,.3,1.5);*/
     padding: 30px 0 30px 40px;
   }
   .normal-text{
+    position:relative;
     color: $f-pri-c;
     font-size: 14px;
     height: 40px;
@@ -819,6 +839,7 @@
 <style lang="scss">
   @import '../../../../../style/var/color';
   .quicklyQA{
+    position:relative;
     .question-item:hover{
       .el-input__inner{
         border-color: $primary-color;

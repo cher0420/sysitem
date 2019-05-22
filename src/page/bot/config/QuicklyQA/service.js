@@ -21,7 +21,7 @@ export const getList  = (params) =>{
     BotRecordId,
     PageSize:10,
     PageIndex:1,
-    KeyWord:'',
+    Keyword:'',
     Status:0,
     ...params,
   }
