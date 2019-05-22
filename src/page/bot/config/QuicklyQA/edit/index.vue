@@ -86,7 +86,7 @@
                     :span="14"
                     class="quicklyQA"
                   >
-                    <el-input autofocus v-model="item.value" placeholder="请输入问法语句" @keyup.enter.native="addSimilarity(index)" @blur="checkRules(item.value,index)"></el-input>
+                    <el-input autofocus v-model="item.value" placeholder="请输入问法语句" @blur="checkRules(item.value,index)"></el-input>
                     <section v-show='dynamicValidateForm.similarity.length>3' class="delete" @click="deleteItem(index)">
                       <i class="el-icon-close"></i>
                       <span>删除</span>

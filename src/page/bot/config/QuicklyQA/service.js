@@ -2,7 +2,7 @@ import {request} from "../../../../serive/request";
 import {getCookies} from "../../../../utils/cookie";
 import {TOKEN} from "../../../../constants/constants";
 import URL from '../../../../host/baseUrl';
-import {DELETEQUESTION, GETQUICKLYLIST,PUBLISH,QQADELETE} from "../../../../constants/api";
+import {DELETEQUESTION, GETQUICKLYLIST,GETPUBLISHSTATUS,QQADELETE} from "../../../../constants/api";
 import route from '../../../../router/index'
 import moment from 'moment';
 import store from '../../../../store';
@@ -134,20 +134,19 @@ export const _ask = (botId = null) => {
   }
   return new Promise(
     (resolve,reject) => {
-      request(URL.requestHost+PUBLISH,params).then(
+      request(URL.requestHost+GETPUBLISHSTATUS,params).then(
         (res) =>{
-          if(res.Data === 0){
-            console.log('12', '')
-            //不存在培训中或者发布中的数据
-            //0:正常 1:培训中 2:发布中 3:发布或者培训失败}
-            res.recordId = BotConfigId
+          if(res.Data.OperationStatus === 3){
+            //3:正常   1:发布中 2:发布失败
+            res.recordId = BotRecordId
             resolve (res)
 
           }else {
             //正在发布或测试
-            res.recordId = BotConfigId
+            res.recordId = BotRecordId
             reject(res)
           }
+
         }
       ).catch(
         err=>err

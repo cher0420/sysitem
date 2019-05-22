@@ -16,8 +16,10 @@
             <span>上传文件:</span>
             <el-upload  class="uploadbtn"
                         ref="upload"
+                        list-type=‘’
                         accept=".csv, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         :headers="params.headers"
+                        :on-change="limitFile"
                         :data="params.body"
                         :action="params.url"
                         :on-error='onError'
@@ -96,7 +98,6 @@
         prop="QuestionName"
         label="问题" show-overflow-tooltip
         :resizable="resizable"
-
       >
         <template slot-scope="scope">
           <section class='link' >
@@ -242,7 +243,7 @@
      */
     created(){
       this.getSevice()
-      this.checkSatus()
+      // this.checkSatus()
       this.reLoad() //导入
       this.tableData = []
       this.total = 0
@@ -263,18 +264,81 @@
         (res) =>{
           that.tableData = res.Data.Result
           this.total = res.Data.TotalCount
-          console.log(res['Data'])
+          // IsNeedPublished  发布状态
+          if (res['Data'].IsNeedPublished) {
+            //false为 已经发布 有点 this.release=true
+            this.release=false
+          } else {
+            this.release=true
+          }
           if (res['Data'].Result) {
-            // this.release=false
             this.clearshow=true
           } else {
             // 无数据的时候 没有发布和清空按钮
-            // this.release=true
             this.clearshow=false
           }
         }
       )
+
+      // lunxun start
       const that = this
+
+      _ask().then(
+        (res) => {
+          getList().then(
+            (res) => {
+              that.complateGetList(res)
+            }
+          ).catch(
+            (err) =>{
+              /*
+               抛出错误
+              */
+              //   that.loading = false
+            }
+          )
+        }
+      ).catch(
+        (err) =>{
+          store.dispatch(REPLACE,{loadingText:null})
+          if(that.$route.path === '/bot/config/quicklyQA'){
+            // store.dispatch(REPLACE,{mainLoading:true})
+            //1 fabuzhong  3 fabu chenggong
+            console.log(err.Data.OperationStatus)
+
+            // if(err.Data.OperationStatus=== 3){
+            //   that.clearReloadId(err)
+            //   const params = {Status:null}
+            //   getList(params).then(
+            //     (res) =>{
+            //       that.complateGetList(res)
+            //       store.dispatch(
+            //         REPLACE,{mainLoading:false,loadingText:null}
+            //       )
+            //     }
+            //   ).catch(
+            //     err => err
+            //   )
+            //   return ;
+            // }
+            // else if(err.Data.OperationStatus === 1){
+            //   store.dispatch(REPLACE,{loadingText:'发布预计需要几分钟，请稍后'})
+            // //   that.initStatus('train')
+            // }
+            //else if(err.Data.OperationStatus === 2){
+            //   store.dispatch(REPLACE,{loadingText:'fabushibai'})
+            // //   that.initStatus('publish')
+            // }
+            // that.loading = false
+            // that.clearReloadId(err)
+            // that._reload_ask(true,err.recordId)
+          }
+        }
+      )
+
+
+//end
+
 
     },
     destroyed(){
@@ -282,8 +346,19 @@
       store.dispatch(REPLACE,{mainLoading:false,loadingText:null})
     },
     methods: {
+      limitFile(res,file,fileList){
+        if (res.raw.type!="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") {
+          this.$message({
+            type: 'error',
+            message: '格式错误!'
+          });
+        }
+
+
+      },
       // 查询发布状态
       checkSatus(){
+        const that= this
         const TenantId = store.state.app.userInfo.TenantId
         const  BotRecordId = this.$route.query.recordId
         const params = {
@@ -296,12 +371,30 @@
           })
         }
         request(GETPUBLISHSTATUS, params).then(res => {
-          if (res.Status=1) {
-            //1为 未发布
-            this.release=true
+          console.log(res, 'stause')
+          if (res.Status==1) {
+            if (res.Data.OperationStatus == 3) {
+              // 发布中
+              this.loading=false
+
+              getList(params).then(
+                (res) =>{
+
+                })
+
+            } else  if(res.Data.OperationStatus == 1){
+              this.loading=true
+              //轮训
+
+            } else if(res.Data.OperationStatus == 2) {
+              this.loading = false
+
+            } else {
+              this.loading = false
+            }
           } else {
             //2为已发布
-            this.release=false
+            // this.release=true
           }
         })
 
@@ -393,6 +486,7 @@
       },
 
       clearAll(){
+        this.loading = true
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -418,7 +512,7 @@
             // this.complateGetList(res)
             //  this.clearshow=false
             if (res.status=1) {
-
+              this.loading = false
               this.$message({
                 type: 'success',
                 message: '删除成功!'
@@ -449,38 +543,15 @@
         )
       },
 
-
+      //cher
       successUpload (res, fileInfo, fileList) {
-        // debugger;
-        //  this.reLoad()
-
+        const that =this
         this.$refs.upload.submit();
-
-        // if(!res.Status){
-        //   this.$message(
-        //     {
-        //       type: 'error',
-        //       message: `${res.ErrorMsg},导入格式不对请重新导入`,
-        //       duration: 2000
-        //     }
-        //   )
-        // }
-        setTimeout(() =>{
-          const that =this
-          const params = {
-            PageIndex: this.PageIndex,
-            Status: this.command,
-          }
-          getList(params).then((res) =>{
-            //  that.complateGetList(res)
-            this. tableData=res.Data.Result
-            this.total = res.Data.TotalCount
-            // this.c()
-            this.uploadMessage = false;
-            this.$refs.upload.clearFiles();
-          })
-        },800)
+        this.$refs.upload.clearFiles();
+        this.uploadMessage = false;
         this.clearshow=true
+        //  this.release=false
+
       },
       onError (err, fileInfo, fileList) {
         this.$message(
@@ -560,20 +631,23 @@
                 })
                 store.dispatch( REPLACE, { mainLoading: false } )
                 break;
-              // case "IRV00001":
-              //     that.alertFun(response);
-              //     break;
               case "IRV00003":
                 that.alertFun(response);
                 break;
-              case 'Succeed':
+              case 'IRV00001':
                 that.loading = true
                 that.$message( {
                   type: 'success',
                   message: `${response.Message}`,
                   duration: 2000,
                   onClose(){
-                    that.getList()
+                    getList().then(
+                      (res) => {
+                        that.tableData=res.Data.Result
+                        that.total = res.Data.TotalCount
+                        that.loading = false
+                      }
+                    )
                   }
                 } )
                 store.dispatch( REPLACE, { mainLoading: false } )
@@ -601,10 +675,12 @@
         this.uploadResponseStatus = true
         this.response = res
       },
+
+      //cher
       operate (key) {
+
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
-        console.log(this.response)
         const params = {
           "Command": key,
           "BotId": BotConfigId,
@@ -672,7 +748,21 @@
         theAnchor[0].dispatchEvent(e);
         theAnchor.remove();
       },
-
+      clearReloadId(err){
+        //清除轮训
+        const reloadArr = store.state.app.quickQuizArr
+        let newID = null;
+        reloadArr.forEach(
+          (v,index) =>{
+            if(v.recordId === err.recordId){
+              v.loading = false
+              newID = v.id
+              return
+            }
+          }
+        )
+        clearInterval(newID);
+      },
       handleCurrentChange(v) {
         this.loading = true
         const options = {
@@ -831,15 +921,12 @@
       search() {
         const that = this
         this.loading = true
-        const str ="<>%;/?'_"
-        const index = this.keys&&str.indexOf(this.keys) > -1
-        if(index){
+        if (!(/^[0-9a-zA-Z\u4e00-\u9eff]{1,}$/).test(this.keys)&&this.keys) {
           this.$message({
-            type:'error',
-            message:"请不要输入特殊字符作为关键词搜索，例如 <，>，%，;，/，?，'，_等",
-            duration:2000,
+            type: 'error',
+            message: "请不要输入特殊字符作为关键词搜索，例如 *，<，>，%，;，/，?，'，_等",
+            duration: 2000,
           })
-          that.loading = false
           return
         }
         this.originDisabled = true
@@ -902,8 +989,7 @@
               getList(params).then((res) =>{
                 that.complateGetList(res)
               })
-              //改发布状态
-              this.release=false
+
               store.dispatch(REPLACE,{mainLoading:false})
               this.$message({
                 type: 'success',
@@ -996,69 +1082,205 @@
         store.dispatch(REPLACE,{quickQuizArr:arr})
       },
       publish(){
+        const that = this
+        //   this.loading = true
 
-        setTimeout(() =>{
-          const that = this
-          this.loading = true
+        this.$confirm('确定发布以上问题?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch(REPLACE,{mainLoading:true,loadingText:'发布预计需要几分钟，请稍后'})
           const params = {
             TenantId: store.state.app.userInfo.TenantId ,
             BotRecordId : this.$route.query.recordId
           }
           that.initStatus('publish',that.$route.query.recordId)
-
+          store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
+            () =>{
+              that._reload_ask(false,that.$route.query.recordId) //开启论询且不刷新列表
+            }
+          )
           doSomething(URL.requestHost+PUBLISH,params).then(
             (res) =>{
-              this.loading = false
-
-              that.$message({
-                type:'success',
-                message:'发布成功',
-                duration:2000,
-              })
+              console.log(res)
             }
           ).catch(
             (err) =>{
-              this.loading = false
               that.$message({
                 type:'error',
                 message:'服务器错误',
                 duration:2000,
               })
-            }
-          )
-          store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
-            () =>{
-              getList().then(
-                (res) => {
-                  this.complateGetList(res)
-                  this.title = '状态'
-                  this.release=true
-                  this.checkSatus()
-                  this.tableData=res.Data.Result
-                })
-
-
-            }
-
-          ).catch(
-            (err) =>{
-              that.$message({
-                type: 'error',
-                message: '服务器错误,请稍后重试',
-                duration:2000,
-              });
               that.clearReloadId(err)
               store.dispatch(REPLACE,{mainLoading: false,loadingText:null})
             }
           )
+        }).catch(() => {
+          that.$message({
+            type: 'info',
+            message: '已取消发布'
+          });
+        });
 
-
-
-        },800)
 
       },
 
+      // 轮询事件
+      _reload_ask(isGetList,botId){
+        const that = this
+        let id = setInterval(function () {
+          _ask(botId).then(
+            (res) =>{
 
+              that.clearReloadId(res)
+              const arr = store.state.app.quickQuizArr
+              console.log('succeess', '')
+              store.dispatch(
+                REPLACE,{mainLoading:false,loadingText:null}
+              )
+              that.$message(
+                {
+                  type:'success',
+                  message:'发布成功',
+                  duration:2000,
+                }
+              )
+              const params = {}
+              getList(params).then(
+                (res) =>{
+                  that.tableData = res.Data.Result
+                  this.total = res.Data.TotalCount
+                  // IsNeedPublished  发布状态
+                  if (res['Data'].IsNeedPublished) {
+                    //true为 未发布 有点 this.release=false
+                    console.log(res['Data'].IsNeedPublished, '?')
+                    this.release=false
+                    console.log( this.release)
+
+                  } else {
+                    console.log(res['Data'].IsNeedPublished, '?')
+                    this.release=true
+                  }
+
+                }
+              )
+              //   arr.forEach(
+              //     (v,index) =>{
+              //       if(v.recordId === that.$route.query.recordId){
+              //         loading = v.loading
+              //         return
+              //       }
+              //       loading = false
+              //     }
+              //   )
+              //   if(that.$route.path === '/bot/config/quicklyQA'){
+              //     store.dispatch(REPLACE,{mainLoading:loading})
+              //   }
+              //   store.dispatch(REPLACE,{loadingText:null})
+              //   if(isGetList){
+              //     that.loading = true
+              //     getList().then(
+              //       (res) =>{
+              //         that.complateGetList(res)
+              //       }
+              //     )
+              //   }
+
+              //   if(that.isReloadBlankNew(res.recordId)){
+              //     that.go(res.recordId)
+              //   }else{
+              //     that.dataContainer = []
+              //     const params = {
+              //       PageSize: 10,
+              //       Status:1,
+              //     }
+              //     getList(params).then(
+              //       (res) =>{
+              //         if(res['Data'].length>0){
+              //           res['Data'].forEach(
+              //             (v,index) =>{
+              //               that.dataContainer.push(v.ID)
+              //             }
+              //           )
+              //         }
+              //       }
+              //     )
+              //     that.tableData.forEach(
+              //       (v,index) =>{
+              //         if(v.checkedStatus){
+              //           v.Status = 5
+              //         }else{
+              //           v.Status = 1
+              //         }
+              //       }
+              //     )
+              //   }
+
+
+            }
+          ).catch(
+            //发布中
+            (res) =>{
+              console.log(res.Data,'sds----》')
+
+              if(res.Data.OperationStatus === 2){
+                that.$message(
+                  {
+                    type:'error',
+                    message:'操作失败，请稍后重试',
+                    duration:2000,
+                  }
+                )
+                // sessionStorage.setItem('doingStatus','nothing')
+                that.clearReloadId(res)
+                clearInterval(that.reloadId)
+                const params = {
+                  Keys:that.keys,
+                  PageIndex: this.PageIndex,
+                  Status: this.command,
+                }
+                getList(params).then(
+                  (res) =>{
+                    that.complateGetList(res)
+                    store.dispatch(
+                      REPLACE,{mainLoading:false,loadingText:null}
+                    )
+                  }
+                ).catch(
+                  (err) =>{
+                    that.$message(
+                      {
+                        type:'error',
+                        message:'服务器错误，请稍后重试',
+                        duration:2000,
+                        onClose: () =>{
+                          store.dispatch(
+                            REPLACE,{mainLoading:false}
+                          )
+                        }
+                      }
+                    )
+                  }
+                )
+              }else if(res.Data.OperationStatus === 1){
+
+                that.initStatus('train',res.recordId)
+                if(that.$route.path === '/bot/config/quicklyQA'){
+                  botId === that.$route.query.recordId?store.commit(REPLACE,{loadingText:'发布预计需要几分钟，请稍后'}):null
+                }
+              } else{
+                console.log('123-shibai-->', '')
+                that.initStatus('publish',res.recordId)
+                if(that.$route.path === '/bot/config/quicklyQA') {
+                  botId === that.$route.query.recordId ? store.commit(REPLACE, {loadingText: '正在发布中，请稍后'}) : null
+                }
+              }
+            }
+          )
+        },20000)
+        that.addReloadArr(id,botId)
+      },
 
     }
   }
@@ -1119,9 +1341,9 @@
     display: inline-block;
     text-decoration: none;
   }
-  .link:hover{
-    text-decoration: underline;
-  }
+  // .link:hover{
+  //     text-decoration: underline;
+  // }
   .item {
     margin-top: 10px; top:8px;
     margin-right: 40px;right: 60px;background: #2a8ce7;padding:6px 20px;color: #fff;box-sizing:border-box; font-size: 14px;border-radius: 2px;
