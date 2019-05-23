@@ -28,7 +28,7 @@
                 :span="14"
                 class="quicklyQA"
               >
-                  <el-input autofocus v-model="item.value" placeholder="请输入问法语句" @keyup.enter.native="addSimilarity(index)" @blur="checkRules(item.value,index)"></el-input>
+                  <el-input autofocus v-model="item.value" placeholder="请输入问法语句" @blur="checkRules(item.value,index)"></el-input>
                   <section v-show='dynamicValidateForm.similarity.length>3' class="delete" @click="deleteItem(index)">
                     <i class="el-icon-close"></i>
                     <span>删除</span>
@@ -351,16 +351,36 @@
        * 保存答案.根据路由判断
        */
       save(){
+        const that = this
+        debugger;
         const element = document.getElementById('quicklyQa')
         this.loadingInstance = Loading.service({target: element});
         this.textAnswer.KnowledgeBase = this.trimStr(this.textAnswer.KnowledgeBase)
         if(this.routerName === 'create'){
-          this.upload_img('/api/admin/portal/QQA/Add')
-        }else{
-          this.upload_img('/api/admin/portal/QQA/Update')
+              this.upload_img('/api/admin/portal/QQA/Add')
+            }else{
+          let lengthStatus = true
+          that.dynamicValidateForm.similarity.forEach(
+            (item) => {
+              if(item.value.length > 50){
+                lengthStatus = false
+              }
+            }
+          )
+          if(lengthStatus){
+            if(that.filterData()){
+              that.dynamicValidateForm.similarity = that.dynamicValidateForm.similarity.filter(
+                (item) => {
+                  if(item.value){
+                    return item
+                  }
+                }
+              )
+              this.upload_img('/api/admin/portal/QQA/Update')
+            }
+          }
+          this.loadingInstance.close()
         }
-
-
       },
       upload_img(url) {
         const that = this
@@ -546,8 +566,6 @@
       submitForm(formName) {
         const that = this
         let lengthStatus = true
-        // this.errorQuestionMessage = this.errorQuestionMessage?this.errorQuestionMessage+Math.random()*100:''
-        // this.errorQuestionMessage = this.errorQuestionMessage?this.errorQuestionMessage.substr(0,7):''
         this.$refs[formName].validate((valid) => {
           if (valid && !this.errorQuestionMessage) {
             that.dynamicValidateForm.similarity.forEach(
