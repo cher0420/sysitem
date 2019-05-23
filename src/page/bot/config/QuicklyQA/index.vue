@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-loading="fullloading">
     <nav-title title="快速问答"></nav-title>
     <a :href="blankUrl" style="display: none" target="_blank" id="blankNew" ref="blankNew"></a>
     <section class="p-relative" style="">
@@ -222,6 +222,7 @@
         resizable:false,
         border:true,
         loading: false,
+        fullloading: false,
         dataContainer:[],
         enableChecked: false,
         options: {0:'全部',1:'未发布',  2: '已发布'},
@@ -360,7 +361,9 @@
       checkSatus(){
         const that= this
         const TenantId = store.state.app.userInfo.TenantId
-        const  BotRecordId = this.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotRecordId = this.$route.query.recordId?this.$route.query.recordId:id
+
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
@@ -405,7 +408,9 @@
         // const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
         const TenantId = store.state.app.userInfo.TenantId
         const Enable = false
-        const  BotRecordId =   this.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotRecordId = this.$route.query.recordId?this.$route.query.recordId:id
+
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
@@ -428,7 +433,9 @@
         const ID = sessionStorage.getItem("seviceId");
         const TenantId = store.state.app.userInfo.TenantId
         const Enable = true
-        const  BotRecordId =   this.$route.query.recordId
+        const id = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotRecordId = this.$route.query.recordId?this.$route.query.recordId:id
+
         const params = {
           headers:{
             'Access-token': getCookies(TOKEN)
@@ -451,7 +458,9 @@
         const that = this
         const TenantId = store.state.app.userInfo.TenantId
         const ServiceType = '1'
-        const  BotRecordId =  this.$route.query.recordId
+        const recordId = JSON.parse(sessionStorage.getItem('recordId'))
+        const BotRecordId =  this.$route.query.recordId?this.$route.query.recordId:recordId
+
         const token = getCookies(TOKEN)
         const params = {
           headers: {
@@ -486,14 +495,16 @@
       },
 
       clearAll(){
-        this.loading = true
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.fullloading = true
           const TenantId = store.state.app.userInfo.TenantId
-          const BotRecordId = this.$route.query.recordId//route.currentRoute.query.recordId
+          const id = JSON.parse(sessionStorage.getItem('recordId'))
+          const BotRecordId = this.$route.query.recordId?this.$route.query.recordId:id
+
           const DeleteType = 2
           const token = getCookies(TOKEN)
           const params = {
@@ -512,7 +523,7 @@
             // this.complateGetList(res)
             //  this.clearshow=false
             if (res.status=1) {
-              this.loading = false
+              this.fullloading = false
               this.$message({
                 type: 'success',
                 message: '删除成功!'
@@ -526,10 +537,6 @@
             message: '已取消删除'
           });
         });
-
-
-
-
       },
 
       reLoad(){
@@ -545,11 +552,11 @@
 
       //cher
       successUpload (res, fileInfo, fileList) {
-        const that =this
         this.$refs.upload.submit();
         this.$refs.upload.clearFiles();
         this.uploadMessage = false;
         this.clearshow=true
+
         //  this.release=false
 
       },
@@ -681,6 +688,7 @@
 
         const id = JSON.parse(sessionStorage.getItem('recordId'))
         const BotConfigId = this.$route.query.recordId?this.$route.query.recordId:id
+        console.log(this.response)
         const params = {
           "Command": key,
           "BotId": BotConfigId,
@@ -982,12 +990,22 @@
               //   }
 
               // }
+              if(this.tableData.length == 0 && this.PageIndex !== 1 ){
+                this.PageIndex--;
+              }
+
               const params = {
                 PageIndex: this.PageIndex,
                 Status: this.command,
               }
               getList(params).then((res) =>{
                 that.complateGetList(res)
+                if (res['Data'].IsNeedPublished) {
+                  //false为 已经发布 有点 this.release=true
+                  this.release=false
+                } else {
+                  this.release=true
+                }
               })
 
               store.dispatch(REPLACE,{mainLoading:false})
@@ -1091,9 +1109,10 @@
           type: 'warning'
         }).then(() => {
           store.dispatch(REPLACE,{mainLoading:true,loadingText:'发布预计需要几分钟，请稍后'})
+          const recordId = JSON.parse(sessionStorage.getItem('recordId'))
           const params = {
             TenantId: store.state.app.userInfo.TenantId ,
-            BotRecordId : this.$route.query.recordId
+            BotRecordId : this.$route.query.recordId?this.$route.query.recordId:recordId
           }
           that.initStatus('publish',that.$route.query.recordId)
           store.dispatch(REPLACE,{id:that.$route.query.recordId}).then(
@@ -1283,8 +1302,7 @@
       },
 
     }
-  }
-</script>
+  }</script>
 <style scoped lang="scss">
   @import '../../../../style/index';
   @import '../../../../style/var/color';

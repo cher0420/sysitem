@@ -8,12 +8,10 @@ import moment from 'moment';
 import store from '../../../../store';
 
 export const getList  = (params) =>{
-
-  const id = JSON.parse(sessionStorage.getItem('recordId'))
-  // const BotConfigId = id?id:route.currentRoute.query.recordId
   const token = getCookies(TOKEN)
   const TenantId = store.state.app.userInfo.TenantId
-  const BotRecordId =  route.currentRoute.query.recordId
+  const recordId = JSON.parse(sessionStorage.getItem('recordId'))
+  const BotRecordId =  route.currentRoute.query.recordId?route.currentRoute.query.recordId:recordId
 
 
   const body = {
@@ -84,7 +82,8 @@ export const del = (params) => {
   const token = getCookies(TOKEN)
   const Ids = [params.QuickQuizId]
   const TenantId = store.state.app.userInfo.TenantId
-  const BotRecordId =  route.currentRoute.query.recordId
+  const recordId = JSON.parse(sessionStorage.getItem('recordId'))
+  const BotRecordId =  route.currentRoute.query.recordId?route.currentRoute.query.recordId:recordId
   const DeleteType = 0
 
 
@@ -119,10 +118,11 @@ export const del = (params) => {
 
 export const _ask = (botId = null) => {
   const token = getCookies(TOKEN)
-  const id = JSON.parse(sessionStorage.getItem('recordId'))
-  // const BotConfigId = route.currentRoute.query.recordId?route.currentRoute.query.recordId:id
   const TenantId = store.state.app.userInfo.TenantId
-  const BotRecordId =  route.currentRoute.query.recordId
+
+
+  const recordId = JSON.parse(sessionStorage.getItem('recordId'))
+  const BotRecordId =  route.currentRoute.query.recordId?route.currentRoute.query.recordId:recordId
 
 
   const params = {
