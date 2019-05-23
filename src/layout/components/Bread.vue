@@ -34,26 +34,6 @@
         return store.state.app.breadArr
       },
     },
-    created(){
-      // //判断面包屑初始化时是否为详情页
-      // const to = this.$route
-      // const arr = to.path.split('/')
-      // const last = to.name === 'detail'
-      //
-      // if(last){
-      //   const navIndex = to.query.title
-      //   store.dispatch(REPLACE,{navIndex})
-      // }else{
-      //   const navIndex = STR[arr[arr.length-1]]
-      //   store.dispatch(REPLACE,{navIndex})
-      // }
-    },
-    methods:{
-
-      back(){
-        this.$router.back()
-      },
-    }
   }
 </script>
 <style lang="scss">

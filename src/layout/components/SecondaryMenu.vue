@@ -74,10 +74,10 @@
         },
         select(index,indexPath){
           const arr = store.state.app.breadArr
-          const obj={
-            url:'/config'
-          }
-          arr.splice(1,arr.length-1,obj)
+          // const obj={
+          //   url:'/config'
+          // }
+          // arr.splice(1,arr.length-1,obj)
           const to =  this.$route.path.split('/')
           const config = to[2] ==='config'
           store.dispatch(REPLACE,{breadArr:arr,config}).then(
